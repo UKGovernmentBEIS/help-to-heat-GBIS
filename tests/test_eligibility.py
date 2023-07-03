@@ -346,7 +346,7 @@ def _do_test(country, council_tax_band, epc_rating):
         assert page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
         page = _check_page(page, "epc", "accept_suggested_epc", "Yes")
 
-    assert page.has_one("h1:contains('Is anyone in your household receiving any benefits?')")
+    assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
     page = _check_page(page, "benefits", "benefits", "No")
 
     assert page.has_one("h1:contains('Your property is not eligible')"), (country, council_tax_band, epc_rating)

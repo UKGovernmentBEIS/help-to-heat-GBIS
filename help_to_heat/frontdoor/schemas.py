@@ -50,7 +50,7 @@ summary_map = {
     "address": "Property address",
     "council_tax_band": "Council tax band",
     "epc": "Energy Performance Certificate",
-    "benefits": "Is anyone in your household receiving any benefits?",
+    "benefits": "Is anyone in your household receiving any of the following benefits?",
     "household_income": "Annual household income",
     "property_type": "Property type",
     "property_subtype": "Property type",
@@ -133,9 +133,9 @@ council_tax_band_options = ("A", "B", "C", "D", "E", "F", "G", "H")
 welsh_council_tax_band_options = ("A", "B", "C", "D", "E", "F", "G", "H", "I")
 yes_no_options = ("Yes", "No")
 household_income_options = ("Less than £31,000 a year", "£31,000 or more a year")
-property_type_options = ("House", "Bungalow", "Apartment, flat or masionette")
+property_type_options = ("House", "Bungalow", "Apartment, flat or maisonette")
 property_subtype_options_map = {
-    "Apartment, flat or masionette": (
+    "Apartment, flat or maisonette": (
         {
             "value": "Top floor",
             "label": "Top floor",

@@ -23,7 +23,7 @@ def add_supplier_view(request):
 def edit_supplier_view(request, supplier_id):
     if request.method == "GET":
         supplier = models.Supplier.objects.get(pk=supplier_id)
-        return render(request, "portal/service-manager/edit-supplier.html", {"supplier": supplier.name})
+        return render(request, "portal/service-manager/edit-supplier.html", {"supplier": supplier})
     else:
         supplier = models.Supplier.objects.get(pk=supplier_id)
         supplier.name = request.POST.get("supplier_name")

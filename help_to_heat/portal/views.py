@@ -1,3 +1,5 @@
+import logging
+
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
@@ -5,6 +7,9 @@ from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
 from . import decorators, models
+
+logger = logging.getLogger("django.request")
+logger.setLevel(logging.ERROR)
 
 
 @require_http_methods(["GET"])
@@ -94,3 +99,14 @@ def healthcheck_view(request):
     _ = models.User.objects.exists()
     data = {"healthy": True, "datetime": timezone.now()}
     return JsonResponse(data, status=201)
+
+
+@require_http_methods(["GET"])
+def epc_page(request):
+    epc_count = models.EpcRating.objects.count()
+    template = "portal/epc-page.html"
+    return render(
+        request,
+        template_name=template,
+        context={"epc_count": epc_count},
+    )

@@ -1,12 +1,12 @@
 {% extends "portal/base_generic_gov.html" %}
 
 {% block content %}
-
+<a href="{{url('portal:supplier-team-leads', supplier.id)}}" class="govuk-back-link">Back</a>
 <form method="POST" novalidate>
   <fieldset class="govuk-fieldset">
     <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
       <h1 class="govuk-fieldset__heading">
-        Edit energy supplier name
+        Edit {{supplier.name}}
       </h1>
     </legend>
     <p>Edit an energy supplier on the platform.</p>
@@ -15,11 +15,11 @@
       <label class="govuk-label" for="supplier_name">
         Name
       </label>
-      <input value="{{supplier}}" required class="govuk-input govuk-!-width-one-half" id="supplier_name" name="supplier_name" type="text">
+      <input value="{{supplier.name}}" required class="govuk-input govuk-!-width-one-half" id="supplier_name" name="supplier_name" type="text">
     </div>
     <div class="govuk-button-group">
       <button class="govuk-button" data-module="govuk-button" type="submit">Save changes</button>
-      <a class="govuk-link" href="{{url('portal:homepage')}}">Cancel</a>
+      <a class="govuk-link" href="{{url('portal:supplier-team-leads', supplier.id)}}">Cancel</a>
     </div>
   </fieldset>
 </form>
