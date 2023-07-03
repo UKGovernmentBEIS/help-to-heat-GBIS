@@ -1,7 +1,7 @@
 {% extends "portal/base_generic_gov.html" %}
 
 {% block content %}
-
+<a href="{{url('portal:user-details', supplier_id, user.id)}}" class="govuk-back-link">Back</a>
 <form method="POST" novalidate>
   {{csrf_input}}
   <div class="govuk-form-group">
@@ -44,7 +44,7 @@
     </div>
     <br>
     <div class="govuk-button-group">
-      <button class="govuk-button" data-module="govuk-button" type="submit">Save changes</button>
+      <button class="govuk-button" data-module="govuk-button" type="submit">Confirm</button>
       <a class="govuk-link" href="{{url('portal:user-details', supplier_id, user.id)}}">Cancel</a>
     </div>
   </fieldset>

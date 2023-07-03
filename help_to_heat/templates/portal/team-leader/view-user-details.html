@@ -3,14 +3,14 @@
 {% block content %}
 
 <a href="{{url('portal:homepage')}}#member-tab" class="govuk-back-link">Back</a>
-<h1 class="govuk-heading-l">View and manage details for {{user.full_name}}</h1>
+<h1 class="govuk-heading-l">View and manage team details for {{user.full_name}}</h1>
 <dl class="govuk-summary-list">
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
-      Role
+      Name
     </dt>
     <dd class="govuk-summary-list__value">
-      {% if user.is_team_member %}Team member{% else %}Team leader{% endif %}
+      {{user.full_name}}
     </dd>
     <dd class="govuk-summary-list__actions">
       <a class="govuk-link" href="{{url('portal:edit-user', supplier_id, user.id)}}">
@@ -20,10 +20,10 @@
   </div>
   <div class="govuk-summary-list__row">
     <dt class="govuk-summary-list__key">
-      Name
+      Role
     </dt>
     <dd class="govuk-summary-list__value">
-      {{user.full_name}}
+      {% if user.is_team_member %}Team member{% else %}Team leader{% endif %}
     </dd>
     <dd class="govuk-summary-list__actions">
       <a class="govuk-link" href="{{url('portal:edit-user', supplier_id, user.id)}}">

@@ -1,19 +1,18 @@
 {% extends "portal/base_generic_gov.html" %}
 
 {% block content %}
-
-<h1 class="govuk-heading-l">{{user.full_name}}</h1>
-<h2 class="govuk-heading-m">{{user.is_active and "Disable user" or "Enable user"}}</h2>
+<a href="{{url('portal:supplier-team-leads-edit', supplier.id, user.id)}}" class="govuk-back-link">Back</a>
+<h1 class="govuk-heading-l">Do you want to {{user.is_active and "disable" or "enable"}} {{user.full_name}}?</h1>
 <form method="POST" novalidate>
   <fieldset class="govuk-fieldset">
     {% if not user.is_active %}
-    <p>Are you sure you wish to enable this team lead? This will allow the user to log in to their account and access referral information.</p>
+    <p>By enabling this user, they will be able to access customer leads.</p>
     {% else %}
-    <p>Are you sure you wish to disable this team lead? This will stop the user from logging in to their account and prevent access to referral information.</p>
+    <p>By disabling this user, they will no longer be able to access customer leads.</p>
     {% endif %}
     {{csrf_input}}
     <div class="govuk-button-group">
-      <button class="govuk-button" data-module="govuk-button" type="submit">Confirm</button>
+      <button class="govuk-button {{user.is_active and "govuk-button--warning"}}" data-module="govuk-button" type="submit">{{user.is_active and "Disable" or "Enable"}} user</button>
       <a class="govuk-link" href="{{url('portal:supplier-team-leads-edit', supplier.id, user.id)}}">Cancel</a>
     </div>
   </fieldset>

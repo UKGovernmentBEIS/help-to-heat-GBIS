@@ -1,19 +1,18 @@
 {% extends "portal/base_generic_gov.html" %}
 
 {% block content %}
-
-<h1 class="govuk-heading-l">{{supplier.name}}</h1>
-<h2 class="govuk-heading-m">{{supplier.is_disabled and "Enable energy supplier" or "Disable energy supplier"}}</h2>
+<a href="{{url('portal:supplier-team-leads', supplier.id)}}" class="govuk-back-link">Back</a>
+<h1 class="govuk-heading-l">Do you want to {{supplier.is_disabled and "enable" or "disable"}} [{{supplier.name}}]?</h1>
 <form method="POST" novalidate>
   <fieldset class="govuk-fieldset">
     {% if supplier.is_disabled %}
-    <p>Are you sure you wish to enable this energy supplier? This will also enable all accounts associated with this energy supplier.</p>
+    <p>By enabling an energy supplier, they will be able to access customer leads.</p>
     {% else %}
-    <p>Are you sure you wish to disable this energy supplier? This will stop any actions related to users of this energy supplier.</p>
+    <p>By disabling an energy supplier, they will no longer be able to access customer leads.</p>
     {% endif %}
     {{csrf_input}}
     <div class="govuk-button-group">
-      <button class="govuk-button" data-module="govuk-button" type="submit">Confirm</button>
+      <button class="govuk-button {{not supplier.is_disabled and "govuk-button--warning"}}" data-module="govuk-button" type="submit">{{supplier.is_disabled and "Enable" or "Disable"}} energy supplier</button>
       <a class="govuk-link" href="{{url('portal:supplier-team-leads', supplier.id)}}">Cancel</a>
     </div>
   </fieldset>

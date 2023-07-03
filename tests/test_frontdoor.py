@@ -33,7 +33,7 @@ def test_flow_northern_ireland():
     form["country"] = "Northern Ireland"
     page = form.submit().follow()
 
-    assert page.has_text("The scheme does not apply to homes in Northern Ireland")
+    assert page.has_text("This service is not available for homes in Northern Ireland")
 
     data = interface.api.session.get_answer(session_id, page_name="country")
     assert data["country"] == "Northern Ireland"
@@ -87,7 +87,7 @@ def test_flow_scotland():
     assert page.has_one("h1:contains('What is the council tax band of your property?')")
     page = _check_page(page, "council-tax-band", "council_tax_band", "B")
 
-    assert page.has_one("h1:contains('Is anyone in your household receiving any benefits?')")
+    assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
     page = _check_page(page, "benefits", "benefits", "Yes")
 
 
@@ -149,7 +149,7 @@ def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D"):
     assert page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
     page = _check_page(page, "epc", "accept_suggested_epc", "Yes")
 
-    assert page.has_one("h1:contains('Is anyone in your household receiving any benefits?')")
+    assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
     page = _check_page(page, "benefits", "benefits", benefits_answer)
 
     assert page.has_one("h1:contains('What is your annual household income?')")
@@ -532,7 +532,7 @@ def test_no_epc():
 
     assert data["epc_rating"] == "Not found"
 
-    assert page.has_one("h1:contains('Is anyone in your household receiving any benefits?')")
+    assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
 
 
 @unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
@@ -593,7 +593,7 @@ def test_eligibility():
     form = page.get_form()
     page = form.submit().follow()
 
-    assert page.has_one("h1:contains('Is anyone in your household receiving any benefits?')")
+    assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
     page = _check_page(page, "benefits", "benefits", "No")
 
     assert page.has_one("h1:contains('Your property is not eligible')")
@@ -806,6 +806,63 @@ def test_referral_not_providing_email():
     form["first_name"] = "Freddy"
     form["last_name"] = "Flibble"
     form["contact_number"] = "07777777777"
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Confirm and submit')")
+
+    form = page.get_form()
+    page = form.submit()
+
+    assert page.has_text("Please confirm that you agree to the use of your information by checking this box")
+    form = page.get_form()
+    form["permission"] = True
+
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Your details have been submitted to Utilita')")
+
+    referral = models.Referral.objects.get(session_id=session_id)
+    referral.delete()
+
+
+@unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
+def test_referral_not_providing_contact_number():
+    client = utils.get_client()
+    page = client.get("/")
+
+    assert page.status_code == 200
+    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
+
+    page = page.click(contains="Start")
+    assert page.status_code == 200
+
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    _check_page = _make_check_page(session_id)
+
+    # Answer main flow
+    page = _answer_house_questions(page, session_id, benefits_answer="Yes", epc_rating="F")
+
+    assert page.has_one("h1:contains('Information based on your answers')")
+    assert page.has_text("Great British Insulation Scheme")
+    assert not page.has_text("Energy Company Obligation 4")
+    form = page.get_form()
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
+    page = _check_page(page, "supplier", "supplier", "Utilita")
+
+    assert page.has_one("h1:contains('Add your personal and contact details')")
+    form = page.get_form()
+
+    page = form.submit()
+    assert page.has_text("Enter your first name")
+    assert page.has_one("p#question-first_name-error.govuk-error-message:contains('Enter your first name')")
+
+    form["first_name"] = "Freddy"
+    form["last_name"] = "Flibble"
+    form["email"] = "freddy.flibble@example.com"
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('Confirm and submit')")
