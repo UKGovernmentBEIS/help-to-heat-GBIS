@@ -115,7 +115,7 @@ class EPCUploadView(utils.MethodDispatcher):
 
     def get(self, request):
             with connection.cursor() as cursor:
-                query = "SELECT(*) FROM portal_epcrating"
+                query = "SELECT COUNT(*) FROM portal_epcrating"
                 cursor.execute(query)
                 epc_count = cursor.fetchone()
             template = "portal/epc-page.html"
