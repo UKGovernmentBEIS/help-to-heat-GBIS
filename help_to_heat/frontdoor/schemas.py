@@ -30,6 +30,9 @@ extra_pages = (
     "epc-disagree",
     "loft-access",
     "loft-insulation",
+    "northern-ireland",
+    "epc-ineligible",
+    "ineligible",
 )
 
 page_prev_next_map = {
@@ -290,6 +293,8 @@ class SessionSchema(Schema):
     contact_number = fields.String(validate=validate.Length(max=128))
     email = fields.String(validate=(validate_email_or_none, validate.Length(max=128)), allow_none=True)
     schemes = fields.List(fields.Str())
+    referral_created_at = fields.String()
+    _page_name = fields.String()
 
     class Meta:
         ordered = True

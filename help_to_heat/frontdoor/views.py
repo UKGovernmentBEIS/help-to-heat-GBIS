@@ -3,6 +3,7 @@ import uuid
 from django.conf import settings
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils import timezone
 from marshmallow import ValidationError
 
 from help_to_heat import utils
@@ -11,7 +12,6 @@ from ..portal import email_handler
 from . import eligibility, interface, schemas
 
 page_map = {}
-
 
 page_compulsory_field_map = {
     "country": ("country",),
@@ -77,6 +77,22 @@ def homepage_view(request):
         "next_url": next_url,
     }
     return render(request, template_name="frontdoor/homepage.html", context=context)
+
+
+def page_view(request, session_id, page_name):
+    if page_name in page_map:
+        return page_map[page_name](request, session_id, page_name)
+
+    # Save a blank answer to record the page visit for analytics
+    interface.api.session.save_answer(session_id, page_name, {"_page_name": page_name})
+    prev_page_url, next_page_url = get_prev_next_urls(session_id, page_name)
+    context = {"session_id": session_id, "page_name": page_name, "prev_url": prev_page_url}
+    return render(request, template_name=f"frontdoor/{page_name}.html", context=context)
+
+
+def change_page_view(request, session_id, page_name):
+    assert page_name in page_map
+    return page_map[page_name](request, session_id, page_name, is_change_page=True)
 
 
 def get_prev_next_page_name(page_name):
@@ -480,6 +496,7 @@ class ConfirmSubmitView(PageView):
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         interface.api.session.create_referral(session_id)
+        interface.api.session.save_answer(session_id, page_name, {"referral_created_at": str(timezone.now())})
         session_data = interface.api.session.get_session(session_id)
         if session_data.get("email"):
             email_handler.send_referral_confirmation_email(session_data)
@@ -491,20 +508,6 @@ class SuccessView(PageView):
     def get_context(self, session_id, *args, **kwargs):
         supplier_data = interface.api.session.get_answer(session_id, "supplier")
         return {"supplier": supplier_data["supplier"]}
-
-
-def page_view(request, session_id, page_name):
-    if page_name in page_map:
-        return page_map[page_name](request, session_id, page_name)
-
-    prev_page_url, next_page_url = get_prev_next_urls(session_id, page_name)
-    context = {"session_id": session_id, "page_name": page_name, "prev_url": prev_page_url}
-    return render(request, template_name=f"frontdoor/{page_name}.html", context=context)
-
-
-def change_page_view(request, session_id, page_name):
-    assert page_name in page_map
-    return page_map[page_name](request, session_id, page_name, is_change_page=True)
 
 
 class FeedbackView(utils.MethodDispatcher):
@@ -540,6 +543,7 @@ def cookies_view(request):
 
 
 def data_layer_js_view(request):
+    # Remove after private beta (in favour of PC-275)
     return render(request, "dataLayer.js", {"gtag_id": settings.GTAG_ID}, content_type="application/x-javascript")
 
 
