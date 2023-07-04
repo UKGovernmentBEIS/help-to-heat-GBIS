@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
+from django.db import connection
 
 from help_to_heat import utils
 
@@ -113,13 +114,16 @@ class EPCUploadView(utils.MethodDispatcher):
     )
 
     def get(self, request):
-        epc_count = models.EpcRating.objects.count()
-        template = "portal/epc-page.html"
-        return render(
-            request,
-            template_name=template,
-            context={"epc_count": epc_count},
-        )
+            with connection.cursor() as cursor:
+                query = "SELECT(*) FROM portal_epcrating"
+                cursor.execute(query)
+                epc_count = cursor.fetchone()
+            template = "portal/epc-page.html"
+            return render(
+                request,
+                template_name=template,
+                context={"epc_count": epc_count},
+            )
 
     def post(self, request):
         url = request.POST["url"]
