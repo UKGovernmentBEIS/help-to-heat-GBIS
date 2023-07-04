@@ -17,7 +17,7 @@ def test_csv():
     text = csv_page.content.decode("utf-8")
     lines = text.splitlines()
     assert len(lines) == 2
-    assert len(lines[0].split(",")) == 27, len(lines[0].split(","))
+    assert len(lines[0].split(",")) == 29, len(lines[0].split(","))
 
     rows = list(csv.DictReader(lines))
     data = rows[0]

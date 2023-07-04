@@ -880,3 +880,36 @@ def test_referral_not_providing_contact_number():
 
     referral = models.Referral.objects.get(session_id=session_id)
     referral.delete()
+
+
+def test_long_address():
+    client = utils.get_client()
+    page = client.get("/")
+
+    assert page.status_code == 200
+    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
+
+    page = page.click(contains="Start")
+    assert page.status_code == 200
+
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    assert page.has_one("h1:contains('What is the property’s address?')")
+
+    form = page.get_form()
+    form["address_line_1"] = "?" * 256
+    form["postcode"] = "?" * 256
+    page = form.submit()
+
+    assert page.has_text("Longer than maximum length 128")
+    assert page.has_text("Longer than maximum length 16")

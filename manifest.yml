@@ -1,4 +1,0 @@
----
-applications:
-- name: help-to-heat-develop
-  memory: 512M
