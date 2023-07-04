@@ -18,6 +18,8 @@ csv_columns = (
     "benefits",
     "household_income",
     "uprn",
+    "address_line_1",
+    "postcode",
     "address",
     "council_tax_band",
     "property_type",
