@@ -3,6 +3,7 @@ import uuid
 from django.conf import settings
 from django.shortcuts import redirect, render
 from django.urls import reverse
+from django.utils import timezone
 from marshmallow import ValidationError
 
 from help_to_heat import utils
@@ -480,6 +481,7 @@ class ConfirmSubmitView(PageView):
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         interface.api.session.create_referral(session_id)
+        interface.api.session.save_answer(session_id, page_name, {"referral_created_at": str(timezone.now())})
         session_data = interface.api.session.get_session(session_id)
         if session_data.get("email"):
             email_handler.send_referral_confirmation_email(session_data)
@@ -540,6 +542,7 @@ def cookies_view(request):
 
 
 def data_layer_js_view(request):
+    # Remove after private beta (in favour of PC-275)
     return render(request, "dataLayer.js", {"gtag_id": settings.GTAG_ID}, content_type="application/x-javascript")
 
 

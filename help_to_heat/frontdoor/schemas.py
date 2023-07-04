@@ -290,6 +290,7 @@ class SessionSchema(Schema):
     contact_number = fields.String(validate=validate.Length(max=128))
     email = fields.String(validate=(validate_email_or_none, validate.Length(max=128)), allow_none=True)
     schemes = fields.List(fields.Str())
+    referral_created_at = fields.String()
 
     class Meta:
         ordered = True
