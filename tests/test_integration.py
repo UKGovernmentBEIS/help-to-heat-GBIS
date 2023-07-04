@@ -1,6 +1,10 @@
 import csv
 import unittest
 
+import freezegun
+
+from help_to_heat.frontdoor import interface
+
 from . import utils
 from .test_frontdoor import _do_happy_flow
 
@@ -22,3 +26,14 @@ def test_csv():
     rows = list(csv.DictReader(lines))
     data = rows[0]
     assert data["epc_date"] == "2022-12-25"
+
+
+@unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
+def test_referral_created_at():
+    expected_datetime = "2022-12-25 14:34:56+00:00"
+    with freezegun.freeze_time(expected_datetime):
+        session_id = _do_happy_flow(supplier="OVO")
+
+    data = interface.api.session.get_session(session_id)
+
+    assert data["referral_created_at"] == expected_datetime, (expected_datetime, data["referral_created_at"])
