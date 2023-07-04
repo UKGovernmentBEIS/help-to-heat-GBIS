@@ -5,6 +5,7 @@ from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
+from django.db import connection
 
 from . import decorators, models
 
@@ -103,10 +104,15 @@ def healthcheck_view(request):
 
 @require_http_methods(["GET"])
 def epc_page(request):
-    epc_count = models.EpcRating.objects.count()
-    template = "portal/epc-page.html"
-    return render(
-        request,
-        template_name=template,
-        context={"epc_count": epc_count},
-    )
+
+    # django is not very good at counting tables with a large amount of rows so we use raw sql here.
+    with connection.cursor() as cursor:
+        query = "SELECT(*) FROM portal_epcrating"
+        cursor.execute(query)
+        epc_count = cursor.fetchone()
+        template = "portal/epc-page.html"
+        return render(
+            request,
+            template_name=template,
+            context={"epc_count": epc_count},
+        )
