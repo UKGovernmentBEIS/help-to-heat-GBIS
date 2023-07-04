@@ -41,6 +41,9 @@ def test_flow_northern_ireland():
     page = page.click(contains="Back")
     assert page.has_one("h1:contains('Where is the property located?')")
 
+    data = interface.api.session.get_answer(session_id, page_name="northern-ireland")
+    assert data["_page_name"] == "northern-ireland", data
+
 
 @unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
 def test_flow_scotland():
