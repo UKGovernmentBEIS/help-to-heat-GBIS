@@ -27,6 +27,7 @@ def test_csv():
     data = rows[0]
     assert data["epc_date"] == "2022-12-25"
 
+
 @unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
 def test_referral_created_at():
     expected_datetime = "2022-12-25 14:34:56+00:00"
@@ -36,4 +37,3 @@ def test_referral_created_at():
     data = interface.api.session.get_session(session_id)
 
     assert data["referral_created_at"] == expected_datetime, (expected_datetime, data["referral_created_at"])
-
