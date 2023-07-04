@@ -4,4 +4,22 @@
 
   <p class="govuk-body">{{epc_count}} uploaded so far</p>
 
+  <form method="POST" novalidate>
+    {{csrf_input}}
+    <div class="govuk-form-group">
+    <fieldset class="govuk-fieldset">
+      <div class="govuk-form-group">
+        <label class="govuk-label" for="url">
+          URL of EPC CSV file to upload
+        </label>
+        <input required class="govuk-input" id="url" name="url" type="text">
+      </div>
+      <br>
+      <div class="govuk-button-group">
+        <button class="govuk-button" data-module="govuk-button" type="submit">Start Upload</button>
+      </div>
+    </fieldset>
+    </div>
+  </form>
+
 {% endblock %}
