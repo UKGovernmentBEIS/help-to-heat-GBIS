@@ -13,7 +13,6 @@ from . import eligibility, interface, schemas
 
 page_map = {}
 
-
 page_compulsory_field_map = {
     "country": ("country",),
     "own-property": ("own_property",),
