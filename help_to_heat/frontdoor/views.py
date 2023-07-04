@@ -80,6 +80,22 @@ def homepage_view(request):
     return render(request, template_name="frontdoor/homepage.html", context=context)
 
 
+def page_view(request, session_id, page_name):
+    if page_name in page_map:
+        return page_map[page_name](request, session_id, page_name)
+
+    # Save a blank answer to record the page visit for analytics
+    interface.api.session.save_answer(session_id, page_name, {"_page_name": page_name})
+    prev_page_url, next_page_url = get_prev_next_urls(session_id, page_name)
+    context = {"session_id": session_id, "page_name": page_name, "prev_url": prev_page_url}
+    return render(request, template_name=f"frontdoor/{page_name}.html", context=context)
+
+
+def change_page_view(request, session_id, page_name):
+    assert page_name in page_map
+    return page_map[page_name](request, session_id, page_name, is_change_page=True)
+
+
 def get_prev_next_page_name(page_name):
     if page_name in schemas.page_prev_next_map:
         prev_page_name = schemas.page_prev_next_map[page_name]["prev"]
@@ -493,20 +509,6 @@ class SuccessView(PageView):
     def get_context(self, session_id, *args, **kwargs):
         supplier_data = interface.api.session.get_answer(session_id, "supplier")
         return {"supplier": supplier_data["supplier"]}
-
-
-def page_view(request, session_id, page_name):
-    if page_name in page_map:
-        return page_map[page_name](request, session_id, page_name)
-
-    prev_page_url, next_page_url = get_prev_next_urls(session_id, page_name)
-    context = {"session_id": session_id, "page_name": page_name, "prev_url": prev_page_url}
-    return render(request, template_name=f"frontdoor/{page_name}.html", context=context)
-
-
-def change_page_view(request, session_id, page_name):
-    assert page_name in page_map
-    return page_map[page_name](request, session_id, page_name, is_change_page=True)
 
 
 class FeedbackView(utils.MethodDispatcher):
