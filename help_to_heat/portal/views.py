@@ -1,10 +1,15 @@
 import logging
+import subprocess
 
 from django.contrib.auth.decorators import login_required
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
+from django.views.decorators.csrf import csrf_exempt
+from django.http import HttpResponse
+
+from help_to_heat import utils
 
 from . import decorators, models
 
@@ -100,13 +105,27 @@ def healthcheck_view(request):
     data = {"healthy": True, "datetime": timezone.now()}
     return JsonResponse(data, status=201)
 
-
-@require_http_methods(["GET"])
-def epc_page(request):
-    epc_count = models.EpcRating.objects.count()
-    template = "portal/epc-page.html"
-    return render(
-        request,
-        template_name=template,
-        context={"epc_count": epc_count},
+@require_http_methods(["GET", "POST"])
+class EPCUploadView(utils.MethodDispatcher):
+    args = (
+        "/usr/local/bin/python",
+        "/app/manage.py",
+        "load_epc_ratings",
+        "--url",
     )
+
+    def get(self, request):
+        epc_count = models.EpcRating.objects.count()
+        template = "portal/epc-page.html"
+        return render(
+            request,
+            template_name=template,
+            context={"epc_count": epc_count},
+        )
+
+    def post(self, request):
+        url = request.POST["url"]
+        cmd_args = self.args + (url,)
+        subprocess.Popen(cmd_args)
+        return redirect("/portal/epc-uploads")
+    
