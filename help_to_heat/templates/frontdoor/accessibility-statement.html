@@ -5,8 +5,13 @@
 {% endblock %}
 
 {% block content %}
-<div class="govuk-grid-row">
-  <div class="govuk-grid-column-two-thirds">
+
+    {% if url %}
+        <a href="{% if previous_path %}{{ previous_path }}{% else %}{{url('frontdoor:homepage')}}{% endif %}" class="govuk-back-link">Back</a>
+    {% endif %}
+
+    <div class="govuk-grid-row">
+    <div class="govuk-grid-column-two-thirds">
     <h1 class="govuk-heading-l">Accessibility Statement</h1>
     <p class="govuk-body">
       This site is being developed to be accessible. It is currently undergoing accessibility testing. Once complete a detailed accessibility statement will be made available.
