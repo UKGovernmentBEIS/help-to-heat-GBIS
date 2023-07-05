@@ -15,7 +15,7 @@ logger = logging.getLogger(__name__)
 
 
 class SupplierChoices(utils.Choices):
-    BRITISH_GAS = ("british-gas", "British Gas")
+    # BRITISH_GAS = ("british-gas", "British Gas")
     # BULB = ("bulb", "Bulb")
     # E_ENERGY = ("e-energy", "E Energy")
     # ECOTRICITY = ("ecotricity", "Ecotricity")
@@ -24,8 +24,8 @@ class SupplierChoices(utils.Choices):
     # ESB = ("esb", "ESB")
     # FOXGLOVE = ("foxglove", "Foxglove")
     # OCTOPUS = ("octopus", "Octopus")
-    OVO = ("ovo", "OVO")
-    SCOTTISH_POWER = ("scottish-power", "Scottish Power")
+    # OVO = ("ovo", "OVO")
+    # SCOTTISH_POWER = ("scottish-power", "Scottish Power")
     # SHELL = ("shell", "Shell")
     SO_ENERGY = ("so-energy", "So Energy")
     UTILITA = ("utilita", "Utilita")

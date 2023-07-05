@@ -11,10 +11,10 @@ from .test_frontdoor import _do_happy_flow
 
 @unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
 def test_csv():
-    _do_happy_flow(supplier="OVO")
+    _do_happy_flow(supplier="EON")
 
     client = utils.get_client()
-    page = utils.login_as_team_leader(client, supplier="OVO")
+    page = utils.login_as_team_leader(client, supplier="EON")
     assert page.has_one("p:contains('Unread leads') ~ p:contains('1')")
 
     csv_page = page.click(contains="Download latest leads")
@@ -32,7 +32,7 @@ def test_csv():
 def test_referral_created_at():
     expected_datetime = "2022-12-25 14:34:56+00:00"
     with freezegun.freeze_time(expected_datetime):
-        session_id = _do_happy_flow(supplier="OVO")
+        session_id = _do_happy_flow(supplier="EON")
 
     data = interface.api.session.get_session(session_id)
 

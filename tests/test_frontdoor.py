@@ -237,7 +237,7 @@ def _do_happy_flow(supplier="Foxglove"):
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
-    page = _check_page(page, "supplier", "supplier", "OVO")
+    page = _check_page(page, "supplier", "supplier", "EON")
 
     assert page.has_one("h1:contains('Add your personal and contact details')")
     form = page.get_form()
