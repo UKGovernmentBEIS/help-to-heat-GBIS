@@ -221,7 +221,7 @@ loft_options = (
 loft_access_options = ("Yes, there is access to my loft", "No, there is no access to my loft")
 loft_access_validation_options = loft_access_options + ("No loft",)
 supplier_options = (
-    "British Gas",
+    # "British Gas",
     # "Bulb",
     # "E Energy",
     # "Ecotricity",
@@ -230,8 +230,8 @@ supplier_options = (
     # "ESB",
     # "Foxglove",
     # "Octopus",
-    "OVO",
-    "Scottish Power",
+    # "OVO",
+    # "Scottish Power",
     # "Shell",
     "So Energy",
     "Utilita",
