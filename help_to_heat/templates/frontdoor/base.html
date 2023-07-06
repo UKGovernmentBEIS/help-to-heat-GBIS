@@ -88,13 +88,13 @@
   </header>
   <div class="govuk-width-container app-width-container">
 
-    <div class="govuk-phase-banner" role="banner">
+    <div class="govuk-phase-banner">
       <p class="govuk-phase-banner__content">
         <strong class="govuk-tag govuk-phase-banner__content__tag">
           BETA
         </strong>
         <span class="govuk-phase-banner__text">
-          This is a new service – your <a class="govuk-link" href="{% if session_id and page_name %}{{url('frontdoor:feedback', session_id=session_id, page_name=page_name)}}{% else %}{{url('frontdoor:feedback')}}{% endif %}">feedback</a> will help us to improve it.
+          This is a new service – your <a class="govuk-link" href="{% if session_id and page_name %}{{url('frontdoor:feedback', session_id=session_id, page_name=page_name)}}{% else %}{{url('frontdoor:feedback')}}{% endif %}" tabindex="0">feedback</a> will help us to improve it.
         </span>
       </p>
     </div>
@@ -117,11 +117,13 @@
                 Privacy Policy
               </a>
             </li>
+            {% if request.path != "/accessibility-statement/" %}
             <li class="govuk-footer__inline-list-item">
-              <a class="govuk-footer__link" href="/accessibility-statement/">
+              <a class="govuk-footer__link" href="/accessibility-statement/?prev={{ request.path }}">
                 Accessibility Statement
               </a>
             </li>
+            {% endif %}
           </ul>
           <svg aria-hidden="true" focusable="false" class="govuk-footer__licence-logo"
             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 483.2 195.7" height="17" width="41">
