@@ -175,3 +175,6 @@ if not DEBUG:
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_AGE = 60 * 10  # 10 minutes
     SESSION_COOKIE_SAMESITE = "Strict"
+else:
+    import debugpy
+    debugpy.listen(("0.0.0.0", 5678))
