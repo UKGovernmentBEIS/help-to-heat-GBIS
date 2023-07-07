@@ -177,4 +177,5 @@ if not DEBUG:
     SESSION_COOKIE_SAMESITE = "Strict"
 else:
     import debugpy
+
     debugpy.listen(("0.0.0.0", 5678))
