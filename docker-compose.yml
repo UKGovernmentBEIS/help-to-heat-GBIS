@@ -17,6 +17,8 @@ services:
       - ./:/app/:z
     ports:
       - "8012:8012"
+      #5678 is used for debugging locally. Luckily, this docker-compose file and /web/Dockerfile which expose it are only used locally.
+      - "5678:5678"
 
   help-to-heat-db:
     image: postgres:13

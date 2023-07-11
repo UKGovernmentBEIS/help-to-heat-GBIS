@@ -26,6 +26,8 @@ COPY ./ /app
 
 WORKDIR /app/
 
+
+
 RUN \
     DJANGO_SETTINGS_MODULE=help_to_heat.settings_base \
     DJANGO_SECRET_KEY="temp" \

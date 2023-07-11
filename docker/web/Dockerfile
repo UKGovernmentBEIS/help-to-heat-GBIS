@@ -15,6 +15,8 @@ RUN chmod +x /bin/wait-for-db
 
 RUN python3 -m pip install -U pip setuptools wheel
 
+RUN python3 -m pip install debugpy
+
 COPY ./requirements.lock /app/requirements.lock
 RUN python3 -m pip install -r /app/requirements.lock --no-cache-dir
 
@@ -33,7 +35,7 @@ RUN \
     DJANGO_SECRET_KEY="temp" \
     python manage.py collectstatic --no-input
 
-EXPOSE 8012
+EXPOSE 8012 5678
 
 ENTRYPOINT ["sh","/entrypoint.sh"]
 CMD ["sh","/start.sh"]
