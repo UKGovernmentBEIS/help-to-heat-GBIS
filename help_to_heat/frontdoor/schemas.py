@@ -205,7 +205,12 @@ wall_type_options = (
     "Solid walls",
     "Cavity walls",
     "Mix of solid and cavity walls",
-    "I don't see my option listed",
+    {
+        "value": "I don't see my option listed",
+        "label": "I don't see my option listed",
+        "hint": "Other wall types could include cob walls, timber framed, system built, steel framed or other "
+        "non-traditional build types",
+    },
     "I don't know",
 )
 wall_insulation_options = (
