@@ -77,7 +77,7 @@ def homepage_view(request):
         "next_url": next_url,
     }
     response = render(request, template_name="frontdoor/homepage.html", context=context)
-    response['x-vcap-request-id'] = session_id
+    response["x-vcap-request-id"] = session_id
     return response
 
 
@@ -90,8 +90,9 @@ def page_view(request, session_id, page_name):
     prev_page_url, next_page_url = get_prev_next_urls(session_id, page_name)
     context = {"session_id": session_id, "page_name": page_name, "prev_url": prev_page_url}
     response = render(request, template_name=f"frontdoor/{page_name}.html", context=context)
-    response['x-vcap-request-id'] = session_id
+    response["x-vcap-request-id"] = session_id
     return response
+
 
 def change_page_view(request, session_id, page_name):
     assert page_name in page_map
@@ -154,7 +155,7 @@ class PageView(utils.MethodDispatcher):
             **extra_context,
         }
         response = render(request, template_name=f"frontdoor/{page_name}.html", context=context)
-        response['x-vcap-request-id'] = session_id
+        response["x-vcap-request-id"] = session_id
         return response
 
     def get_prev_next_urls(self, session_id, page_name):
