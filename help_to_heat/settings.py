@@ -69,13 +69,13 @@ if BASIC_AUTH:
 SECURE_HSTS_SECONDS = 300
 
 # Content Security Policy configurations
-CSP_DEFAULT_SRC = ("'self'")
+CSP_DEFAULT_SRC = "'self'"
 CSP_SCRIPT_SRC = ("'self'", "https://www.googletagmanager.com/")
-CSP_CONNECT_SRC = ("'self'")
-CSP_IMG_SRC = ("'self'")
-CSP_STYLE_SRC = ("'self'")
-CSP_BASE_URI = ("'self'")
-CSP_FORM_ACTION = ("'self'")
+CSP_CONNECT_SRC = "'self'"
+CSP_IMG_SRC = "'self'"
+CSP_STYLE_SRC = "'self'"
+CSP_BASE_URI = "'self'"
+CSP_FORM_ACTION = "'self'"
 
 # CSRF settings
 CSRF_COOKIE_HTTPONLY = True
