@@ -1,10 +1,10 @@
 from django.shortcuts import redirect, render
 from django.views.decorators.http import require_http_methods
+from marshmallow import ValidationError, validate
 
 from help_to_heat.portal import email_handler, models
 
 from .decorators import requires_service_manager, requires_team_leader
-from marshmallow import validate, ValidationError
 
 
 @require_http_methods(["GET", "POST"])
@@ -70,8 +70,12 @@ def supplier_team_leads_add_view(request, supplier_id):
         try:
             validate.Email()(leader_email)
         except ValidationError as val_error:
-            return render(request, "portal/service-manager/add-supplier-team-lead.html", {"supplier": supplier, "error": val_error})
-    
+            return render(
+                request,
+                "portal/service-manager/add-supplier-team-lead.html",
+                {"supplier": supplier, "error": val_error},
+            )
+
         user, _ = models.User.objects.get_or_create(email=leader_email)
         user.full_name = leader_name
         user.role = "TEAM_LEADER"
