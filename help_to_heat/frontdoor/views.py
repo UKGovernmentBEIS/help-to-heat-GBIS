@@ -144,6 +144,12 @@ class PageView(utils.MethodDispatcher):
             next_page_url = None
         else:
             prev_page_url, next_page_url = self.get_prev_next_urls(session_id, page_name)
+
+        session = interface.api.session.get_session(session_id)
+        # Once a user has created a referral, they can no longer access their old session
+        if "referral_created_at" in session:
+            return redirect("/")
+
         extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data=data)
         context = {
             "data": data,
