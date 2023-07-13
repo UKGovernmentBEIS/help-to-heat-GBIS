@@ -554,7 +554,9 @@ def data_layer_js_view(request):
 
 
 def privacy_policy_view(request):
-    return render(request, template_name="frontdoor/privacy-policy.html")
+    previous_path = request.GET.get("prev")
+    context = {"previous_path": previous_path}
+    return render(request, template_name="frontdoor/privacy-policy.html", context=context)
 
 
 def accessibility_statement_view(request):

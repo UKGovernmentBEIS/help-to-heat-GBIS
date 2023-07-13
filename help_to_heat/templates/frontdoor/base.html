@@ -112,11 +112,13 @@
         <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
           <h2 class="govuk-visually-hidden">Support links</h2>
           <ul class="govuk-footer__inline-list">
+            {% if request.path != "/privacy-policy/" %}
             <li class="govuk-footer__inline-list-item">
-              <a class="govuk-footer__link" href="/privacy-policy/">
+              <a class="govuk-footer__link" href="/privacy-policy/?prev={{ request.path }}">
                 Privacy Policy
               </a>
             </li>
+            {% endif %}
             {% if request.path != "/accessibility-statement/" %}
             <li class="govuk-footer__inline-list-item">
               <a class="govuk-footer__link" href="/accessibility-statement/?prev={{ request.path }}">

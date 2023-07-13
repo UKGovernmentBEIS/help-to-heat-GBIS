@@ -7,6 +7,7 @@
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
+    <a href="{% if previous_path %}{{ previous_path }}{% else %}{{url('frontdoor:homepage')}}{% endif %}" class="govuk-back-link">Back</a>
     <h1 class="govuk-heading-l">Privacy Notice – the Great British Insulation Scheme</h1>
     <p class="govuk-body">This notice is provided to meet the requirements of the UK General Data Protection Regulation
       (UK GDPR) and Data
