@@ -77,9 +77,7 @@ CSP_STYLE_SRC = ("'self'",)
 CSP_BASE_URI = ("'self'",)
 CSP_FORM_ACTION = ("'self'",)
 
-# CSRF settings
 CSRF_COOKIE_HTTPONLY = True
-# CSRF_COOKIE_SECURE = True
 
 CORS_MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
@@ -189,6 +187,7 @@ if not DEBUG:
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_AGE = 60 * 10  # 10 minutes
     SESSION_COOKIE_SAMESITE = "Strict"
+    CSRF_COOKIE_SECURE = True
 else:
     import debugpy
 
