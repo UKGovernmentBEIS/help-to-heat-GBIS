@@ -1,5 +1,6 @@
-import furl
 import logging
+
+import furl
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
 from django.core.mail import send_mail
@@ -85,7 +86,7 @@ def _send_token_email(user, subject, template_name, from_address, url_name, toke
             recipient_list=[user.email],
         )
         return response
-    except Exception as err:
+    except Exception as err:  # noqa: B902
         logger.error("An error occured while attempting to send an email.")
         logger.error(err)
 
@@ -100,10 +101,9 @@ def _send_normal_email(subject, template_name, from_address, to_address, context
             recipient_list=[to_address],
         )
         return response
-    except Exception as err:
+    except Exception as err:  # noqa: B902
         logger.error("An error occured while attempting to send an email.")
         logger.error(err)
-
 
 
 def send_password_reset_email(user):
