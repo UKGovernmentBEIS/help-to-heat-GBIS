@@ -156,6 +156,8 @@ class PageView(utils.MethodDispatcher):
         }
         response = render(request, template_name=f"frontdoor/{page_name}.html", context=context)
         response["x-vcap-request-id"] = session_id
+        if "sensitive" in context:
+            response["cache-control"] = "no-store"
         return response
 
     def get_prev_next_urls(self, session_id, page_name):
@@ -445,7 +447,7 @@ class SummaryView(PageView):
             for question in questions
             if question in session_data
         )
-        return {"summary_lines": summary_lines}
+        return {"summary_lines": summary_lines, "sensitive": True}
 
 
 @register_page("schemes")
