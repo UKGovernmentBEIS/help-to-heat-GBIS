@@ -66,6 +66,7 @@ if BASIC_AUTH:
 
 # CSRF settings
 CSRF_COOKIE_HTTPONLY = True
+CSRF_COOKIE_SECURE = True
 
 CORS_MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
