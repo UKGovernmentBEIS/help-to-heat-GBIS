@@ -79,7 +79,7 @@ CSP_FORM_ACTION = ("'self'")
 
 # CSRF settings
 CSRF_COOKIE_HTTPONLY = True
-CSRF_COOKIE_SECURE = True
+# CSRF_COOKIE_SECURE = True
 
 CORS_MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
