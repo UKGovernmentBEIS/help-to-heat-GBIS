@@ -158,6 +158,7 @@ class PageView(utils.MethodDispatcher):
         response["x-vcap-request-id"] = session_id
         if "sensitive" in context and context["sensitive"] == True:
             response["cache-control"] = "no-store"
+            response["Pragma"] = "no-cache"
         return response
 
     def get_prev_next_urls(self, session_id, page_name):
