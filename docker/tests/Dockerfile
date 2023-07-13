@@ -22,11 +22,12 @@ RUN chmod +x /entrypoint.sh
 COPY ./docker/tests/start.sh /start.sh
 RUN chmod +x /start.sh
 
+COPY ./docker/tests/check-code.sh /check-code.sh
+RUN chmod +x /check-code.sh
+
 COPY ./ /app
 
 WORKDIR /app/
-
-
 
 RUN \
     DJANGO_SETTINGS_MODULE=help_to_heat.settings_base \
