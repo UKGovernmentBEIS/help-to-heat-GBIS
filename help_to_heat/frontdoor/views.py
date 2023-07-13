@@ -563,3 +563,7 @@ def accessibility_statement_view(request):
     previous_path = request.GET.get("prev")
     context = {"previous_path": previous_path}
     return render(request, template_name="frontdoor/accessibility-statement.html", context=context)
+
+
+def holding_page_view(request):
+    return render(request, template_name="frontdoor/holding-page.html")
