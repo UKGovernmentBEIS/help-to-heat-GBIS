@@ -52,6 +52,7 @@ CORS_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "csp.middleware.CSPMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -64,8 +65,21 @@ MIDDLEWARE = [
 if BASIC_AUTH:
     MIDDLEWARE = ["help_to_heat.auth.basic_auth_middleware"] + MIDDLEWARE
 
+# Secure transport header timeout 5 minutes; we can up to something larger (like a year) when we're happy it's working.
+SECURE_HSTS_SECONDS = 300
+
+# Content Security Policy configurations
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", "https://www.googletagmanager.com/")
+CSP_CONNECT_SRC = ("'self'",)
+CSP_IMG_SRC = ("'self'",)
+CSP_STYLE_SRC = ("'self'",)
+CSP_BASE_URI = ("'self'",)
+CSP_FORM_ACTION = ("'self'",)
+
 # CSRF settings
 CSRF_COOKIE_HTTPONLY = True
+# CSRF_COOKIE_SECURE = True
 
 CORS_MIDDLEWARE = [
     "corsheaders.middleware.CorsMiddleware",
