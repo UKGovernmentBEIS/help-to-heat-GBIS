@@ -162,6 +162,9 @@ class PageView(utils.MethodDispatcher):
         }
         response = render(request, template_name=f"frontdoor/{page_name}.html", context=context)
         response["x-vcap-request-id"] = session_id
+        if "sensitive" in context and context["sensitive"]:
+            response["cache-control"] = "no-store"
+            response["Pragma"] = "no-cache"
         return response
 
     def get_prev_next_urls(self, session_id, page_name):
@@ -451,7 +454,7 @@ class SummaryView(PageView):
             for question in questions
             if question in session_data
         )
-        return {"summary_lines": summary_lines}
+        return {"summary_lines": summary_lines, "sensitive": True}
 
 
 @register_page("schemes")
@@ -504,7 +507,7 @@ class ConfirmSubmitView(PageView):
         )
         supplier_data = interface.api.session.get_answer(session_id, "supplier")
         supplier = supplier_data["supplier"]
-        return {"summary_lines": summary_lines, "supplier": supplier}
+        return {"summary_lines": summary_lines, "supplier": supplier, "sensitive": True}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         interface.api.session.create_referral(session_id)
