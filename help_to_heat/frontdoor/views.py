@@ -156,7 +156,7 @@ class PageView(utils.MethodDispatcher):
         }
         response = render(request, template_name=f"frontdoor/{page_name}.html", context=context)
         response["x-vcap-request-id"] = session_id
-        if "sensitive" in context and context["sensitive"] == True:
+        if "sensitive" in context and context["sensitive"]:
             response["cache-control"] = "no-store"
             response["Pragma"] = "no-cache"
         return response
