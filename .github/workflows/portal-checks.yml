@@ -8,6 +8,7 @@ on:
     branches:
       - 'main'
       - 'PC-*'
+      - 'pc-*'
       - 'feature/**'
       - 'bugfix/**'
       - 'hotfix/**'
