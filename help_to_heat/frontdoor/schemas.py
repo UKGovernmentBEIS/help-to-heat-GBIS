@@ -69,7 +69,7 @@ confirm_sumbit_map = {
     "supplier": "Energy supplier",
     "first_name": "First name",
     "last_name": "Last name",
-    "contact_number": "Contact number",
+    "contact_number": "Mobile number",
     "email": "Email",
 }
 
