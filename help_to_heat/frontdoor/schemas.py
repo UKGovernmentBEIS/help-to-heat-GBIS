@@ -225,6 +225,7 @@ loft_options = (
 )
 loft_access_options = ("Yes, there is access to my loft", "No, there is no access to my loft")
 loft_access_validation_options = loft_access_options + ("No loft",)
+# TODO: Make this a tuple again when Bulb gets restored
 supplier_options = [
     # "British Gas",
     # "Bulb",
