@@ -79,7 +79,7 @@ def add_extra_row_data(referral):
         "GBIS": "Great British Insulation Scheme" in eligibility and "Yes" or "No",
         "epc_date": epc_date and epc_date or "Not found",
         "submission_date": created_at.date(),
-        "submission_time": created_at.time().strftime("%H:%M:%S'"),
+        "submission_time": created_at.time().strftime("%H:%M:%S"),
     }
     return row
 
