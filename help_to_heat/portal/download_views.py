@@ -90,7 +90,7 @@ def create_referral_csv(referrals, file_name):
     }
     rows = [add_extra_row_data(referral) for referral in referrals]
     response = HttpResponse(headers=headers)
-    writer = csv.DictWriter(response, fieldnames=csv_columns, extrasaction="ignore")
+    writer = csv.DictWriter(response, fieldnames=csv_columns, extrasaction="ignore", dialect=csv.unix_dialect)
     writer.writeheader()
     for row in rows:
         writer.writerow(row)
