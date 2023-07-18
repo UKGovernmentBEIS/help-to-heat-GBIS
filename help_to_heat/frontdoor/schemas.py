@@ -225,7 +225,7 @@ loft_options = (
 )
 loft_access_options = ("Yes, there is access to my loft", "No, there is no access to my loft")
 loft_access_validation_options = loft_access_options + ("No loft",)
-supplier_options = (
+supplier_options = [
     # "British Gas",
     # "Bulb",
     # "E Energy",
@@ -241,7 +241,7 @@ supplier_options = (
     "So Energy",
     "Utilita",
     # "Utility Warehouse",
-)
+]
 epc_rating_options = ("A", "B", "C", "D", "E", "F", "G", "H", "Not found")
 loft_insulation_options = (
     "Yes, there is at least 270mm of insulation in my loft",
