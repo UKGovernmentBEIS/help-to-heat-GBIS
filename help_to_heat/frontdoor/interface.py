@@ -127,9 +127,14 @@ class Address(Entity):
 
 class EPC(Entity):
     @with_schema(load=GetEPCSchema, dump=EPCSchema)
-    def get_epc(self, uprn):
+    def get_epc(self, uprn, country):
         try:
-            epc = portal.models.EpcRating.objects.get(uprn=uprn)
+            if country == "Scotland":
+                epc = portal.models.EpcRating.objects.get(uprn=uprn)
+            elif country == "England":
+                epc = portal.models.ScottishEpcRating.objects.get(uprn=uprn)
+            else:
+                epc = None
         except portal.models.EpcRating.DoesNotExist:
             epc = None
         if epc:
