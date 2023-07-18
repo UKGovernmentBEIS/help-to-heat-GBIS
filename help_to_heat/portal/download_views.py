@@ -89,7 +89,7 @@ def create_referral_csv(referrals, file_name):
         "Content-Disposition": f"attachment; filename=referral-data-{file_name}.csv",
     }
     rows = [add_extra_row_data(referral) for referral in referrals]
-    response = HttpResponse(headers=headers)
+    response = HttpResponse(headers=headers, charset="utf-8")
     writer = csv.DictWriter(response, fieldnames=csv_columns, extrasaction="ignore", dialect=csv.unix_dialect)
     writer.writeheader()
     for row in rows:
