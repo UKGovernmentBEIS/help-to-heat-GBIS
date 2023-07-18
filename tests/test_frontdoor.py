@@ -4,6 +4,7 @@ import uuid
 
 from help_to_heat.frontdoor import interface
 from help_to_heat.frontdoor import models as frontdoor_models
+from help_to_heat.frontdoor import schemas
 from help_to_heat.portal import models
 
 from . import utils
@@ -265,6 +266,8 @@ def _do_happy_flow(supplier="Foxglove"):
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('Confirm and submit')")
+    if supplier == "Bulb":
+        supplier = "Octopus"
     assert page.has_text(supplier)
 
     form = page.get_form()
@@ -287,6 +290,8 @@ def _make_check_page(session_id):
         form[key] = answer
         page = form.submit().follow()
 
+        if page_name == "supplier" and key == "supplier" and answer == "Bulb":
+            answer = "Octopus"
         data = interface.api.session.get_answer(session_id, page_name=page_name)
         assert data[key] == answer
         return page
@@ -916,3 +921,21 @@ def test_long_address():
 
     assert page.has_text("Longer than maximum length 128")
     assert page.has_text("Longer than maximum length 16")
+
+
+@unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
+def test_bulb_to_octopus():
+    supplier = "Bulb"
+    schemas.supplier_options.append("Bulb")
+    schemas.supplier_options.append("Octopus")
+    models.Supplier(name="Octopus").save()
+
+    session_id = _do_happy_flow(supplier=supplier)
+
+    data = interface.api.session.get_session(session_id)
+
+    assert data["supplier"] == "Octopus", data["supplier"]
+
+    referral = models.Referral.objects.get(session_id=session_id)
+    assert referral.supplier.name == "Octopus"
+    referral.delete()
