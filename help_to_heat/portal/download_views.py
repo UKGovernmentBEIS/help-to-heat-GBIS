@@ -3,9 +3,12 @@ import csv
 from django.http import HttpResponse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
+from dateutil import tz
 
 from help_to_heat.frontdoor.eligibility import calculate_eligibility
 from help_to_heat.portal import decorators, models
+
+london_tz = tz.gettz('Europe/London')
 
 csv_columns = (
     "ECO4",
@@ -72,7 +75,7 @@ def add_extra_row_data(referral):
     row = dict(referral.data)
     eligibility = calculate_eligibility(row)
     epc_date = row.get("epc_date")
-    created_at = referral.created_at
+    created_at = referral.created_at.astimezone(london_tz)
     row = {
         **row,
         "ECO4": "Energy Company Obligation 4" in eligibility and "Yes" or "No",
