@@ -11,7 +11,7 @@
         Add a new team lead for {{supplier.name}}
       </h1>
     </legend>
-    <p>Add a team lead from the energy supplier who will manage their team and customer leads. Team leads can add team members and other team leads to their account.</p>
+    <p class="govuk-body">Add a team lead from the energy supplier who will manage their team and customer leads. Team leads can add team members and other team leads to their account.</p>
     {{csrf_input}}
     <div class="govuk-form-group">
       <label class="govuk-label" for="team-leader-name">
@@ -25,7 +25,7 @@
       </label>
       <input required class="govuk-input govuk-!-width-one-half" id="team-leader-email" name="team-leader-email" type="email">
     </div>
-    <p>They will receive an invitation to the service via this email address.</p>
+    <p class="govuk-body">They will receive an invitation to the service via this email address.</p>
     <div class="govuk-button-group">
       <button class="govuk-button" data-module="govuk-button" type="submit">Add team lead</button>
       <a class="govuk-link" href="{{url('portal:supplier-team-leads', supplier.id)}}">Cancel</a>
