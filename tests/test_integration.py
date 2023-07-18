@@ -11,7 +11,9 @@ from .test_frontdoor import _do_happy_flow
 
 @unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
 def test_csv():
-    _do_happy_flow(supplier="EON")
+    expected_datetime = "2022-06-30 23:59:59+00:00"
+    with freezegun.freeze_time(expected_datetime):
+        _do_happy_flow(supplier="EON")
 
     client = utils.get_client()
     page = utils.login_as_team_leader(client, supplier="EON")
@@ -26,6 +28,8 @@ def test_csv():
     rows = list(csv.DictReader(lines))
     data = rows[0]
     assert data["epc_date"] == "2022-12-25"
+    assert data["submission_date"] == "2022-07-01"
+    assert data["submission_time"] == "00:59:59"
 
 
 @unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
