@@ -287,11 +287,8 @@ class EpcView(PageView):
         session_data = interface.api.session.get_session(session_id)
         uprn = session_data.get("uprn")
         address = session_data.get("address")
-        country = session_data.get("country")
-        #get the country from the session data here
         if uprn:
-            #put the country here so we query the correct epc db
-            epc = interface.api.epc.get_epc(uprn, country)
+            epc = interface.api.epc.get_epc(uprn)
         else:
             epc = {}
         context = {
