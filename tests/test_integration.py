@@ -24,7 +24,7 @@ def test_csv():
         csv_page = page.click(contains="Download latest leads")
 
     page = client.get("/portal/")
-    assert page.has_one("span:contains('01/08/2022')")
+    assert page.has_one("span:contains('2022-08-01')")
     assert page.has_one("span:contains('00:48')")
 
     text = csv_page.content.decode("utf-8")
