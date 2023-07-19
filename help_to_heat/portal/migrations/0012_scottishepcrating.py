@@ -4,24 +4,38 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('portal', '0011_data_migrate_roles_again'),
+        ("portal", "0011_data_migrate_roles_again"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='ScottishEpcRating',
+            name="ScottishEpcRating",
             fields=[
-                ('created_at', models.DateTimeField(auto_now_add=True)),
-                ('modified_at', models.DateTimeField(auto_now=True)),
-                ('uprn', models.CharField(max_length=12, primary_key=True, serialize=False)),
-                ('rating', models.CharField(choices=[('A', 'A'), ('B', 'B'), ('C', 'C'), ('D', 'D'), ('E', 'E'), ('F', 'F'), ('G', 'G'), ('H', 'H')], max_length=32)),
-                ('date', models.DateField(blank=True, null=True)),
+                ("created_at", models.DateTimeField(auto_now_add=True)),
+                ("modified_at", models.DateTimeField(auto_now=True)),
+                ("uprn", models.CharField(max_length=12, primary_key=True, serialize=False)),
+                (
+                    "rating",
+                    models.CharField(
+                        choices=[
+                            ("A", "A"),
+                            ("B", "B"),
+                            ("C", "C"),
+                            ("D", "D"),
+                            ("E", "E"),
+                            ("F", "F"),
+                            ("G", "G"),
+                            ("H", "H"),
+                        ],
+                        max_length=32,
+                    ),
+                ),
+                ("date", models.DateField(blank=True, null=True)),
             ],
             options={
-                'ordering': ['created_at'],
-                'abstract': False,
+                "ordering": ["created_at"],
+                "abstract": False,
             },
         ),
     ]
