@@ -1,5 +1,7 @@
+from typing import Dict, List
 import marshmallow
 import osdatahub
+import requests
 from django.conf import settings
 
 from help_to_heat import portal
@@ -39,7 +41,8 @@ class ReferralSchema(marshmallow.Schema):
 
 
 class FindAddressesSchema(marshmallow.Schema):
-    text = marshmallow.fields.String()
+    building_name_or_number = marshmallow.fields.String()
+    postcode = marshmallow.fields.String()
 
 
 class GetAddressSchema(marshmallow.Schema):
@@ -48,8 +51,11 @@ class GetAddressSchema(marshmallow.Schema):
 
 class AddressSchema(marshmallow.Schema):
     uprn = marshmallow.fields.String()
-    address = marshmallow.fields.String()
-
+    address_line_1 = marshmallow.fields.String()
+    address_line_2 = marshmallow.fields.String()
+    town = marshmallow.fields.String()
+    postcode = marshmallow.fields.String()
+    local_custodian_code = marshmallow.fields.String()
 
 class GetEPCSchema(marshmallow.Schema):
     uprn = marshmallow.fields.Integer()
@@ -108,14 +114,53 @@ class Session(Entity):
 
 class Address(Entity):
     @with_schema(load=FindAddressesSchema, dump=AddressSchema(many=True))
-    def find_addresses(self, text):
-        api = osdatahub.PlacesAPI(settings.OS_API_KEY)
-        api_results = api.find(text, dataset="LPI")["features"]
-        if len(api_results) > 10:
-            api_results = api_results[:10]
-        results = tuple({"uprn": r["properties"]["UPRN"], "address": r["properties"]["ADDRESS"]} for r in api_results)
-        return results
+    def find_addresses(self, building_name_or_number: str, postcode: str) -> List[Dict]:
 
+        # api = osdatahub.PlacesAPI(settings.OS_API_KEY)
+        # api_results = api.postcode(postcode, dataset=['LPI', 'DPA'], limit=200)["features"] or []
+
+        url = f"https://api.os.uk/search/places/v1/postcode?maxresults=100&postcode={postcode}&lr=EN&dataset=DPA,LPI&key={settings.OS_API_KEY}"
+        
+        # if (offset is not null)
+        # {
+        #     path += $"&offset={offset}";
+        # }
+        
+        # return new RequestParameters
+        # {
+        #     BaseAddress = config.BaseUrl,
+        #     Path = path,
+        #     Headers = new Dictionary<string, string> { { "Key", config.Key } }
+        # };
+        
+        response = requests.get(url)
+        json_response = response.json()
+        api_results = json_response['results']
+        lpi_data = tuple({"LPI": r["LPI"]} for r in api_results if r.get("LPI") is not None 
+                    and self.is_current_residential(r.get("LPI")))
+        
+        lpi_addresses = tuple(self.parse_lpi_to_address(r.get("LPI")) for r in lpi_data)
+
+        uprns_to_use = tuple(address["uprn"] for address in lpi_addresses)
+
+        dpa_data = tuple({"DPA": r["DPA"]} for r in api_results if r.get("DPA") is not None 
+                    and r.get("DPA")["UPRN"] in uprns_to_use)
+        
+        dpa_addresses = tuple(self.parse_dpa_to_address(r.get("DPA")) for r in dpa_data)
+        
+        dpa_uprns = tuple(address["uprn"] for address in dpa_addresses)
+
+        joined_addresses = dpa_addresses + tuple(address for address in lpi_addresses if address["uprn"] not in dpa_uprns)        
+        
+        if (building_name_or_number): 
+            return tuple(a for a in joined_addresses if building_name_or_number.lower() in a["address_line_1"].lower() or building_name_or_number.lower() in a["address_line_2"].lower())
+        else:
+            return joined_addresses
+    
+        # if len(filtered_results) > 10:
+        #     filtered_results = filtered_results[:10]
+        
+    
     @with_schema(load=GetAddressSchema, dump=AddressSchema)
     def get_address(self, uprn):
         api = osdatahub.PlacesAPI(settings.OS_API_KEY)
@@ -123,8 +168,161 @@ class Address(Entity):
         address = api_results[0]["properties"]["ADDRESS"]
         result = {"uprn": uprn, "address": address}
         return result
+    
+    def is_current_residential(self, lpi):
+        return (lpi["POSTAL_ADDRESS_CODE"] != "N" # is a postal address
+                   and lpi["LPI_LOGICAL_STATUS_CODE"] == "1" # only want current addresses           
+                   and lpi["CLASSIFICATION_CODE"].startswith("R") # Residential addresses
+                   or lpi["CLASSIFICATION_CODE"].startswith("CE") # Educational addresses
+                   or lpi["CLASSIFICATION_CODE"].startswith("X") # Dual-use (residential and commercial) addresses
+                   or lpi["CLASSIFICATION_CODE"].startswith("M") # Military addresses
+            )
+    
+    def parse_lpi_to_address(self, lpi):
+        line_1_parts = []
+        line2Parts = []
+        
+        saoParts = []
+        paoParts = []
 
+        # Organisation name
+        if ("ORGANISATION" in lpi): line_1_parts.append(lpi["ORGANISATION"].title())
+        
+        # SAO
+        if ("SAO_TEXT" in lpi): saoParts.append(lpi["SAO_TEXT"].title())
 
+        saoStart = ""
+        if ("SAO_START_NUMBER" in lpi): saoStart += lpi["SAO_START_NUMBER"]
+        if ("SAO_START_SUFFIX" in lpi): saoStart += lpi["SAO_START_SUFFIX"]
+        
+        saoEnd = ""
+        if ("SAO_END_NUMBER" in lpi): saoEnd += lpi["SAO_END_NUMBER"]
+        if ("SAO_END_SUFFIX" in lpi): saoEnd += lpi["SAO_END_SUFFIX"]
+        
+        saoNumbers = ""
+        if (saoStart != ""): saoNumbers += saoStart
+        if (saoEnd != ""): saoNumbers += ("–" + saoEnd);  # Use an en dash (–) for ranges
+        
+        if (saoNumbers is not None): saoParts.append(saoNumbers)
+        
+        if (any(saoParts)): line_1_parts.extend(saoParts)
+
+        # PAO text goes on the line before the rest of the PAO, if present
+        if ("PAO_TEXT" in lpi): line_1_parts.append(lpi["PAO_TEXT"].title())
+
+        # Rest of PAO
+        paoStart = ""
+        if ("PAO_START_NUMBER" in lpi): paoStart += lpi["PAO_START_NUMBER"]
+        if ("PAO_START_SUFFIX" in lpi): paoStart += lpi["PAO_START_SUFFIX"]
+        
+        paoEnd = ""
+        if ("PAO_END_NUMBER" in lpi): paoEnd += lpi["PAO_END_NUMBER"]
+        if ("PAO_END_SUFFIX" in lpi): paoEnd += lpi["PAO_END_SUFFIX"]
+        
+        paoNumbers = ""
+        if (paoStart != ""): paoNumbers += paoStart
+        if (paoEnd != ""): paoNumbers += ("–" + paoEnd);  # Use an en dash (–) for ranges
+        if (paoNumbers != ""): paoParts.append(paoNumbers)
+        
+        if (any(line_1_parts)):
+            line2Parts.extend(paoParts)
+            if ("STREET_DESCRIPTION" in lpi): line2Parts.append(lpi["STREET_DESCRIPTION"].title())
+        else:
+            line_1_parts.extend(paoParts)
+            if ("STREET_DESCRIPTION" in lpi): line_1_parts.append(lpi["STREET_DESCRIPTION"].title())
+
+        line1 = ", ".join(line for line in line_1_parts if line)
+        line2 = ", ".join(line for line in line2Parts if line)
+        
+        address = {
+            "address_line_1": line1,
+            "address_line_2": line2,
+            "town": lpi["TOWN_NAME"].title(),
+            "postcode": lpi["POSTCODE_LOCATOR"],
+            "local_custodian_code": lpi["LOCAL_CUSTODIAN_CODE"],
+            "uprn": lpi["UPRN"]
+        }
+
+        return address
+
+        
+    
+    def parse_dpa_to_address(self, dpa):
+        
+        line_1_parts = []
+        
+        if ("DEPARTMENT_NAME" in dpa): line_1_parts.append(dpa["DEPARTMENT_NAME"].title())
+        if ("ORGANISATION_NAME" in dpa): line_1_parts.append(dpa["ORGANISATION_NAME"].title())
+        if ("SUB_BUILDING_NAME" in dpa): line_1_parts.append(dpa["SUB_BUILDING_NAME"].title())
+        if ("BUILDING_NAME" in dpa): line_1_parts.append(dpa["BUILDING_NAME"].title())
+        if ("BUILDING_NUMBER" in dpa): line_1_parts.append(dpa["BUILDING_NUMBER"])
+
+        line2Parts = []
+        
+        if ("DOUBLE_DEPENDENT_LOCALITY" in dpa): line_1_parts.append(dpa["DOUBLE_DEPENDENT_LOCALITY"].title())
+        if ("DEPENDENT_LOCALITY" in dpa): line_1_parts.append(dpa["DEPENDENT_LOCALITY"].title())
+
+        if ("DEPENDENT_THOROUGHFARE_NAME" and "THOROUGHFARE_NAME" in dpa): line_1_parts.append(dpa["THOROUGHFARE_NAME"].title())
+        else:
+           line_1_parts.append(dpa["DEPENDENT_THOROUGHFARE_NAME"].title())
+           line2Parts.insert(0, dpa["THOROUGHFARE_NAME"].title())
+
+        line1 = ", ".join(line for line in line_1_parts if line)
+        line2 = ", ".join(line for line in line2Parts if line)
+
+        la_merges_dict = {       
+             "405": "440",
+             "410": "440", 
+             "415": "440", 
+             "425": "440",
+             "905": "940",
+             "915": "940",
+             "920": "940",
+             "910": "935",
+             "925": "935",
+             "930": "935",
+             "2705": "2745", 
+             "2710": "2745",
+             "2715": "2745",
+             "2720": "2745",
+             "2725": "2745",
+             "2730": "2745",
+             "2735": "2745",
+             "3305": "3300", 
+             "3310": "3300",
+             "3325": "3300",  
+             "3330": "3300", 
+             }
+        # Map:
+        #   405 - Aylesbury Vale, 410 - South Bucks, 415 - Chiltern, 425 - Wycombe
+        #   to 440 - Buckinghamshire
+        #   905 - Allerdale, 915 - Carlisle, 920 - Copeland  
+        #  to 940 - Cumberland
+        #   910 - Barrow-in-Furness, 925 - Eden, 930 - South Lakeland
+        #   to 935 - Westmorland and Furness
+
+        #   2705 - Craven, 2710 - Hambleton, 2715 - Harrogate, 2720 - Richmondshire, 2725 - Ryedale, 2730 - Scarborough, 2735 - Selby
+        #   to 2745 - North Yorkshire   
+        
+        # Map:
+        #    3305 - Mendip, 3310 - Sedgemoor, 3325 - South Somerset, 3330 - Somerset West and Taunton
+        #    to 3300 - Somerset
+
+        custodianCode = ""
+        if ("LOCAL_CUSTODIAN_CODE" in dpa): custodianCode = la_merges_dict.get(dpa["LOCAL_CUSTODIAN_CODE"]) or dpa["LOCAL_CUSTODIAN_CODE"]
+
+        address = {
+            "address_line_1": line1,
+            "address_line_2": line2,
+            "town": dpa["POST_TOWN"].title(),
+            "postcode": dpa["POSTCODE"],
+            "local_custodian_code": custodianCode,
+            "uprn": dpa["UPRN"]
+        }
+
+        return address
+    
+    
 class EPC(Entity):
     @with_schema(load=GetEPCSchema, dump=EPCSchema)
     def get_epc(self, uprn):
