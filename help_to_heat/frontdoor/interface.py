@@ -131,7 +131,7 @@ class EPC(Entity):
         try:
             epc = portal.models.EpcRating.objects.get(uprn=uprn)
         except portal.models.EpcRating.DoesNotExist:
-            try: 
+            try:
                 epc = portal.models.ScottishEpcRating.objects.get(uprn=uprn)
             except portal.models.ScottishEpcRating.DoesNotExist:
                 epc = None
