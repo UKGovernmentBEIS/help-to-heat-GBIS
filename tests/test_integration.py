@@ -19,7 +19,14 @@ def test_csv():
     page = utils.login_as_team_leader(client, supplier="EON")
     assert page.has_one("p:contains('Unread leads') ~ p:contains('1')")
 
-    csv_page = page.click(contains="Download latest leads")
+    download_datetime = "2022-07-31 23:48:59+00:00"
+    with freezegun.freeze_time(download_datetime):
+        csv_page = page.click(contains="Download latest leads")
+
+    page = client.get("/portal/")
+    assert page.has_one("span:contains('01/08/2022')")
+    assert page.has_one("span:contains('00:48')")
+
     text = csv_page.content.decode("utf-8")
     lines = text.splitlines()
     assert len(lines) == 2
