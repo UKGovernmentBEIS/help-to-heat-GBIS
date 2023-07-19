@@ -16,7 +16,7 @@ page_map = {}
 page_compulsory_field_map = {
     "country": ("country",),
     "own-property": ("own_property",),
-    "address": ("address_line_1", "postcode"),
+    "address": ("building_name_or_number", "postcode"),
     "address-select": ("uprn",),
     "address-manual": ("address_line_1", "town_or_city", "postcode"),
     "council-tax-band": ("council_tax_band",),
@@ -38,7 +38,7 @@ page_compulsory_field_map = {
 missing_item_errors = {
     "country": "Select where the property is located",
     "own_property": "Select if you own the property",
-    "address_line_1": "Enter Address line 1",
+    "building_name_or_number": "Enter building name or number",
     "postcode": "Enter a postcode",
     "uprn": "Select your address",
     "town_or_city": "Enter your Town or city",
@@ -233,8 +233,9 @@ class AddressView(PageView):
 class AddressSelectView(PageView):
     def get_context(self, request, session_id, *args, **kwargs):
         data = interface.api.session.get_answer(session_id, "address")
-        text = f"{data['address_line_1'], data['postcode']}"
-        addresses = interface.api.address.find_addresses(text)
+        building_name_or_number = data['building_name_or_number']
+        postcode = data['postcode']
+        addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
         uprn_options = tuple({"value": a["uprn"], "label": a["address"]} for a in addresses)
         return {"uprn_options": uprn_options}
 
