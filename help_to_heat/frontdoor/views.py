@@ -472,6 +472,13 @@ class SupplierView(PageView):
     def get_context(self, *args, **kwargs):
         return {"supplier_options": schemas.supplier_options}
 
+    def save_data(self, request, session_id, page_name, *args, **kwargs):
+        data = dict(request.POST.dict())
+        if data["supplier"] == "Bulb":
+            data["supplier"] = "Octopus"
+        data = interface.api.session.save_answer(session_id, page_name, data)
+        return data
+
 
 @register_page("contact-details")
 class ContactDetailsView(PageView):
