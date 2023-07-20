@@ -51,8 +51,11 @@ class GetAddressSchema(marshmallow.Schema):
 
 class AddressSchema(marshmallow.Schema):
     uprn = marshmallow.fields.String()
-    address = marshmallow.fields.String()
-
+    address_line_1 = marshmallow.fields.String()
+    address_line_2 = marshmallow.fields.String()
+    town = marshmallow.fields.String()
+    postcode = marshmallow.fields.String()
+    local_custodian_code = marshmallow.fields.String()
 
 class GetEPCSchema(marshmallow.Schema):
     uprn = marshmallow.fields.Integer()
@@ -138,29 +141,25 @@ class Address(Entity):
         
         lpi_addresses = tuple(self.parse_lpi_to_address(r.get("LPI")) for r in lpi_data)
 
-        uprns_to_use = tuple(address["Uprn"] for address in lpi_addresses)
+        uprns_to_use = tuple(address["uprn"] for address in lpi_addresses)
 
         dpa_data = tuple({"DPA": r["DPA"]} for r in api_results if r.get("DPA") is not None 
                     and r.get("DPA")["UPRN"] in uprns_to_use)
         
         dpa_addresses = tuple(self.parse_dpa_to_address(r.get("DPA")) for r in dpa_data)
         
-        dpa_uprns = tuple(address["Uprn"] for address in dpa_addresses)
-        
-        # joined_addresses = list(dpa_addresses).extend([address for address in lpi_addresses if address["Uprn"] not in dpa_uprns])
+        dpa_uprns = tuple(address["uprn"] for address in dpa_addresses)
 
-        # var joinedAddresses = dpaAddresses.Concat(lpiAddresses.Where(la => !dpaUprns.Contains(la.Uprn))).ToList();
-
+        joined_addresses = dpa_addresses + tuple(address for address in lpi_addresses if address["uprn"] not in dpa_uprns)        
         
-#             var filteredResults = buildingNameOrNumber is null
-#                 ? joinedAddresses
-#                 : joinedAddresses.Where(a =>
-#                     a.AddressLine1.ToLower().Contains(buildingNameOrNumber.ToLower())
-#                     || a.AddressLine2.ToLower().Contains(buildingNameOrNumber.ToLower()))
-#                 .ToList();
+        if (building_name_or_number): 
+            return tuple(a for a in joined_addresses if building_name_or_number.lower() in a["address_line_1"].lower() or building_name_or_number.lower() in a["address_line_2"].lower())
+        else:
+            return joined_addresses
+    
+        # if len(filtered_results) > 10:
+        #     filtered_results = filtered_results[:10]
         
-        # if len(api_results) > 10:
-        #     api_results = api_results[:10]
     
     @with_schema(load=GetAddressSchema, dump=AddressSchema)
     def get_address(self, uprn):
@@ -232,19 +231,21 @@ class Address(Entity):
             line_1_parts.extend(paoParts)
             if ("STREET_DESCRIPTION" in lpi): line_1_parts.append(lpi["STREET_DESCRIPTION"].title())
 
-        line1 = ", ".join(line_1_parts)
-        line2 = ", ".join(line2Parts)
+        line1 = ", ".join(line for line in line_1_parts if line)
+        line2 = ", ".join(line for line in line2Parts if line)
         
         address = {
-            "AddressLine1": line1,
-            "AddressLine2": line2,
-            "Town": lpi["TOWN_NAME"].title(),
-            "Postcode": lpi["POSTCODE_LOCATOR"],
-            "LocalCustodianCode": lpi["LOCAL_CUSTODIAN_CODE"],
-            "Uprn": lpi["UPRN"]
+            "address_line_1": line1,
+            "address_line_2": line2,
+            "town": lpi["TOWN_NAME"].title(),
+            "postcode": lpi["POSTCODE_LOCATOR"],
+            "local_custodian_code": lpi["LOCAL_CUSTODIAN_CODE"],
+            "uprn": lpi["UPRN"]
         }
 
         return address
+
+        
     
     def parse_dpa_to_address(self, dpa):
         
@@ -266,8 +267,8 @@ class Address(Entity):
            line_1_parts.append(dpa["DEPENDENT_THOROUGHFARE_NAME"].title())
            line2Parts.insert(0, dpa["THOROUGHFARE_NAME"].title())
 
-        line1 = ", ".join(line_1_parts)
-        line2 = ", ".join(line2Parts)
+        line1 = ", ".join(line for line in line_1_parts if line)
+        line2 = ", ".join(line for line in line2Parts if line)
 
         la_merges_dict = {       
              "405": "440",
@@ -311,12 +312,12 @@ class Address(Entity):
         if ("LOCAL_CUSTODIAN_CODE" in dpa): custodianCode = la_merges_dict.get(dpa["LOCAL_CUSTODIAN_CODE"]) or dpa["LOCAL_CUSTODIAN_CODE"]
 
         address = {
-            "AddressLine1": line1,
-            "AddressLine2": line2,
-            "Town": dpa["POST_TOWN"].title(),
-            "Postcode": dpa["POST_TOWN"],
-            "LocalCustodianCode": custodianCode,
-            "Uprn": dpa["UPRN"]
+            "address_line_1": line1,
+            "address_line_2": line2,
+            "town": dpa["POST_TOWN"].title(),
+            "postcode": dpa["POSTCODE"],
+            "local_custodian_code": custodianCode,
+            "uprn": dpa["UPRN"]
         }
 
         return address
