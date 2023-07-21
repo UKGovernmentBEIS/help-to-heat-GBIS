@@ -77,6 +77,47 @@ class SuccessSchema(marshmallow.Schema):
     success = marshmallow.fields.Boolean()
 
 
+def get_url(postcode: str, offset: int, max_results: int) -> str:
+    url = f"https://api.os.uk/search/places/v1/postcode?maxresults={max_results}&postcode={postcode}&lr=EN&dataset=DPA,LPI&key={settings.OS_API_KEY}"
+    if (offset):
+        url += f"&offset={offset}"
+    return url
+
+def get_addresses_from_api(postcode) -> List[Dict]:
+    try:
+        max_results_number = 100
+        offset = 0
+
+        url = get_url(postcode=postcode, offset=offset, max_results=max_results_number)
+        response = requests.get(url)
+        response.raise_for_status()
+        json_response = response.json()
+
+        total_results_number = json_response['header']["totalresults"]
+        api_results = json_response['results']
+        api_results_all = api_results
+
+        if total_results_number > max_results_number:
+            requested_results_number = max_results_number
+            while requested_results_number < total_results_number:
+                offset = requested_results_number
+                
+                url = get_url(postcode=postcode, offset=offset, max_results=max_results_number)
+                response = requests.get(url)
+                json_response = response.json()
+
+                api_results = json_response['results']
+                api_results_all.extend(api_results)
+
+                requested_results_number += max_results_number
+
+        return api_results_all
+
+    except Exception as e:
+        print(f"An error occurred: {e}")
+
+    return []
+
 class Session(Entity):
     @with_schema(load=SaveAnswerSchema, dump=schemas.SessionSchema)
     @register_event(models.Event, "Answer saved")
@@ -115,27 +156,8 @@ class Session(Entity):
 class Address(Entity):
     @with_schema(load=FindAddressesSchema, dump=AddressSchema(many=True))
     def find_addresses(self, building_name_or_number: str, postcode: str) -> List[Dict]:
+        api_results = get_addresses_from_api(postcode=postcode)
 
-        # api = osdatahub.PlacesAPI(settings.OS_API_KEY)
-        # api_results = api.postcode(postcode, dataset=['LPI', 'DPA'], limit=200)["features"] or []
-
-        url = f"https://api.os.uk/search/places/v1/postcode?maxresults=100&postcode={postcode}&lr=EN&dataset=DPA,LPI&key={settings.OS_API_KEY}"
-        
-        # if (offset is not null)
-        # {
-        #     path += $"&offset={offset}";
-        # }
-        
-        # return new RequestParameters
-        # {
-        #     BaseAddress = config.BaseUrl,
-        #     Path = path,
-        #     Headers = new Dictionary<string, string> { { "Key", config.Key } }
-        # };
-        
-        response = requests.get(url)
-        json_response = response.json()
-        api_results = json_response['results']
         lpi_data = tuple({"LPI": r["LPI"]} for r in api_results if r.get("LPI") is not None 
                     and self.is_current_residential(r.get("LPI")))
         
@@ -153,13 +175,11 @@ class Address(Entity):
         joined_addresses = dpa_addresses + tuple(address for address in lpi_addresses if address["uprn"] not in dpa_uprns)        
         
         if (building_name_or_number): 
-            return tuple(a for a in joined_addresses if building_name_or_number.lower() in a["address_line_1"].lower() or building_name_or_number.lower() in a["address_line_2"].lower())
-        else:
-            return joined_addresses
-    
-        # if len(filtered_results) > 10:
-        #     filtered_results = filtered_results[:10]
+            joined_addresses = tuple([a for a in joined_addresses 
+                                      if building_name_or_number.lower() in a["address_line_1"].lower() 
+                                      or building_name_or_number.lower() in a["address_line_2"].lower()])
         
+        return joined_addresses[:10]
     
     @with_schema(load=GetAddressSchema, dump=AddressSchema)
     def get_address(self, uprn):

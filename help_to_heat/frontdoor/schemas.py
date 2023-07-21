@@ -265,12 +265,8 @@ def validate_email_or_none(value):
         raise ValidationError("Invalid email format")
 
 postcode_regex_collection = (
-    # r'^[A-Z]\d \d[A-Z]{2}$' # AN NAA
-    # r'^[A-Z]\d\d \d[A-Z]{2}$' # ANN NAA
-    r'^[A-Z]{2}\d \d[A-Z]{2}$' # AAN NAA
-    # r'^[A-Z]{2}\d\d \d[A-Z]{2}$' # AANN NAA
-    # r'^[A-Z]\d[A-Z] \d[A-Z]{2}$' # ANA NAA
-    # r'^[A-Z]{2}\d[A-Z] \d[A-Z]{2}$' # AANA NAA
+    # allow both upper and lower cases, no or multiple spaces in between outward and inward code
+    r'^[a-zA-Z]{1,2}\d[\da-zA-Z]?(\s*\d[a-zA-Z]{2})*$'
 )
 
 class SessionSchema(Schema):
