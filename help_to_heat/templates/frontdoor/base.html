@@ -151,9 +151,11 @@
   <script src="/static/govuk-frontend/govuk-frontend-4.3.1.min.js"></script>
 
   <script src="/static/main.js"></script>
-  {% if gtag_id %}
-  <script async src="https://www.googletagmanager.com/gtag/js?id={{gtag_id}}"></script>
-  <script src="{{url('frontdoor:data-layer-js')}}"></script>
+  {% if request.COOKIES['cookiesAccepted'] == "True"%}
+    {% if gtag_id %}
+      <script async src="https://www.googletagmanager.com/gtag/js?id={{gtag_id}}"></script>
+      <script src="{{url('frontdoor:data-layer-js')}}"></script>
+    {% endif %}
   {% endif %}
 </body>
 
