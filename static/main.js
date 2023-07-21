@@ -10,7 +10,7 @@ window.onload = () => {
 
   const isCookieSet = document.cookie
     .split(";")
-    .some((item) => item.trim().startsWith("hideButton="));
+    .some((item) => item.trim().startsWith("cookiesAccepted="));
 
   if (!isCookieSet) {
     cookieBanner.classList.remove("hidden");
@@ -22,7 +22,7 @@ window.onload = () => {
     date.setFullYear(date.getFullYear() + 1);
 
     document.cookie =
-      "hideButton=hidden; expires=" + date.toUTCString() + "; path=/";
+      "cookiesAccepted=True; expires=" + date.toUTCString() + "; path=/";
 
     cookieBanner.classList.remove("visible");
     cookieBanner.classList.add("hidden");
