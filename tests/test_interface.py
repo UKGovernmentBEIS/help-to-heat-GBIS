@@ -67,9 +67,9 @@ def test_get_epc():
     }
     models.EpcRating.objects.create(**data)
 
-    found_epc = interface.api.epc.get_epc(uprn, "England")
+    found_epc = interface.api.epc.get_epc(uprn)
     assert found_epc["rating"] == data["rating"]
 
     new_uprn = "".join(random.choices(string.digits, k=5))
-    missing_epc = interface.api.epc.get_epc(new_uprn, "England")
+    missing_epc = interface.api.epc.get_epc(new_uprn)
     assert missing_epc == {}
