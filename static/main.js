@@ -8,11 +8,11 @@ window.onload = () => {
   const hideButton = document.getElementById("hideButton");
   const cookieBanner = document.getElementById("cookie-banner");
 
-  const isCookieSet = document.cookie
+  const cookiesAccepted = document.cookie
     .split(";")
     .some((item) => item.trim().startsWith("cookiesAccepted="));
 
-  if (!isCookieSet) {
+  if (!cookiesAccepted) {
     cookieBanner.classList.remove("hidden");
     cookieBanner.classList.add("visible");
   }
