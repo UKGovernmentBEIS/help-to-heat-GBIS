@@ -15,7 +15,13 @@ class Answer(utils.UUIDPrimaryKeyBase, utils.TimeStampedModel):
     session_id = models.UUIDField(editable=False)
 
     class Meta:
-        indexes = [models.Index(fields=["session_id"])]
+        indexes = [
+            models.Index(
+                name="idx_answer_session_id",
+                fields=["session_id", "page_name", "-created_at"],
+                include=["id", "data", "modified_at"],
+            )
+        ]
 
 
 class Feedback(utils.UUIDPrimaryKeyBase, utils.TimeStampedModel):
