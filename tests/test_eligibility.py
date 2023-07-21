@@ -272,7 +272,7 @@ def _add_epc(uprn, rating):
     models.EpcRating.objects.update_or_create(
         uprn=uprn, defaults={"rating": rating, "date": datetime.date(2022, 12, 25)}
     )
-    assert interface.api.epc.get_epc(uprn, "England")
+    assert interface.api.epc.get_epc(uprn)
 
 
 def _make_check_page(session_id):
