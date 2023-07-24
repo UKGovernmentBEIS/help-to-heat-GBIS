@@ -11,7 +11,7 @@
     {{macros.details_summary(summary_lines)}}
     {% if errors.get('permission') %}
       <p id="permission-error" class="govuk-error-message">
-        <span class="govuk-visually-hidden">Error:</span> {{errors.get('permission')}}
+        <a href="#question-permission"><span class="govuk-visually-hidden">Error:</span> {{errors.get('permission')}}</a>
       </p>
     {% endif %}
 
@@ -26,14 +26,14 @@
               I agree that they may share my personal details with their approved delivery partners and installers to check
               my eligibility, my property's suitability, and to contact me.
 
-                <p class="govuk-body"><a class="govuk-link" href="/privacy-policy/">Further information on our GDPR UK Privacy Policy.</a></p>
-                <h2 class="govuk-heading-s">What is the Energy Company Obligation?</h2>
+              <p class="govuk-body"><a class="govuk-link" href="/privacy-policy/">Further information on our GDPR UK Privacy Policy.</a></p>
+              <h2 class="govuk-heading-s">What is the Energy Company Obligation?</h2>
 
-             The Great British Insulation Scheme is the latest of a series of schemes that have operated since 2013
-             requiring energy suppliers to help people to make their homes more energy efficient. This family of
-             schemes has been called the Energy Company Obligation (ECO). Alongside the Great British Insulation
-             Scheme, a complementary ECO4 scheme is also operating. Households on low incomes or who are vulnerable
-             to the effects of living in a cold home may be able to get help through this scheme.
+              The Great British Insulation Scheme is the latest of a series of schemes that have operated since 2013
+              requiring energy suppliers to help people to make their homes more energy efficient. This family of
+              schemes has been called the Energy Company Obligation (ECO). Alongside the Great British Insulation
+              Scheme, a complementary ECO4 scheme is also operating. Households on low incomes or who are vulnerable
+              to the effects of living in a cold home may be able to get help through this scheme.
             </label>
           </div>
         </div>
