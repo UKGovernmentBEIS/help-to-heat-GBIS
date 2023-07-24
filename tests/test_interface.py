@@ -50,12 +50,14 @@ def test_duplicate_answer():
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
 def test_find_addresses():
     result = interface.api.address.find_addresses("foobar", "sw1a 2aa")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!!", result)
     assert result[0]["uprn"] == "100023336956"
 
 
 @utils.mock_os_api
 def test_get_address():
     result = interface.api.address.get_address(uprn="10")
+    print("!!!!!!!!!!!!!!!!!!!!!!!!!!!", result)
     assert result["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
 
 
