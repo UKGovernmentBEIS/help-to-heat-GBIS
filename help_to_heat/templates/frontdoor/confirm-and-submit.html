@@ -11,7 +11,7 @@
     {{macros.details_summary(summary_lines)}}
     {% if errors.get('permission') %}
       <p id="permission-error" class="govuk-error-message">
-        <span class="govuk-visually-hidden">Error:</span> {{errors.get('permission')}}
+        <a href="#question-permission"><span class="govuk-visually-hidden">Error:</span> {{errors.get('permission')}}</a>
       </p>
     {% endif %}
 
