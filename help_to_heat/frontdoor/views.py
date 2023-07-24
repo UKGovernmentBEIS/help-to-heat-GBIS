@@ -233,10 +233,18 @@ class AddressView(PageView):
 class AddressSelectView(PageView):
     def get_context(self, request, session_id, *args, **kwargs):
         data = interface.api.session.get_answer(session_id, "address")
-        building_name_or_number = data['building_name_or_number']
-        postcode = data['postcode']
+        building_name_or_number = data["building_name_or_number"]
+        postcode = data["postcode"]
         addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
-        uprn_options = tuple({"value": a["uprn"], "label": f"{a['address_line_1'] + ',' if a['address_line_1'] else ''} {a['address_line_2'] + ',' if a['address_line_2'] else ''} {a['town']}, {a['postcode']}"} for a in addresses)
+        uprn_options = tuple(
+            {
+                "value": a["uprn"],
+                "label": f"""{a['address_line_1'] + ',' if a['address_line_1'] else ''}
+                    {a['address_line_2'] + ',' if a['address_line_2'] else ''}
+                    {a['town']}, {a['postcode']}""",
+            }
+            for a in addresses
+        )
         return {"uprn_options": uprn_options}
 
     def save_data(self, request, session_id, page_name, *args, **kwargs):
