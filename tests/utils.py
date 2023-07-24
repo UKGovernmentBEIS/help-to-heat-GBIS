@@ -31,7 +31,7 @@ class StubAPI:
     def __init__(self, key):
         self.key = key
 
-    def postcode(self, text, dataset=None):
+    def get_by_postcode(self, postcode, offset, max_results):
         content = (DATA_DIR / self.files["postcode"]).read_text()
         data = json.loads(content)
         return data

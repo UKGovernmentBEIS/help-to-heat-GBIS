@@ -81,31 +81,39 @@ class SuccessSchema(marshmallow.Schema):
     success = marshmallow.fields.Boolean()
 
 
-def get_json_response_from_url(postcode, offset, max_results):
-    url = f"""https://api.os.uk/search/places/v1/postcode?maxresults={max_results}
-        &postcode={postcode}&lr=EN&dataset=DPA,LPI&key={settings.OS_API_KEY}"""
-    if offset:
-        url += f"&offset={offset}"
+# class xxx:
+#   def get_response:
+#       ...
+# then mock xxx
+class OSApi:
+    def __init__(self, key):
+        self.key = key
 
-    try:
-        response = requests.get(url)
-        response.raise_for_status()
-        json_response = response.json()
+    def get_by_postcode(self, postcode, offset, max_results):
+        url = f"""https://api.os.uk/search/places/v1/postcode?maxresults={max_results}
+            &postcode={postcode}&lr=EN&dataset=DPA,LPI&key={self.key}"""
+        if offset:
+            url += f"&offset={offset}"
 
-        return json_response
+        try:
+            response = requests.get(url)
+            response.raise_for_status()
+            json_response = response.json()
 
-    except requests.exceptions.HTTPError or requests.exceptions.RequestException as e:
-        logger.error("An error occured while attempting to fetch addresses.")
-        logger.error(e)
+            return json_response
 
-    return []
+        except requests.exceptions.HTTPError or requests.exceptions.RequestException as e:
+            logger.error("An error occured while attempting to fetch addresses.")
+            logger.error(e)
+
+        return []
 
 
 def get_addresses_from_api(postcode):
     max_results_number = 100
     offset = 0
 
-    json_response = get_json_response_from_url(postcode, offset, max_results_number)
+    json_response = OSApi(settings.OS_API_KEY).get_by_postcode(postcode, offset, max_results_number)
     if not json_response:
         return []
 
@@ -121,7 +129,7 @@ def get_addresses_from_api(postcode):
         while requested_results_number < total_results_number:
             offset = requested_results_number
 
-            json_response = get_json_response_from_url(postcode, offset, max_results_number)
+            json_response = OSApi(settings.OS_API_KEY).get_by_postcode(postcode, offset, max_results_number)
             if not json_response:
                 return []
 

@@ -48,7 +48,7 @@ def test_duplicate_answer():
 
 @utils.mock_os_api
 def test_find_addresses():
-    result = interface.api.address.find_addresses("foobar")
+    result = interface.api.address.find_addresses("foobar", "sw1a 2aa")
     assert result[0]["uprn"] == "100023336956"
 
 
