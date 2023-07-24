@@ -15,9 +15,8 @@ def test_registration():
     page = client.get("/portal/")
     assert page.status_code == 302
 
-
-@nose.with_setup(utils.wipe_emails)
 def invite_user(name, email, password, role, try_fake_email=False, skip_otp=False):
+    utils.wipe_emails()
     client = utils.get_client()
     page = utils.login_as_team_leader(client)
     page = page.click(contains="Add a new team member or leader")
@@ -127,8 +126,8 @@ def test_no_supplier_set():
     assert page.status_code == 403
 
 
-@nose.with_setup(utils.wipe_emails)
 def test_password_reset():
+    utils.wipe_emails()
     email = f"team-leader-password-reset+{utils.make_code()}@example.com"
     new_password = "Bl4mbl3Bl4mbl3"
     client = utils.get_client()
