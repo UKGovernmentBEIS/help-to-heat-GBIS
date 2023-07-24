@@ -72,12 +72,12 @@ def test_flow_scotland():
     assert page.has_one("h1:contains('What is the property’s address?')")
 
     form = page.get_form()
-    form["address_line_1"] = "999 Letsby Avenue"
+    form["building_name_or_number"] = "999 Letsby Avenue"
     form["postcode"] = "PO99 9PO"
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="address")
-    assert data["address_line_1"] == "999 Letsby Avenue"
+    assert data["building_name_or_number"] == "999 Letsby Avenue"
     assert data["postcode"] == "PO99 9PO"
 
     form = page.get_form()
@@ -131,12 +131,12 @@ def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D"):
     assert page.has_one("h1:contains('What is the property’s address?')")
 
     form = page.get_form()
-    form["address_line_1"] = "999 Letsby Avenue"
+    form["building_name_or_number"] = "999 Letsby Avenue"
     form["postcode"] = "PO99 9PO"
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="address")
-    assert data["address_line_1"] == "999 Letsby Avenue"
+    assert data["building_name_or_number"] == "999 Letsby Avenue"
     assert data["postcode"] == "PO99 9PO"
 
     form = page.get_form()
@@ -366,12 +366,12 @@ def test_no_benefits_flow():
     assert page.has_one("h1:contains('What is the property’s address?')")
 
     form = page.get_form()
-    form["address_line_1"] = "999 Letsby Avenue"
+    form["building_name_or_number"] = "999 Letsby Avenue"
     form["postcode"] = "PO99 9PO"
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="address")
-    assert data["address_line_1"] == "999 Letsby Avenue"
+    assert data["building_name_or_number"] == "999 Letsby Avenue"
     assert data["postcode"] == "PO99 9PO"
 
     form = page.get_form()
@@ -456,14 +456,14 @@ def test_no_address():
 
     assert page.has_one("h1:contains('What is the property’s address?')")
     form = page.get_form()
-    form["address_line_1"] = "999 Letsby Avenue"
+    form["building_name_or_number"] = "999 Letsby Avenue"
     form["postcode"] = "PO99 9PO"
     page = form.submit().follow()
 
     assert page.has_text("No addresses found")
     page = page.click(contains="I want to enter it manually")
     form = page.get_form()
-    assert form["address_line_1"] == "999 Letsby Avenue"
+    assert form["building_name_or_number"] == "999 Letsby Avenue"
     assert form["postcode"] == "PO99 9PO"
 
     page = form.submit()
@@ -471,7 +471,7 @@ def test_no_address():
     assert page.has_text("Enter your Town or city")
 
     form = page.get_form()
-    assert form["address_line_1"] == "999 Letsby Avenue"
+    assert form["building_name_or_number"] == "999 Letsby Avenue"
     assert form["postcode"] == "PO99 9PO"
 
     form["address_line_2"] = "Smalltown"
@@ -480,7 +480,7 @@ def test_no_address():
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="address-manual")
-    assert data["address_line_1"] == "999 Letsby Avenue"
+    assert data["building_name_or_number"] == "999 Letsby Avenue"
     assert data["town_or_city"] == "Metropolis"
     assert data["address_line_2"] == "Smalltown"
     assert data["town_or_city"] == "Metropolis"
@@ -515,14 +515,14 @@ def test_no_epc():
     assert page.has_one("h1:contains('What is the property’s address?')")
 
     form = page.get_form()
-    form["address_line_1"] = "999 Letsby Avenue"
+    form["building_name_or_number"] = "999 Letsby Avenue"
     form["postcode"] = "PO99 9PO"
     page = form.submit().follow()
 
     assert page.has_text("No addresses found")
     page = page.click(contains="I want to enter it manually")
     form = page.get_form()
-    assert form["address_line_1"] == "999 Letsby Avenue"
+    assert form["building_name_or_number"] == "999 Letsby Avenue"
     assert form["postcode"] == "PO99 9PO"
 
     form["town_or_city"] = "Metropolis"
@@ -576,12 +576,12 @@ def test_eligibility():
     assert page.has_one("h1:contains('What is the property’s address?')")
 
     form = page.get_form()
-    form["address_line_1"] = "999 Letsby Avenue"
+    form["building_name_or_number"] = "999 Letsby Avenue"
     form["postcode"] = "PO99 9PO"
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="address")
-    assert data["address_line_1"] == "999 Letsby Avenue"
+    assert data["building_name_or_number"] == "999 Letsby Avenue"
     assert data["postcode"] == "PO99 9PO"
 
     form = page.get_form()
@@ -915,7 +915,7 @@ def test_long_address():
     assert page.has_one("h1:contains('What is the property’s address?')")
 
     form = page.get_form()
-    form["address_line_1"] = "?" * 256
+    form["building_name_or_number"] = "?" * 256
     form["postcode"] = "?" * 256
     page = form.submit()
 
