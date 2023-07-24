@@ -25,7 +25,6 @@ TEST_SERVER_URL = "http://help-to-heat-testserver/"
 class StubAPI:
     files = {
         "postcode": "sample_osdatahub_postcode_response.json",
-        "uprn": "sample_osdatahub_uprn_response.json",
     }
 
     def __init__(self, key):
@@ -36,27 +35,19 @@ class StubAPI:
         data = json.loads(content)
         return data
 
-    def uprn(self, uprn, dataset=None):
-        content = (DATA_DIR / self.files["uprn"]).read_text()
-        data = json.loads(content)
-        return data
-
 
 class EmptyAPI(StubAPI):
     files = {
-        "postcode": "empty_osdatahub_response.json",
-        "uprn": "empty_osdatahub_response.json",
+        "postcode": "empty_osdatahub_response.json"
     }
 
 
 def mock_os_api(func):
-    postcode_data = (DATA_DIR / "sample_os_api_postcode_response.json").read_text()
     uprn_data = (DATA_DIR / "sample_os_api_uprn_response.json").read_text()
 
     @functools.wraps(func)
     def _inner(*args, **kwargs):
         with requests_mock.Mocker() as m:
-            m.register_uri("GET", "https://api.os.uk/search/places/v1/postcode", text=postcode_data)
             m.register_uri("GET", "https://api.os.uk/search/places/v1/uprn", text=uprn_data)
             return func()
 
