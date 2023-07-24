@@ -25,6 +25,8 @@ RUN chmod +x /start.sh
 COPY ./docker/tests/check-code.sh /check-code.sh
 RUN chmod +x /check-code.sh
 
+RUN python3 -m pip install -U pip pytest
+
 COPY ./ /app
 
 WORKDIR /app/

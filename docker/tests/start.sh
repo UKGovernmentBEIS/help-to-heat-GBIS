@@ -10,11 +10,11 @@ python manage.py add_suppliers
 echo
 echo '----------------------------------------------------------------------'
 echo
-nosetests -v ./tests
+pytest ./tests
 
 
 echo
 echo '----------------------------------------------------------------------'
 echo
 echo 'Test Basic Auth'
-BASIC_AUTH="mr-flibble:flim-flam-flooble" nosetests -v ./tests/test_basic_auth.py
+BASIC_AUTH="mr-flibble:flim-flam-flooble" pytest ./tests/test_basic_auth.py
