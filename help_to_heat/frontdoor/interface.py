@@ -82,7 +82,7 @@ class SuccessSchema(marshmallow.Schema):
     success = marshmallow.fields.Boolean()
 
 
-def get_url(postcode: str, offset: int, max_results: int) -> str:
+def get_url(postcode, offset, max_results):
     url = f"""https://api.os.uk/search/places/v1/postcode?maxresults={max_results}
                 &postcode={postcode}&lr=EN&dataset=DPA,LPI&key={settings.OS_API_KEY}"""
     if offset:
@@ -90,12 +90,12 @@ def get_url(postcode: str, offset: int, max_results: int) -> str:
     return url
 
 
-def get_addresses_from_api(postcode) -> List[Dict]:
+def get_addresses_from_api(postcode):
     try:
         max_results_number = 100
         offset = 0
 
-        url = get_url(postcode=postcode, offset=offset, max_results=max_results_number)
+        url = get_url(postcode, offset, max_results_number)
         response = requests.get(url)
         response.raise_for_status()
         json_response = response.json()
@@ -104,7 +104,7 @@ def get_addresses_from_api(postcode) -> List[Dict]:
         api_results = json_response["results"]
         api_results_all = api_results
 
-        if total_results_number > max_results_number:
+        if max_results_number < total_results_number:
             requested_results_number = max_results_number
             while requested_results_number < total_results_number:
                 offset = requested_results_number
@@ -164,7 +164,7 @@ class Session(Entity):
 
 class Address(Entity):
     @with_schema(load=FindAddressesSchema, dump=AddressSchema(many=True))
-    def find_addresses(self, building_name_or_number: str, postcode: str) -> List[Dict]:
+    def find_addresses(self, building_name_or_number, postcode):
         api_results = get_addresses_from_api(postcode=postcode)
 
         lpi_data = tuple(
@@ -362,6 +362,7 @@ class Address(Entity):
             "3330": "3300",
         }
         # Map:
+        # Maps old custodian code onto new custodian code due to local authority merges
         #   405 - Aylesbury Vale, 410 - South Bucks, 415 - Chiltern, 425 - Wycombe
         #   to 440 - Buckinghamshire
         #   905 - Allerdale, 915 - Carlisle, 920 - Copeland
