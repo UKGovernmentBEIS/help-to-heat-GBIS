@@ -1,5 +1,4 @@
 import logging
-from typing import Dict, List
 
 import marshmallow
 import osdatahub
@@ -82,49 +81,53 @@ class SuccessSchema(marshmallow.Schema):
     success = marshmallow.fields.Boolean()
 
 
-def get_url(postcode, offset, max_results):
+def get_json_response_from_url(postcode, offset, max_results):
     url = f"""https://api.os.uk/search/places/v1/postcode?maxresults={max_results}
                 &postcode={postcode}&lr=EN&dataset=DPA,LPI&key={settings.OS_API_KEY}"""
     if offset:
         url += f"&offset={offset}"
-    return url
 
-
-def get_addresses_from_api(postcode):
     try:
-        max_results_number = 100
-        offset = 0
-
-        url = get_url(postcode, offset, max_results_number)
         response = requests.get(url)
         response.raise_for_status()
         json_response = response.json()
 
-        total_results_number = json_response["header"]["totalresults"]
-        api_results = json_response["results"]
-        api_results_all = api_results
-
-        if max_results_number < total_results_number:
-            requested_results_number = max_results_number
-            while requested_results_number < total_results_number:
-                offset = requested_results_number
-
-                url = get_url(postcode=postcode, offset=offset, max_results=max_results_number)
-                response = requests.get(url)
-                json_response = response.json()
-
-                api_results = json_response["results"]
-                api_results_all.extend(api_results)
-
-                requested_results_number += max_results_number
-
-        return api_results_all
+        return json_response
 
     except requests.exceptions as e:
         logger.error("An error occured while attempting to fetch addresses.")
         logger.error(e)
 
     return []
+
+
+def get_addresses_from_api(postcode):
+    max_results_number = 100
+    offset = 0
+
+    json_response = get_json_response_from_url(postcode, offset, max_results_number)
+    if not json_response:
+        return []
+
+    total_results_number = json_response["header"]["totalresults"]
+    api_results = json_response["results"]
+    api_results_all = api_results
+
+    if max_results_number < total_results_number:
+        requested_results_number = max_results_number
+        while requested_results_number < total_results_number:
+            offset = requested_results_number
+
+            json_response = get_json_response_from_url(postcode, offset, max_results_number)
+            if not json_response:
+                return []
+
+            api_results = json_response["results"]
+            api_results_all.extend(api_results)
+
+            requested_results_number += max_results_number
+
+    return api_results_all
 
 
 class Session(Entity):
