@@ -56,6 +56,9 @@ class AddressSchema(marshmallow.Schema):
     postcode = marshmallow.fields.String()
     local_custodian_code = marshmallow.fields.String()
 
+class FullAddressSchema(marshmallow.Schema):
+    uprn = marshmallow.fields.String()
+    address = marshmallow.fields.String()
 
 class GetEPCSchema(marshmallow.Schema):
     uprn = marshmallow.fields.Integer()
@@ -182,7 +185,7 @@ class Address(Entity):
 
         return joined_addresses[:10]
 
-    @with_schema(load=GetAddressSchema, dump=AddressSchema)
+    @with_schema(load=GetAddressSchema, dump=FullAddressSchema)
     def get_address(self, uprn):
         api = osdatahub.PlacesAPI(settings.OS_API_KEY)
         api_results = api.uprn(int(uprn), dataset="LPI")["features"]

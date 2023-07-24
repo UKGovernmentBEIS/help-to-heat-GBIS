@@ -4,6 +4,7 @@ import os
 import pathlib
 import random
 import string
+import re
 
 import furl
 import httpx
@@ -48,6 +49,7 @@ def mock_os_api(func):
     @functools.wraps(func)
     def _inner(*args, **kwargs):
         with requests_mock.Mocker() as m:
+            m.register_uri(requests_mock.ANY, re.compile(TEST_SERVER_URL + ".*"), real_http=True)
             m.register_uri("GET", "https://api.os.uk/search/places/v1/uprn", text=uprn_data)
             return func()
 
