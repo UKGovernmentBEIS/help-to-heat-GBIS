@@ -83,7 +83,7 @@ class SuccessSchema(marshmallow.Schema):
 
 def get_json_response_from_url(postcode, offset, max_results):
     url = f"""https://api.os.uk/search/places/v1/postcode?maxresults={max_results}
-                &postcode={postcode}&lr=EN&dataset=DPA,LPI&key={settings.OS_API_KEY}"""
+        &postcode={postcode}&lr=EN&dataset=DPA,LPI&key={settings.OS_API_KEY}"""
     if offset:
         url += f"&offset={offset}"
 
@@ -94,7 +94,7 @@ def get_json_response_from_url(postcode, offset, max_results):
 
         return json_response
 
-    except requests.exceptions as e:
+    except requests.exceptions.HTTPError or requests.exceptions.RequestException as e:
         logger.error("An error occured while attempting to fetch addresses.")
         logger.error(e)
 
@@ -113,6 +113,9 @@ def get_addresses_from_api(postcode):
     api_results = json_response["results"]
     api_results_all = api_results
 
+    # We have a max result number (in this case 100) for each call.
+    # If we expect more than 100 results in total, we set the offset to 100 and request another 100 results.
+    # Repeat until all results are requested and return a full list of results.
     if max_results_number < total_results_number:
         requested_results_number = max_results_number
         while requested_results_number < total_results_number:
