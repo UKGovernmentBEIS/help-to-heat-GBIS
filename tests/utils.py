@@ -24,7 +24,7 @@ TEST_SERVER_URL = "http://help-to-heat-testserver/"
 
 class StubAPI:
     files = {
-        "postcode": "sample_osdatahub_postcode_response.json",
+        "postcode": "sample_os_api_postcode_response.json",
     }
 
     def __init__(self, key):
