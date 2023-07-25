@@ -1,7 +1,6 @@
 import datetime
 
 import freezegun
-import nose
 from django.contrib.auth import authenticate
 from django.utils import timezone
 
@@ -14,6 +13,7 @@ def test_registration():
     client = utils.get_client()
     page = client.get("/portal/")
     assert page.status_code == 302
+
 
 def invite_user(name, email, password, role, try_fake_email=False, skip_otp=False):
     utils.wipe_emails()

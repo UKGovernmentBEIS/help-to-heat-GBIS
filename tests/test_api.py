@@ -1,11 +1,9 @@
 import datetime
 import random
 import string
-import pytest
 
 import django.db.utils
-
-from . import utils
+import pytest
 
 from help_to_heat.portal import models
 
@@ -24,6 +22,7 @@ def test_epc_duplicates():
     with pytest.raises(django.db.utils.IntegrityError):
         epc2 = models.EpcRating(**data)
         epc2.save()
+
 
 def test_healthcheck():
     client = utils.get_client()
