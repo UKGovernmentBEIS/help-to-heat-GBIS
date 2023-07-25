@@ -191,4 +191,7 @@ if not DEBUG:
 else:
     import debugpy
 
-    debugpy.listen(("0.0.0.0", 5678))
+    try:
+        debugpy.listen(("0.0.0.0", 5678))
+    except Exception as e:
+        print("Unable to bind debugpy (if you are running manage.py in local, this is expected):", e)
