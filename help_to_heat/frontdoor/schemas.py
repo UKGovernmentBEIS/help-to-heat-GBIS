@@ -33,7 +33,7 @@ extra_pages = (
     "northern-ireland",
     "epc-ineligible",
     "ineligible",
-    "bulb-warning-page"
+    "bulb-warning-page",
 )
 
 page_prev_next_map = {
@@ -46,7 +46,7 @@ page_prev_next_map = {
     "epc-ineligible": {"prev": "epc", "next": None},
     "ineligible": {"prev": "benefits", "next": None},
     "northern-ireland": {"prev": "country", "next": None},
-    "bulb-warning-page": {"prev": "supplier", "next": "contact-details"}
+    "bulb-warning-page": {"prev": "supplier", "next": "contact-details"},
 }
 
 summary_map = {

@@ -483,20 +483,16 @@ class SupplierView(PageView):
 
     def save_data(self, request, session_id, page_name, *args, **kwargs):
         data = dict(request.POST.dict())
-        new_data = data
         if data["supplier"] == "Bulb, now part of Octopus Energy":
-            new_data["supplier"] = "Octopus"
-        data = interface.api.session.save_answer(session_id, page_name, new_data)
+            data["supplier"] = "Octopus"
+        data = interface.api.session.save_answer(session_id, page_name, data)
         return data
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        data = dict(request.POST.dict())
-        print(data)
-        print(interface.api.session.get_answer(session_id, "supplier"))
-        print(interface.api.session.get_session(session_id).get("supplier"))
         prev_page_name, next_page_name = get_prev_next_page_name(page_name)
-        supplier = data.get("supplier")
-        if supplier == "Bulb, now part of Octopus Energy":
+        request_data = dict(request.POST.dict())
+        request_supplier = request_data.get("supplier")
+        if request_supplier == "Bulb, now part of Octopus Energy":
             next_page_name = "bulb-warning-page"
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 

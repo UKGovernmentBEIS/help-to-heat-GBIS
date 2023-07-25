@@ -56,9 +56,11 @@ class AddressSchema(marshmallow.Schema):
     postcode = marshmallow.fields.String()
     local_custodian_code = marshmallow.fields.String()
 
+
 class FullAddressSchema(marshmallow.Schema):
     uprn = marshmallow.fields.String()
     address = marshmallow.fields.String()
+
 
 class GetEPCSchema(marshmallow.Schema):
     uprn = marshmallow.fields.Integer()
@@ -78,6 +80,7 @@ class FeedbackSchema(marshmallow.Schema):
 
 class SuccessSchema(marshmallow.Schema):
     success = marshmallow.fields.Boolean()
+
 
 def get_addresses_from_api(postcode):
     max_results_number = 100

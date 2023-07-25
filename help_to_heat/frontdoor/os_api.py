@@ -1,7 +1,9 @@
 import logging
+
 import requests
 
 logger = logging.getLogger(__name__)
+
 
 class OSApi:
     def __init__(self, key):
@@ -25,4 +27,3 @@ class OSApi:
             logger.error(e)
 
         return []
-
