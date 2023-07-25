@@ -269,7 +269,7 @@ def _do_happy_flow(supplier="Foxglove"):
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('Confirm and submit')")
-    if supplier == "Bulb":
+    if supplier == "Bulb, now part of Octopus Energy":
         supplier = "Octopus"
     assert page.has_text(supplier)
 
@@ -293,7 +293,7 @@ def _make_check_page(session_id):
         form[key] = answer
         page = form.submit().follow()
 
-        if page_name == "supplier" and key == "supplier" and answer == "Bulb":
+        if page_name == "supplier" and key == "supplier" and answer == "Bulb, now part of Octopus Energy":
             answer = "Octopus"
         data = interface.api.session.get_answer(session_id, page_name=page_name)
         assert data[key] == answer
@@ -944,8 +944,8 @@ def test_address_validation():
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
 @utils.mock_os_api
 def test_bulb_to_octopus():
-    supplier = "Bulb"
-    schemas.supplier_options.append("Bulb")
+    supplier = "Bulb, now part of Octopus Energy"
+    schemas.supplier_options.append("Bulb, now part of Octopus Energy")
     schemas.supplier_options.append("Octopus")
     models.Supplier(name="Octopus").save()
 

@@ -33,6 +33,7 @@ extra_pages = (
     "northern-ireland",
     "epc-ineligible",
     "ineligible",
+    "bulb-warning-page"
 )
 
 page_prev_next_map = {
@@ -45,6 +46,7 @@ page_prev_next_map = {
     "epc-ineligible": {"prev": "epc", "next": None},
     "ineligible": {"prev": "benefits", "next": None},
     "northern-ireland": {"prev": "country", "next": None},
+    "bulb-warning-page": {"prev": "supplier", "next": "contact-details"}
 }
 
 summary_map = {
@@ -228,14 +230,14 @@ loft_access_validation_options = loft_access_options + ("No loft",)
 # TODO: Make this a tuple again when Bulb gets restored
 supplier_options = [
     # "British Gas",
-    # "Bulb",
+    "Bulb, now part of Octopus Energy",
     # "E Energy",
     # "Ecotricity",
     "EDF",
     "EON",
     # "ESB",
     # "Foxglove",
-    # "Octopus",
+    "Octopus",
     # "OVO",
     # "Scottish Power",
     # "Shell",

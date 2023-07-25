@@ -483,10 +483,29 @@ class SupplierView(PageView):
 
     def save_data(self, request, session_id, page_name, *args, **kwargs):
         data = dict(request.POST.dict())
-        if data["supplier"] == "Bulb":
-            data["supplier"] = "Octopus"
-        data = interface.api.session.save_answer(session_id, page_name, data)
+        new_data = data
+        if data["supplier"] == "Bulb, now part of Octopus Energy":
+            new_data["supplier"] = "Octopus"
+        data = interface.api.session.save_answer(session_id, page_name, new_data)
         return data
+
+    def handle_post(self, request, session_id, page_name, data, is_change_page):
+        data = dict(request.POST.dict())
+        print(data)
+        print(interface.api.session.get_answer(session_id, "supplier"))
+        print(interface.api.session.get_session(session_id).get("supplier"))
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
+        supplier = data.get("supplier")
+        if supplier == "Bulb, now part of Octopus Energy":
+            next_page_name = "bulb-warning-page"
+        return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+
+
+@register_page("bulb-warning-page")
+class BulbWarningPageView(PageView):
+    def get_context(self, session_id, *args, **kwargs):
+        supplier_data = interface.api.session.get_answer(session_id, "supplier")
+        return {"supplier": supplier_data["supplier"]}
 
 
 @register_page("contact-details")
