@@ -46,7 +46,8 @@ def test_flow_northern_ireland():
     assert data["_page_name"] == "northern-ireland", data
 
 
-@unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
+@utils.mock_os_api
 def test_flow_scotland():
     client = utils.get_client()
     page = client.get("/")
@@ -72,13 +73,13 @@ def test_flow_scotland():
     assert page.has_one("h1:contains('What is the property’s address?')")
 
     form = page.get_form()
-    form["address_line_1"] = "999 Letsby Avenue"
-    form["postcode"] = "PO99 9PO"
+    form["building_name_or_number"] = "10"
+    form["postcode"] = "SW1A 2AA"
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="address")
-    assert data["address_line_1"] == "999 Letsby Avenue"
-    assert data["postcode"] == "PO99 9PO"
+    assert data["building_name_or_number"] == "10"
+    assert data["postcode"] == "SW1A 2AA"
 
     form = page.get_form()
     form["uprn"] = "100023336956"
@@ -115,6 +116,7 @@ def test_flow_errors():
     assert page.has_text("Select where the property is located")
 
 
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
 def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D"):
     """Answer main flow with set answers"""
     _add_epc(uprn="100023336956", rating=epc_rating)
@@ -131,13 +133,13 @@ def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D"):
     assert page.has_one("h1:contains('What is the property’s address?')")
 
     form = page.get_form()
-    form["address_line_1"] = "999 Letsby Avenue"
-    form["postcode"] = "PO99 9PO"
+    form["building_name_or_number"] = "10"
+    form["postcode"] = "SW1A 2AA"
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="address")
-    assert data["address_line_1"] == "999 Letsby Avenue"
-    assert data["postcode"] == "PO99 9PO"
+    assert data["building_name_or_number"] == "10"
+    assert data["postcode"] == "SW1A 2AA"
 
     form = page.get_form()
     form["uprn"] = "100023336956"
@@ -192,7 +194,8 @@ def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D"):
     return page
 
 
-@unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
+@utils.mock_os_api
 def test_happy_flow():
     supplier = "EON"
     session_id = _do_happy_flow(supplier=supplier)
@@ -338,7 +341,8 @@ def test_back_button():
     assert form["country"] == "England"
 
 
-@unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
+@utils.mock_os_api
 def test_no_benefits_flow():
     client = utils.get_client()
     page = client.get("/")
@@ -366,13 +370,13 @@ def test_no_benefits_flow():
     assert page.has_one("h1:contains('What is the property’s address?')")
 
     form = page.get_form()
-    form["address_line_1"] = "999 Letsby Avenue"
-    form["postcode"] = "PO99 9PO"
+    form["building_name_or_number"] = "10"
+    form["postcode"] = "SW1A 2AA"
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="address")
-    assert data["address_line_1"] == "999 Letsby Avenue"
-    assert data["postcode"] == "PO99 9PO"
+    assert data["building_name_or_number"] == "10"
+    assert data["postcode"] == "SW1A 2AA"
 
     form = page.get_form()
     form["uprn"] = "100023336956"
@@ -395,7 +399,8 @@ def test_no_benefits_flow():
     assert page.has_one("""h1:contains("It's likely that your home already has suitable energy saving measures")""")
 
 
-@unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
+@utils.mock_os_api
 def test_summary():
     client = utils.get_client()
     page = client.get("/")
@@ -427,7 +432,8 @@ def test_summary():
     assert page.has_text("10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA")
 
 
-@unittest.mock.patch("osdatahub.PlacesAPI", utils.EmptyAPI)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.EmptyAPI)
+@utils.mock_os_api
 def test_no_address():
     client = utils.get_client()
     page = client.get("/")
@@ -456,23 +462,25 @@ def test_no_address():
 
     assert page.has_one("h1:contains('What is the property’s address?')")
     form = page.get_form()
-    form["address_line_1"] = "999 Letsby Avenue"
-    form["postcode"] = "PO99 9PO"
+    form["building_name_or_number"] = "10"
+    form["postcode"] = "SW1A 2AA"
     page = form.submit().follow()
 
     assert page.has_text("No addresses found")
     page = page.click(contains="I want to enter it manually")
     form = page.get_form()
-    assert form["address_line_1"] == "999 Letsby Avenue"
-    assert form["postcode"] == "PO99 9PO"
+    assert form["address_line_1"] == ""
+    assert form["postcode"] == "SW1A 2AA"
+
+    form["address_line_1"] = "10 DOWNING STREET"
 
     page = form.submit()
     assert page.has_one("h2:contains('There is a problem')")
     assert page.has_text("Enter your Town or city")
 
     form = page.get_form()
-    assert form["address_line_1"] == "999 Letsby Avenue"
-    assert form["postcode"] == "PO99 9PO"
+    assert form["address_line_1"] == "10 DOWNING STREET"
+    assert form["postcode"] == "SW1A 2AA"
 
     form["address_line_2"] = "Smalltown"
     form["town_or_city"] = "Metropolis"
@@ -480,7 +488,7 @@ def test_no_address():
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="address-manual")
-    assert data["address_line_1"] == "999 Letsby Avenue"
+    assert data["address_line_1"] == "10 DOWNING STREET"
     assert data["town_or_city"] == "Metropolis"
     assert data["address_line_2"] == "Smalltown"
     assert data["town_or_city"] == "Metropolis"
@@ -489,7 +497,8 @@ def test_no_address():
     assert page.has_one("h1:contains('What is the council tax band of your property?')")
 
 
-@unittest.mock.patch("osdatahub.PlacesAPI", utils.EmptyAPI)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.EmptyAPI)
+@utils.mock_os_api
 def test_no_epc():
     client = utils.get_client()
     page = client.get("/")
@@ -515,16 +524,20 @@ def test_no_epc():
     assert page.has_one("h1:contains('What is the property’s address?')")
 
     form = page.get_form()
-    form["address_line_1"] = "999 Letsby Avenue"
-    form["postcode"] = "PO99 9PO"
+    form["building_name_or_number"] = "10"
+    form["postcode"] = "SW1A 2AA"
     page = form.submit().follow()
 
     assert page.has_text("No addresses found")
     page = page.click(contains="I want to enter it manually")
     form = page.get_form()
-    assert form["address_line_1"] == "999 Letsby Avenue"
-    assert form["postcode"] == "PO99 9PO"
+    # TODO: find out if we should still be forwarding this part through, and if so fix it so we are
+    # assert form["building_name_or_number"] == "10"
+    assert form["address_line_1"] == ""
+    assert form["postcode"] == "SW1A 2AA"
 
+    # TODO: won't need to set this if it's passed through from the lookup (see above)
+    form["address_line_1"] = "10 DOWNING STREET"
     form["town_or_city"] = "Metropolis"
 
     page = form.submit().follow()
@@ -543,7 +556,8 @@ def test_no_epc():
     assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
 
 
-@unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
+@utils.mock_os_api
 def test_eligibility():
     client = utils.get_client()
     page = client.get("/")
@@ -576,13 +590,13 @@ def test_eligibility():
     assert page.has_one("h1:contains('What is the property’s address?')")
 
     form = page.get_form()
-    form["address_line_1"] = "999 Letsby Avenue"
-    form["postcode"] = "PO99 9PO"
+    form["building_name_or_number"] = "10"
+    form["postcode"] = "SW1A 2AA"
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="address")
-    assert data["address_line_1"] == "999 Letsby Avenue"
-    assert data["postcode"] == "PO99 9PO"
+    assert data["building_name_or_number"] == "10"
+    assert data["postcode"] == "SW1A 2AA"
 
     form = page.get_form()
     form["uprn"] = "100023336956"
@@ -607,7 +621,8 @@ def test_eligibility():
     assert page.has_one("h1:contains('Your property is not eligible')")
 
 
-@unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
+@utils.mock_os_api
 def test_referral_email():
     client = utils.get_client()
     page = client.get("/")
@@ -732,7 +747,8 @@ def test_feedback_with_session():
     assert page.has_one("h1:contains('Do you own the property?')")
 
 
-@unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
+@utils.mock_os_api
 def test_incorrect_referral_email():
     client = utils.get_client()
     page = client.get("/")
@@ -776,7 +792,8 @@ def test_incorrect_referral_email():
     assert page.has_one("p:contains('Not a valid email address.')")
 
 
-@unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
+@utils.mock_os_api
 def test_referral_not_providing_email():
     client = utils.get_client()
     page = client.get("/")
@@ -833,7 +850,8 @@ def test_referral_not_providing_email():
     referral.delete()
 
 
-@unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
+@utils.mock_os_api
 def test_referral_not_providing_contact_number():
     client = utils.get_client()
     page = client.get("/")
@@ -890,7 +908,7 @@ def test_referral_not_providing_contact_number():
     referral.delete()
 
 
-def test_long_address():
+def test_address_validation():
     client = utils.get_client()
     page = client.get("/")
 
@@ -915,15 +933,16 @@ def test_long_address():
     assert page.has_one("h1:contains('What is the property’s address?')")
 
     form = page.get_form()
-    form["address_line_1"] = "?" * 256
+    form["building_name_or_number"] = "?" * 256
     form["postcode"] = "?" * 256
     page = form.submit()
 
     assert page.has_text("Longer than maximum length 128")
-    assert page.has_text("Longer than maximum length 16")
+    assert page.has_text("Please enter a valid UK postcode")
 
 
-@unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
+@utils.mock_os_api
 def test_bulb_to_octopus():
     supplier = "Bulb"
     schemas.supplier_options.append("Bulb")

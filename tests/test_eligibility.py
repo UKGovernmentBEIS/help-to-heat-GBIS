@@ -288,6 +288,8 @@ def _make_check_page(session_id):
     return _check_page
 
 
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
+@utils.mock_os_api
 def test_ineligible_shortcut():
     for country in eligible_council_tax:
         for council_tax_band in eligible_council_tax[country]["ineligible"]:
@@ -295,7 +297,6 @@ def test_ineligible_shortcut():
                 _do_test(country=country, council_tax_band=council_tax_band, epc_rating=epc_rating)
 
 
-@unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
 def _do_test(country, council_tax_band, epc_rating):
     _add_epc(uprn="100023336956", rating=epc_rating)
 
@@ -323,13 +324,13 @@ def _do_test(country, council_tax_band, epc_rating):
     assert page.has_one("h1:contains('What is the property’s address?')")
 
     form = page.get_form()
-    form["address_line_1"] = "999 Letsby Avenue"
-    form["postcode"] = "PO99 9PO"
+    form["building_name_or_number"] = "10"
+    form["postcode"] = "SW1A 2AA"
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="address")
-    assert data["address_line_1"] == "999 Letsby Avenue"
-    assert data["postcode"] == "PO99 9PO"
+    assert data["building_name_or_number"] == "10"
+    assert data["postcode"] == "SW1A 2AA"
 
     form = page.get_form()
     form["uprn"] = "100023336956"
