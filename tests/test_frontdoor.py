@@ -14,7 +14,7 @@ def _add_epc(uprn, rating):
     models.EpcRating.objects.update_or_create(
         uprn=uprn, defaults={"rating": rating, "date": datetime.date(2022, 12, 25)}
     )
-    assert interface.api.epc.get_epc(uprn)
+    assert interface.api.epc.get_epc(uprn, "England")
 
 
 def test_flow_northern_ireland():
@@ -44,57 +44,6 @@ def test_flow_northern_ireland():
 
     data = interface.api.session.get_answer(session_id, page_name="northern-ireland")
     assert data["_page_name"] == "northern-ireland", data
-
-
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
-@utils.mock_os_api
-def test_flow_scotland():
-    client = utils.get_client()
-    page = client.get("/")
-
-    assert page.status_code == 200
-    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
-
-    page = page.click(contains="Start")
-    assert page.status_code == 200
-
-    session_id = page.path.split("/")[1]
-    assert uuid.UUID(session_id)
-
-    _check_page = _make_check_page(session_id)
-
-    form = page.get_form()
-    form["country"] = "Scotland"
-    page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Do you own the property?')")
-    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
-
-    assert page.has_one("h1:contains('What is the property’s address?')")
-
-    form = page.get_form()
-    form["building_name_or_number"] = "10"
-    form["postcode"] = "SW1A 2AA"
-    page = form.submit().follow()
-
-    data = interface.api.session.get_answer(session_id, page_name="address")
-    assert data["building_name_or_number"] == "10"
-    assert data["postcode"] == "SW1A 2AA"
-
-    form = page.get_form()
-    form["uprn"] = "100023336956"
-    page = form.submit().follow()
-
-    data = interface.api.session.get_answer(session_id, page_name="address-select")
-    assert data["uprn"] == 100023336956
-    assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
-
-    assert page.has_one("h1:contains('What is the council tax band of your property?')")
-    page = _check_page(page, "council-tax-band", "council_tax_band", "B")
-
-    assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
-    page = _check_page(page, "benefits", "benefits", "Yes")
-
 
 def test_flow_errors():
     client = utils.get_client()

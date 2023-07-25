@@ -389,7 +389,7 @@ class EPC(Entity):
                 epc = portal.models.ScottishEpcRating.objects.get(uprn=uprn)
             else:
                 epc = None
-        except portal.models.EpcRating.DoesNotExist:
+        except (portal.models.EpcRating.DoesNotExist, portal.models.ScottishEpcRating.DoesNotExist):
             epc = None
         if epc:
             data = {"uprn": epc.uprn, "rating": epc.rating, "date": epc.date}
