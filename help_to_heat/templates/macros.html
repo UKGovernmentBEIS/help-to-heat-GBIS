@@ -1,125 +1,131 @@
 {% macro form_wrapper(prev_url, button_label="Continue") -%}
-  {% if prev_url %}
-    <a href="{{prev_url}}" class="govuk-back-link">Back</a>
-  {% endif %}
-  {% if errors %}
-    {{error_summary(errors)}}
-  {% endif %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <form method="post" novalidate>
-        {{csrf_input}}
+{% if prev_url %}
+<a href="{{prev_url}}" class="govuk-back-link">Back</a>
+{% endif %}
+{% if errors %}
+{{error_summary(errors)}}
+{% endif %}
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
+    <form method="post" novalidate>
+      {{csrf_input}}
 
-        {{caller()}}
+      {{caller()}}
 
-        <button class="govuk-button" data-module="govuk-button">
-          {{button_label}}
-        </button>
-      </form>
-    </div>
+      <button class="govuk-button" data-module="govuk-button">
+        {{button_label}}
+      </button>
+    </form>
   </div>
+</div>
 {%- endmacro%}
 
 {% macro radios(name, options, data, errors) -%}
-  {% if errors.get(name) %}
-    <p id="question-{{name}}-error" class="govuk-error-message">
-      <span class="govuk-visually-hidden">Error:</span> {{errors.get(name)}}
-    </p>
+{% if errors.get(name) %}
+<p id="question-{{name}}-error" class="govuk-error-message">
+  <span class="govuk-visually-hidden">Error:</span> {{errors.get(name)}}
+</p>
+{% endif %}
+<div id="question-{{name}}" class="govuk-radios" data-module="govuk-radios">
+  {% for option in options %}
+  {% if option is string %}
+  {% set value, label = option, option %}
+  {% elif option is mapping %}
+  {% set value, label = option.value, option.label %}
+  {% else %}
+  {% set value, label = option %}
   {% endif %}
-  <div id="question-{{name}}" class="govuk-radios" data-module="govuk-radios">
-    {% for option in options %}
-      {% if option is string %}
-        {% set value, label = option, option %}
-      {% elif option is mapping %}
-        {% set value, label = option.value, option.label %}
-      {% else %}
-        {% set value, label = option %}
-      {% endif %}
-      <div class="govuk-radios__item">
-        <input class="govuk-radios__input" id="{{name}}-option-{{slugify(value)}}" name="{{name}}" type="radio" value="{{value}}" {{is_checked(data, name, value)}} aria-describedby="{{name}}-option-{{slugify(value)}}-hint">
-        <label class="govuk-label govuk-radios__label" for="{{name}}-option-{{slugify(value)}}">
-          {{label}}
-        </label>
-        {% if option is mapping %}
-          {% if option.hint %}
-            <div id="{{name}}-option-{{slugify(value)}}-hint" class="govuk-hint govuk-radios__hint">
-              {{option.hint}}
-            </div>
-          {% endif %}
-        {% endif %}
-      </div>
-    {% endfor %}
-  </div>
-{%- endmacro%}
-
-{% macro input(name, label, data, errors, type="text") -%}
-  {% if errors.get(name) %}
-    <p id="question-{{name}}-error" class="govuk-error-message">
-      <span class="govuk-visually-hidden">Error:</span> {{errors.get(name)}}
-    </p>
-  {% endif %}
-
-  <div class="govuk-form-group {{errors.get(name) and 'govuk-form-group--error' or ''}}">
-    <label class="govuk-label" for="question-{{name}}">
+  <div class="govuk-radios__item">
+    <input class="govuk-radios__input" id="{{name}}-option-{{slugify(value)}}" name="{{name}}" type="radio"
+      value="{{value}}" {{is_checked(data, name, value)}} aria-describedby="{{name}}-option-{{slugify(value)}}-hint">
+    <label class="govuk-label govuk-radios__label" for="{{name}}-option-{{slugify(value)}}">
       {{label}}
     </label>
-    <input class="govuk-input" id="question-{{name}}" name="{{name}}" type="{{type}}" {% if errors.get(name) %} aria-describedby="question-{{name}}-error" {% endif %} autocomplete="off" value="{{data.get(name, '')}}">
+    {% if option is mapping %}
+    {% if option.hint %}
+    <div id="{{name}}-option-{{slugify(value)}}-hint" class="govuk-hint govuk-radios__hint">
+      {{option.hint}}
+    </div>
+    {% endif %}
+    {% endif %}
   </div>
+  {% endfor %}
+</div>
+{%- endmacro%}
+
+{% macro input(name, label, data, errors, autocomplete, type="text") -%}
+{% if errors.get(name) %}
+<p id="question-{{name}}-error" class="govuk-error-message">
+  <span class="govuk-visually-hidden">Error:</span> {{errors.get(name)}}
+</p>
+{% endif %}
+
+<div class="govuk-form-group {{errors.get(name) and 'govuk-form-group--error' or ''}}">
+  <label class="govuk-label" for="question-{{name}}">
+    {{label}}
+  </label>
+  <input class="govuk-input" id="question-{{name}}" name="{{name}}" type="{{type}}" {% if errors.get(name) %}
+    aria-describedby="question-{{name}}-error" {% endif %} autocomplete="{{autocomplete}}"
+    value="{{data.get(name, '')}}">
+</div>
 {%- endmacro%}
 
 {% macro error_summary(errors) -%}
-  <div class="govuk-error-summary" data-module="govuk-error-summary">
-    <div role="alert">
-      <h2 class="govuk-error-summary__title">
-        There is a problem
-      </h2>
-      <div class="govuk-error-summary__body">
-        <ul class="govuk-list govuk-error-summary__list">
-          {% for (key, message) in errors.items() %}
-            <li>
-              <a href="#question-{{key}}">{{message}}</a>
-            </li>
-          {% endfor %}
-        </ul>
-      </div>
+<div class="govuk-error-summary" data-module="govuk-error-summary">
+  <div role="alert">
+    <h2 class="govuk-error-summary__title">
+      There is a problem
+    </h2>
+    <div class="govuk-error-summary__body">
+      <ul class="govuk-list govuk-error-summary__list">
+        {% for (key, message) in errors.items() %}
+        <li>
+          <a href="#question-{{key}}">{{message}}</a>
+        </li>
+        {% endfor %}
+      </ul>
     </div>
   </div>
+</div>
 {%- endmacro%}
 
 {% macro details_summary(summary_lines) -%}
-  <dl class="govuk-summary-list govuk-!-margin-bottom-9">
-    {% for summary_line in summary_lines %}
-      <div class="govuk-summary-list__row">
-        <dt class="govuk-summary-list__key">
-          {{summary_line.question}}
-        </dt>
-        <dd class="govuk-summary-list__value">
-          {{summary_line.answer}}
-        </dd>
-        <dd class="govuk-summary-list__actions">
-          <a class="govuk-link" href="{{summary_line.change_url}}">
-            Change<span class="govuk-visually-hidden"> {{summary_line.question}}</span>
-          </a>
-        </dd>
-      </div>
-    {% endfor %}
-  </dl>
+<dl class="govuk-summary-list govuk-!-margin-bottom-9">
+  {% for summary_line in summary_lines %}
+  <div class="govuk-summary-list__row">
+    <dt class="govuk-summary-list__key">
+      {{summary_line.question}}
+    </dt>
+    <dd class="govuk-summary-list__value">
+      {{summary_line.answer}}
+    </dd>
+    <dd class="govuk-summary-list__actions">
+      <a class="govuk-link" href="{{summary_line.change_url}}">
+        Change<span class="govuk-visually-hidden"> {{summary_line.question}}</span>
+      </a>
+    </dd>
+  </div>
+  {% endfor %}
+</dl>
 {%- endmacro%}
 
 
 {% macro further_help() -%}
-  <a href="{{prev_url}}" class="govuk-back-link">Back</a>
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
+<a href="{{prev_url}}" class="govuk-back-link">Back</a>
+<div class="govuk-grid-row">
+  <div class="govuk-grid-column-two-thirds">
 
-      {{caller()}}
+    {{caller()}}
 
-      <h2 class="govuk-heading-m">Find other support</h2>
+    <h2 class="govuk-heading-m">Find other support</h2>
 
-      <p class="govuk-body">Check out what other help you can get with your energy bills from the government's <a href="https://helpforhouseholds.campaign.gov.uk/energy-saving-advice/" class="govuk-link">Help for Households</a>.</p>
+    <p class="govuk-body">Check out what other help you can get with your energy bills from the government's <a
+        href="https://helpforhouseholds.campaign.gov.uk/energy-saving-advice/" class="govuk-link">Help for
+        Households</a>.</p>
 
-      <p class="govuk-body">Find out if you can get support from your local council from the <a href="https://www.gov.uk/cost-living-help-local-council" class="govuk-link">Household Support Fund</a>.</p>
+    <p class="govuk-body">Find out if you can get support from your local council from the <a
+        href="https://www.gov.uk/cost-living-help-local-council" class="govuk-link">Household Support Fund</a>.</p>
 
-    </div>
   </div>
+</div>
 {%- endmacro%}

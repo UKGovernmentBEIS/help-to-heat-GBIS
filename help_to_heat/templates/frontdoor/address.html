@@ -2,25 +2,27 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>What is the property address? - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+<title>What is the property address? - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
 {% endblock %}
 
 {% block content %}
-  {% call macros.form_wrapper(prev_url) -%}
-    <fieldset class="govuk-fieldset">
-      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-        <h1 class="govuk-heading-l">
-          What is the property’s address?
-        </h1>
-        <p class="govuk-body">We use this information to search the Energy Performance of Buildings Register for an Energy Performance Certificate that matches your address</p>
+{% call macros.form_wrapper(prev_url) -%}
+<fieldset class="govuk-fieldset">
+  <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+    <h1 class="govuk-heading-l">
+      What is the property’s address?
+    </h1>
+    <p class="govuk-body">We use this information to search the Energy Performance of Buildings Register for an Energy
+      Performance Certificate that matches your address</p>
 
-      </legend>
+  </legend>
 
       {{macros.input('building_name_or_number', 'Building name or number', data, errors)}}
       {{macros.input('postcode', 'Postcode', data, errors)}}
 
   {%- endcall %}
 
-  <a href="{{url('frontdoor:page', session_id=session_id, page_name='address-manual')}}" class="govuk-link">Enter address manually</a>
+  <a href="{{url('frontdoor:page', session_id=session_id, page_name='address-manual')}}" class="govuk-link">Enter
+    address manually</a>
 
-{% endblock %}
+  {% endblock %}
