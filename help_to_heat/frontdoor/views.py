@@ -79,10 +79,12 @@ def homepage_view(request):
     }
     return render(request, template_name="frontdoor/homepage.html", context=context)
 
+
 def holding_page_view(request):
     previous_path = reverse("frontdoor:homepage")
     context = {"previous_path": previous_path}
     return render(request, template_name="frontdoor/holding-page.html", context=context)
+
 
 def page_view(request, session_id, page_name):
     if page_name in page_map:
