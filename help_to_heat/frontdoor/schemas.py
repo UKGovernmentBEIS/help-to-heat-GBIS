@@ -33,6 +33,7 @@ extra_pages = (
     "northern-ireland",
     "epc-ineligible",
     "ineligible",
+    "holding-page",
 )
 
 page_prev_next_map = {
