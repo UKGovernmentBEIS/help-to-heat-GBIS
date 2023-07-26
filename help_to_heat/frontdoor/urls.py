@@ -3,6 +3,7 @@ from django.urls import path
 from . import views
 
 frontdoor_patterns = [
+    path("thankyou", views.holding_page_view, name="holding-page"),
     path("", views.homepage_view, name="homepage"),
     path("dataLayer.js", views.data_layer_js_view, name="data-layer-js"),
     path("cookies/", views.cookies_view, name="cookies"),

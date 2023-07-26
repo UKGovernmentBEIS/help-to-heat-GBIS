@@ -72,11 +72,18 @@ def register_page(name):
 
 def homepage_view(request):
     session_id = uuid.uuid4()
-    next_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="country"))
+    # next_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="country"))
+    next_url = reverse("frontdoor:holding-page")
     context = {
         "next_url": next_url,
     }
     return render(request, template_name="frontdoor/homepage.html", context=context)
+
+
+def holding_page_view(request):
+    previous_path = reverse("frontdoor:homepage")
+    context = {"previous_path": previous_path}
+    return render(request, template_name="frontdoor/holding-page.html", context=context)
 
 
 def page_view(request, session_id, page_name):
