@@ -112,6 +112,13 @@ def get_addresses_from_api(postcode):
     return api_results_all
 
 
+def sanitise_data_for_referral(data):
+    if data["supplier"] == "Bulb, now a part of Octopus Energy":
+        data["supplier"] = "Octopus"
+
+    return data
+
+
 class Session(Entity):
     @with_schema(load=SaveAnswerSchema, dump=schemas.SessionSchema)
     @register_event(models.Event, "Answer saved")
@@ -141,8 +148,9 @@ class Session(Entity):
     @register_event(models.Event, "Referral created")
     def create_referral(self, session_id):
         data = self.get_session(session_id)
-        supplier = portal.models.Supplier.objects.get(name=data["supplier"])
-        referral = portal.models.Referral.objects.create(session_id=session_id, data=data, supplier=supplier)
+        sanitised_data = sanitise_data_for_referral(data)
+        supplier = portal.models.Supplier.objects.get(name=sanitised_data["supplier"])
+        referral = portal.models.Referral.objects.create(session_id=session_id, data=sanitised_data, supplier=supplier)
         referral_data = {"id": referral.id, "session_id": referral.session_id, "data": referral.data}
         return referral_data
 
