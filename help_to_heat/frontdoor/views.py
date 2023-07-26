@@ -72,7 +72,8 @@ def register_page(name):
 
 def homepage_view(request):
     session_id = uuid.uuid4()
-    next_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="country"))
+    next_url = reverse("frontdoor:holding-page")
+    # next_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="country"))
     context = {
         "next_url": next_url,
     }
