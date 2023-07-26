@@ -16,7 +16,7 @@ page_map = {}
 page_compulsory_field_map = {
     "country": ("country",),
     "own-property": ("own_property",),
-    "address": ("address_line_1", "postcode"),
+    "address": ("building_name_or_number", "postcode"),
     "address-select": ("uprn",),
     "address-manual": ("address_line_1", "town_or_city", "postcode"),
     "council-tax-band": ("council_tax_band",),
@@ -38,7 +38,7 @@ page_compulsory_field_map = {
 missing_item_errors = {
     "country": "Select where the property is located",
     "own_property": "Select if you own the property",
-    "address_line_1": "Enter Address line 1",
+    "building_name_or_number": "Enter building name or number",
     "postcode": "Enter a postcode",
     "uprn": "Select your address",
     "town_or_city": "Enter your Town or city",
@@ -72,8 +72,7 @@ def register_page(name):
 
 def homepage_view(request):
     session_id = uuid.uuid4()
-    next_url = reverse("frontdoor:holding-page")
-    # next_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="country"))
+    next_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="country"))
     context = {
         "next_url": next_url,
     }
@@ -145,6 +144,12 @@ class PageView(utils.MethodDispatcher):
             next_page_url = None
         else:
             prev_page_url, next_page_url = self.get_prev_next_urls(session_id, page_name)
+
+        session = interface.api.session.get_session(session_id)
+        # Once a user has created a referral, they can no longer access their old session
+        if "referral_created_at" in session and page_name != "success":
+            return redirect("/")
+
         extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data=data)
         context = {
             "data": data,
@@ -157,6 +162,9 @@ class PageView(utils.MethodDispatcher):
         }
         response = render(request, template_name=f"frontdoor/{page_name}.html", context=context)
         response["x-vcap-request-id"] = session_id
+        if "sensitive" in context and context["sensitive"]:
+            response["cache-control"] = "no-store"
+            response["Pragma"] = "no-cache"
         return response
 
     def get_prev_next_urls(self, session_id, page_name):
@@ -225,9 +233,18 @@ class AddressView(PageView):
 class AddressSelectView(PageView):
     def get_context(self, request, session_id, *args, **kwargs):
         data = interface.api.session.get_answer(session_id, "address")
-        text = f"{data['address_line_1'], data['postcode']}"
-        addresses = interface.api.address.find_addresses(text)
-        uprn_options = tuple({"value": a["uprn"], "label": a["address"]} for a in addresses)
+        building_name_or_number = data["building_name_or_number"]
+        postcode = data["postcode"]
+        addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
+        uprn_options = tuple(
+            {
+                "value": a["uprn"],
+                "label": f"""{a['address_line_1'] + ',' if a['address_line_1'] else ''}
+                    {a['address_line_2'] + ',' if a['address_line_2'] else ''}
+                    {a['town']}, {a['postcode']}""",
+            }
+            for a in addresses
+        )
         return {"uprn_options": uprn_options}
 
     def save_data(self, request, session_id, page_name, *args, **kwargs):
@@ -446,7 +463,7 @@ class SummaryView(PageView):
             for question in questions
             if question in session_data
         )
-        return {"summary_lines": summary_lines}
+        return {"summary_lines": summary_lines, "sensitive": True}
 
 
 @register_page("schemes")
@@ -463,6 +480,13 @@ class SchemesView(PageView):
 class SupplierView(PageView):
     def get_context(self, *args, **kwargs):
         return {"supplier_options": schemas.supplier_options}
+
+    def save_data(self, request, session_id, page_name, *args, **kwargs):
+        data = dict(request.POST.dict())
+        if data["supplier"] == "Bulb":
+            data["supplier"] = "Octopus"
+        data = interface.api.session.save_answer(session_id, page_name, data)
+        return data
 
 
 @register_page("contact-details")
@@ -499,7 +523,7 @@ class ConfirmSubmitView(PageView):
         )
         supplier_data = interface.api.session.get_answer(session_id, "supplier")
         supplier = supplier_data["supplier"]
-        return {"summary_lines": summary_lines, "supplier": supplier}
+        return {"summary_lines": summary_lines, "supplier": supplier, "sensitive": True}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         interface.api.session.create_referral(session_id)
