@@ -4,7 +4,6 @@ import uuid
 
 from help_to_heat.frontdoor import interface
 from help_to_heat.frontdoor import models as frontdoor_models
-from help_to_heat.frontdoor import schemas
 from help_to_heat.portal import models
 
 from . import utils
