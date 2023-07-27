@@ -230,7 +230,7 @@ loft_access_validation_options = loft_access_options + ("No loft",)
 # TODO: Make this a tuple again when Bulb gets restored
 supplier_options = [
     # "British Gas",
-    "Bulb, now a part of Octopus Energy",
+    "Bulb, now part of Octopus Energy",
     # "E Energy",
     # "Ecotricity",
     "EDF",

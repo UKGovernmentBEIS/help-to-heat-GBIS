@@ -45,6 +45,7 @@ def test_flow_northern_ireland():
     data = interface.api.session.get_answer(session_id, page_name="northern-ireland")
     assert data["_page_name"] == "northern-ireland", data
 
+
 def test_flow_errors():
     client = utils.get_client()
     page = client.get("/")
@@ -193,7 +194,7 @@ def _do_happy_flow(supplier="EON"):
 
     page = _check_page(page, "supplier", "supplier", supplier)
 
-    if supplier == "Bulb, now a part of Octopus Energy":
+    if supplier == "Bulb, now part of Octopus Energy":
         assert page.has_one("h1:contains('Your referral will be sent to Octopus Energy')")
         form = page.get_form()
         page = form.submit().follow()
@@ -229,7 +230,7 @@ def _do_happy_flow(supplier="EON"):
     page = form.submit().follow()
 
     supplier_shown = supplier
-    if supplier == "Bulb, now a part of Octopus Energy":
+    if supplier == "Bulb, now part of Octopus Energy":
         supplier_shown = "Octopus"
 
     assert page.has_one(f"h1:contains('Your details have been submitted to {supplier_shown}')")
@@ -892,7 +893,7 @@ def test_address_validation():
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
 @utils.mock_os_api
 def test_bulb_to_octopus():
-    supplier = "Bulb, now a part of Octopus Energy"
+    supplier = "Bulb, now part of Octopus Energy"
 
     models.Supplier(name="Octopus").save()
 

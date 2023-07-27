@@ -139,21 +139,21 @@ def get_prev_next_urls(session_id, page_name):
 
 def get_supplier_and_add_comma_after_bulb(session_id):
     supplier = interface.api.session.get_answer(session_id, "supplier")["supplier"]
-    if supplier == "Bulb, now a part of Octopus Energy":
+    if supplier == "Bulb, now part of Octopus Energy":
         supplier = supplier + ", "
     return supplier
 
 
 def get_supplier_and_change_bulb_to_octopus(session_id):
     supplier = interface.api.session.get_answer(session_id, "supplier")["supplier"]
-    if supplier == "Bulb, now a part of Octopus Energy":
+    if supplier == "Bulb, now part of Octopus Energy":
         supplier = "Octopus"
     return supplier
 
 
 def get_session_data_and_change_bulb_to_octopus(session_id):
     session_data = interface.api.session.get_session(session_id)
-    if session_data["supplier"] == "Bulb, now a part of Octopus Energy":
+    if session_data["supplier"] == "Bulb, now part of Octopus Energy":
         session_data["supplier"] = "Octopus"
     return session_data
 
@@ -509,7 +509,7 @@ class SupplierView(PageView):
         prev_page_name, next_page_name = get_prev_next_page_name(page_name)
         request_data = dict(request.POST.dict())
         request_supplier = request_data.get("supplier")
-        if request_supplier == "Bulb, now a part of Octopus Energy":
+        if request_supplier == "Bulb, now part of Octopus Energy":
             next_page_name = "bulb-warning-page"
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
