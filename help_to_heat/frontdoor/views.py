@@ -11,6 +11,8 @@ from help_to_heat import utils
 from ..portal import email_handler
 from . import eligibility, interface, schemas
 
+BulbSupplierConverter = interface.BulbSupplierConverter
+
 page_map = {}
 
 page_compulsory_field_map = {
@@ -484,19 +486,27 @@ class SupplierView(PageView):
     def get_context(self, *args, **kwargs):
         return {"supplier_options": schemas.supplier_options}
 
-    def save_data(self, request, session_id, page_name, *args, **kwargs):
-        data = dict(request.POST.dict())
-        if data["supplier"] == "Bulb":
-            data["supplier"] = "Octopus"
-        data = interface.api.session.save_answer(session_id, page_name, data)
-        return data
+    def handle_post(self, request, session_id, page_name, data, is_change_page):
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
+        request_data = dict(request.POST.dict())
+        request_supplier = request_data.get("supplier")
+        if request_supplier == "Bulb, now part of Octopus Energy":
+            next_page_name = "bulb-warning-page"
+        return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+
+
+@register_page("bulb-warning-page")
+class BulbWarningPageView(PageView):
+    def get_context(self, session_id, *args, **kwargs):
+        supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        return {"supplier": supplier}
 
 
 @register_page("contact-details")
 class ContactDetailsView(PageView):
     def get_context(self, session_id, *args, **kwargs):
-        supplier_data = interface.api.session.get_answer(session_id, "supplier")
-        return {"supplier": supplier_data["supplier"]}
+        supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        return {"supplier": supplier}
 
     def validate(self, request, session_id, page_name, data, is_change_page):
         fields = page_compulsory_field_map.get(page_name, ())
@@ -524,14 +534,14 @@ class ConfirmSubmitView(PageView):
             for page_name, questions in schemas.details_pages.items()
             for question in questions
         )
-        supplier_data = interface.api.session.get_answer(session_id, "supplier")
-        supplier = supplier_data["supplier"]
+        supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
         return {"summary_lines": summary_lines, "supplier": supplier, "sensitive": True}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         interface.api.session.create_referral(session_id)
         interface.api.session.save_answer(session_id, page_name, {"referral_created_at": str(timezone.now())})
         session_data = interface.api.session.get_session(session_id)
+        session_data = BulbSupplierConverter(session_id).replace_bulb_with_octopus_in_session_data(session_data)
         if session_data.get("email"):
             email_handler.send_referral_confirmation_email(session_data)
         return super().handle_post(request, session_id, page_name, data, is_change_page)
@@ -540,8 +550,8 @@ class ConfirmSubmitView(PageView):
 @register_page("success")
 class SuccessView(PageView):
     def get_context(self, session_id, *args, **kwargs):
-        supplier_data = interface.api.session.get_answer(session_id, "supplier")
-        return {"supplier": supplier_data["supplier"]}
+        supplier = BulbSupplierConverter(session_id).get_supplier_and_replace_bulb_with_octopus()
+        return {"supplier": supplier}
 
 
 class FeedbackView(utils.MethodDispatcher):
