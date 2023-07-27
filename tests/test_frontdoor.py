@@ -165,7 +165,7 @@ def test_happy_flow():
     referral.delete()
 
 
-def _do_happy_flow(supplier="Foxglove"):
+def _do_happy_flow(supplier="EON"):
     client = utils.get_client()
     page = client.get("/")
 
@@ -190,7 +190,13 @@ def _do_happy_flow(supplier="Foxglove"):
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
-    page = _check_page(page, "supplier", "supplier", "EON")
+
+    page = _check_page(page, "supplier", "supplier", supplier)
+
+    if supplier == "Bulb, now a part of Octopus Energy":
+        assert page.has_one("h1:contains('Your referral will be sent to Octopus Energy')")
+        form = page.get_form()
+        page = form.submit().follow()
 
     assert page.has_one("h1:contains('Add your personal and contact details')")
     form = page.get_form()
@@ -211,15 +217,6 @@ def _do_happy_flow(supplier="Foxglove"):
 
     assert page.has_one("h1:contains('Confirm and submit')")
 
-    page = page.click(contains="Change Energy supplier")
-
-    form = page.get_form()
-    form["supplier"] = supplier
-    page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Confirm and submit')")
-    if supplier == "Bulb":
-        supplier = "Octopus"
     assert page.has_text(supplier)
 
     form = page.get_form()
@@ -231,7 +228,11 @@ def _do_happy_flow(supplier="Foxglove"):
 
     page = form.submit().follow()
 
-    assert page.has_one(f"h1:contains('Your details have been submitted to {supplier}')")
+    supplier_shown = supplier
+    if supplier == "Bulb, now a part of Octopus Energy":
+        supplier_shown = "Octopus"
+
+    assert page.has_one(f"h1:contains('Your details have been submitted to {supplier_shown}')")
 
     return session_id
 
@@ -242,8 +243,6 @@ def _make_check_page(session_id):
         form[key] = answer
         page = form.submit().follow()
 
-        if page_name == "supplier" and key == "supplier" and answer == "Bulb":
-            answer = "Octopus"
         data = interface.api.session.get_answer(session_id, page_name=page_name)
         assert data[key] == answer
         return page
@@ -893,16 +892,14 @@ def test_address_validation():
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
 @utils.mock_os_api
 def test_bulb_to_octopus():
-    supplier = "Bulb"
-    schemas.supplier_options.append("Bulb")
-    schemas.supplier_options.append("Octopus")
+    supplier = "Bulb, now a part of Octopus Energy"
+
     models.Supplier(name="Octopus").save()
 
     session_id = _do_happy_flow(supplier=supplier)
 
-    data = interface.api.session.get_session(session_id)
-
-    assert data["supplier"] == "Octopus", data["supplier"]
+    referral_email_text = utils.get_latest_email_text("freddy.flibble@example.com")
+    assert "Your details have been submitted to Octopus." in referral_email_text
 
     referral = models.Referral.objects.get(session_id=session_id)
     assert referral.supplier.name == "Octopus"
