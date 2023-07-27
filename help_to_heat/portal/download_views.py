@@ -1,14 +1,15 @@
+import codecs
 import csv
 
+from dateutil import tz
 from django.http import HttpResponse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
-from dateutil import tz
 
 from help_to_heat.frontdoor.eligibility import calculate_eligibility
 from help_to_heat.portal import decorators, models
 
-london_tz = tz.gettz('Europe/London')
+london_tz = tz.gettz("Europe/London")
 
 csv_columns = (
     "ECO4",
@@ -94,6 +95,7 @@ def create_referral_csv(referrals, file_name):
     }
     rows = [add_extra_row_data(referral) for referral in referrals]
     response = HttpResponse(headers=headers, charset="utf-8")
+    response.write(codecs.BOM_UTF8)
     writer = csv.DictWriter(response, fieldnames=csv_columns, extrasaction="ignore", dialect=csv.unix_dialect)
     writer.writeheader()
     for row in rows:

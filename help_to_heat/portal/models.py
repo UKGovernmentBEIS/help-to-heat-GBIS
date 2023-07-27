@@ -2,6 +2,7 @@ import logging
 import string
 
 import pyotp
+from dateutil import tz
 from django.conf import settings
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db import models
@@ -12,6 +13,8 @@ from help_to_heat import utils
 epc_rating_choices = tuple((letter, letter) for letter in string.ascii_letters.upper()[:8])
 
 logger = logging.getLogger(__name__)
+
+london_tz = tz.gettz("Europe/London")
 
 
 class SupplierChoices(utils.Choices):
@@ -114,6 +117,10 @@ class ReferralDownload(utils.UUIDPrimaryKeyBase, utils.TimeStampedModel):
     file_name = models.CharField(max_length=255, blank=True, null=True)
     last_downloaded_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.PROTECT)
 
+    @property
+    def local_created_at(self):
+        return self.created_at.astimezone(london_tz)
+
 
 class Referral(utils.UUIDPrimaryKeyBase, utils.TimeStampedModel):
     data = models.JSONField(encoder=DjangoJSONEncoder)
@@ -139,3 +146,8 @@ class EpcRating(utils.TimeStampedModel):
 
     def __str__(self):
         return f"<EpcRating uprn={self.uprn}>"
+
+class ScottishEpcRating(utils.TimeStampedModel):
+    uprn = models.CharField(max_length=12, primary_key=True)
+    rating = models.CharField(max_length=32, choices=epc_rating_choices)
+    date = models.DateField(blank=True, null=True)

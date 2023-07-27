@@ -1,3 +1,4 @@
+import unittest
 import datetime
 import random
 import string
@@ -46,9 +47,9 @@ def test_duplicate_answer():
     assert result == expected, (result, expected)
 
 
-@utils.mock_os_api
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
 def test_find_addresses():
-    result = interface.api.address.find_addresses("foobar")
+    result = interface.api.address.find_addresses("10", "sw1a 2aa")
     assert result[0]["uprn"] == "100023336956"
 
 

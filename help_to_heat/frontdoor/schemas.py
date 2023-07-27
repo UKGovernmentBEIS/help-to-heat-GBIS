@@ -265,14 +265,23 @@ def validate_email_or_none(value):
         raise ValidationError("Invalid email format")
 
 
+postcode_regex_collection = (
+    # allow both upper and lower cases, no or multiple spaces in between outward and inward code
+    r"^[a-zA-Z]{1,2}\d[\da-zA-Z]?(\s*\d[a-zA-Z]{2})*$"
+)
+
+
 class SessionSchema(Schema):
     country = fields.String(validate=validate.OneOf(country_options))
     own_property = fields.String(validate=validate.OneOf(tuple(item["value"] for item in own_property_options_map)))
     address_line_1 = fields.String(validate=validate.Length(max=128))
     address_line_2 = fields.String(validate=validate.Length(max=128))
+    building_name_or_number = fields.String(validate=validate.Length(max=128))
     town_or_city = fields.String(validate=validate.Length(max=128))
     county = fields.String(validate=validate.Length(max=128))
-    postcode = fields.String(validate=validate.Length(max=16))
+    postcode = fields.String(
+        validate=validate.Regexp(postcode_regex_collection, error="Please enter a valid UK postcode")
+    )
     uprn = fields.Integer()
     address = fields.String(validate=validate.Length(max=512))
     council_tax_band = fields.String(validate=validate.OneOf(welsh_council_tax_band_options))

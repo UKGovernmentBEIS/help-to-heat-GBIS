@@ -16,7 +16,7 @@ page_map = {}
 page_compulsory_field_map = {
     "country": ("country",),
     "own-property": ("own_property",),
-    "address": ("address_line_1", "postcode"),
+    "address": ("building_name_or_number", "postcode"),
     "address-select": ("uprn",),
     "address-manual": ("address_line_1", "town_or_city", "postcode"),
     "council-tax-band": ("council_tax_band",),
@@ -38,7 +38,7 @@ page_compulsory_field_map = {
 missing_item_errors = {
     "country": "Select where the property is located",
     "own_property": "Select if you own the property",
-    "address_line_1": "Enter Address line 1",
+    "building_name_or_number": "Enter building name or number",
     "postcode": "Enter a postcode",
     "uprn": "Select your address",
     "town_or_city": "Enter your Town or city",
@@ -79,6 +79,12 @@ def homepage_view(request):
     response = render(request, template_name="frontdoor/homepage.html", context=context)
     response["x-vcap-request-id"] = session_id
     return response
+
+
+def holding_page_view(request):
+    previous_path = reverse("frontdoor:homepage")
+    context = {"previous_path": previous_path}
+    return render(request, template_name="frontdoor/holding-page.html", context=context)
 
 
 def page_view(request, session_id, page_name):
@@ -235,9 +241,18 @@ class AddressView(PageView):
 class AddressSelectView(PageView):
     def get_context(self, request, session_id, *args, **kwargs):
         data = interface.api.session.get_answer(session_id, "address")
-        text = f"{data['address_line_1'], data['postcode']}"
-        addresses = interface.api.address.find_addresses(text)
-        uprn_options = tuple({"value": a["uprn"], "label": a["address"]} for a in addresses)
+        building_name_or_number = data["building_name_or_number"]
+        postcode = data["postcode"]
+        addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
+        uprn_options = tuple(
+            {
+                "value": a["uprn"],
+                "label": f"""{a['address_line_1'] + ',' if a['address_line_1'] else ''}
+                    {a['address_line_2'] + ',' if a['address_line_2'] else ''}
+                    {a['town']}, {a['postcode']}""",
+            }
+            for a in addresses
+        )
         return {"uprn_options": uprn_options}
 
     def save_data(self, request, session_id, page_name, *args, **kwargs):
@@ -276,11 +291,7 @@ class CouncilTaxBandView(PageView):
         return {"council_tax_band_options": council_tax_bands}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        session_data = interface.api.session.get_session(session_id)
-        if session_data.get("country") == "Scotland":
-            return redirect("frontdoor:page", session_id=session_id, page_name="benefits")
-        else:
-            return super().handle_post(request, session_id, page_name, data, is_change_page)
+        return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
 @register_page("epc")
@@ -289,8 +300,9 @@ class EpcView(PageView):
         session_data = interface.api.session.get_session(session_id)
         uprn = session_data.get("uprn")
         address = session_data.get("address")
+        country = session_data.get("country")
         if uprn:
-            epc = interface.api.epc.get_epc(uprn)
+            epc = interface.api.epc.get_epc(uprn, country)
         else:
             epc = {}
         context = {

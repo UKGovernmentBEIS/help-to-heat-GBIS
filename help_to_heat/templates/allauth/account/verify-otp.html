@@ -4,42 +4,43 @@
 
 {% block content %}
 
-  <section class="wrapper">
+<section class="wrapper">
 
-    <form class="login" method="POST">
-      {% csrf_token %}
+  <form class="login" method="POST">
+    {% csrf_token %}
 
-      <div class="govuk-form-group">
-        <fieldset class="govuk-fieldset">
-          <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-            <h1 class="govuk-fieldset__heading">
-              Please enter your One Time Password (OTP)
-            </h1>
-          </legend>
+    <div class="govuk-form-group">
+      <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+          <h1 class="govuk-fieldset__heading">
+            Please enter your One Time Password (OTP)
+          </h1>
+        </legend>
 
-          <p class="govuk-body">Your authenticator app should now give you a one time code.  Enter it below.</p>
+        <p class="govuk-body">Your authenticator app should now give you a one time code. Enter it below.</p>
 
-          <p class="govuk-body">If you have not setup your authenticator app, then <a class="govuk-link" href="{% url 'portal:password-reset' %}">request a password reset</a>.</p>
+        <p class="govuk-body">If you have not setup your authenticator app, then <a class="govuk-link"
+            href="{% url 'portal:password-reset' %}">request a password reset</a>.</p>
 
-          <div class="govuk-form-group">
-            <label class="govuk-label" for="id_otp">
-              Enter your OTP
-            </label>
-            <input class="govuk-input" id="id_otp" name="otp" required autocomplete="off">
-          </div>
+        <div class="govuk-form-group">
+          <label class="govuk-label" for="id_otp">
+            Enter your OTP
+          </label>
+          <input class="govuk-input" id="id_otp" name="otp" required autocomplete="one-time-code">
+        </div>
 
-        </fieldset>
-      </div>
-
-      <button class="govuk-button" data-module="govuk-button" type="submit">
-        Submit
-      </button>
-    </form>
-
-    <div class="govuk-button-group">
-      <a class="govuk-link" href="{% url 'portal:password-reset' %}">Request password reset</a>
+      </fieldset>
     </div>
 
-  </section>
+    <button class="govuk-button" data-module="govuk-button" type="submit">
+      Submit
+    </button>
+  </form>
+
+  <div class="govuk-button-group">
+    <a class="govuk-link" href="{% url 'portal:password-reset' %}">Request password reset</a>
+  </div>
+
+</section>
 
 {% endblock %}
