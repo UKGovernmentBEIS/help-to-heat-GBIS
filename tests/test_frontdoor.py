@@ -45,6 +45,7 @@ def test_flow_northern_ireland():
     data = interface.api.session.get_answer(session_id, page_name="northern-ireland")
     assert data["_page_name"] == "northern-ireland", data
 
+
 def test_flow_errors():
     client = utils.get_client()
     page = client.get("/")

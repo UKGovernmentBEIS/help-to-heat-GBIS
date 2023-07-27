@@ -169,7 +169,8 @@ class PageView(utils.MethodDispatcher):
         response = render(request, template_name=f"frontdoor/{page_name}.html", context=context)
         response["x-vcap-request-id"] = session_id
 
-        # Most pages will return previously entered data, which could be sensitive and thus should not be cached unless explicitly okayed.
+        # Most pages will return previously entered data, which could be sensitive and thus should not be cached unless
+        # explicitly okayed.
         if not ("safe_to_cache" in context and context["safe_to_cache"]):
             response["cache-control"] = "no-store"
             response["Pragma"] = "no-cache"
@@ -543,7 +544,7 @@ class ConfirmSubmitView(PageView):
 class SuccessView(PageView):
     def get_context(self, session_id, *args, **kwargs):
         supplier_data = interface.api.session.get_answer(session_id, "supplier")
-        return {"supplier": supplier_data["supplier"], "safe_to_cache": True }
+        return {"supplier": supplier_data["supplier"], "safe_to_cache": True}
 
 
 class FeedbackView(utils.MethodDispatcher):
