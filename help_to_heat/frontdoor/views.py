@@ -81,6 +81,12 @@ def homepage_view(request):
     return response
 
 
+def holding_page_view(request):
+    previous_path = reverse("frontdoor:homepage")
+    context = {"previous_path": previous_path}
+    return render(request, template_name="frontdoor/holding-page.html", context=context)
+
+
 def page_view(request, session_id, page_name):
     if page_name in page_map:
         return page_map[page_name](request, session_id, page_name)
@@ -283,11 +289,7 @@ class CouncilTaxBandView(PageView):
         return {"council_tax_band_options": council_tax_bands}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        session_data = interface.api.session.get_session(session_id)
-        if session_data.get("country") == "Scotland":
-            return redirect("frontdoor:page", session_id=session_id, page_name="benefits")
-        else:
-            return super().handle_post(request, session_id, page_name, data, is_change_page)
+        return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
 @register_page("epc")
@@ -296,8 +298,9 @@ class EpcView(PageView):
         session_data = interface.api.session.get_session(session_id)
         uprn = session_data.get("uprn")
         address = session_data.get("address")
+        country = session_data.get("country")
         if uprn:
-            epc = interface.api.epc.get_epc(uprn)
+            epc = interface.api.epc.get_epc(uprn, country)
         else:
             epc = {}
         context = {

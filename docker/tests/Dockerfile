@@ -1,4 +1,4 @@
-FROM python:3.9-buster
+FROM public.ecr.aws/docker/library/python:3.9-buster
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
