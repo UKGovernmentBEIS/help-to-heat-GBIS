@@ -1,5 +1,6 @@
 ## Initial Setup
-1. 
+1. From the project root, run `cp envs/web.template envs/web`
+2. Populate the OS API key into the OS_API_KEY variable. The key can be found in keeper
 
 ## Using Docker
 
