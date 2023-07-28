@@ -147,6 +147,7 @@ class EpcRating(utils.TimeStampedModel):
     def __str__(self):
         return f"<EpcRating uprn={self.uprn}>"
 
+
 class ScottishEpcRating(utils.TimeStampedModel):
     uprn = models.CharField(max_length=12, primary_key=True)
     rating = models.CharField(max_length=32, choices=epc_rating_choices)

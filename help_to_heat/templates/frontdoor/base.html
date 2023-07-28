@@ -4,7 +4,7 @@
 <head>
   <meta charset="utf-8">
   {% block title %}
-    <title>Great British Insulation Scheme - GOV.UK</title>
+  <title>Great British Insulation Scheme - GOV.UK</title>
   {% endblock %}
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="blue">
@@ -30,28 +30,32 @@
 
 <body class="govuk-template__body" id="i-dot-ai">
   {% if request.COOKIES['cookiesAccepted'] != "True"%}
-    <div id="cookie-banner" class="govuk-cookie-banner" data-nosnippet role="region"
-      aria-label="Cookies on Check eligibility for Great British Insulation Scheme">
-      <div class="govuk-cookie-banner__message govuk-width-container">
-        <div class="govuk-grid-row">
-          <div class="govuk-grid-column-two-thirds">
-            <h2 class="govuk-cookie-banner__heading govuk-heading-m">Cookies we are using on our service</h2>
-            <div class="govuk-cookie-banner__content">
-              <p class="govuk-body">We will use necessary cookies when you use this service to help you move around the site.</p>
-              <p class="govuk-body">We will also use analytic cookies using Google Analytics to tell us how you got to our service, the pages you visit, and
-                how long you spent on them. Analytics cookies help us to improve our service. We do not allow Google to use or share the
-                data about how you use this site and the data is stored anonymously.</p>
-            </div>
+  <div id="cookie-banner" class="govuk-cookie-banner" data-nosnippet role="region"
+    aria-label="Cookies on Check eligibility for Great British Insulation Scheme">
+    <div class="govuk-cookie-banner__message govuk-width-container">
+      <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+          <h2 class="govuk-cookie-banner__heading govuk-heading-m">Cookies we are using on our service</h2>
+          <div class="govuk-cookie-banner__content">
+            <p class="govuk-body">We will use necessary cookies when you use this service to help you move around the
+              site.</p>
+            <p class="govuk-body">We will also use analytic cookies using Google Analytics to tell us how you got to our
+              service, the pages you visit, and
+              how long you spent on them. Analytics cookies help us to improve our service. We do not allow Google to
+              use or share the
+              data about how you use this site and the data is stored anonymously.</p>
           </div>
         </div>
-        <div class="govuk-button-group">
-          <button id="hideButton" value="hide" type="button" name="cookies" class="govuk-button" data-module="govuk-button">
-            Accept cookies
-          </button>
-          <a class="govuk-link" href="/cookies">View cookies we use on this service</a>
-        </div>
+      </div>
+      <div class="govuk-button-group">
+        <button id="hideButton" value="hide" type="button" name="cookies" class="govuk-button"
+          data-module="govuk-button">
+          Accept cookies
+        </button>
+        <a class="govuk-link" href="/cookies">View cookies we use on this service</a>
       </div>
     </div>
+  </div>
   {% endif %}
 
   <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
@@ -94,7 +98,9 @@
           BETA
         </strong>
         <span class="govuk-phase-banner__text">
-          This is a new service – your <a class="govuk-link" href="{% if session_id and page_name %}{{url('frontdoor:feedback', session_id=session_id, page_name=page_name)}}{% else %}{{url('frontdoor:feedback')}}{% endif %}" tabindex="0">feedback</a> will help us to improve it.
+          This is a new service – your <a class="govuk-link"
+            href="{% if session_id and page_name %}{{url('frontdoor:feedback', session_id=session_id, page_name=page_name)}}{% else %}{{url('frontdoor:feedback')}}{% endif %}"
+            tabindex="0">feedback</a> will help us to improve it.
         </span>
       </p>
     </div>
@@ -151,11 +157,9 @@
   <script src="/static/govuk-frontend/govuk-frontend-4.3.1.min.js"></script>
 
   <script src="/static/main.js"></script>
-  {% if request.COOKIES['cookiesAccepted'] == "True"%}
-    {% if gtag_id %}
-      <script async src="https://www.googletagmanager.com/gtag/js?id={{gtag_id}}"></script>
-      <script src="{{url('frontdoor:data-layer-js')}}"></script>
-    {% endif %}
+  {% if request.COOKIES['cookiesAccepted'] == "True" and gtag_id %}
+  <script async src="https://www.googletagmanager.com/gtag/js?id={{gtag_id}}"></script>
+  <script src="{{url('frontdoor:data-layer-js')}}"></script>
   {% endif %}
 </body>
 

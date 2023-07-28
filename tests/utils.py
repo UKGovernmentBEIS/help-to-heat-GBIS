@@ -3,8 +3,8 @@ import json
 import os
 import pathlib
 import random
-import string
 import re
+import string
 
 import furl
 import httpx
@@ -38,9 +38,7 @@ class StubAPI:
 
 
 class EmptyAPI(StubAPI):
-    files = {
-        "postcode": "empty_osdatahub_response.json"
-    }
+    files = {"postcode": "empty_osdatahub_response.json"}
 
 
 def mock_os_api(func):
