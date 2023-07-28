@@ -1,3 +1,6 @@
+## Initial Setup
+1. 
+
 ## Using Docker
 
 1. [Install Docker](https://docs.docker.com/get-docker/) on your machine
