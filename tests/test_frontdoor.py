@@ -65,7 +65,7 @@ def test_flow_errors():
     assert page.has_text("Select where the property is located")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
+# @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.MockApi)
 def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D"):
     """Answer main flow with set answers"""
     _add_epc(uprn="100023336956", rating=epc_rating)
@@ -143,7 +143,7 @@ def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D"):
     return page
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
+# @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.MockApi)
 @utils.mock_os_api
 def test_happy_flow():
     supplier = "EON"
@@ -289,8 +289,8 @@ def test_back_button():
     assert form["country"] == "England"
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
-@utils.mock_os_api
+# @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.MockApi)
+# @utils.mock_os_api
 def test_no_benefits_flow():
     client = utils.get_client()
     page = client.get("/")
@@ -347,8 +347,8 @@ def test_no_benefits_flow():
     assert page.has_one("""h1:contains("It's likely that your home already has suitable energy saving measures")""")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
-@utils.mock_os_api
+# @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.MockApi)
+# @utils.mock_os_api
 def test_summary():
     client = utils.get_client()
     page = client.get("/")
@@ -380,8 +380,8 @@ def test_summary():
     assert page.has_text("10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.EmptyAPI)
-@utils.mock_os_api
+@unittest.mock.patch("help_to_heat.frontdoor.interface.MockOSApi", utils.EmptyOSApi)
+# @utils.mock_os_api
 def test_no_address():
     client = utils.get_client()
     page = client.get("/")
@@ -445,8 +445,8 @@ def test_no_address():
     assert page.has_one("h1:contains('What is the council tax band of your property?')")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.EmptyAPI)
-@utils.mock_os_api
+@unittest.mock.patch("help_to_heat.frontdoor.interface.MockOSApi", utils.EmptyOSApi)
+# @utils.mock_os_api
 def test_no_epc():
     client = utils.get_client()
     page = client.get("/")
@@ -504,8 +504,8 @@ def test_no_epc():
     assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
-@utils.mock_os_api
+# @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.MockApi)
+# @utils.mock_os_api
 def test_eligibility():
     client = utils.get_client()
     page = client.get("/")
@@ -569,8 +569,8 @@ def test_eligibility():
     assert page.has_one("h1:contains('Your property is not eligible')")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
-@utils.mock_os_api
+# @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.MockApi)
+# @utils.mock_os_api
 def test_referral_email():
     client = utils.get_client()
     page = client.get("/")
@@ -695,8 +695,8 @@ def test_feedback_with_session():
     assert page.has_one("h1:contains('Do you own the property?')")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
-@utils.mock_os_api
+# @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.MockApi)
+# @utils.mock_os_api
 def test_incorrect_referral_email():
     client = utils.get_client()
     page = client.get("/")
@@ -740,8 +740,8 @@ def test_incorrect_referral_email():
     assert page.has_one("p:contains('Not a valid email address.')")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
-@utils.mock_os_api
+# @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.MockApi)
+# @utils.mock_os_api
 def test_referral_not_providing_email():
     client = utils.get_client()
     page = client.get("/")
@@ -798,8 +798,8 @@ def test_referral_not_providing_email():
     referral.delete()
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
-@utils.mock_os_api
+# @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.MockApi)
+# @utils.mock_os_api
 def test_referral_not_providing_contact_number():
     client = utils.get_client()
     page = client.get("/")
@@ -889,8 +889,8 @@ def test_address_validation():
     assert page.has_text("Please enter a valid UK postcode")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
-@utils.mock_os_api
+# @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.MockApi)
+# @utils.mock_os_api
 def test_bulb_to_octopus():
     supplier = "Bulb, now part of Octopus Energy"
 

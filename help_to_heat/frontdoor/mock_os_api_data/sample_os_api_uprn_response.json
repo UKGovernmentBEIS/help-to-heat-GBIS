@@ -1,0 +1,52 @@
+{
+  "header" : {
+    "uri" : "https://api.os.uk/search/places/v1/uprn?uprn=100023336956&dataset=LPI",
+    "query" : "uprn=100023336956",
+    "offset" : 0,
+    "totalresults" : 1,
+    "format" : "JSON",
+    "dataset" : "LPI",
+    "lr" : "EN,CY",
+    "maxresults" : 100,
+    "epoch" : "101",
+    "lastupdate" : "2023-05-24",
+    "output_srs" : "EPSG:27700"
+  },
+  "results" : [ {
+    "LPI" : {
+      "UPRN" : "100023336956",
+      "ADDRESS" : "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA",
+      "USRN" : "8400071",
+      "LPI_KEY" : "5990L000098595",
+      "PAO_START_NUMBER" : "10",
+      "STREET_DESCRIPTION" : "DOWNING STREET",
+      "TOWN_NAME" : "LONDON",
+      "ADMINISTRATIVE_AREA" : "CITY OF WESTMINSTER",
+      "POSTCODE_LOCATOR" : "SW1A 2AA",
+      "RPC" : "2",
+      "X_COORDINATE" : 530047.0,
+      "Y_COORDINATE" : 179951.0,
+      "STATUS" : "APPROVED",
+      "LOGICAL_STATUS_CODE" : "1",
+      "CLASSIFICATION_CODE" : "RD04",
+      "CLASSIFICATION_CODE_DESCRIPTION" : "Terraced",
+      "LOCAL_CUSTODIAN_CODE" : 5990,
+      "LOCAL_CUSTODIAN_CODE_DESCRIPTION" : "CITY OF WESTMINSTER",
+      "COUNTRY_CODE" : "E",
+      "COUNTRY_CODE_DESCRIPTION" : "This record is within England",
+      "POSTAL_ADDRESS_CODE" : "D",
+      "POSTAL_ADDRESS_CODE_DESCRIPTION" : "A record which is linked to PAF",
+      "BLPU_STATE_CODE" : "2",
+      "BLPU_STATE_CODE_DESCRIPTION" : "In use",
+      "TOPOGRAPHY_LAYER_TOID" : "osgb1000005572568",
+      "LAST_UPDATE_DATE" : "24/11/2021",
+      "ENTRY_DATE" : "19/03/2001",
+      "BLPU_STATE_DATE" : "19/03/2001",
+      "LPI_LOGICAL_STATUS_CODE" : "1",
+      "LPI_LOGICAL_STATUS_CODE_DESCRIPTION" : "APPROVED",
+      "LANGUAGE" : "EN",
+      "MATCH" : 1.0,
+      "MATCH_DESCRIPTION" : "EXACT"
+    }
+  } ]
+}
