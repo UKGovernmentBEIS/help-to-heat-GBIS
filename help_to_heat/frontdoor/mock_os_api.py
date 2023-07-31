@@ -16,13 +16,11 @@ class MockOSApi:
 
     def get_by_postcode(self, postcode, offset, max_results):
         content = (DATA_DIR / self.files["postcode"]).read_text()
-        data = json.loads(content)
-        return data
+        return json.loads(content)
 
     def get_by_uprn(self, uprn, dataset):
         content = (DATA_DIR / self.files["uprn"]).read_text()
-        data = json.loads(content)
-        return data
+        return json.loads(content)
 
 
 class EmptyOSApi(MockOSApi):
