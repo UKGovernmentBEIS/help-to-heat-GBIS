@@ -1,5 +1,4 @@
 import functools
-import json
 import os
 import pathlib
 import random
@@ -15,9 +14,8 @@ from django.conf import settings
 from django.utils import timezone
 
 from help_to_heat import wsgi
+from help_to_heat.frontdoor.mock_os_api import EmptyOSApi, MockOSApi
 from help_to_heat.portal import models
-
-from help_to_heat.frontdoor.mock_os_api import MockOSApi, EmptyOSApi
 
 __here__ = pathlib.Path(__file__).parent
 DATA_DIR = __here__ / "data"
