@@ -9,7 +9,7 @@ from . import utils
 from .test_frontdoor import _do_happy_flow
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.os_api.OSApi", utils.StubAPI)
+# @unittest.mock.patch("help_to_heat.frontdoor.os_api.OSApi", utils.MockApi)
 @utils.mock_os_api
 def test_csv():
     expected_datetime = "2022-06-30 23:59:59+00:00"
@@ -40,8 +40,8 @@ def test_csv():
     assert data["submission_time"] == "00:59:59"
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.os_api.OSApi", utils.StubAPI)
-@utils.mock_os_api
+# @unittest.mock.patch("help_to_heat.frontdoor.os_api.OSApi", utils.MockApi)
+# @utils.mock_os_api
 def test_referral_created_at():
     expected_datetime = "2022-12-25 14:34:56+00:00"
     with freezegun.freeze_time(expected_datetime):

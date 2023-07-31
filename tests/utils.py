@@ -17,28 +17,12 @@ from django.utils import timezone
 from help_to_heat import wsgi
 from help_to_heat.portal import models
 
+from help_to_heat.frontdoor.mock_os_api import MockOSApi, EmptyOSApi
+
 __here__ = pathlib.Path(__file__).parent
 DATA_DIR = __here__ / "data"
 
 TEST_SERVER_URL = "http://help-to-heat-testserver/"
-
-
-class StubAPI:
-    files = {
-        "postcode": "sample_os_api_postcode_response.json",
-    }
-
-    def __init__(self, key):
-        self.key = key
-
-    def get_by_postcode(self, postcode, offset, max_results):
-        content = (DATA_DIR / self.files["postcode"]).read_text()
-        data = json.loads(content)
-        return data
-
-
-class EmptyAPI(StubAPI):
-    files = {"postcode": "empty_osdatahub_response.json"}
 
 
 def mock_os_api(func):

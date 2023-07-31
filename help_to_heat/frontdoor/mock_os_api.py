@@ -26,3 +26,10 @@ class MockOSApi:
         content = (DATA_DIR / self.files["uprn"]).read_text()
         data = json.loads(content)
         return data
+
+
+class EmptyOSApi(MockOSApi):
+    files = {
+        "postcode": "empty_osdatahub_response.json",
+        "uprn": "empty_osdatahub_response.json"
+    }
