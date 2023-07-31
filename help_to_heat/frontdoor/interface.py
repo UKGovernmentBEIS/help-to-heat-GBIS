@@ -1,12 +1,11 @@
 import marshmallow
-import osdatahub
 from django.conf import settings
 
 from help_to_heat import portal
 from help_to_heat.utils import Entity, Interface, register_event, with_schema
 
 from . import models, schemas
-from .os_api import OSApi
+from .mock_os_api import MockOSApi
 
 
 class SaveAnswerSchema(marshmallow.Schema):
@@ -87,7 +86,7 @@ def get_addresses_from_api(postcode):
     max_results_number = 100
     offset = 0
 
-    json_response = OSApi(settings.OS_API_KEY).get_by_postcode(postcode, offset, max_results_number)
+    json_response = MockOSApi(settings.OS_API_KEY).get_by_postcode(postcode, offset, max_results_number)
     if not json_response:
         return []
 
@@ -103,7 +102,7 @@ def get_addresses_from_api(postcode):
         while requested_results_number < total_results_number:
             offset = requested_results_number
 
-            json_response = OSApi(settings.OS_API_KEY).get_by_postcode(postcode, offset, max_results_number)
+            json_response = MockOSApi(settings.OS_API_KEY).get_by_postcode(postcode, offset, max_results_number)
             if not json_response:
                 return []
 
@@ -138,7 +137,6 @@ class BulbSupplierConverter:
         return supplier
 
     def replace_bulb_with_octopus_in_session_data(self, session_data):
-        supplier = session_data["supplier"]
         if self._is_bulb():
             session_data["supplier"] = "Octopus"
         return session_data
@@ -221,9 +219,8 @@ class Address(Entity):
 
     @with_schema(load=GetAddressSchema, dump=FullAddressSchema)
     def get_address(self, uprn):
-        api = osdatahub.PlacesAPI(settings.OS_API_KEY)
-        api_results = api.uprn(int(uprn), dataset="LPI")["features"]
-        address = api_results[0]["properties"]["ADDRESS"]
+        api_results = MockOSApi(settings.OS_API_KEY).get_by_uprn(int(uprn), "LPI")["results"]
+        address = api_results[0]["LPI"]["ADDRESS"]
         result = {"uprn": uprn, "address": address}
         return result
 
