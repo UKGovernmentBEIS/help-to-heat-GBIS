@@ -12,7 +12,7 @@
     <div class="govuk-button-group">
       <a href="{{url('portal:change-supplier-team-lead-status', supplier.id, user.id)}}" class="govuk-button govuk-button--secondary">{{user.is_active and "Disable" or "Enable"}}</a>
     </div>
-    <p>You can amend a team lead's name. If you need to amend their email, you can remove them and add a new team lead.</p>
+    <p class="govuk-body">You can amend a team lead's name. If you need to amend their email, you can remove them and add a new team lead.</p>
     {{csrf_input}}
     <div class="govuk-form-group">
       <label class="govuk-label" for="team-leader-name">

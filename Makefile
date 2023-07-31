@@ -26,9 +26,7 @@ add-suppliers:
 
 .PHONY: check-python-code
 check-python-code:
-	isort --check .
-	black --check .
-	flake8
+	docker-compose -f tests/docker-compose.yml build check-code-help-to-heat && docker-compose -f tests/docker-compose.yml run --no-deps --rm check-code-help-to-heat
 
 .PHONY: check-migrations
 check-migrations:

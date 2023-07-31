@@ -1,4 +1,4 @@
-FROM python:3.9-buster
+FROM public.ecr.aws/docker/library/python:3.9-buster
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -21,6 +21,9 @@ RUN chmod +x /entrypoint.sh
 
 COPY ./docker/tests/start.sh /start.sh
 RUN chmod +x /start.sh
+
+COPY ./docker/tests/check-code.sh /check-code.sh
+RUN chmod +x /check-code.sh
 
 COPY ./ /app
 

@@ -2,24 +2,24 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>Enter the property address manually - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+<title>Enter the property address manually - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
 {% endblock %}
 
 {% block content %}
-  {% call macros.form_wrapper(prev_url) -%}
-    <fieldset class="govuk-fieldset">
-      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-        <h1 class="govuk-heading-l">
-          What is the property’s address?
-        </h1>
-      </legend>
+{% call macros.form_wrapper(prev_url) -%}
+<fieldset class="govuk-fieldset">
+  <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+    <h1 class="govuk-heading-l">
+      What is the property’s address?
+    </h1>
+  </legend>
 
-      {{macros.input('address_line_1', 'Address line 1', data, errors)}}
-      {{macros.input('address_line_2', 'Address line 2 (optional)', data, errors)}}
-      {{macros.input('town_or_city', 'Town or city', data, errors)}}
-      {{macros.input('county', 'County (optional)', data, errors)}}
-      {{macros.input('postcode', 'Postcode', data, errors)}}
+  {{macros.input('address_line_1', 'Address line 1', data, errors, 'address-line1')}}
+  {{macros.input('address_line_2', 'Address line 2 (optional)', data, errors, 'address-line2')}}
+  {{macros.input('town_or_city', 'Town or city', data, errors, 'address-level2')}}
+  {{macros.input('county', 'County (optional)', data, errors, 'county')}}
+  {{macros.input('postcode', 'Postcode', data, errors, 'postal-code')}}
 
-    </fieldset>
-  {%- endcall %}
+</fieldset>
+{%- endcall %}
 {% endblock %}

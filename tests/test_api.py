@@ -3,7 +3,7 @@ import random
 import string
 
 import django.db.utils
-from nose.tools import assert_raises
+import pytest
 
 from help_to_heat.portal import models
 
@@ -19,13 +19,13 @@ def test_epc_duplicates():
     }
     epc1 = models.EpcRating(**data)
     epc1.save()
-    with assert_raises(django.db.utils.IntegrityError):
+    with pytest.raises(django.db.utils.IntegrityError):
         epc2 = models.EpcRating(**data)
         epc2.save()
 
 
-@utils.with_client
-def test_healthcheck(client):
+def test_healthcheck():
+    client = utils.get_client()
     result = client.get("/api/healthcheck/")
     assert result.json()["healthy"] is True
     assert result.json()["datetime"]

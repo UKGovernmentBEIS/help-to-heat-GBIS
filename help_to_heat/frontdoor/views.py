@@ -11,12 +11,14 @@ from help_to_heat import utils
 from ..portal import email_handler
 from . import eligibility, interface, schemas
 
+BulbSupplierConverter = interface.BulbSupplierConverter
+
 page_map = {}
 
 page_compulsory_field_map = {
     "country": ("country",),
     "own-property": ("own_property",),
-    "address": ("address_line_1", "postcode"),
+    "address": ("building_name_or_number", "postcode"),
     "address-select": ("uprn",),
     "address-manual": ("address_line_1", "town_or_city", "postcode"),
     "council-tax-band": ("council_tax_band",),
@@ -38,7 +40,7 @@ page_compulsory_field_map = {
 missing_item_errors = {
     "country": "Select where the property is located",
     "own_property": "Select if you own the property",
-    "address_line_1": "Enter Address line 1",
+    "building_name_or_number": "Enter building name or number",
     "postcode": "Enter a postcode",
     "uprn": "Select your address",
     "town_or_city": "Enter your Town or city",
@@ -77,7 +79,15 @@ def homepage_view(request):
     context = {
         "next_url": next_url,
     }
-    return render(request, template_name="frontdoor/homepage.html", context=context)
+    response = render(request, template_name="frontdoor/homepage.html", context=context)
+    response["x-vcap-request-id"] = session_id
+    return response
+
+
+def holding_page_view(request):
+    previous_path = reverse("frontdoor:homepage")
+    context = {"previous_path": previous_path}
+    return render(request, template_name="frontdoor/holding-page.html", context=context)
 
 
 def holding_page_view(request):
@@ -94,7 +104,9 @@ def page_view(request, session_id, page_name):
     interface.api.session.save_answer(session_id, page_name, {"_page_name": page_name})
     prev_page_url, next_page_url = get_prev_next_urls(session_id, page_name)
     context = {"session_id": session_id, "page_name": page_name, "prev_url": prev_page_url}
-    return render(request, template_name=f"frontdoor/{page_name}.html", context=context)
+    response = render(request, template_name=f"frontdoor/{page_name}.html", context=context)
+    response["x-vcap-request-id"] = session_id
+    return response
 
 
 def change_page_view(request, session_id, page_name):
@@ -147,6 +159,12 @@ class PageView(utils.MethodDispatcher):
             next_page_url = None
         else:
             prev_page_url, next_page_url = self.get_prev_next_urls(session_id, page_name)
+
+        session = interface.api.session.get_session(session_id)
+        # Once a user has created a referral, they can no longer access their old session
+        if "referral_created_at" in session and page_name != "success":
+            return redirect("/")
+
         extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data=data)
         context = {
             "data": data,
@@ -157,7 +175,12 @@ class PageView(utils.MethodDispatcher):
             "next_url": next_page_url,
             **extra_context,
         }
-        return render(request, template_name=f"frontdoor/{page_name}.html", context=context)
+        response = render(request, template_name=f"frontdoor/{page_name}.html", context=context)
+        response["x-vcap-request-id"] = session_id
+        if "sensitive" in context and context["sensitive"]:
+            response["cache-control"] = "no-store"
+            response["Pragma"] = "no-cache"
+        return response
 
     def get_prev_next_urls(self, session_id, page_name):
         return get_prev_next_urls(session_id, page_name)
@@ -225,9 +248,18 @@ class AddressView(PageView):
 class AddressSelectView(PageView):
     def get_context(self, request, session_id, *args, **kwargs):
         data = interface.api.session.get_answer(session_id, "address")
-        text = f"{data['address_line_1'], data['postcode']}"
-        addresses = interface.api.address.find_addresses(text)
-        uprn_options = tuple({"value": a["uprn"], "label": a["address"]} for a in addresses)
+        building_name_or_number = data["building_name_or_number"]
+        postcode = data["postcode"]
+        addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
+        uprn_options = tuple(
+            {
+                "value": a["uprn"],
+                "label": f"""{a['address_line_1'] + ',' if a['address_line_1'] else ''}
+                    {a['address_line_2'] + ',' if a['address_line_2'] else ''}
+                    {a['town']}, {a['postcode']}""",
+            }
+            for a in addresses
+        )
         return {"uprn_options": uprn_options}
 
     def save_data(self, request, session_id, page_name, *args, **kwargs):
@@ -266,11 +298,7 @@ class CouncilTaxBandView(PageView):
         return {"council_tax_band_options": council_tax_bands}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        session_data = interface.api.session.get_session(session_id)
-        if session_data.get("country") == "Scotland":
-            return redirect("frontdoor:page", session_id=session_id, page_name="benefits")
-        else:
-            return super().handle_post(request, session_id, page_name, data, is_change_page)
+        return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
 @register_page("epc")
@@ -279,8 +307,9 @@ class EpcView(PageView):
         session_data = interface.api.session.get_session(session_id)
         uprn = session_data.get("uprn")
         address = session_data.get("address")
+        country = session_data.get("country")
         if uprn:
-            epc = interface.api.epc.get_epc(uprn)
+            epc = interface.api.epc.get_epc(uprn, country)
         else:
             epc = {}
         context = {
@@ -446,7 +475,7 @@ class SummaryView(PageView):
             for question in questions
             if question in session_data
         )
-        return {"summary_lines": summary_lines}
+        return {"summary_lines": summary_lines, "sensitive": True}
 
 
 @register_page("schemes")
@@ -464,12 +493,27 @@ class SupplierView(PageView):
     def get_context(self, *args, **kwargs):
         return {"supplier_options": schemas.supplier_options}
 
+    def handle_post(self, request, session_id, page_name, data, is_change_page):
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
+        request_data = dict(request.POST.dict())
+        request_supplier = request_data.get("supplier")
+        if request_supplier == "Bulb, now part of Octopus Energy":
+            next_page_name = "bulb-warning-page"
+        return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+
+
+@register_page("bulb-warning-page")
+class BulbWarningPageView(PageView):
+    def get_context(self, session_id, *args, **kwargs):
+        supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        return {"supplier": supplier}
+
 
 @register_page("contact-details")
 class ContactDetailsView(PageView):
     def get_context(self, session_id, *args, **kwargs):
-        supplier_data = interface.api.session.get_answer(session_id, "supplier")
-        return {"supplier": supplier_data["supplier"]}
+        supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        return {"supplier": supplier}
 
     def validate(self, request, session_id, page_name, data, is_change_page):
         fields = page_compulsory_field_map.get(page_name, ())
@@ -497,14 +541,14 @@ class ConfirmSubmitView(PageView):
             for page_name, questions in schemas.details_pages.items()
             for question in questions
         )
-        supplier_data = interface.api.session.get_answer(session_id, "supplier")
-        supplier = supplier_data["supplier"]
-        return {"summary_lines": summary_lines, "supplier": supplier}
+        supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        return {"summary_lines": summary_lines, "supplier": supplier, "sensitive": True}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         interface.api.session.create_referral(session_id)
         interface.api.session.save_answer(session_id, page_name, {"referral_created_at": str(timezone.now())})
         session_data = interface.api.session.get_session(session_id)
+        session_data = BulbSupplierConverter(session_id).replace_bulb_with_octopus_in_session_data(session_data)
         if session_data.get("email"):
             email_handler.send_referral_confirmation_email(session_data)
         return super().handle_post(request, session_id, page_name, data, is_change_page)
@@ -513,8 +557,8 @@ class ConfirmSubmitView(PageView):
 @register_page("success")
 class SuccessView(PageView):
     def get_context(self, session_id, *args, **kwargs):
-        supplier_data = interface.api.session.get_answer(session_id, "supplier")
-        return {"supplier": supplier_data["supplier"]}
+        supplier = BulbSupplierConverter(session_id).get_supplier_and_replace_bulb_with_octopus()
+        return {"supplier": supplier}
 
 
 class FeedbackView(utils.MethodDispatcher):
@@ -555,7 +599,9 @@ def data_layer_js_view(request):
 
 
 def privacy_policy_view(request):
-    return render(request, template_name="frontdoor/privacy-policy.html")
+    previous_path = request.GET.get("prev")
+    context = {"previous_path": previous_path}
+    return render(request, template_name="frontdoor/privacy-policy.html", context=context)
 
 
 def accessibility_statement_view(request):

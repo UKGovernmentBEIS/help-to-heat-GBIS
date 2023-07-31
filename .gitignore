@@ -44,3 +44,5 @@ web/tsconfig.tsbuildinfo
 web/.env
 /web/cypress/videos
 /web/.env
+
+/envs/web
