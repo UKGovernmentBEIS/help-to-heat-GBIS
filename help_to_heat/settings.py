@@ -8,7 +8,6 @@ from .settings_base import (
 )
 
 import logging
-logging.getLogger("waitress.queue").setLevel(logging.ERROR)
 
 SECRET_KEY = SECRET_KEY
 STATIC_URL = STATIC_URL
@@ -191,6 +190,8 @@ if not DEBUG:
     SESSION_COOKIE_AGE = 60 * 10  # 10 minutes
     SESSION_COOKIE_SAMESITE = "Strict"
     CSRF_COOKIE_SECURE = True
+
+    logging.getLogger("waitress.queue").setLevel(logging.ERROR)
 else:
     import debugpy
 
