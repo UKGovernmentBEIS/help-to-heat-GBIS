@@ -6,9 +6,9 @@
 <form method="POST" novalidate>
   <fieldset class="govuk-fieldset">
     {% if not user.is_active %}
-    <p>By enabling a user, they will be able to access customer leads.</p>
+    <p class="govuk-body">By enabling a user, they will be able to access customer leads.</p>
     {% else %}
-    <p>By disabling a user, they will no longer be able to access customer leads.</p>
+    <p class="govuk-body">By disabling a user, they will no longer be able to access customer leads.</p>
     {% endif %}
     {{csrf_input}}
     <div class="govuk-button-group">

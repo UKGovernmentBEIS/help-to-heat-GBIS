@@ -1,5 +1,16 @@
 {
-  "crs": "EPSG:27700",
-  "features": [],
-  "type": "FeatureCollection"
+  "header" : {
+    "uri" : "https://api.os.uk/search/places/v1/postcode?maxresults=100&postcode=sw1a2aa&lr=EN&dataset=DPA%2CLPI",
+    "query" : "postcode=sw1a2aa",
+    "offset" : 0,
+    "totalresults" : 0,
+    "format" : "JSON",
+    "dataset" : "DPA,LPI",
+    "lr" : "EN",
+    "maxresults" : 100,
+    "epoch" : "102",
+    "lastupdate" : "2023-07-21",
+    "output_srs" : "EPSG:27700"
+  },
+  "results" : []
 }

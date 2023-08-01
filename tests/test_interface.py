@@ -1,6 +1,7 @@
 import datetime
 import random
 import string
+import unittest
 import uuid
 
 from help_to_heat.frontdoor import interface
@@ -46,9 +47,9 @@ def test_duplicate_answer():
     assert result == expected, (result, expected)
 
 
-@utils.mock_os_api
+# @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.MockApi)
 def test_find_addresses():
-    result = interface.api.address.find_addresses("foobar")
+    result = interface.api.address.find_addresses("10", "sw1a 2aa")
     assert result[0]["uprn"] == "100023336956"
 
 
@@ -67,9 +68,9 @@ def test_get_epc():
     }
     models.EpcRating.objects.create(**data)
 
-    found_epc = interface.api.epc.get_epc(uprn)
+    found_epc = interface.api.epc.get_epc(uprn, "England")
     assert found_epc["rating"] == data["rating"]
 
     new_uprn = "".join(random.choices(string.digits, k=5))
-    missing_epc = interface.api.epc.get_epc(new_uprn)
+    missing_epc = interface.api.epc.get_epc(new_uprn, "England")
     assert missing_epc == {}

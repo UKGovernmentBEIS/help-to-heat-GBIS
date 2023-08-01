@@ -1,8 +1,8 @@
 import functools
-import json
 import os
 import pathlib
 import random
+import re
 import string
 
 import furl
@@ -14,6 +14,7 @@ from django.conf import settings
 from django.utils import timezone
 
 from help_to_heat import wsgi
+from help_to_heat.frontdoor.mock_os_api import EmptyOSApi, MockOSApi
 from help_to_heat.portal import models
 
 __here__ = pathlib.Path(__file__).parent
@@ -22,41 +23,13 @@ DATA_DIR = __here__ / "data"
 TEST_SERVER_URL = "http://help-to-heat-testserver/"
 
 
-class StubAPI:
-    files = {
-        "find": "sample_osdatahub_find_response.json",
-        "uprn": "sample_osdatahub_uprn_response.json",
-    }
-
-    def __init__(self, key):
-        self.key = key
-
-    def find(self, text, dataset=None):
-        content = (DATA_DIR / self.files["find"]).read_text()
-        data = json.loads(content)
-        return data
-
-    def uprn(self, uprn, dataset=None):
-        content = (DATA_DIR / self.files["uprn"]).read_text()
-        data = json.loads(content)
-        return data
-
-
-class EmptyAPI(StubAPI):
-    files = {
-        "find": "empty_osdatahub_response.json",
-        "uprn": "empty_osdatahub_response.json",
-    }
-
-
 def mock_os_api(func):
-    find_data = (DATA_DIR / "sample_os_api_find_response.json").read_text()
     uprn_data = (DATA_DIR / "sample_os_api_uprn_response.json").read_text()
 
     @functools.wraps(func)
     def _inner(*args, **kwargs):
         with requests_mock.Mocker() as m:
-            m.register_uri("GET", "https://api.os.uk/search/places/v1/find", text=find_data)
+            m.register_uri(requests_mock.ANY, re.compile(TEST_SERVER_URL + ".*"), real_http=True)
             m.register_uri("GET", "https://api.os.uk/search/places/v1/uprn", text=uprn_data)
             return func()
 

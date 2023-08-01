@@ -85,13 +85,6 @@ def calculate_eligibility(session_data):
     # Scenario 4
     if country in country_council_tax_bands:
         if council_tax_band in country_council_tax_bands[country]["ineligible"]:
-            if epc_rating in ("D"):
-                if benefits in ("No",):
-                    logger.error("Scenario 4")
-                    return ()
-
-    if country in country_council_tax_bands:
-        if council_tax_band in country_council_tax_bands[country]["ineligible"]:
             if epc_rating in ("D", "E", "F", "G"):
                 if benefits in ("No",):
                     logger.error("Scenario 4")

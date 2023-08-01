@@ -272,7 +272,7 @@ def _add_epc(uprn, rating):
     models.EpcRating.objects.update_or_create(
         uprn=uprn, defaults={"rating": rating, "date": datetime.date(2022, 12, 25)}
     )
-    assert interface.api.epc.get_epc(uprn)
+    assert interface.api.epc.get_epc(uprn, "England")
 
 
 def _make_check_page(session_id):
@@ -288,6 +288,8 @@ def _make_check_page(session_id):
     return _check_page
 
 
+# @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.MockApi)
+@utils.mock_os_api
 def test_ineligible_shortcut():
     for country in eligible_council_tax:
         for council_tax_band in eligible_council_tax[country]["ineligible"]:
@@ -295,7 +297,6 @@ def test_ineligible_shortcut():
                 _do_test(country=country, council_tax_band=council_tax_band, epc_rating=epc_rating)
 
 
-@unittest.mock.patch("osdatahub.PlacesAPI", utils.StubAPI)
 def _do_test(country, council_tax_band, epc_rating):
     _add_epc(uprn="100023336956", rating=epc_rating)
 
@@ -323,13 +324,13 @@ def _do_test(country, council_tax_band, epc_rating):
     assert page.has_one("h1:contains('What is the property’s address?')")
 
     form = page.get_form()
-    form["address_line_1"] = "999 Letsby Avenue"
-    form["postcode"] = "PO99 9PO"
+    form["building_name_or_number"] = "10"
+    form["postcode"] = "SW1A 2AA"
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="address")
-    assert data["address_line_1"] == "999 Letsby Avenue"
-    assert data["postcode"] == "PO99 9PO"
+    assert data["building_name_or_number"] == "10"
+    assert data["postcode"] == "SW1A 2AA"
 
     form = page.get_form()
     form["uprn"] = "100023336956"
@@ -342,9 +343,14 @@ def _do_test(country, council_tax_band, epc_rating):
     assert page.has_one("h1:contains('What is the council tax band of your property?')")
     page = _check_page(page, "council-tax-band", "council_tax_band", council_tax_band)
 
-    if not country == "Scotland":
-        assert page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
-        page = _check_page(page, "epc", "accept_suggested_epc", "Yes")
+    does_it_have_an_epc = page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
+
+    if not does_it_have_an_epc:
+        print(f"country: {country}")
+        print(f"council: {council_tax_band}")
+        print(f"epc: {epc_rating}")
+    assert does_it_have_an_epc
+    page = _check_page(page, "epc", "accept_suggested_epc", "Yes")
 
     assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
     page = _check_page(page, "benefits", "benefits", "No")

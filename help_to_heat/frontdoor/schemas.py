@@ -33,6 +33,7 @@ extra_pages = (
     "northern-ireland",
     "epc-ineligible",
     "ineligible",
+    "bulb-warning-page",
 )
 
 page_prev_next_map = {
@@ -45,6 +46,7 @@ page_prev_next_map = {
     "epc-ineligible": {"prev": "epc", "next": None},
     "ineligible": {"prev": "benefits", "next": None},
     "northern-ireland": {"prev": "country", "next": None},
+    "bulb-warning-page": {"prev": "supplier", "next": "contact-details"},
 }
 
 summary_map = {
@@ -69,7 +71,7 @@ confirm_sumbit_map = {
     "supplier": "Energy supplier",
     "first_name": "First name",
     "last_name": "Last name",
-    "contact_number": "Contact number",
+    "contact_number": "Mobile number",
     "email": "Email",
 }
 
@@ -205,7 +207,12 @@ wall_type_options = (
     "Solid walls",
     "Cavity walls",
     "Mix of solid and cavity walls",
-    "I don't see my option listed",
+    {
+        "value": "I don't see my option listed",
+        "label": "I don't see my option listed",
+        "hint": "Other wall types could include cob walls, timber framed, system built, steel framed or other "
+        "non-traditional build types",
+    },
     "I don't know",
 )
 wall_insulation_options = (
@@ -220,23 +227,24 @@ loft_options = (
 )
 loft_access_options = ("Yes, there is access to my loft", "No, there is no access to my loft")
 loft_access_validation_options = loft_access_options + ("No loft",)
-supplier_options = (
+# TODO: Make this a tuple again when Bulb gets restored
+supplier_options = [
     # "British Gas",
-    # "Bulb",
+    "Bulb, now part of Octopus Energy",
     # "E Energy",
     # "Ecotricity",
     "EDF",
     "EON",
     # "ESB",
     # "Foxglove",
-    # "Octopus",
+    "Octopus",
     # "OVO",
     # "Scottish Power",
     # "Shell",
     "So Energy",
     "Utilita",
     # "Utility Warehouse",
-)
+]
 epc_rating_options = ("A", "B", "C", "D", "E", "F", "G", "H", "Not found")
 loft_insulation_options = (
     "Yes, there is at least 270mm of insulation in my loft",
@@ -259,14 +267,23 @@ def validate_email_or_none(value):
         raise ValidationError("Invalid email format")
 
 
+postcode_regex_collection = (
+    # allow both upper and lower cases, no or multiple spaces in between outward and inward code
+    r"^[a-zA-Z]{1,2}\d[\da-zA-Z]?(\s*\d[a-zA-Z]{2})*$"
+)
+
+
 class SessionSchema(Schema):
     country = fields.String(validate=validate.OneOf(country_options))
     own_property = fields.String(validate=validate.OneOf(tuple(item["value"] for item in own_property_options_map)))
     address_line_1 = fields.String(validate=validate.Length(max=128))
     address_line_2 = fields.String(validate=validate.Length(max=128))
+    building_name_or_number = fields.String(validate=validate.Length(max=128))
     town_or_city = fields.String(validate=validate.Length(max=128))
     county = fields.String(validate=validate.Length(max=128))
-    postcode = fields.String(validate=validate.Length(max=16))
+    postcode = fields.String(
+        validate=validate.Regexp(postcode_regex_collection, error="Please enter a valid UK postcode")
+    )
     uprn = fields.Integer()
     address = fields.String(validate=validate.Length(max=512))
     council_tax_band = fields.String(validate=validate.OneOf(welsh_council_tax_band_options))

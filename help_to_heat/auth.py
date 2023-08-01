@@ -15,7 +15,7 @@ class InvalidAuthError(Exception):
 def get_auth_from_header(request):
     auth_header = request.META.get("HTTP_AUTHORIZATION")
     if not auth_header:
-        raise InvalidAuthError("No auth header set")
+        return (None, None)
     if isinstance(auth_header, str):
         auth_header = auth_header.encode("utf-8")
     if b" " not in auth_header:
