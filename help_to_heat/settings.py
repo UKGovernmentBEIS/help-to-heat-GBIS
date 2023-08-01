@@ -7,6 +7,9 @@ from .settings_base import (
     env,
 )
 
+import logging
+logging.getLogger("waitress.queue").setLevel(logging.ERROR)
+
 SECRET_KEY = SECRET_KEY
 STATIC_URL = STATIC_URL
 STATICFILES_DIRS = STATICFILES_DIRS
