@@ -13,4 +13,4 @@ echo "Suppliers check completed"
 
 echo "Starting app"
 
-watchmedo auto-restart --directory=./  --pattern=""*.py"" --recursive -- waitress-serve --port=$PORT --threads=64 --asyncore-use-poll --connection-limit=2000 --backlog=2000 help_to_heat.wsgi:application
+watchmedo auto-restart --directory=./  --pattern=""*.py"" --recursive -- waitress-serve --port=$PORT --threads=128 --asyncore-use-poll --connection-limit=2000 --backlog=2000 help_to_heat.wsgi:application
