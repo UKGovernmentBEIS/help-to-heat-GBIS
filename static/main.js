@@ -5,7 +5,8 @@ document.body.className = document.body.className
 window.GOVUKFrontend.initAll();
 
 window.onload = () => {
-  const hideButton = document.getElementById("hideButton");
+  const acceptButton = document.getElementById("acceptButton");
+  const rejectButton = document.getElementById("rejectButton");
   const cookieBanner = document.getElementById("cookie-banner");
 
   const cookiesAccepted = document.cookie
@@ -17,14 +18,27 @@ window.onload = () => {
     cookieBanner.classList.add("visible");
   }
 
-  hideButton.addEventListener("click", () => {
-    const date = new Date();
-    date.setFullYear(date.getFullYear() + 1);
+  if (cookieBanner) {
+    acceptButton.addEventListener("click", () => {
+      const date = new Date();
+      date.setFullYear(date.getFullYear() + 1);
 
-    document.cookie =
-      "cookiesAccepted=True; expires=" + date.toUTCString() + "; path=/";
+      document.cookie =
+        "cookiesAccepted=True; expires=" + date.toUTCString() + "; path=/";
 
-    cookieBanner.classList.remove("visible");
-    cookieBanner.classList.add("hidden");
-  });
+      cookieBanner.classList.remove("visible");
+      cookieBanner.classList.add("hidden");
+    });
+
+    rejectButton.addEventListener("click", () => {
+      const date = new Date();
+      date.setFullYear(date.getFullYear() + 1);
+
+      document.cookie =
+        "cookiesAccepted=False; expires=" + date.toUTCString() + "; path=/";
+
+      cookieBanner.classList.remove("visible");
+      cookieBanner.classList.add("hidden");
+    });
+  }
 };
