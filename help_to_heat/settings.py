@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "debug_toolbar" ,
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -62,6 +63,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "debug_toolbar.middleware.DebugToolbarMiddleware",
 ]
 
 if BASIC_AUTH:
@@ -182,6 +184,15 @@ else:
 OS_API_KEY = env.str("OS_API_KEY")
 
 TOTP_ISSUER = "Help to Heat Supplier Portal"
+
+# TODO: PC-450 Gross way to check which environment we're in, we should have a var for this
+is_developer_environment = BASE_URL == "https://dev.check-eligibility-for-gb-insulation-scheme.service.gov.uk/" or DEBUG
+
+if is_developer_environment:
+    import socket
+
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
 
 if not DEBUG:
     SESSION_COOKIE_SECURE = True

@@ -11,6 +11,7 @@ urlpatterns = [
     path("robots.txt", views.robots_txt_view),
     path("portal/", include((portal_patterns, "portal"))),
     path("", include((frontdoor_patterns, "frontdoor"))),
+    path("__debug__/", include("debug_toolbar.urls")),
 ]
 
 if settings.DEBUG:
