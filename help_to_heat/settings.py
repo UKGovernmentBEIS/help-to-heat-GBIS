@@ -1,3 +1,5 @@
+import logging
+
 from .settings_base import (
     BASE_DIR,
     SECRET_KEY,
@@ -6,8 +8,6 @@ from .settings_base import (
     STATICFILES_DIRS,
     env,
 )
-
-import logging
 
 SECRET_KEY = SECRET_KEY
 STATIC_URL = STATIC_URL
@@ -197,5 +197,5 @@ else:
 
     try:
         debugpy.listen(("0.0.0.0", 5678))
-    except Exception as e:
-        print("Unable to bind debugpy (if you are running manage.py in local, this is expected):", e)
+    except Exception as e:  # noqa: B902
+        print("Unable to bind debugpy (if you are running manage.py in local, this is expected):", e)  # noqa: T201

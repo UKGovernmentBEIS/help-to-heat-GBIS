@@ -6,6 +6,7 @@ import uuid
 
 from help_to_heat.frontdoor import interface
 from help_to_heat.portal import models
+from help_to_heat.frontdoor.mock_os_api import MockOSApi
 
 from . import utils
 
@@ -47,7 +48,7 @@ def test_duplicate_answer():
     assert result == expected, (result, expected)
 
 
-# @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.MockApi)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 def test_find_addresses():
     result = interface.api.address.find_addresses("10", "sw1a 2aa")
     assert result[0]["uprn"] == "100023336956"
