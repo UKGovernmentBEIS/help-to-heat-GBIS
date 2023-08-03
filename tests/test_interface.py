@@ -1,7 +1,6 @@
 import datetime
 import random
 import string
-import unittest
 import uuid
 
 from help_to_heat.frontdoor import interface
