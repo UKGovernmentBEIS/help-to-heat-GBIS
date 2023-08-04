@@ -2,7 +2,7 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>What is the subtype of your property? - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("What is the subtype of your property? - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
@@ -11,19 +11,18 @@
       <fieldset class="govuk-fieldset" {% if errors %} aria-describedby="question-property_subtype-error" {% endif %}>
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
           <h1 class="govuk-fieldset__heading">
-            What kind of {{property_type|lower}} do you have?
-          </h1>
+            {{_("What kind of %(property_type)s do you have?") % { "property_type": property_type }}}</h1>
         </legend>
 
         <details class="govuk-details" data-module="govuk-details">
           <summary class="govuk-details__summary">
             <span class="govuk-details__summary-text">
-              Why do we need to know this?
+              {{_("Why do we need to know this?")}}
             </span>
           </summary>
           <div class="govuk-details__text">
-            <p class="govuk-body">Energy use varies between different buildings, particularly for heating.</p>
-            <p class="govuk-body">Some home improvements are only possible or appropriate for certain buildings.</p>
+            <p class="govuk-body">{{_("Energy use varies between different buildings, particularly for heating.")}}</p>
+            <p class="govuk-body">{{_("Some home improvements are only possible or appropriate for certain buildings.")}}</p>
           </div>
         </details>
 

@@ -2,13 +2,13 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>A summary of your answers - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("A summary of your answers - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
-  {% call macros.form_wrapper(prev_url, button_label="Submit") -%}
+  {% call macros.form_wrapper(prev_url, button_label=_("Submit")) -%}
     <div class="govuk-form-group">
-      <h1 class="govuk-heading-l">Check your answers</h1>
+      <h1 class="govuk-heading-l">{{_("Check your answers")}}</h1>
       {{macros.details_summary(summary_lines)}}
     </div>
   {%- endcall %}

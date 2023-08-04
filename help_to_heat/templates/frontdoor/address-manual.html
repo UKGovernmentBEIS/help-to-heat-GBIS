@@ -2,7 +2,7 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-<title>Enter the property address manually - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+<title>{{_("Enter the property address manually - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
@@ -10,16 +10,23 @@
 <fieldset class="govuk-fieldset">
   <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
     <h1 class="govuk-heading-l">
-      What is the property’s address?
+      {{_("What is the property's address?")}}
     </h1>
   </legend>
+  {% set address_line_1_label = _("Address line 1") %}
+  {{macros.input('address_line_1', address_line_1_label, data, errors, 'address-line1')}}
+  
+  {% set address_line_2_label = _("Address line 2 (optional)") %}
+  {{macros.input('address_line_2', address_line_2_label, data, errors, 'address-line2')}}
 
-  {{macros.input('address_line_1', 'Address line 1', data, errors, 'address-line1')}}
-  {{macros.input('address_line_2', 'Address line 2 (optional)', data, errors, 'address-line2')}}
-  {{macros.input('town_or_city', 'Town or city', data, errors, 'address-level2')}}
-  {{macros.input('county', 'County (optional)', data, errors, 'county')}}
-  {{macros.input('postcode', 'Postcode', data, errors, 'postal-code')}}
+  {% set town_or_city_label = _("Town or city") %}
+  {{macros.input('town_or_city', town_or_city_label, data, errors, 'address-level2')}}
+  
+  {% set county_label = _("County (optional)") %}
+  {{macros.input('county', county_label, data, errors, 'county')}}
 
+  {% set postcode_label = _("Postcode") %}
+  {{macros.input('postcode', postcode_label, data, errors, 'postal-code')}}
 </fieldset>
 {%- endcall %}
 {% endblock %}

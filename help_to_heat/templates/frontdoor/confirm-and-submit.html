@@ -2,12 +2,12 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>Confirm and submit - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("Confirm and submit - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %} 
-  {% call macros.form_wrapper(prev_url, button_label="Submit") -%}
-    <h1 class="govuk-heading-l">Confirm and submit</h1>
+  {% call macros.form_wrapper(prev_url, button_label=_("Submit")) -%}
+    <h1 class="govuk-heading-l">{{_("Confirm and submit")}}</h1>
     {{macros.details_summary(summary_lines)}}
     {% if errors.get('permission') %}
       <p id="permission-error" class="govuk-error-message">
@@ -21,19 +21,12 @@
           <div class="govuk-checkboxes__item">
             <input class="govuk-checkboxes__input" id="question-permission" name="permission" type="checkbox"/>
             <label class="govuk-label govuk-checkboxes__label" for="question-permission" id="question-permission-label">
-              I agree for my personal details to be shared with {{supplier}} to see if my property is eligible for
-              support from the Great British Insulation Scheme and to contact me about my referral.
-              I agree that they may share my personal details with their approved delivery partners and installers to check
-              my eligibility, my property's suitability, and to contact me.
+              {{_("I agree for my personal details to be shared with %(supplier)s to see if my property is eligible for support from the Great British Insulation Scheme and to contact me about my referral. I agree that they may share my personal details with their approved delivery partners and installers to check my eligibility, my property's suitability, and to contact me.")% { "supplier": supplier }}}
 
-              <p class="govuk-body"><a class="govuk-link" href="/privacy-policy/">Further information on our GDPR UK Privacy Policy.</a></p>
-              <h2 class="govuk-heading-s">What is the Energy Company Obligation?</h2>
+              <p class="govuk-body"><a class="govuk-link" href="/privacy-policy/">{{_("Further information on our GDPR UK Privacy Policy")}}.</a></p>
+              <h2 class="govuk-heading-s">{{_("What is the Energy Company Obligation?")}}</h2>
 
-              The Great British Insulation Scheme is the latest of a series of schemes that have operated since 2013
-              requiring energy suppliers to help people to make their homes more energy efficient. This family of
-              schemes has been called the Energy Company Obligation (ECO). Alongside the Great British Insulation
-              Scheme, a complementary ECO4 scheme is also operating. Households on low incomes or who are vulnerable
-              to the effects of living in a cold home may be able to get help through this scheme.
+              {{_("The Great British Insulation Scheme is the latest of a series of schemes that have operated since 2013 requiring energy suppliers to help people to make their homes more energy efficient. This family of schemes has been called the Energy Company Obligation (ECO). Alongside the Great British Insulation Scheme, a complementary ECO4 scheme is also operating. Households on low incomes or who are vulnerable to the effects of living in a cold home may be able to get help through this scheme.")}}
             </label>
           </div>
         </div>

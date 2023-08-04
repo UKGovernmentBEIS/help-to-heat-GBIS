@@ -2,7 +2,7 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>Where is the property located? - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("Where is the property located? - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
@@ -11,7 +11,7 @@
       <fieldset class="govuk-fieldset" {% if errors %}aria-describedby="question-country-error"{% endif %}>
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
           <h1 class="govuk-fieldset__heading">
-            Where is the property located?
+            {{_("Where is the property located?")}}
           </h1>
         </legend>
 

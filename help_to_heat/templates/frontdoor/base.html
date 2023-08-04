@@ -1,14 +1,14 @@
 <!DOCTYPE html>
-<html lang="en" class="govuk-template app-html-class">
+<html lang="{{request.LANGUAGE_CODE}}" class="govuk-template app-html-class">
 
 <head>
   <meta charset="utf-8">
   {% block title %}
-  <title>Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("Great British Insulation Scheme - GOV.UK")}}</title>
   {% endblock %}
+
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="theme-color" content="blue">
-
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <link rel="shortcut icon" sizes="16x16 32x32 48x48" href="/static/govuk-frontend/assets/images/favicon.ico"
     type="image/x-icon">
@@ -35,15 +35,14 @@
         <div class="govuk-cookie-banner__message govuk-width-container">
           <div class="govuk-grid-row">
             <div class="govuk-grid-column-two-thirds">
-              <h2 class="govuk-cookie-banner__heading govuk-heading-m">Cookies we are using on our service</h2>
+              <h2 class="govuk-cookie-banner__heading govuk-heading-m">{{_("Cookies we are using on our service")}}</h2>
               <div class="govuk-cookie-banner__content">
-                <p class="govuk-body">We will use necessary cookies when you use this service to help you move around the
-                  site.</p>
-                <p class="govuk-body">We will also use analytic cookies using Google Analytics to tell us how you got to our
-                  service, the pages you visit, and
-                  how long you spent on them. Analytics cookies help us to improve our service. We do not allow Google to
-                  use or share the
-                  data about how you use this site and the data is stored anonymously.</p>
+                <p class="govuk-body">
+                  {{_("We will use necessary cookies when you use this service to help you move around the site.")}}
+                </p>
+                <p class="govuk-body">
+                  {{_("We will also use analytic cookies using Google Analytics to tell us how you got to our service, the pages you visit, and how long you spent on them. Analytics cookies help us to improve our service. We do not allow Google to use or share the data about how you use this site and the data is stored anonymously.")}}
+                </p>
               </div>
             </div>
           </div>
@@ -51,16 +50,16 @@
                 {{ csrf_input }}
                 <input type="hidden" name="prev" value="{{ request.path }}">
                 <div class="govuk-button-group">
-                    <button type="submit" name="cookies" class="govuk-button" value="True">Accept cookies</button>
-                    <button type="submit" name="cookies-f" class="govuk-button" value="False">Reject cookies</button>
-                    <a class="govuk-link" href="/cookies">View cookies we use on this service</a>
+                    <button type="submit" name="cookies" class="govuk-button" value="True">{{_("Accept cookies")}}</button>
+                    <button type="submit" name="cookies-f" class="govuk-button" value="False">{{_("Reject cookies")}}</button>
+                    <a class="govuk-link" href="/cookies">{{_("View cookies we use on this service")}}</a>
                 </div>
             </form>
         </div>
       </div>
   {% endif %}
 
-  <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
+  <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">{{_("Skip to main content")}}</a>
 
 
   <header class="govuk-header " role="banner" data-module="govuk-header">
@@ -87,7 +86,7 @@
       </div>
       <div class="govuk-header__content">
         <a href="/" class="govuk-header__link govuk-header__service-name">
-          Check eligibility for Great British Insulation Scheme
+          {{_("Check eligibility for Great British Insulation Scheme")}}
         </a>
       </div>
     </div>
@@ -100,14 +99,45 @@
           BETA
         </strong>
         <span class="govuk-phase-banner__text">
-          This is a new service – your <a class="govuk-link"
+          {{_("This is a new service – your ")}}<a class="govuk-link"
             href="{% if session_id and page_name %}{{url('frontdoor:feedback', session_id=session_id, page_name=page_name)}}{% else %}{{url('frontdoor:feedback')}}{% endif %}"
-            tabindex="0">feedback</a> will help us to improve it.
+            tabindex="0">{{_("feedback")}}</a>{{_(" will help us to improve it.")}}
         </span>
       </p>
     </div>
 
-    <main class="govuk-main-wrapper " id="main-content" role="main">
+    <main class="govuk-main-wrapper" id="main-content" role="main">
+      <form class="gbis-language-select govuk-body" action="{{ url('frontdoor:set_language') }}" method="post"
+        aria-label="Language switcher">
+        {{csrf_input}}
+
+        <input name="next" type="hidden" value="{{request.path}}">
+
+        <ul class="gbis-language-select__list">
+          <li class="gbis-language-select__list-item">
+            {% if request.LANGUAGE_CODE.startswith('en') %}
+            <span aria-current="true">English</span>
+            {% else %}
+            <input name="language" type="hidden" value="en">
+            <button type="submit" lang="en" rel="alternate" class="govuk-link">
+              <span class="govuk-visually-hidden">Change the language to English</span>
+              <span aria-hidden="true">English</span>
+            </button>
+            {% endif %}
+          </li>
+          <li class="gbis-language-select__list-item">
+            {% if request.LANGUAGE_CODE.startswith('cy') %}
+            <span aria-current="true">Cymraeg</span>
+            {% else %}
+            <input name="language" type="hidden" value="cy">
+            <button type="submit" lang="cy" rel="alternate" class="govuk-link">
+              <span class="govuk-visually-hidden">Newid yr iaith ir Gymraeg</span>
+              <span aria-hidden="true">Cymraeg</span>
+            </button>
+            {% endif %}
+          </li>
+        </ul>
+      </form>
 
       {% block content %}
       {% endblock %}
@@ -118,19 +148,19 @@
     <div class="govuk-width-container ">
       <div class="govuk-footer__meta">
         <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
-          <h2 class="govuk-visually-hidden">Support links</h2>
+          <h2 class="govuk-visually-hidden">{{_("Support links")}}</h2>
           <ul class="govuk-footer__inline-list">
             {% if request.path != "/privacy-policy/" %}
             <li class="govuk-footer__inline-list-item">
               <a class="govuk-footer__link" href="/privacy-policy/?prev={{ request.path }}">
-                Privacy Policy
+                {{_("Privacy Policy")}}
               </a>
             </li>
             {% endif %}
             {% if request.path != "/accessibility-statement/" %}
             <li class="govuk-footer__inline-list-item">
               <a class="govuk-footer__link" href="/accessibility-statement/?prev={{ request.path }}">
-                Accessibility Statement
+                {{_("Accessibility Statement")}}
               </a>
             </li>
             {% endif %}
@@ -141,16 +171,16 @@
               d="M421.5 142.8V.1l-50.7 32.3v161.1h112.4v-50.7zm-122.3-9.6A47.12 47.12 0 0 1 221 97.8c0-26 21.1-47.1 47.1-47.1 16.7 0 31.4 8.7 39.7 21.8l42.7-27.2A97.63 97.63 0 0 0 268.1 0c-36.5 0-68.3 20.1-85.1 49.7A98 98 0 0 0 97.8 0C43.9 0 0 43.9 0 97.8s43.9 97.8 97.8 97.8c36.5 0 68.3-20.1 85.1-49.7a97.76 97.76 0 0 0 149.6 25.4l19.4 22.2h3v-87.8h-80l24.3 27.5zM97.8 145c-26 0-47.1-21.1-47.1-47.1s21.1-47.1 47.1-47.1 47.2 21 47.2 47S123.8 145 97.8 145" />
           </svg>
           <span class="govuk-footer__licence-description">
-            All content is available under the
+            {{_("All content is available under the ")}}
             <a class="govuk-footer__link"
-              href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">Open
-              Government Licence v3.0</a>, except where otherwise stated
+              href="https://www.nationalarchives.gov.uk/doc/open-government-licence/version/3/" rel="license">{{_("Open Government Licence v3.0")}}</a>
+              {{_(", except where otherwise stated")}}
           </span>
         </div>
         <div class="govuk-footer__meta-item">
           <a class="govuk-footer__link govuk-footer__copyright-logo"
-            href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">©
-            Crown copyright</a>
+            href="https://www.nationalarchives.gov.uk/information-management/re-using-public-sector-information/uk-government-licensing-framework/crown-copyright/">{{_("©
+            Crown copyright")}}</a>
         </div>
       </div>
     </div>

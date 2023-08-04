@@ -2,7 +2,7 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>Select the property address - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("Select the property address - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
@@ -11,18 +11,18 @@
       <fieldset class="govuk-fieldset"{% if errors %} aria-describedby="question-uprn-error" {% endif %}>
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
           <h1 class="govuk-fieldset__heading">
-            Select your address
+            {{_("Select your address")}}
           </h1>
         </legend>
 
         {% if uprn_options %}
           {{macros.radios('uprn', uprn_options, data, errors)}}
         {% else %}
-          <p class="govuk-body">No addresses found</p>
+          <p class="govuk-body">{{_("No addresses found")}}</p>
         {% endif %}
 
         <p>
-          <a href="{{url('frontdoor:page', session_id=session_id, page_name='address-manual')}}" class="govuk-link">I can't find my address.  I want to enter it manually</a>
+          <a href="{{url('frontdoor:page', session_id=session_id, page_name='address-manual')}}" class="govuk-link">{{_("I can't find my address. I want to enter it manually")}}</a>
         </p>
 
       </fieldset>

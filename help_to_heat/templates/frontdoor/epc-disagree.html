@@ -2,21 +2,21 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>An EPC was not found for this property - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("An EPC was not found for this property - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
   {% call macros.form_wrapper(prev_url) -%}
-    <h1 class="govuk-heading-l">We did not find a complete Energy Performance Certificate for your property</h1>
+    <h1 class="govuk-heading-l">{{_("We did not find a complete Energy Performance Certificate for your property")}}</h1>
 
-    <p class="govuk-body">This could be because:</p>
+    <p class="govuk-body">{{_("This could be because:")}}</p>
     <ul class="govuk-list govuk-list--bullet">
-      <li>there isn't an EPC for your property</li>
-      <li>your property is a new build</li>
-      <li>your address is saved in a different format</li>
+      <li>{{_("there isn't an EPC for your property")}}</li>
+      <li>{{_("your property is a new build")}}</li>
+      <li>{{_("your address is saved in a different format")}}</li>
     </ul>
 
-    <p class="govuk-body">You can continue without an Energy Performance Certificate, We will need to ask you some questions to work out which home improvement schemes your property is eligible for. There will be guidance to support you along the way</p>
+    <p class="govuk-body">{{_("You can continue without an Energy Performance Certificate, We will need to ask you some questions to work out which home improvement schemes your property is eligible for. There will be guidance to support you along the way")}}</p>
     <input type="hidden" name="accept_suggested_epc" value="Not found"/>
     <input type="hidden" name="epc_rating" value="Not found"/>
   {% endcall %}

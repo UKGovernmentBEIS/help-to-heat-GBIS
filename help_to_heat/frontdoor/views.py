@@ -4,13 +4,14 @@ from django.conf import settings
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from marshmallow import ValidationError
-from .os_api import ThrottledApiException
 
 from help_to_heat import utils
 
 from ..portal import email_handler
 from . import eligibility, interface, schemas
+from .os_api import ThrottledApiException
 
 BulbSupplierConverter = interface.BulbSupplierConverter
 
@@ -39,29 +40,30 @@ page_compulsory_field_map = {
 }
 
 missing_item_errors = {
-    "country": "Select where the property is located",
-    "own_property": "Select if you own the property",
+    "country": _("Select where the property is located"),
+    "own_property": _("Select if you own the property"),
     "building_name_or_number": "Enter building name or number",
-    "postcode": "Enter a postcode",
-    "uprn": "Select your address",
-    "town_or_city": "Enter your Town or city",
-    "council_tax_band": "Enter the Council Tax Band of the property",
-    "accept_suggested_epc": "Select if your EPC rating is correct or not, or that you don’t know",
-    "benefits": "Select if anyone in your household is receiving any benefits listed below",
-    "household_income": "Select your household income",
-    "property_type": "Select your property type",
-    "number_of_bedrooms": "Select the number of bedrooms the property has",
-    "wall_type": "Select the type of walls the property has",
-    "wall_insulation": "Select if the walls of the property are insulated or not, or if you don’t know",
-    "loft": "Select if you have a loft that has been converted into a room or not",
-    "loft_access": "Select whether or not you have access to the loft",
-    "loft_insulation": "Select whether or not your loft is fully insulated",
-    "supplier": "Select your home energy supplier from the list below",
-    "first_name": "Enter your first name",
-    "last_name": "Enter your last name",
-    "email": "Enter your address",
-    "contact_number": "Enter your contact number",
-    "permission": "Please confirm that you agree to the use of your information by checking this box",
+    "address_line_1": _("Enter Address line 1"),
+    "postcode": _("Enter a postcode"),
+    "uprn": _("Select your address"),
+    "town_or_city": _("Enter your Town or city"),
+    "council_tax_band": _("Enter the Council Tax Band of the property"),
+    "accept_suggested_epc": _("Select if your EPC rating is correct or not, or that you don’t know"),
+    "benefits": _("Select if anyone in your household is receiving any benefits listed below"),
+    "household_income": _("Select your household income"),
+    "property_type": _("Select your property type"),
+    "number_of_bedrooms": _("Select the number of bedrooms the property has"),
+    "wall_type": _("Select the type of walls the property has"),
+    "wall_insulation": _("Select if the walls of the property are insulated or not, or if you don’t know"),
+    "loft": _("Select if you have a loft that has been converted into a room or not"),
+    "loft_access": _("Select whether or not you have access to the loft"),
+    "loft_insulation": _("Select whether or not your loft is fully insulated"),
+    "supplier": _("Select your home energy supplier from the list below"),
+    "first_name": _("Enter your first name"),
+    "last_name": _("Enter your last name"),
+    "email": _("Enter your address"),
+    "contact_number": _("Enter your contact number"),
+    "permission": _("Please confirm that you agree to the use of your information by checking this box"),
 }
 
 
@@ -88,6 +90,7 @@ def holding_page_view(request):
     previous_path = reverse("frontdoor:homepage")
     context = {"previous_path": previous_path}
     return render(request, template_name="frontdoor/holding-page.html", context=context)
+
 
 def sorry_page_view(request):
     return render(request, template_name="frontdoor/os-api-throttled.html")
@@ -226,7 +229,7 @@ class PageView(utils.MethodDispatcher):
 @register_page("country")
 class CountryView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"country_options": schemas.country_options}
+        return {"country_options": schemas.country_options_map}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         if data["country"] == "Northern Ireland":
@@ -307,8 +310,11 @@ class CouncilTaxBandView(PageView):
         epc = None
         if uprn:
             epc = interface.api.epc.get_epc(uprn, country)
-        return super().handle_post(request, session_id, page_name, data, is_change_page) if epc \
+        return (
+            super().handle_post(request, session_id, page_name, data, is_change_page)
+            if epc
             else redirect("frontdoor:page", session_id=session_id, page_name="benefits")
+        )
 
 
 @register_page("epc")
@@ -325,7 +331,7 @@ class EpcView(PageView):
         context = {
             "epc_rating": epc.get("rating"),
             "epc_date": epc.get("date"),
-            "epc_display_options": schemas.epc_display_options,
+            "epc_display_options": schemas.epc_display_options_map,
             "address": address,
         }
         return context
@@ -376,7 +382,7 @@ class EpcDisagreeView(PageView):
 class BenefitsView(PageView):
     def get_context(self, request, session_id, *args, **kwargs):
         context = interface.api.session.get_session(session_id)
-        return {"benefits_options": schemas.yes_no_options, "context": context}
+        return {"benefits_options": schemas.yes_no_options_map, "context": context}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         session_data = interface.api.session.get_session(session_id)
@@ -390,13 +396,13 @@ class BenefitsView(PageView):
 @register_page("household-income")
 class HouseholdIncomeView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"household_income_options": schemas.household_income_options}
+        return {"household_income_options": schemas.household_income_options_map}
 
 
 @register_page("property-type")
 class PropertyTypeView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"property_type_options": schemas.property_type_options}
+        return {"property_type_options": schemas.property_type_options_map}
 
 
 @register_page("property-subtype")
@@ -405,7 +411,7 @@ class PropertySubtypeView(PageView):
         data = interface.api.session.get_answer(session_id, "property-type")
         property_type = data["property_type"]
         return {
-            "property_type": property_type,
+            "property_type": schemas.property_subtype_titles_options_map[property_type],
             "property_subtype_options": schemas.property_subtype_options_map[property_type],
         }
 
@@ -413,25 +419,25 @@ class PropertySubtypeView(PageView):
 @register_page("number-of-bedrooms")
 class NumberOfBedroomsView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"number_of_bedrooms_options": schemas.number_of_bedrooms_options}
+        return {"number_of_bedrooms_options": schemas.number_of_bedrooms_options_map}
 
 
 @register_page("wall-type")
 class WallTypeView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"wall_type_options": schemas.wall_type_options}
+        return {"wall_type_options": schemas.wall_type_options_map}
 
 
 @register_page("wall-insulation")
 class WallInsulationView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"wall_insulation_options": schemas.wall_insulation_options}
+        return {"wall_insulation_options": schemas.wall_insulation_options_map}
 
 
 @register_page("loft")
 class LoftView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"loft_options": schemas.loft_options}
+        return {"loft_options": schemas.loft_options_map}
 
     def save_data(self, request, session_id, page_name, *args, **kwargs):
         data = request.POST.dict()
@@ -453,13 +459,13 @@ class LoftView(PageView):
 @register_page("loft-access")
 class LoftAccessView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"loft_access_options": schemas.loft_access_options}
+        return {"loft_access_options": schemas.loft_access_options_map}
 
 
 @register_page("loft-insulation")
 class LoftInsulationView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"loft_insulation_options": schemas.loft_insulation_options}
+        return {"loft_insulation_options": schemas.loft_insulation_options_map}
 
     def get_prev_next_urls(self, session_id, page_name):
         loft_data = interface.api.session.get_answer(session_id, "loft")
@@ -479,7 +485,7 @@ class SummaryView(PageView):
         summary_lines = tuple(
             {
                 "question": schemas.summary_map[question],
-                "answer": session_data.get(question),
+                "answer": self.get_answer(session_data, question),
                 "change_url": reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name)),
             }
             for page_name, questions in schemas.household_pages.items()
@@ -487,6 +493,11 @@ class SummaryView(PageView):
             if question in session_data
         )
         return {"summary_lines": summary_lines}
+
+    def get_answer(self, session_data, question):
+        answer = session_data.get(question)
+        answers_map = schemas.check_your_answers_options_map.get(question)
+        return answers_map[answer] if answers_map else answer
 
 
 @register_page("schemes")

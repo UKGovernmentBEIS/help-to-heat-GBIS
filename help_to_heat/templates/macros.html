@@ -1,6 +1,6 @@
-{% macro form_wrapper(prev_url, button_label="Continue") -%}
+{% macro form_wrapper(prev_url, button_label=_("Continue")) -%}
 {% if prev_url %}
-<a href="{{prev_url}}" class="govuk-back-link">Back</a>
+<a href="{{prev_url}}" class="govuk-back-link">{{_("Back")}}</a>
 {% endif %}
 {% if errors %}
 {{error_summary(errors)}}
@@ -74,7 +74,7 @@
 <div class="govuk-error-summary" data-module="govuk-error-summary">
   <div role="alert">
     <h2 class="govuk-error-summary__title">
-      There is a problem
+      {{_("There is a problem")}}
     </h2>
     <div class="govuk-error-summary__body">
       <ul class="govuk-list govuk-error-summary__list">
@@ -101,7 +101,7 @@
     </dd>
     <dd class="govuk-summary-list__actions">
       <a class="govuk-link" href="{{summary_line.change_url}}">
-        Change<span class="govuk-visually-hidden"> {{summary_line.question}}</span>
+        {{_("Change")}}<span class="govuk-visually-hidden"> {{summary_line.question}}</span>
       </a>
     </dd>
   </div>
@@ -111,20 +111,20 @@
 
 
 {% macro further_help() -%}
-<a href="{{prev_url}}" class="govuk-back-link">Back</a>
+<a href="{{prev_url}}" class="govuk-back-link">{{_("Back")}}</a>
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
 
     {{caller()}}
 
-    <h2 class="govuk-heading-m">Find other support</h2>
+    <h2 class="govuk-heading-m">{{_("Find other support")}}</h2>
 
-    <p class="govuk-body">Check out what other help you can get with your energy bills from the government's <a
-        href="https://helpforhouseholds.campaign.gov.uk/energy-saving-advice/" class="govuk-link">Help for
-        Households</a>.</p>
+    <p class="govuk-body">{{_("Check out what other help you can get with your energy bills from the government's ")}}
+      <a href="https://helpforhouseholds.campaign.gov.uk/energy-saving-advice/" class="govuk-link">{{_("Help for Households")}}</a>.
+    </p>
 
-    <p class="govuk-body">Find out if you can get support from your local council from the <a
-        href="https://www.gov.uk/cost-living-help-local-council" class="govuk-link">Household Support Fund</a>.</p>
+    <p class="govuk-body">{{_("Find out if you can get support from your local council from the ")}}
+      <a href="https://www.gov.uk/cost-living-help-local-council" class="govuk-link">{{_("Household Support Fund")}}</a>.</p>
 
   </div>
 </div>

@@ -2,7 +2,7 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>What is your household income? - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("What is your household income? - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
@@ -11,22 +11,22 @@
       <fieldset class="govuk-fieldset" {% if errors %} aria-describedby="question-household_income-error" {% endif %}>
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
           <h1 class="govuk-fieldset__heading">
-            What is your annual household income?
+            {{_("What is your annual household income?")}}
           </h1>
         </legend>
 
         <p class="govuk-body">
-          Your annual household income is the total income before paying tax for all adults living in your home.
+          {{_("Your annual household income is the total income before paying tax for all adults living in your home.")}}
         </p>
 
         <details class="govuk-details" data-module="govuk-details">
           <summary class="govuk-details__summary">
             <span class="govuk-details__summary-text">
-              Why we need this info
+              {{_("Why we need this info")}}
             </span>
           </summary>
           <div class="govuk-details__text">
-            Your annual household income is used to work out how much support you can get through each scheme. 
+            {{_("Your annual household income is used to work out how much support you can get through each scheme.")}}
           </div>
         </details>
 
