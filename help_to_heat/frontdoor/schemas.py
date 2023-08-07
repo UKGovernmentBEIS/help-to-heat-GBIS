@@ -33,7 +33,6 @@ extra_pages = (
     "northern-ireland",
     "epc-ineligible",
     "ineligible",
-    "bulb-warning-page",
 )
 
 page_prev_next_map = {
@@ -46,7 +45,6 @@ page_prev_next_map = {
     "epc-ineligible": {"prev": "epc", "next": None},
     "ineligible": {"prev": "benefits", "next": None},
     "northern-ireland": {"prev": "country", "next": None},
-    "bulb-warning-page": {"prev": "supplier", "next": "contact-details"},
 }
 
 summary_map = {
@@ -230,14 +228,14 @@ loft_access_validation_options = loft_access_options + ("No loft",)
 # TODO: Make this a tuple again when Bulb gets restored
 supplier_options = [
     # "British Gas",
-    "Bulb, now part of Octopus Energy",
+    # "Bulb",
     # "E Energy",
     # "Ecotricity",
     "EDF",
     "EON",
     # "ESB",
     # "Foxglove",
-    "Octopus",
+    # "Octopus",
     # "OVO",
     # "Scottish Power",
     # "Shell",
@@ -271,6 +269,9 @@ postcode_regex_collection = (
     # allow both upper and lower cases, no or multiple spaces in between outward and inward code
     r"^[a-zA-Z]{1,2}\d[\da-zA-Z]?(\s*\d[a-zA-Z]{2})*$"
 )
+
+# allow only numbers, spaces and +.
+phone_number_regex = (r"^[\d\s\+]*$")
 
 
 class SessionSchema(Schema):
@@ -307,7 +308,7 @@ class SessionSchema(Schema):
     supplier = fields.String(validate=validate.OneOf(supplier_options))
     first_name = fields.String(validate=validate.Length(max=128))
     last_name = fields.String(validate=validate.Length(max=128))
-    contact_number = fields.String(validate=validate.Length(max=128))
+    contact_number = fields.String(validate=validate.And(validate.Length(max=128), validate.Regexp(phone_number_regex, error="please enter a contact number")))
     email = fields.String(validate=(validate_email_or_none, validate.Length(max=128)), allow_none=True)
     schemes = fields.List(fields.Str())
     referral_created_at = fields.String()
