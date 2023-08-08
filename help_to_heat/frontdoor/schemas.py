@@ -227,24 +227,23 @@ loft_options = (
 )
 loft_access_options = ("Yes, there is access to my loft", "No, there is no access to my loft")
 loft_access_validation_options = loft_access_options + ("No loft",)
-# TODO: Make this a tuple again when Bulb gets restored
-supplier_options = [
-    # "British Gas",
+
+supplier_options = (
+    "British Gas",
     "Bulb, now part of Octopus Energy",
-    # "E Energy",
-    # "Ecotricity",
+    "E (Gas & Electricity) Ltd",
+    "Ecotricity",
     "EDF",
-    "EON",
-    # "ESB",
-    # "Foxglove",
+    "E.ON",
+    "Foxglove",
     "Octopus",
-    # "OVO",
-    # "Scottish Power",
-    # "Shell",
+    "OVO",
+    "Scottish Power",
+    "Shell",
     "So Energy",
     "Utilita",
-    # "Utility Warehouse",
-]
+    "Utility Warehouse",
+)
 epc_rating_options = ("A", "B", "C", "D", "E", "F", "G", "H", "Not found")
 loft_insulation_options = (
     "Yes, there is at least 270mm of insulation in my loft",
