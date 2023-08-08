@@ -115,6 +115,34 @@ def get_addresses_from_api(postcode):
     return api_results_all
 
 
+class BulbSupplierConverter:
+    def __init__(self, session_id):
+        self.session_id = session_id
+
+    def _get_supplier(self):
+        return api.session.get_answer(self.session_id, "supplier")["supplier"]
+
+    def _is_bulb(self):
+        return self._get_supplier() == "Bulb, now part of Octopus Energy"
+
+    def get_supplier_and_add_comma_after_bulb(self):
+        supplier = self._get_supplier()
+        if self._is_bulb():
+            return supplier + ", "
+        return supplier
+
+    def get_supplier_and_replace_bulb_with_octopus(self):
+        supplier = self._get_supplier()
+        if self._is_bulb():
+            return "Octopus"
+        return supplier
+
+    def replace_bulb_with_octopus_in_session_data(self, session_data):
+        if self._is_bulb():
+            session_data["supplier"] = "Octopus"
+        return session_data
+
+
 class Session(Entity):
     @with_schema(load=SaveAnswerSchema, dump=schemas.SessionSchema)
     @register_event(models.Event, "Answer saved")
@@ -143,7 +171,8 @@ class Session(Entity):
     @with_schema(load=CreateReferralSchema, dump=ReferralSchema)
     @register_event(models.Event, "Referral created")
     def create_referral(self, session_id):
-        data = self.get_session(session_id)
+        session_data = api.session.get_session(session_id)
+        data = BulbSupplierConverter(session_id).replace_bulb_with_octopus_in_session_data(session_data)
         supplier = portal.models.Supplier.objects.get(name=data["supplier"])
         referral = portal.models.Referral.objects.create(session_id=session_id, data=data, supplier=supplier)
         referral_data = {"id": referral.id, "session_id": referral.session_id, "data": referral.data}

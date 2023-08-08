@@ -1,6 +1,7 @@
 boto3==1.26.86
 botocore==1.29.86
 debugpy==1.6.7
+django-debug-toolbar==4.1.0
 django-csp==3.7
 jmespath==1.0.1
 localstack-client==1.39

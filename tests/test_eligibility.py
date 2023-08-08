@@ -1,5 +1,4 @@
 import datetime
-import unittest
 import uuid
 
 from help_to_heat.frontdoor import interface
@@ -288,7 +287,7 @@ def _make_check_page(session_id):
     return _check_page
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.StubAPI)
+# @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.MockApi)
 @utils.mock_os_api
 def test_ineligible_shortcut():
     for country in eligible_council_tax:
@@ -345,10 +344,6 @@ def _do_test(country, council_tax_band, epc_rating):
 
     does_it_have_an_epc = page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
 
-    if not does_it_have_an_epc:
-        print(f"country: {country}")
-        print(f"council: {council_tax_band}")
-        print(f"epc: {epc_rating}")
     assert does_it_have_an_epc
     page = _check_page(page, "epc", "accept_suggested_epc", "Yes")
 
