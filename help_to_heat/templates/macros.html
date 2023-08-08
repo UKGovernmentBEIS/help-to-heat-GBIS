@@ -37,8 +37,8 @@
   {% endif %}
   <div class="govuk-radios__item">
     <input class="govuk-radios__input" id="{{name}}-option-{{slugify(value)}}" name="{{name}}" type="radio"
-      value="{{value}}" {{is_checked(data, name, value)}} aria-describedby="{{name}}-option-{{slugify(value)}}-hint">
-    <label class="govuk-label govuk-radios__label" for="{{name}}-option-{{slugify(value)}}">
+      value="{{value}}" {{is_checked(data, name, value)}} aria-describedby="{{name}}-option-{{slugify(value)}}">
+    <label class="govuk-label govuk-radios__label" for="{{name}}-option-{{slugify(value)}}" id="{{name}}-option-{{slugify(value)}}">
       {{label}}
     </label>
     {% if option is mapping %}

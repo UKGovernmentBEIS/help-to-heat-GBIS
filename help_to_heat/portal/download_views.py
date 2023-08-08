@@ -76,12 +76,14 @@ def add_extra_row_data(referral):
     row = dict(referral.data)
     eligibility = calculate_eligibility(row)
     epc_date = row.get("epc_date")
+    epc_rating = row.get("epc_rating")
     created_at = referral.created_at.astimezone(london_tz)
     row = {
         **row,
         "ECO4": "Energy Company Obligation 4" in eligibility and "Yes" or "No",
         "GBIS": "Great British Insulation Scheme" in eligibility and "Yes" or "No",
-        "epc_date": epc_date and epc_date or "Not found",
+        "epc_rating": epc_rating and epc_rating != "Not found" or "",
+        "epc_date": epc_date and epc_date or "",
         "submission_date": created_at.date(),
         "submission_time": created_at.time().strftime("%H:%M:%S"),
     }

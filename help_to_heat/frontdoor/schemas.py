@@ -272,6 +272,9 @@ postcode_regex_collection = (
     r"^[a-zA-Z]{1,2}\d[\da-zA-Z]?(\s*\d[a-zA-Z]{2})*$"
 )
 
+# allow only numbers, spaces and +.
+phone_number_regex = (r"^[\d\s\+]*$")
+
 
 class SessionSchema(Schema):
     country = fields.String(validate=validate.OneOf(country_options))
@@ -307,7 +310,7 @@ class SessionSchema(Schema):
     supplier = fields.String(validate=validate.OneOf(supplier_options))
     first_name = fields.String(validate=validate.Length(max=128))
     last_name = fields.String(validate=validate.Length(max=128))
-    contact_number = fields.String(validate=validate.Length(max=128))
+    contact_number = fields.String(validate=validate.And(validate.Length(max=128), validate.Regexp(phone_number_regex, error="please enter a contact number")))
     email = fields.String(validate=(validate_email_or_none, validate.Length(max=128)), allow_none=True)
     schemes = fields.List(fields.Str())
     referral_created_at = fields.String()
