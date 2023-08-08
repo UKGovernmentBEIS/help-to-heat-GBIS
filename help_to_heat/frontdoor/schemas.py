@@ -273,7 +273,7 @@ postcode_regex_collection = (
 )
 
 # allow only numbers, spaces and +.
-phone_number_regex = (r"^[\d\s\+]*$")
+phone_number_regex = r"^[\d\s\+]*$"
 
 
 class SessionSchema(Schema):
@@ -310,7 +310,11 @@ class SessionSchema(Schema):
     supplier = fields.String(validate=validate.OneOf(supplier_options))
     first_name = fields.String(validate=validate.Length(max=128))
     last_name = fields.String(validate=validate.Length(max=128))
-    contact_number = fields.String(validate=validate.And(validate.Length(max=128), validate.Regexp(phone_number_regex, error="please enter a contact number")))
+    contact_number = fields.String(
+        validate=validate.And(
+            validate.Length(max=128), validate.Regexp(phone_number_regex, error="please enter a contact number")
+        )
+    )
     email = fields.String(validate=(validate_email_or_none, validate.Length(max=128)), allow_none=True)
     schemes = fields.List(fields.Str())
     referral_created_at = fields.String()

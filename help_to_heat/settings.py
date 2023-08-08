@@ -39,7 +39,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
-    "debug_toolbar" ,
+    "debug_toolbar",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -69,10 +69,13 @@ MIDDLEWARE = [
 # TODO: PC-450 Gross way to check which environment we're in, we should have a var for this
 is_developer_environment = BASE_URL == "https://dev.check-eligibility-for-gb-insulation-scheme.service.gov.uk/" or DEBUG
 
+
 def show_toolbar(request):
     return True
+
+
 DEBUG_TOOLBAR_CONFIG = {
-    "SHOW_TOOLBAR_CALLBACK" : show_toolbar,
+    "SHOW_TOOLBAR_CALLBACK": show_toolbar,
 }
 
 if is_developer_environment:

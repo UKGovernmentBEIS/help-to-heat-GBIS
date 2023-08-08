@@ -5,8 +5,8 @@ import unittest
 import uuid
 
 from help_to_heat.frontdoor import interface
-from help_to_heat.portal import models
 from help_to_heat.frontdoor.mock_os_api import MockOSApi
+from help_to_heat.portal import models
 
 from . import utils
 
