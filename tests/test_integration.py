@@ -3,8 +3,8 @@ import unittest
 
 import freezegun
 
-from help_to_heat.frontdoor.mock_os_api import MockOSApi
 from help_to_heat.frontdoor import interface
+from help_to_heat.frontdoor.mock_os_api import MockOSApi
 
 from . import utils
 from .test_frontdoor import _do_happy_flow

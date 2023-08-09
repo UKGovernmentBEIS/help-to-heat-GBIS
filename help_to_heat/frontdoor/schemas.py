@@ -227,24 +227,23 @@ loft_options = (
 )
 loft_access_options = ("Yes, there is access to my loft", "No, there is no access to my loft")
 loft_access_validation_options = loft_access_options + ("No loft",)
-# TODO: Make this a tuple again when Bulb gets restored
-supplier_options = [
-    # "British Gas",
+
+supplier_options = (
+    "British Gas",
     "Bulb, now part of Octopus Energy",
-    # "E Energy",
-    # "Ecotricity",
+    "E (Gas & Electricity) Ltd",
+    "Ecotricity",
     "EDF",
-    "EON",
-    # "ESB",
-    # "Foxglove",
+    "E.ON",
+    "Foxglove",
     "Octopus",
-    # "OVO",
-    # "Scottish Power",
-    # "Shell",
+    "OVO",
+    "Scottish Power",
+    "Shell",
     "So Energy",
     "Utilita",
-    # "Utility Warehouse",
-]
+    "Utility Warehouse",
+)
 epc_rating_options = ("A", "B", "C", "D", "E", "F", "G", "H", "Not found")
 loft_insulation_options = (
     "Yes, there is at least 270mm of insulation in my loft",
@@ -273,7 +272,7 @@ postcode_regex_collection = (
 )
 
 # allow only numbers, spaces and +.
-phone_number_regex = (r"^[\d\s\+]*$")
+phone_number_regex = r"^[\d\s\+]*$"
 
 
 class SessionSchema(Schema):
@@ -310,7 +309,11 @@ class SessionSchema(Schema):
     supplier = fields.String(validate=validate.OneOf(supplier_options))
     first_name = fields.String(validate=validate.Length(max=128))
     last_name = fields.String(validate=validate.Length(max=128))
-    contact_number = fields.String(validate=validate.And(validate.Length(max=128), validate.Regexp(phone_number_regex, error="please enter a contact number")))
+    contact_number = fields.String(
+        validate=validate.And(
+            validate.Length(max=128), validate.Regexp(phone_number_regex, error="please enter a contact number")
+        )
+    )
     email = fields.String(validate=(validate_email_or_none, validate.Length(max=128)), allow_none=True)
     schemes = fields.List(fields.Str())
     referral_created_at = fields.String()

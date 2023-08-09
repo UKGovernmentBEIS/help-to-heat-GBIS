@@ -1,6 +1,6 @@
 Hi,
 
-You've been invited to participate in the Help to Heat scheme. Please use the link below to access the site and setup your password:
+You've been invited to participate in the Great British Insulation Scheme. Please use the link below to access the site and setup your password:
 {{url|safe}}
 
 You can then start using the system.
@@ -9,4 +9,4 @@ The link is valid for 24 hours. If you use the link more than once, it will expi
 
 Regards
 
-Help to heat team
+Great British Insulation Scheme team

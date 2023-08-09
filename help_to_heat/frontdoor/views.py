@@ -170,7 +170,10 @@ class PageView(utils.MethodDispatcher):
         }
         response = render(request, template_name=f"frontdoor/{page_name}.html", context=context)
         response["x-vcap-request-id"] = session_id
-        if "sensitive" in context and context["sensitive"]:
+
+        # Most pages will return previously entered data, which could be sensitive and thus should not be cached unless
+        # explicitly okayed.
+        if not ("safe_to_cache" in context and context["safe_to_cache"]):
             response["cache-control"] = "no-store"
             response["Pragma"] = "no-cache"
         return response
@@ -468,7 +471,7 @@ class SummaryView(PageView):
             for question in questions
             if question in session_data
         )
-        return {"summary_lines": summary_lines, "sensitive": True}
+        return {"summary_lines": summary_lines}
 
 
 @register_page("schemes")
@@ -535,7 +538,7 @@ class ConfirmSubmitView(PageView):
             for question in questions
         )
         supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
-        return {"summary_lines": summary_lines, "supplier": supplier, "sensitive": True}
+        return {"summary_lines": summary_lines, "supplier": supplier}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         interface.api.session.create_referral(session_id)
@@ -551,7 +554,7 @@ class ConfirmSubmitView(PageView):
 class SuccessView(PageView):
     def get_context(self, session_id, *args, **kwargs):
         supplier = BulbSupplierConverter(session_id).get_supplier_and_replace_bulb_with_octopus()
-        return {"supplier": supplier}
+        return {"supplier": supplier, "safe_to_cache": True}
 
 
 class FeedbackView(utils.MethodDispatcher):

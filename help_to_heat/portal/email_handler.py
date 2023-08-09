@@ -50,14 +50,14 @@ INVITE_TOKEN_GENERATOR = InviteTokenGenerator()
 EMAIL_MAPPING = {
     "password-reset": {
         "from_address": settings.FROM_EMAIL,
-        "subject": "Help to heat: password reset",
+        "subject": "Great British Insulation Scheme: password reset",
         "template_name": "portal/email/password-reset.txt",
         "url_name": "portal:password-reset-change",
         "token_generator": PASSWORD_RESET_TOKEN_GENERATOR,
     },
     "invite-user": {
         "from_address": settings.FROM_EMAIL,
-        "subject": "Help to heat: invitation to system",
+        "subject": "Great British Insulation Scheme: invitation to system",
         "template_name": "portal/email/invite-user.txt",
         "url_name": "portal:accept-invite",
         "token_generator": INVITE_TOKEN_GENERATOR,
