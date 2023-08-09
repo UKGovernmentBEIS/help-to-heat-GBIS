@@ -47,17 +47,15 @@
           </div>
         </div>
       </div>
-      <div class="govuk-button-group">
-        <button id="acceptButton" value="hide" type="button" name="cookies" class="govuk-button"
-          data-module="govuk-button">
-          Accept cookies
-        </button>
-          <button id="rejectButton" value="hide" type="button" name="cookies" class="govuk-button"
-          data-module="govuk-button">
-          Reject cookies
-        </button>
-        <a class="govuk-link" href="/cookies">View cookies we use on this service</a>
-      </div>
+        <form method="post" action="{{url('frontdoor:cookies')}}">
+            {{ csrf_input }}
+            <input type="hidden" name="prev" value="{{ request.path }}">
+            <div class="govuk-button-group">
+                <button type="submit" name="cookies" class="govuk-button" value="True">Accept cookies</button>
+                <button type="submit" name="cookies" class="govuk-button" value="False">Reject cookies</button>
+                <a class="govuk-link" href="/cookies">View cookies we use on this service</a>
+            </div>
+        </form>
     </div>
   </div>
   {% endif %}
@@ -160,7 +158,6 @@
 
   <script src="/static/govuk-frontend/govuk-frontend-4.3.1.min.js"></script>
 
-  <script src="/static/main.js"></script>
   {% if request.COOKIES['cookiesAccepted'] == "True" and gtag_id %}
   <script async src="https://www.googletagmanager.com/gtag/js?id={{gtag_id}}"></script>
   <script src="{{url('frontdoor:data-layer-js')}}"></script>
