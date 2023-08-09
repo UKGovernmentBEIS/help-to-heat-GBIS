@@ -4,6 +4,7 @@ from marshmallow import Schema, ValidationError, fields, validate
 
 page_order = (
     "country",
+    "supplier",
     "own-property",
     "address",
     "council-tax-band",
@@ -18,7 +19,6 @@ page_order = (
     "loft",
     "summary",
     "schemes",
-    "supplier",
     "contact-details",
     "confirm-and-submit",
     "success",
@@ -46,11 +46,12 @@ page_prev_next_map = {
     "epc-ineligible": {"prev": "epc", "next": None},
     "ineligible": {"prev": "benefits", "next": None},
     "northern-ireland": {"prev": "country", "next": None},
-    "bulb-warning-page": {"prev": "supplier", "next": "contact-details"},
+    "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
 }
 
 summary_map = {
     "country": "Country of property",
+    "supplier": "Energy supplier",
     "own_property": "Do you own the property?",
     "address": "Property address",
     "council_tax_band": "Council tax band",
@@ -68,7 +69,6 @@ summary_map = {
 }
 
 confirm_sumbit_map = {
-    "supplier": "Energy supplier",
     "first_name": "First name",
     "last_name": "Last name",
     "contact_number": "Mobile number",
@@ -77,6 +77,8 @@ confirm_sumbit_map = {
 
 household_pages = {
     "country": ("country",),
+    "supplier": ("supplier",),
+    "bulb-warning-page": ("bulb-warning-page",),
     "own-property": ("own_property",),
     "address": ("address",),
     "council-tax-band": ("council_tax_band",),
@@ -94,7 +96,6 @@ household_pages = {
 }
 
 details_pages = {
-    "supplier": ("supplier",),
     "contact-details": ("first_name", "last_name", "contact_number", "email"),
 }
 

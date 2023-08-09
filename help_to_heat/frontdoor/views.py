@@ -495,6 +495,13 @@ class SupplierView(PageView):
         request_supplier = request_data.get("supplier")
         if request_supplier == "Bulb, now part of Octopus Energy":
             next_page_name = "bulb-warning-page"
+
+        if is_change_page:
+            if request_supplier == "Bulb, now part of Octopus Energy":
+                return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
+            else:
+                assert page_name in schemas.change_page_lookup
+                next_page_name = schemas.change_page_lookup[page_name]
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
 
@@ -503,6 +510,9 @@ class BulbWarningPageView(PageView):
     def get_context(self, session_id, *args, **kwargs):
         supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
         return {"supplier": supplier}
+
+    def handle_post(self, request, session_id, page_name, data, is_change_page):
+        return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
 @register_page("contact-details")
