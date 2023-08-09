@@ -67,7 +67,7 @@ def test_flow_errors():
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
-def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D"):
+def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D", supplier="Utilita"):
     """Answer main flow with set answers"""
     _add_epc(uprn="100023336956", rating=epc_rating)
 
@@ -76,6 +76,15 @@ def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D"):
     form = page.get_form()
     form["country"] = "England"
     page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = supplier
+    page = form.submit().follow()
+
+    if supplier == "Bulb, now part of Octopus Energy":
+        form = page.get_form()
+        assert page.has_text("Your referral will be sent to Octopus Energy")
+        page = form.submit().follow()
 
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
@@ -147,7 +156,7 @@ def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D"):
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 @utils.mock_os_api
 def test_happy_flow():
-    supplier = "EON"
+    supplier = "Utilita"
     session_id = _do_happy_flow(supplier=supplier)
 
     data = interface.api.session.get_answer(session_id, page_name="contact-details")
@@ -182,22 +191,13 @@ def _do_happy_flow(supplier="EON"):
     _check_page = _make_check_page(session_id)
 
     # Answer main flow
-    page = _answer_house_questions(page, session_id, benefits_answer="Yes", epc_rating="F")
+    page = _answer_house_questions(page, session_id, benefits_answer="Yes", epc_rating="F", supplier=supplier)
 
     assert page.has_one("h1:contains('Information based on your answers')")
     assert page.has_text("Great British Insulation Scheme")
     assert not page.has_text("Energy Company Obligation 4")
     form = page.get_form()
     page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
-
-    page = _check_page(page, "supplier", "supplier", supplier)
-
-    if supplier == "Bulb, now part of Octopus Energy":
-        assert page.has_one("h1:contains('Your referral will be sent to Octopus Energy')")
-        form = page.get_form()
-        page = form.submit().follow()
 
     assert page.has_one("h1:contains('Add your personal and contact details')")
     form = page.get_form()
@@ -217,8 +217,6 @@ def _do_happy_flow(supplier="EON"):
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('Confirm and submit')")
-
-    assert page.has_text(supplier)
 
     form = page.get_form()
     page = form.submit()
@@ -271,6 +269,12 @@ def test_back_button():
     form["country"] = "England"
     page = form.submit().follow()
 
+    assert page.has_text("your home energy supplier from the list below")
+
+    form = page.get_form()
+    form["supplier"] = "Utilita"
+    page = form.submit().follow()
+
     assert page.has_text("Do you own the property?")
 
     form = page.get_form()
@@ -283,6 +287,11 @@ def test_back_button():
 
     form = page.get_form()
     assert form["own_property"] == "Yes, I own my property and live in it"
+
+    page = page.click(contains="Back")
+
+    form = page.get_form()
+    assert form["supplier"] == "Utilita"
 
     page = page.click(contains="Back")
 
@@ -312,6 +321,9 @@ def test_no_benefits_flow():
     form = page.get_form()
     form["country"] = "England"
     page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
+    page = _check_page(page, "supplier", "supplier", "Utilita")
 
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
@@ -403,6 +415,12 @@ def test_no_address():
     form["country"] = "England"
     page = form.submit().follow()
 
+    assert page.has_text("your home energy supplier from the list below")
+
+    form = page.get_form()
+    form["supplier"] = "Utilita"
+    page = form.submit().follow()
+
     assert page.has_text("Do you own the property?")
 
     form = page.get_form()
@@ -466,6 +484,9 @@ def test_no_epc():
     form = page.get_form()
     form["country"] = "England"
     page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
+    page = _check_page(page, "supplier", "supplier", "Utilita")
 
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
@@ -533,6 +554,9 @@ def test_eligibility():
     form["country"] = "England"
     page = form.submit().follow()
 
+    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
+    page = _check_page(page, "supplier", "supplier", "Utilita")
+
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
@@ -595,9 +619,6 @@ def test_referral_email():
     assert not page.has_text("Energy Company Obligation 4")
     form = page.get_form()
     page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
-    page = _check_page(page, "supplier", "supplier", "Utilita")
 
     assert page.has_one("h1:contains('Add your personal and contact details')")
     form = page.get_form()
@@ -671,6 +692,10 @@ def test_feedback_with_session():
     form["country"] = "Scotland"
     page = form.submit().follow()
 
+    form = page.get_form()
+    form["supplier"] = "Utilita"
+    page = form.submit().follow()
+
     assert page.has_one("h1:contains('Do you own the property?')")
 
     page = page.click(contains="feedback")
@@ -722,9 +747,6 @@ def test_incorrect_referral_email():
     form = page.get_form()
     page = form.submit().follow()
 
-    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
-    page = _check_page(page, "supplier", "supplier", "Utilita")
-
     assert page.has_one("h1:contains('Add your personal and contact details')")
     form = page.get_form()
 
@@ -766,9 +788,6 @@ def test_referral_not_providing_email():
     assert not page.has_text("Energy Company Obligation 4")
     form = page.get_form()
     page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
-    page = _check_page(page, "supplier", "supplier", "Utilita")
 
     assert page.has_one("h1:contains('Add your personal and contact details')")
     form = page.get_form()
@@ -825,9 +844,6 @@ def test_referral_not_providing_contact_number():
     form = page.get_form()
     page = form.submit().follow()
 
-    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
-    page = _check_page(page, "supplier", "supplier", "Utilita")
-
     assert page.has_one("h1:contains('Add your personal and contact details')")
     form = page.get_form()
 
@@ -876,6 +892,9 @@ def test_address_validation():
     form["country"] = "England"
     page = form.submit().follow()
 
+    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
+    page = _check_page(page, "supplier", "supplier", "Utilita")
+
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
@@ -894,8 +913,6 @@ def test_address_validation():
 @utils.mock_os_api
 def test_bulb_to_octopus():
     supplier = "Bulb, now part of Octopus Energy"
-
-    models.Supplier(name="Octopus").save()
 
     session_id = _do_happy_flow(supplier=supplier)
 
