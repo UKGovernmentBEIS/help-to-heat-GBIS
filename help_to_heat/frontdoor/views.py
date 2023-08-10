@@ -511,9 +511,6 @@ class BulbWarningPageView(PageView):
         supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
         return {"supplier": supplier}
 
-    def handle_post(self, request, session_id, page_name, data, is_change_page):
-        return super().handle_post(request, session_id, page_name, data, is_change_page)
-
 
 @register_page("contact-details")
 class ContactDetailsView(PageView):

@@ -188,8 +188,6 @@ def _do_happy_flow(supplier="EON"):
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
-    _check_page = _make_check_page(session_id)
-
     # Answer main flow
     page = _answer_house_questions(page, session_id, benefits_answer="Yes", epc_rating="F", supplier=supplier)
 
@@ -609,8 +607,6 @@ def test_referral_email():
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
-    _check_page = _make_check_page(session_id)
-
     # Answer main flow
     page = _answer_house_questions(page, session_id, benefits_answer="Yes", epc_rating="F")
 
@@ -736,8 +732,6 @@ def test_incorrect_referral_email():
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
-    _check_page = _make_check_page(session_id)
-
     # Answer main flow
     page = _answer_house_questions(page, session_id, benefits_answer="Yes", epc_rating="F")
 
@@ -777,8 +771,6 @@ def test_referral_not_providing_email():
 
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
-
-    _check_page = _make_check_page(session_id)
 
     # Answer main flow
     page = _answer_house_questions(page, session_id, benefits_answer="Yes", epc_rating="F")
@@ -832,8 +824,6 @@ def test_referral_not_providing_contact_number():
 
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
-
-    _check_page = _make_check_page(session_id)
 
     # Answer main flow
     page = _answer_house_questions(page, session_id, benefits_answer="Yes", epc_rating="F")
