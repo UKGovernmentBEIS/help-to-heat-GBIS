@@ -237,7 +237,7 @@ supplier_options = (
     "EDF",
     "E.ON",
     "Foxglove",
-    "Octopus",
+    "Octopus Energy",
     "OVO",
     "Scottish Power",
     "Shell",

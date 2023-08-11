@@ -227,7 +227,7 @@ def _do_happy_flow(supplier="EON"):
 
     supplier_shown = supplier
     if supplier == "Bulb, now part of Octopus Energy":
-        supplier_shown = "Octopus"
+        supplier_shown = "Octopus Energy"
 
     assert page.has_one(f"h1:contains('Your details have been submitted to {supplier_shown}')")
 
@@ -907,8 +907,8 @@ def test_bulb_to_octopus():
     session_id = _do_happy_flow(supplier=supplier)
 
     referral_email_text = utils.get_latest_email_text("freddy.flibble@example.com")
-    assert "Your details have been submitted to Octopus." in referral_email_text
+    assert "Your details have been submitted to Octopus Energy." in referral_email_text
 
     referral = models.Referral.objects.get(session_id=session_id)
-    assert referral.supplier.name == "Octopus"
+    assert referral.supplier.name == "Octopus Energy"
     referral.delete()
