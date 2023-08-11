@@ -1,11 +1,14 @@
 import logging
+from http import HTTPStatus
 
 import requests
 
 logger = logging.getLogger(__name__)
 
+
 class ThrottledApiException(Exception):
     pass
+
 
 class OSApi:
     def __init__(self, key):
@@ -26,7 +29,8 @@ class OSApi:
 
         except requests.exceptions.HTTPError or requests.exceptions.RequestException as e:
             status_code = e.response.status_code
-            if status_code == 429: #too many requests
+            if status_code == HTTPStatus.TOO_MANY_REQUESTS:
+                logger.error("The OS API usage limit has been hit.")
                 raise ThrottledApiException
 
             logger.error("An error occured while attempting to fetch addresses.")
