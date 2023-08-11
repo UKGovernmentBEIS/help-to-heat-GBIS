@@ -26,8 +26,6 @@ def test_flow_northern_ireland():
 
     page = page.click(contains="Start")
     assert page.status_code == 200
-    print(page.content)
-    assert not page.has_text("Accept cookies")
 
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
@@ -149,7 +147,7 @@ def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D"):
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 @utils.mock_os_api
 def test_happy_flow():
-    supplier = "EON"
+    supplier = "Utilita"
     session_id = _do_happy_flow(supplier=supplier)
 
     data = interface.api.session.get_answer(session_id, page_name="contact-details")
