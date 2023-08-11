@@ -117,7 +117,12 @@ TEMPLATES = [
         "DIRS": [
             BASE_DIR / "help_to_heat" / "templates",
         ],
-        "OPTIONS": {"environment": "help_to_heat.jinja2.environment"},
+        "OPTIONS": {
+            "environment": "help_to_heat.jinja2.environment",
+            "context_processors": [
+                "help_to_heat.context_processors.suppress_cookie_banner"
+            ],
+        },
     },
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",

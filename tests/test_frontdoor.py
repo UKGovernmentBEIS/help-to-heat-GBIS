@@ -26,6 +26,8 @@ def test_flow_northern_ireland():
 
     page = page.click(contains="Start")
     assert page.status_code == 200
+    print(page.content)
+    assert not page.has_text("Accept cookies")
 
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
