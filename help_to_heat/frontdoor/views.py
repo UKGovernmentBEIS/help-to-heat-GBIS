@@ -10,6 +10,7 @@ from help_to_heat import utils
 
 from ..portal import email_handler
 from . import eligibility, interface, schemas
+from os_api import ThrottledApiException
 
 BulbSupplierConverter = interface.BulbSupplierConverter
 
@@ -158,7 +159,11 @@ class PageView(utils.MethodDispatcher):
         if "referral_created_at" in session and page_name != "success":
             return redirect("/")
 
-        extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data=data)
+        try:
+            extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data=data)
+        except ThrottledApiException:
+            render(request, template_name="frontdoor/os-api-throttled.html")
+            return response
         context = {
             "data": data,
             "session_id": session_id,

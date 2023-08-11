@@ -4,6 +4,8 @@ import requests
 
 logger = logging.getLogger(__name__)
 
+class ThrottledApiException(Exception):
+    pass
 
 class OSApi:
     def __init__(self, key):
@@ -23,6 +25,10 @@ class OSApi:
             return json_response
 
         except requests.exceptions.HTTPError or requests.exceptions.RequestException as e:
+            status_code = e.response.status_code
+            if status_code == 429: #too many requests
+                raise ThrottledApiException
+
             logger.error("An error occured while attempting to fetch addresses.")
             logger.error(e)
 
