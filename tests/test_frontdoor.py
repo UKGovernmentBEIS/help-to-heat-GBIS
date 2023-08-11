@@ -16,6 +16,7 @@ def _add_epc(uprn, rating):
     )
     assert interface.api.epc.get_epc(uprn, "England")
 
+# TODO: PC-380: Add tests for cookie banner
 
 def test_flow_northern_ireland():
     client = utils.get_client()
