@@ -15,10 +15,10 @@ from .test_frontdoor import _do_happy_flow
 def test_csv():
     expected_datetime = "2022-06-30 23:59:59+00:00"
     with freezegun.freeze_time(expected_datetime):
-        _do_happy_flow(supplier="EON")
+        _do_happy_flow(supplier="Utilita")
 
     client = utils.get_client()
-    page = utils.login_as_team_leader(client, supplier="EON")
+    page = utils.login_as_team_leader(client, supplier="Utilita")
     assert page.has_one("p:contains('Unread leads') ~ p:contains('1')")
 
     download_datetime = "2022-07-31 23:48:59+00:00"
@@ -46,7 +46,7 @@ def test_csv():
 def test_referral_created_at():
     expected_datetime = "2022-12-25 14:34:56+00:00"
     with freezegun.freeze_time(expected_datetime):
-        session_id = _do_happy_flow(supplier="EON")
+        session_id = _do_happy_flow(supplier="Utilita")
 
     data = interface.api.session.get_session(session_id)
 

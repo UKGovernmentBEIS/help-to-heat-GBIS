@@ -134,12 +134,12 @@ class BulbSupplierConverter:
     def get_supplier_and_replace_bulb_with_octopus(self):
         supplier = self._get_supplier()
         if self._is_bulb():
-            return "Octopus"
+            return "Octopus Energy"
         return supplier
 
     def replace_bulb_with_octopus_in_session_data(self, session_data):
         if self._is_bulb():
-            session_data["supplier"] = "Octopus"
+            session_data["supplier"] = "Octopus Energy"
         return session_data
 
 
