@@ -306,7 +306,7 @@ class CouncilTaxBandView(PageView):
 
 @register_page("epc")
 class EpcView(PageView):
-    def get(self, request, session_id, page_name, errors=None, is_change_page=False):
+    def get(self, request, session_id, page_name, data=None, errors=None, is_change_page=False):
         if not errors:
             errors = {}
         data = {}
@@ -361,7 +361,7 @@ class EpcView(PageView):
 
 @register_page("epc-disagree")
 class EpcDisagreeView(PageView):
-    def get(self, request, session_id, page_name, errors=None, is_change_page=False):
+    def get(self, request, session_id, page_name, data=None, errors=None, is_change_page=False):
         if not errors:
             errors = {}
         data = {}
