@@ -5,7 +5,7 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from marshmallow import ValidationError
-from os_api import ThrottledApiException
+from .os_api import ThrottledApiException
 
 from help_to_heat import utils
 
@@ -89,6 +89,9 @@ def holding_page_view(request):
     context = {"previous_path": previous_path}
     return render(request, template_name="frontdoor/holding-page.html", context=context)
 
+def sorry_page_view(request):
+    return render(request, template_name="frontdoor/os-api-throttled.html")
+
 
 def page_view(request, session_id, page_name):
     if page_name in page_map:
@@ -162,8 +165,7 @@ class PageView(utils.MethodDispatcher):
         try:
             extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data=data)
         except ThrottledApiException:
-            response = render(request, template_name="frontdoor/os-api-throttled.html")
-            return response
+            return redirect("/sorry")
         context = {
             "data": data,
             "session_id": session_id,

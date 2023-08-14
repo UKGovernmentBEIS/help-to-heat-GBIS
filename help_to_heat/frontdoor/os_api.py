@@ -19,13 +19,15 @@ class OSApi:
             &postcode={postcode}&lr=EN&dataset=DPA,LPI&key={self.key}"""
         if offset:
             url += f"&offset={offset}"
-
+    
         try:
             response = requests.get(url)
             response.raise_for_status()
             json_response = response.json()
 
             return json_response
+        
+
 
         except requests.exceptions.HTTPError or requests.exceptions.RequestException as e:
             status_code = e.response.status_code
