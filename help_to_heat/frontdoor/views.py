@@ -593,7 +593,14 @@ def feedback_thanks_view(request, session_id=None, page_name=None):
 
 
 def cookies_view(request):
-    return render(request, template_name="frontdoor/cookies.html")
+    if request.method == "POST":
+        consent = request.POST.get("cookies")
+        previous_path = request.POST.get("prev")
+        response = redirect(previous_path)
+        response.set_cookie("cookiesAccepted", consent)
+        return response
+    else:
+        return render(request, template_name="frontdoor/cookies.html")
 
 
 def data_layer_js_view(request):
