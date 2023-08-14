@@ -29,8 +29,7 @@
 </head>
 
 <body class="govuk-template__body" id="i-dot-ai">
-  {% if not SUPPRESS_COOKIE_BANNER %}
-      {% if request.COOKIES['cookiesAccepted'] != "True" and request.COOKIES['cookiesAccepted'] != "False"%}
+  {% if not SUPPRESS_COOKIE_BANNER and (request.COOKIES['cookiesAccepted'] != "True" and request.COOKIES['cookiesAccepted'] != "False") %}
       <div id="cookie-banner" class="govuk-cookie-banner" data-nosnippet role="region"
         aria-label="Cookies on Check eligibility for Great British Insulation Scheme">
         <div class="govuk-cookie-banner__message govuk-width-container">
@@ -59,7 +58,6 @@
             </form>
         </div>
       </div>
-      {% endif %}
   {% endif %}
 
   <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>
@@ -160,6 +158,7 @@
 
   <script src="/static/govuk-frontend/govuk-frontend-4.3.1.min.js"></script>
 
+  <script src="/static/main.js"></script>
   {% if request.COOKIES['cookiesAccepted'] == "True" and gtag_id %}
   <script async src="https://www.googletagmanager.com/gtag/js?id={{gtag_id}}"></script>
   <script src="{{url('frontdoor:data-layer-js')}}"></script>
