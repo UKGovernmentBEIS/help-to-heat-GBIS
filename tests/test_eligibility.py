@@ -287,7 +287,6 @@ def _make_check_page(session_id):
     return _check_page
 
 
-# @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", utils.MockApi)
 @utils.mock_os_api
 def test_ineligible_shortcut():
     for country in eligible_council_tax:
@@ -316,6 +315,9 @@ def _do_test(country, council_tax_band, epc_rating):
     form = page.get_form()
     form["country"] = country
     page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
+    page = _check_page(page, "supplier", "supplier", "Utilita")
 
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
