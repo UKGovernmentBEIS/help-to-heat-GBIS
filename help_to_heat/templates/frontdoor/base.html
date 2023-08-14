@@ -29,33 +29,35 @@
 </head>
 
 <body class="govuk-template__body" id="i-dot-ai">
-  {% if request.COOKIES['cookiesAccepted'] != "True"%}
-  <div id="cookie-banner" class="govuk-cookie-banner" data-nosnippet role="region"
-    aria-label="Cookies on Check eligibility for Great British Insulation Scheme">
-    <div class="govuk-cookie-banner__message govuk-width-container">
-      <div class="govuk-grid-row">
-        <div class="govuk-grid-column-two-thirds">
-          <h2 class="govuk-cookie-banner__heading govuk-heading-m">Cookies we are using on our service</h2>
-          <div class="govuk-cookie-banner__content">
-            <p class="govuk-body">We will use necessary cookies when you use this service to help you move around the
-              site.</p>
-            <p class="govuk-body">We will also use analytic cookies using Google Analytics to tell us how you got to our
-              service, the pages you visit, and
-              how long you spent on them. Analytics cookies help us to improve our service. We do not allow Google to
-              use or share the
-              data about how you use this site and the data is stored anonymously.</p>
+  {% if not SUPPRESS_COOKIE_BANNER and (request.COOKIES['cookiesAccepted'] != "True" and request.COOKIES['cookiesAccepted'] != "False") %}
+      <div id="cookie-banner" class="govuk-cookie-banner" data-nosnippet role="region"
+        aria-label="Cookies on Check eligibility for Great British Insulation Scheme">
+        <div class="govuk-cookie-banner__message govuk-width-container">
+          <div class="govuk-grid-row">
+            <div class="govuk-grid-column-two-thirds">
+              <h2 class="govuk-cookie-banner__heading govuk-heading-m">Cookies we are using on our service</h2>
+              <div class="govuk-cookie-banner__content">
+                <p class="govuk-body">We will use necessary cookies when you use this service to help you move around the
+                  site.</p>
+                <p class="govuk-body">We will also use analytic cookies using Google Analytics to tell us how you got to our
+                  service, the pages you visit, and
+                  how long you spent on them. Analytics cookies help us to improve our service. We do not allow Google to
+                  use or share the
+                  data about how you use this site and the data is stored anonymously.</p>
+              </div>
+            </div>
           </div>
+            <form method="post" action="{{url('frontdoor:cookies')}}" class="cookie_banner">
+                {{ csrf_input }}
+                <input type="hidden" name="prev" value="{{ request.path }}">
+                <div class="govuk-button-group">
+                    <button type="submit" name="cookies" class="govuk-button" value="True">Accept cookies</button>
+                    <button type="submit" name="cookies-f" class="govuk-button" value="False">Reject cookies</button>
+                    <a class="govuk-link" href="/cookies">View cookies we use on this service</a>
+                </div>
+            </form>
         </div>
       </div>
-      <div class="govuk-button-group">
-        <button id="hideButton" value="hide" type="button" name="cookies" class="govuk-button"
-          data-module="govuk-button">
-          Accept cookies
-        </button>
-        <a class="govuk-link" href="/cookies">View cookies we use on this service</a>
-      </div>
-    </div>
-  </div>
   {% endif %}
 
   <a href="#main-content" class="govuk-skip-link" data-module="govuk-skip-link">Skip to main content</a>

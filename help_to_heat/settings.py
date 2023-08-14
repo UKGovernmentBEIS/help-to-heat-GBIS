@@ -22,6 +22,8 @@ FROM_EMAIL = env.str("FROM_EMAIL", default="test@example.com")
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
 
+SUPPRESS_COOKIE_BANNER = env.bool("SUPPRESS_COOKIE_BANNER", default=False)
+
 # TODO: Replace with fixed hosts once we know the domain
 ALLOWED_HOSTS = ["*"]
 
@@ -117,7 +119,10 @@ TEMPLATES = [
         "DIRS": [
             BASE_DIR / "help_to_heat" / "templates",
         ],
-        "OPTIONS": {"environment": "help_to_heat.jinja2.environment"},
+        "OPTIONS": {
+            "environment": "help_to_heat.jinja2.environment",
+            "context_processors": ["help_to_heat.context_processors.add_settings_to_context"],
+        },
     },
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",

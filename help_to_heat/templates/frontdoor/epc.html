@@ -8,61 +8,43 @@
 {% block content %}
   {% call macros.form_wrapper(prev_url) -%}
 
-    {% if not epc_rating %}
+  <span class="govuk-caption-l">Find your EPC</span>
+  <h1 class="govuk-heading-l">We found an Energy Performance Certificate that might be yours</h1>
 
-      <h1 class="govuk-heading-l">We did not find a complete Energy Performance Certificate for your property</h1>
+  <p class="govuk-body">This certificate may be registered to your property or one of the properties nearby that
+    shares part of your address.</p>
 
-      <p class="govuk-body">This could be because:</p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li>there isn't an EPC for your property</li>
-        <li>your property is a new build</li>
-        <li>your address is saved in a different format</li>
-      </ul>
+  <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title"
+    data-module="govuk-notification-banner">
+    <div class="govuk-notification-banner__header">
+      <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
+        Certificate
+      </h2>
+    </div>
+    <div class="govuk-notification-banner__content">
 
-      <p class="govuk-body">You can continue without an Energy Performance Certificate, We will need to ask you some questions to work out which home improvement schemes your property is eligible for. There will be guidance to support you along the way</p>
-      <input type="hidden" name="accept_suggested_epc" value="Not found"/>
-      <input type="hidden" name="epc_rating" value="Not found"/>
+      <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">Registered address</p>
+      {% for part in address.split(',') %}
+        <p class="govuk-body govuk-!-margin-bottom-1">{{ part.strip() }}</p>
+      {% endfor %}
 
-    {% else %}
+      <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">EPC rating</p>
+      <p class="govuk-body">{{epc_rating}}</p>
+    </div>
+  </div>
+  <div class="govuk-form-group {% if errors %}govuk-form-group--error{% endif %}">
+    <fieldset class="govuk-fieldset" {% if errors %} aria-describedby="question-accept_suggested_epc-error" {% endif %}>
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+        <h1 class="govuk-fieldset__heading">
+          Is this your EPC?
+        </h1>
+      </legend>
+      <input type="hidden" name="epc_rating" value="{{epc_rating}}"/>
+      <input type="hidden" name="epc_date" value="{{epc_date}}"/>
+      {{macros.radios('accept_suggested_epc', epc_display_options, data, errors)}}
+    </fieldset>
+  </div>
 
-      <span class="govuk-caption-l">Find your EPC</span>
-      <h1 class="govuk-heading-l">We found an Energy Performance Certificate that might be yours</h1>
-
-      <p class="govuk-body">This certificate may be registered to your property or one of the properties nearby that
-        shares part of your address.</p>
-
-      <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title"
-        data-module="govuk-notification-banner">
-        <div class="govuk-notification-banner__header">
-          <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-            Certificate
-          </h2>
-        </div>
-        <div class="govuk-notification-banner__content">
-
-          <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">Registered address</p>
-          {% for part in address.split(',') %}
-            <p class="govuk-body govuk-!-margin-bottom-1">{{ part.strip() }}</p>
-          {% endfor %}
-
-          <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">EPC rating</p>
-          <p class="govuk-body">{{epc_rating}}</p>
-        </div>
-      </div>
-      <div class="govuk-form-group {% if errors %}govuk-form-group--error{% endif %}">
-        <fieldset class="govuk-fieldset" {% if errors %} aria-describedby="question-accept_suggested_epc-error" {% endif %}>
-          <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
-            <h1 class="govuk-fieldset__heading">
-              Is this your EPC?
-            </h1>
-          </legend>
-          <input type="hidden" name="epc_rating" value="{{epc_rating}}"/>
-          <input type="hidden" name="epc_date" value="{{epc_date}}"/>
-          {{macros.radios('accept_suggested_epc', epc_display_options, data, errors)}}
-        </fieldset>
-      </div>
-
-    {% endif %}
 
   {% endcall %}
 {% endblock %}

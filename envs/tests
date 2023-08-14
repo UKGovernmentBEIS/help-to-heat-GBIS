@@ -17,3 +17,4 @@ SEND_VERIFICATION_EMAIL = False
 CONTACT_EMAIL="test@example.com"
 FROM_EMAIL="test@example.com"
 OS_API_KEY="f4k3k3y"
+SUPPRESS_COOKIE_BANNER=True
