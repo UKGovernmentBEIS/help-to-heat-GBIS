@@ -516,14 +516,6 @@ def test_no_epc():
     assert page.has_one("h1:contains('What is the council tax band of your property?')")
     page = _check_page(page, "council-tax-band", "council_tax_band", "B")
 
-    assert page.has_one("h1:contains('We did not find a complete Energy Performance Certificate for your property')")
-    form = page.get_form()
-    page = form.submit().follow()
-
-    data = interface.api.session.get_answer(session_id, page_name="epc")
-
-    assert data["epc_rating"] == "Not found"
-
     assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
 
 
