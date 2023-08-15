@@ -34,6 +34,7 @@ extra_pages = (
     "epc-ineligible",
     "ineligible",
     "bulb-warning-page",
+    "supplier-ineligible"
 )
 
 page_prev_next_map = {
@@ -47,6 +48,7 @@ page_prev_next_map = {
     "ineligible": {"prev": "benefits", "next": None},
     "northern-ireland": {"prev": "country", "next": None},
     "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
+    "supplier-ineligible": {"prev": None, "next": None},
 }
 
 summary_map = {
@@ -93,6 +95,7 @@ household_pages = {
     "loft": ("loft",),
     "loft-access": ("loft_access",),
     "loft-insulation": ("loft_insulation",),
+    "supplier-ineligible": ("supplier-ineligible",),
 }
 
 details_pages = {
@@ -244,6 +247,10 @@ supplier_options = (
     "So Energy",
     "Utilita",
     "Utility Warehouse",
+)
+#TBC
+ineligible_supplier_options = (
+    "Shell",
 )
 epc_rating_options = ("A", "B", "C", "D", "E", "F", "G", "H", "Not found")
 loft_insulation_options = (

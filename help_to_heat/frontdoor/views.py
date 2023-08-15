@@ -510,7 +510,9 @@ class SupplierView(PageView):
         request_supplier = request_data.get("supplier")
         if request_supplier == "Bulb, now part of Octopus Energy":
             next_page_name = "bulb-warning-page"
-
+        if request_supplier in schemas.ineligible_supplier_options:
+            next_page_name = "supplier-ineligible"
+            return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
         if is_change_page:
             if request_supplier == "Bulb, now part of Octopus Energy":
                 return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
@@ -522,6 +524,12 @@ class SupplierView(PageView):
 
 @register_page("bulb-warning-page")
 class BulbWarningPageView(PageView):
+    def get_context(self, session_id, *args, **kwargs):
+        supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        return {"supplier": supplier}
+    
+@register_page("supplier-ineligible")
+class SupplierIneligiblePageView(PageView):
     def get_context(self, session_id, *args, **kwargs):
         supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
         return {"supplier": supplier}

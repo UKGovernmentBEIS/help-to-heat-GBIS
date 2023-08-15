@@ -1,0 +1,17 @@
+{% extends "frontdoor/base.html" %}
+
+{% block title %}
+  <title>{{supplier}} are not taking referrals right now- Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+{% endblock %}
+
+{% block content %}
+<legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+    <h1 class="govuk-fieldset__heading">
+        {{supplier}} are not taking referrals right now
+    </h1>
+  </legend>
+
+<p class="govuk-body">You are not able to apply to {{supplier}} using this service just now.</p>
+<p class="govuk-body">You can check back again soon.</p>
+<p class="govuk-body">If you are a home owner in England and Wales, <a href="https://www.citizensadvice.org.uk/consumer/energy/energy-supply/" class="govuk-link" target="_blank">you can find other ways to save energy using the find ways to save energy service (opens in a new tab)</a></p>
+{% endblock %}
