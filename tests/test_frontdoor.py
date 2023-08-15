@@ -217,6 +217,11 @@ def _do_happy_flow(supplier="EON"):
     form["email"] = "freddy.flibble@example.com"
     page = form.submit().follow()
 
+    assert page.has_one("h1:contains('When is the best time to call you')")
+    form = page.get_form()
+    form["preferred_contact_time"] = "Afternoon"
+    page = form.submit().follow()
+
     assert page.has_one("h1:contains('Confirm and submit')")
 
     form = page.get_form()
@@ -624,6 +629,11 @@ def test_referral_email():
     form["email"] = "freddy.flibble@example.com"
     page = form.submit().follow()
 
+    assert page.has_one("h1:contains('When is the best time to call you')")
+    form = page.get_form()
+    form["preferred_contact_time"] = "Afternoon"
+    page = form.submit().follow()
+
     assert page.has_one("h1:contains('Confirm and submit')")
     assert page.has_text("I agree for my personal details to be shared with Utilita")
 
@@ -788,6 +798,11 @@ def test_referral_not_providing_email():
     form["contact_number"] = "07777777777"
     page = form.submit().follow()
 
+    assert page.has_one("h1:contains('When is the best time to call you')")
+    form = page.get_form()
+    form["preferred_contact_time"] = "Afternoon"
+    page = form.submit().follow()
+
     assert page.has_one("h1:contains('Confirm and submit')")
 
     form = page.get_form()
@@ -839,6 +854,11 @@ def test_referral_not_providing_contact_number():
     form["first_name"] = "Freddy"
     form["last_name"] = "Flibble"
     form["email"] = "freddy.flibble@example.com"
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('When is the best time to call you')")
+    form = page.get_form()
+    form["preferred_contact_time"] = "Afternoon"
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('Confirm and submit')")
