@@ -1,8 +1,9 @@
-FROM python:3.9-buster
+FROM public.ecr.aws/docker/library/python:3.9-buster
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
 ENV TZ=UTC
+ENV CONN_MAX_AGE=300
 
 ARG BASE_URL
 
@@ -14,6 +15,8 @@ RUN curl -o /bin/wait-for-db https://github.com/palfrey/wait-for-db/releases/dow
 RUN chmod +x /bin/wait-for-db
 
 RUN python3 -m pip install -U pip setuptools wheel
+
+RUN python3 -m pip install debugpy
 
 COPY ./requirements.lock /app/requirements.lock
 RUN python3 -m pip install -r /app/requirements.lock --no-cache-dir
@@ -33,7 +36,7 @@ RUN \
     DJANGO_SECRET_KEY="temp" \
     python manage.py collectstatic --no-input
 
-EXPOSE 8012
+EXPOSE 8012 5678
 
 ENTRYPOINT ["sh","/entrypoint.sh"]
 CMD ["sh","/start.sh"]

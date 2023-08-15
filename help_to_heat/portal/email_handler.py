@@ -1,3 +1,5 @@
+import logging
+
 import furl
 from django.conf import settings
 from django.contrib.auth.tokens import PasswordResetTokenGenerator
@@ -7,6 +9,8 @@ from django.urls import reverse
 from django.utils import timezone
 
 from help_to_heat.portal import models
+
+logger = logging.getLogger(__name__)
 
 
 def _strip_microseconds(dt):
@@ -74,24 +78,32 @@ def _send_token_email(user, subject, template_name, from_address, url_name, toke
     url = str(furl.furl(url=base_url, path=url_path, query_params={"code": token, "user_id": str(user.id)}))
     context = dict(user=user, url=url, contact_address=settings.CONTACT_EMAIL)
     body = render_to_string(template_name, context)
-    response = send_mail(
-        subject=subject,
-        message=body,
-        from_email=from_address,
-        recipient_list=[user.email],
-    )
-    return response
+    try:
+        response = send_mail(
+            subject=subject,
+            message=body,
+            from_email=from_address,
+            recipient_list=[user.email],
+        )
+        return response
+    except Exception as err:  # noqa: B902
+        logger.error("An error occured while attempting to send an email.")
+        logger.error(err)
 
 
 def _send_normal_email(subject, template_name, from_address, to_address, context):
     body = render_to_string(template_name, context)
-    response = send_mail(
-        subject=subject,
-        message=body,
-        from_email=from_address,
-        recipient_list=[to_address],
-    )
-    return response
+    try:
+        response = send_mail(
+            subject=subject,
+            message=body,
+            from_email=from_address,
+            recipient_list=[to_address],
+        )
+        return response
+    except Exception as err:  # noqa: B902
+        logger.error("An error occured while attempting to send an email.")
+        logger.error(err)
 
 
 def send_password_reset_email(user):

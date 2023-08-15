@@ -1,11 +1,15 @@
+import codecs
 import csv
 
+from dateutil import tz
 from django.http import HttpResponse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
 from help_to_heat.frontdoor.eligibility import calculate_eligibility
 from help_to_heat.portal import decorators, models
+
+london_tz = tz.gettz("Europe/London")
 
 csv_columns = (
     "ECO4",
@@ -72,13 +76,14 @@ def add_extra_row_data(referral):
     row = dict(referral.data)
     eligibility = calculate_eligibility(row)
     epc_date = row.get("epc_date")
+    created_at = referral.created_at.astimezone(london_tz)
     row = {
         **row,
         "ECO4": "Energy Company Obligation 4" in eligibility and "Yes" or "No",
         "GBIS": "Great British Insulation Scheme" in eligibility and "Yes" or "No",
         "epc_date": epc_date and epc_date or "Not found",
-        "submission_date": referral.created_at.date(),
-        "submission_time": referral.created_at.time().strftime("%H:%M:%S'"),
+        "submission_date": created_at.date(),
+        "submission_time": created_at.time().strftime("%H:%M:%S"),
     }
     return row
 
@@ -89,8 +94,9 @@ def create_referral_csv(referrals, file_name):
         "Content-Disposition": f"attachment; filename=referral-data-{file_name}.csv",
     }
     rows = [add_extra_row_data(referral) for referral in referrals]
-    response = HttpResponse(headers=headers)
-    writer = csv.DictWriter(response, fieldnames=csv_columns, extrasaction="ignore")
+    response = HttpResponse(headers=headers, charset="utf-8")
+    response.write(codecs.BOM_UTF8)
+    writer = csv.DictWriter(response, fieldnames=csv_columns, extrasaction="ignore", dialect=csv.unix_dialect)
     writer.writeheader()
     for row in rows:
         writer.writerow(row)

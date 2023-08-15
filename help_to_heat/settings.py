@@ -7,6 +7,8 @@ from .settings_base import (
     env,
 )
 
+import logging
+
 SECRET_KEY = SECRET_KEY
 STATIC_URL = STATIC_URL
 STATICFILES_DIRS = STATICFILES_DIRS
@@ -52,6 +54,7 @@ CORS_APPS = [
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "csp.middleware.CSPMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
@@ -64,7 +67,18 @@ MIDDLEWARE = [
 if BASIC_AUTH:
     MIDDLEWARE = ["help_to_heat.auth.basic_auth_middleware"] + MIDDLEWARE
 
-# CSRF settings
+# Secure transport header timeout 5 minutes; we can up to something larger (like a year) when we're happy it's working.
+SECURE_HSTS_SECONDS = 300
+
+# Content Security Policy configurations
+CSP_DEFAULT_SRC = ("'self'",)
+CSP_SCRIPT_SRC = ("'self'", "https://www.googletagmanager.com/")
+CSP_CONNECT_SRC = ("'self'",)
+CSP_IMG_SRC = ("'self'",)
+CSP_STYLE_SRC = ("'self'",)
+CSP_BASE_URI = ("'self'",)
+CSP_FORM_ACTION = ("'self'",)
+
 CSRF_COOKIE_HTTPONLY = True
 
 CORS_MIDDLEWARE = [
@@ -175,3 +189,13 @@ if not DEBUG:
     SESSION_COOKIE_HTTPONLY = True
     SESSION_COOKIE_AGE = 60 * 10  # 10 minutes
     SESSION_COOKIE_SAMESITE = "Strict"
+    CSRF_COOKIE_SECURE = True
+
+    logging.getLogger("waitress.queue").setLevel(logging.ERROR)
+else:
+    import debugpy
+
+    try:
+        debugpy.listen(("0.0.0.0", 5678))
+    except Exception as e:
+        print("Unable to bind debugpy (if you are running manage.py in local, this is expected):", e)

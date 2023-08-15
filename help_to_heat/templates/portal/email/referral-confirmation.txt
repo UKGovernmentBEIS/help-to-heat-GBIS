@@ -4,7 +4,7 @@ Your details have been submitted to {{supplier_name}}.
 
 # What happens next?
 
-We have sent your referral to the energy supplier you selected. They will contact you within X working days to confirm they have received your referral or to ask you for more information.
+We have sent your referral to the energy supplier you selected. They will contact you within 10 working days to confirm they have received your referral or to ask you for more information.
 
 You do not need to create another referral at any point.
 
@@ -12,11 +12,11 @@ Once the energy supplier has confirmed they have received your referral, they wi
 
 Properties that are applicable for home improvements must have a home survey completed. Your energy supplier will organise this with you.
 
-# Contacting the energy supplier about your referral after X working days
+# Contacting the energy supplier about your referral after 10 working days
 
 You can [find contact details for the energy supplier](https://www.ofgem.gov.uk/environmental-and-social-schemes/energy-company-obligation-eco/contacts-guidance-and-resources/eco-supplier-contact-details) if you need to contact them.
 
-You do not need to contact the energy supplier unless it has been more than X working days since you submitted the referral and you have not yet received a confirmation email from them.
+You do not need to contact the energy supplier unless it has been more than 10 working days since you submitted the referral and you have not yet received a confirmation email from them.
 
 # Access more household energy support
 
