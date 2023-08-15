@@ -27,6 +27,8 @@ RUN chmod +x /check-code.sh
 
 COPY ./ /app
 
+COPY ./envs/web.template ./envs/web
+
 WORKDIR /app/
 
 RUN \
