@@ -20,6 +20,7 @@ page_order = (
     "summary",
     "schemes",
     "contact-details",
+    "preferred-contact-time",
     "confirm-and-submit",
     "success",
 )
@@ -73,6 +74,7 @@ confirm_sumbit_map = {
     "last_name": "Last name",
     "contact_number": "Mobile number",
     "email": "Email",
+    "preferred_contact_time": "Preferred contact time",
 }
 
 household_pages = {
@@ -97,6 +99,7 @@ household_pages = {
 
 details_pages = {
     "contact-details": ("first_name", "last_name", "contact_number", "email"),
+    "preferred-contact-time": ("preferred_contact_time",),
 }
 
 change_page_lookup = {
@@ -260,6 +263,7 @@ multichoice_options = (
     "Completely agree",
     "Not sure / not applicable",
 )
+preferred_contact_time_options = ("Morning", "Afternoon", "No preference")
 
 
 def validate_email_or_none(value):
@@ -316,6 +320,7 @@ class SessionSchema(Schema):
         )
     )
     email = fields.String(validate=(validate_email_or_none, validate.Length(max=128)), allow_none=True)
+    preferred_contact_time = fields.String(validate=validate.OneOf(preferred_contact_time_options))
     schemes = fields.List(fields.Str())
     referral_created_at = fields.String()
     _page_name = fields.String()

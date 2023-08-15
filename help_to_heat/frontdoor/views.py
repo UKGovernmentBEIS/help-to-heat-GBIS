@@ -35,6 +35,7 @@ page_compulsory_field_map = {
     "loft-insulation": ("loft_insulation",),
     "supplier": ("supplier",),
     "contact-details": ("first_name", "last_name"),
+    "preferred-contact-time": ("preferred_contact_time",),
     "confirm-and-submit": ("permission",),
 }
 
@@ -61,6 +62,7 @@ missing_item_errors = {
     "last_name": "Enter your last name",
     "email": "Enter your address",
     "contact_number": "Enter your contact number",
+    "preferred_contact_time": "Select when the best time to call you is",
     "permission": "Please confirm that you agree to the use of your information by checking this box",
 }
 
@@ -554,6 +556,12 @@ class ContactDetailsView(PageView):
                 "contact_number": missing_item_errors["contact_number"],
             }
         return errors
+
+
+@register_page("preferred-contact-time")
+class ContactDetailsView(PageView):
+    def get_context(self, *args, **kwargs):
+        return {"preferred_contact_time_options": schemas.preferred_contact_time_options}
 
 
 @register_page("confirm-and-submit")

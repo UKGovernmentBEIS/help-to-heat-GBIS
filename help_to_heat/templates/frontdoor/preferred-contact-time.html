@@ -1,0 +1,23 @@
+{% extends "frontdoor/base.html" %}
+{% import "macros.html" as macros with context %}
+
+{% block title %}
+  <title>When is the best time to call you? - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+{% endblock %}
+
+{% block content %}
+  {% call macros.form_wrapper(prev_url) -%}
+    <div class="govuk-form-group {% if errors %}govuk-form-group--error{% endif %}">
+      <fieldset class="govuk-fieldset" {% if errors %} aria-describedby="question-preferred_contact_time-error" {% endif %}>
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+          <h1 class="govuk-fieldset__heading">
+            When is the best time to call you?
+          </h1>
+        </legend>
+
+        {{macros.radios('preferred_contact_time', preferred_contact_time_options, data, errors)}}
+
+      </fieldset>
+    </div>
+  {%- endcall %}
+{% endblock %}

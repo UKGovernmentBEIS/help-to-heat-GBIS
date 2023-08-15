@@ -17,6 +17,7 @@ csv_columns = (
     "first_name",
     "last_name",
     "contact_number",
+    "preferred_contact_time",
     "email",
     "own_property",
     "benefits",
