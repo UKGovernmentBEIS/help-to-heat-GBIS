@@ -89,6 +89,7 @@ jobs:
       - uses: actions/checkout@v3
 
       - run: |
+          cp ./envs/web.template ./envs/web
           docker-compose build web
           docker-compose run web python manage.py makemigrations --check
 
