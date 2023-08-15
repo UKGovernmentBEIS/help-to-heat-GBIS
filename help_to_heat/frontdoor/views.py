@@ -301,18 +301,19 @@ class CouncilTaxBandView(PageView):
         return {"council_tax_band_options": council_tax_bands}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        return super().handle_post(request, session_id, page_name, data, is_change_page)
+        session_data = interface.api.session.get_session(session_id)
+        uprn = session_data.get("uprn")
+        country = session_data.get("country")
+        epc = None
+        if uprn:
+            epc = interface.api.epc.get_epc(uprn, country)
+        return super().handle_post(request, session_id, page_name, data, is_change_page) if epc \
+            else redirect("frontdoor:page", session_id=session_id, page_name="benefits")
 
 
 @register_page("epc")
 class EpcView(PageView):
-    def get(self, request, session_id, page_name, data=None, errors=None, is_change_page=False):
-        if not errors:
-            errors = {}
-        data = {}
-        prev_page_url, next_page_url = get_prev_next_urls(session_id, page_name)
-        extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data={})
-
+    def get_context(self, request, session_id, page_name, data):
         session_data = interface.api.session.get_session(session_id)
         uprn = session_data.get("uprn")
         address = session_data.get("address")
@@ -321,24 +322,13 @@ class EpcView(PageView):
             epc = interface.api.epc.get_epc(uprn, country)
         else:
             epc = {}
-
         context = {
-            "data": data,
-            "session_id": session_id,
-            "errors": errors,
-            "prev_url": prev_page_url,
-            "next_url": next_page_url,
             "epc_rating": epc.get("rating"),
             "epc_date": epc.get("date"),
             "epc_display_options": schemas.epc_display_options,
             "address": address,
-            **extra_context,
         }
-
-        if context["epc_rating"]:
-            return render(request, template_name=f"frontdoor/{page_name}.html", context=context)
-        else:
-            return render(request, template_name="frontdoor/benefits.html", context=context)
+        return context
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         prev_page_name, next_page_name = get_prev_next_page_name(page_name)
