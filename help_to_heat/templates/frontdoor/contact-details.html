@@ -2,7 +2,7 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-<title>What are your contact details? - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+<title>{{_("What are your contact details? - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
@@ -10,29 +10,35 @@
 <fieldset class="govuk-fieldset">
   <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
     <h1 class="govuk-fieldset__heading">
-      Add your personal and contact details
+      {{_("Add your personal and contact details")}}
     </h1>
   </legend>
   <p class="govuk-body">
-    The details entered below will be used by {{supplier}} and their subcontractors to review your referral and provide
-    you with relevant updates. Emails will be used to provide you with updates and telephone calls to discuss measure
-    details.
+    {{_("The details entered below will be used by %(supplier)s and their subcontractors to review your referral and provide you with relevant updates. Emails will be used to provide you with updates and telephone calls to discuss measure details.") % { "supplier": supplier }}}
   </p>
   <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-    <h1 class="govuk-fieldset__heading">Personal details</h1>
+    <h1 class="govuk-fieldset__heading">{{_("Personal details")}}</h1>
   </legend>
-  {{macros.input('first_name', 'First name', data, errors, 'given-name')}}
-  {{macros.input('last_name', 'Last name', data, errors, 'family-name')}}
+
+  {% set first_name_label = _("First name") %}
+  {{macros.input('first_name', first_name_label, data, errors, 'given-name')}}
+  
+  {% set last_name_label = _("Last name") %}
+  {{macros.input('last_name', last_name_label, data, errors, 'family-name')}}
 
   <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-    <h1 class="govuk-fieldset__heading">Contact details</h1>
+    <h1 class="govuk-fieldset__heading">{{_("Contact details")}}</h1>
   </legend>
   <p class="govuk-body">
-    We will need at least one of these for an energy supplier to be able to
-    contact you.
+    {{_("We will need at least one of these for an energy supplier to be able to contact you.")}}
   </p>
-  {{macros.input('email', 'Email address', data, errors, 'email', type="email")}}
-  {{macros.input('contact_number', 'Contact number', data, errors, 'tel', type="tel")}}
+
+  {% set email_label = _("Email address") %}
+  {{macros.input('email', email_label, data, errors, 'email', type="email")}}
+
+  {% set contact_number_label = _("Contact number") %}
+  {{macros.input('contact_number', contact_number_label, data, errors, 'tel', type="tel")}}
+
 </fieldset>
 {%- endcall %}
 {% endblock %}

@@ -43,3 +43,13 @@ test:
 .PHONY: psql
 psql:
 	docker-compose run ${POSTGRES_HOST} psql -U ${POSTGRES_USER} -h ${POSTGRES_HOST} ${POSTGRES_DB}
+
+.PHONY: extract-translations
+extract-translations:
+	docker-compose build web
+	docker-compose run web python manage.py makemessages --locale cy --ignore venv
+
+.PHONY: compile-translations
+compile-translations:
+	docker-compose build web
+	docker-compose run web python manage.py compilemessages --ignore venv

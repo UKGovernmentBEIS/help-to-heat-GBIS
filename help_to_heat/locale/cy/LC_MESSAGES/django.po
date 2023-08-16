@@ -1,0 +1,2403 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2023-08-16 11:24+0000\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n==1) ? 0 : (n==2) ? 1 : (n != 8 && n != "
+"11) ? 2 : 3;\n"
+
+#: help_to_heat/frontdoor/schemas.py:55
+msgid "Country of property"
+msgstr "Gwlad yr eiddo"
+
+#: help_to_heat/frontdoor/schemas.py:56 help_to_heat/frontdoor/schemas.py:74
+msgid "Energy supplier"
+msgstr "Cyflenwr ynni"
+
+#: help_to_heat/frontdoor/schemas.py:57
+msgctxt "summary page"
+msgid "Do you own the property?"
+msgstr "Ydy'r eiddo yn perthyn i chi?"
+
+#: help_to_heat/frontdoor/schemas.py:58
+msgid "Property address"
+msgstr "Cyfeiriad yr eiddo"
+
+#: help_to_heat/frontdoor/schemas.py:59
+msgid "Council tax band"
+msgstr "Band treth gyngor"
+
+#: help_to_heat/frontdoor/schemas.py:60
+msgid "Energy Performance Certificate"
+msgstr "Dystysgrif Perfformiad Ynni"
+
+#: help_to_heat/frontdoor/schemas.py:61
+msgctxt "summary page"
+msgid "Is anyone in your household receiving any of the following benefits?"
+msgstr ""
+"Oes unrhyw un yn eich aelwyd yn cael unrhyw un o'r budd-daliadau canlynol?"
+
+#: help_to_heat/frontdoor/schemas.py:62
+msgid "Annual household income"
+msgstr "Incwm blynyddol yr aelwyd"
+
+#: help_to_heat/frontdoor/schemas.py:63 help_to_heat/frontdoor/schemas.py:64
+msgid "Property type"
+msgstr "Math o eiddo"
+
+#: help_to_heat/frontdoor/schemas.py:65
+msgid "Number of bedrooms"
+msgstr "Nifer yr ystafelloedd gwely"
+
+#: help_to_heat/frontdoor/schemas.py:66
+msgid "Property walls"
+msgstr "Waliau'r eiddo"
+
+#: help_to_heat/frontdoor/schemas.py:67
+msgctxt "summary page"
+msgid "Are your walls insulated?"
+msgstr "Ydy'ch waliau wedi'u hinswleiddio?"
+
+#: help_to_heat/frontdoor/schemas.py:68
+msgid "Does this property have a loft?"
+msgstr "Oes gan yr eiddo yma atig?"
+
+#: help_to_heat/frontdoor/schemas.py:69
+#: help_to_heat/templates/frontdoor/loft-access.html:14
+msgid "Is there access to your loft?"
+msgstr "Oes modd mynd i'ch atig?"
+
+#: help_to_heat/frontdoor/schemas.py:70
+msgid "Is there 270mm of insulation in your loft?"
+msgstr "Oes 270mm o inswleiddiad yn eich atig?"
+
+#: help_to_heat/frontdoor/schemas.py:75
+#: help_to_heat/templates/frontdoor/contact-details.html:23
+msgid "First name"
+msgstr "Enw cyntaf"
+
+#: help_to_heat/frontdoor/schemas.py:76
+#: help_to_heat/templates/frontdoor/contact-details.html:26
+msgid "Last name"
+msgstr "Enw olaf"
+
+#: help_to_heat/frontdoor/schemas.py:78
+msgid "Email"
+msgstr "Ebost"
+
+#: help_to_heat/frontdoor/schemas.py:121 help_to_heat/frontdoor/schemas.py:228
+msgid "England"
+msgstr "Lloegr"
+
+#: help_to_heat/frontdoor/schemas.py:125 help_to_heat/frontdoor/schemas.py:229
+msgid "Scotland"
+msgstr "Yr Alban"
+
+#: help_to_heat/frontdoor/schemas.py:129 help_to_heat/frontdoor/schemas.py:230
+msgid "Wales"
+msgstr "Cymru"
+
+#: help_to_heat/frontdoor/schemas.py:133
+msgid "Northern Ireland"
+msgstr "Gogledd Iwerddon"
+
+#: help_to_heat/frontdoor/schemas.py:140 help_to_heat/frontdoor/schemas.py:233
+msgid "Yes, I own my property and live in it"
+msgstr "Ydy, mae'r eiddo'n perthyn i mi a dwi'n byw ynddo"
+
+#: help_to_heat/frontdoor/schemas.py:144 help_to_heat/frontdoor/schemas.py:234
+msgid "No, I am a tenant"
+msgstr "Nac ydy. Tenant ydw i"
+
+#: help_to_heat/frontdoor/schemas.py:146 help_to_heat/frontdoor/schemas.py:154
+msgid ""
+"If you are eligible for a referral through this service, your energy "
+"supplier will need to check that you             have your landlord’s "
+"permission to install any energy-saving measures to the property."
+msgstr ""
+"Os ydych chi'n gymwys i gael atgyfeiriad drwy'r gwasanaeth hwn, bydd angen "
+"i'ch cyflenwr ynni wirio bod gennych chi ganiatâd eich landlord i osod "
+"unrhyw fesurau arbed ynni yn yr eiddo."
+
+#: help_to_heat/frontdoor/schemas.py:152 help_to_heat/frontdoor/schemas.py:235
+msgid "No, I am a social housing tenant"
+msgstr "Nac ydy. Dwi'n denant tai cymdeithasol"
+
+#: help_to_heat/frontdoor/schemas.py:160 help_to_heat/frontdoor/schemas.py:237
+msgid ""
+"Yes, I am the property owner but I lease the property to one or more tenants"
+msgstr ""
+"Ydy, mae'r eiddo'n perthyn i mi ond dwi'n gosod yr eiddo i un neu ragor o "
+"denantiaid"
+
+#: help_to_heat/frontdoor/schemas.py:166
+msgid "Yes"
+msgstr "Ie"
+
+#: help_to_heat/frontdoor/schemas.py:170
+msgid "No"
+msgstr "Nage"
+
+#: help_to_heat/frontdoor/schemas.py:174 help_to_heat/frontdoor/schemas.py:283
+#: help_to_heat/frontdoor/schemas.py:289 help_to_heat/frontdoor/schemas.py:311
+#: help_to_heat/frontdoor/schemas.py:423 help_to_heat/frontdoor/schemas.py:441
+#: help_to_heat/frontdoor/schemas.py:498
+msgid "I don't know"
+msgstr "Wn i ddim"
+
+#: help_to_heat/frontdoor/schemas.py:188 help_to_heat/frontdoor/schemas.py:251
+msgctxt "yes no question option"
+msgid "Yes"
+msgstr "Oes"
+
+#: help_to_heat/frontdoor/schemas.py:192 help_to_heat/frontdoor/schemas.py:252
+msgctxt "yes no question option"
+msgid "No"
+msgstr "Nac oes"
+
+#: help_to_heat/frontdoor/schemas.py:198 help_to_heat/frontdoor/schemas.py:255
+msgid "Less than £31,000 a year"
+msgstr "Llai na £31,000 y flwyddyn"
+
+#: help_to_heat/frontdoor/schemas.py:202 help_to_heat/frontdoor/schemas.py:256
+msgid "£31,000 or more a year"
+msgstr "£31,000 y flwyddyn neu ragor"
+
+#: help_to_heat/frontdoor/schemas.py:208 help_to_heat/frontdoor/schemas.py:259
+msgid "House"
+msgstr "Tŷ"
+
+#: help_to_heat/frontdoor/schemas.py:212 help_to_heat/frontdoor/schemas.py:260
+msgid "Bungalow"
+msgstr "Byngalo"
+
+#: help_to_heat/frontdoor/schemas.py:216 help_to_heat/frontdoor/schemas.py:261
+msgid "Apartment, flat or maisonette"
+msgstr "Rhandy, fflat neu fflat ddeulawr"
+
+#: help_to_heat/frontdoor/schemas.py:221
+msgid "house"
+msgstr "dŷ"
+
+#: help_to_heat/frontdoor/schemas.py:222
+msgid "bungalow"
+msgstr "fyngalo"
+
+#: help_to_heat/frontdoor/schemas.py:223
+msgid "apartment, flat or maisonette"
+msgstr "randy, fflat neu fflat ddeulawr"
+
+#: help_to_heat/frontdoor/schemas.py:248
+msgid "Not found"
+msgstr ""
+
+#: help_to_heat/frontdoor/schemas.py:264 help_to_heat/frontdoor/schemas.py:339
+#: help_to_heat/frontdoor/schemas.py:361
+msgid "Detached"
+msgstr "Tŷ sengl"
+
+#: help_to_heat/frontdoor/schemas.py:265 help_to_heat/frontdoor/schemas.py:344
+#: help_to_heat/frontdoor/schemas.py:366
+msgid "Semi-detached"
+msgstr "Tŷ pâr"
+
+#: help_to_heat/frontdoor/schemas.py:266 help_to_heat/frontdoor/schemas.py:349
+#: help_to_heat/frontdoor/schemas.py:371
+msgid "Terraced"
+msgstr "Tŷ teras"
+
+#: help_to_heat/frontdoor/schemas.py:267 help_to_heat/frontdoor/schemas.py:354
+#: help_to_heat/frontdoor/schemas.py:376
+msgid "End terrace"
+msgstr "Tŷ pen teras"
+
+#: help_to_heat/frontdoor/schemas.py:268 help_to_heat/frontdoor/schemas.py:320
+msgid "Top floor"
+msgstr "Llawr uchaf"
+
+#: help_to_heat/frontdoor/schemas.py:269 help_to_heat/frontdoor/schemas.py:325
+msgid "Middle floor"
+msgstr "Llawr canol"
+
+#: help_to_heat/frontdoor/schemas.py:270 help_to_heat/frontdoor/schemas.py:330
+msgid "Ground floor"
+msgstr "Llawr daear"
+
+#: help_to_heat/frontdoor/schemas.py:273 help_to_heat/frontdoor/schemas.py:384
+msgid "Studio"
+msgstr "Stiwdio"
+
+#: help_to_heat/frontdoor/schemas.py:274 help_to_heat/frontdoor/schemas.py:388
+msgid "One bedroom"
+msgstr "Un ystafell wely"
+
+#: help_to_heat/frontdoor/schemas.py:275 help_to_heat/frontdoor/schemas.py:392
+msgid "Two bedrooms"
+msgstr "Dwy ystafell wely"
+
+#: help_to_heat/frontdoor/schemas.py:276 help_to_heat/frontdoor/schemas.py:396
+msgid "Three or more bedrooms"
+msgstr "Tair neu fwy o ystafelloedd gwely"
+
+#: help_to_heat/frontdoor/schemas.py:279 help_to_heat/frontdoor/schemas.py:403
+msgid "Solid walls"
+msgstr "Waliau solet"
+
+#: help_to_heat/frontdoor/schemas.py:280 help_to_heat/frontdoor/schemas.py:407
+msgid "Cavity walls"
+msgstr "Waliau ceudod"
+
+#: help_to_heat/frontdoor/schemas.py:281 help_to_heat/frontdoor/schemas.py:411
+msgid "Mix of solid and cavity walls"
+msgstr "Cymysgedd o waliau solet a waliau ceudod"
+
+#: help_to_heat/frontdoor/schemas.py:282 help_to_heat/frontdoor/schemas.py:415
+msgid "I don't see my option listed"
+msgstr "Dwi ddim yn gweld bod fy opsiwn i wedi'i restru"
+
+#: help_to_heat/frontdoor/schemas.py:286 help_to_heat/frontdoor/schemas.py:429
+msgid "Yes they are all insulated"
+msgstr "Ydyn, maen nhw i gyd wedi'u hinswleiddio"
+
+#: help_to_heat/frontdoor/schemas.py:287 help_to_heat/frontdoor/schemas.py:433
+msgid "Some are insulated, some are not"
+msgstr "Mae rhai wedi'u eu hinswleiddio, mae rhai heb"
+
+#: help_to_heat/frontdoor/schemas.py:288 help_to_heat/frontdoor/schemas.py:437
+msgid "No they are not insulated"
+msgstr "Na, dydyn nhw ddim wedi'u hinswleiddio"
+
+#: help_to_heat/frontdoor/schemas.py:293 help_to_heat/frontdoor/schemas.py:447
+msgid "Yes, I have a loft that hasn't been converted into a room"
+msgstr "Oes, mae gen i atig sydd heb ei droi'n ystafell"
+
+#: help_to_heat/frontdoor/schemas.py:296 help_to_heat/frontdoor/schemas.py:451
+msgid "No, I don't have a loft or my loft has been converted into a room"
+msgstr "Nac oes, does gen i ddim atig neu mae fy atig i wedi'i droi'n ystafell"
+
+#: help_to_heat/frontdoor/schemas.py:300 help_to_heat/frontdoor/schemas.py:457
+msgid "Yes, there is access to my loft"
+msgstr "Oes, mae modd mynd i'r atig"
+
+#: help_to_heat/frontdoor/schemas.py:301 help_to_heat/frontdoor/schemas.py:461
+msgid "No, there is no access to my loft"
+msgstr "Nac oes, does dim modd mynd i'r atig"
+
+#: help_to_heat/frontdoor/schemas.py:302 help_to_heat/frontdoor/schemas.py:312
+msgid "No loft"
+msgstr ""
+
+#: help_to_heat/frontdoor/schemas.py:306 help_to_heat/frontdoor/schemas.py:490
+msgid "Yes, there is at least 270mm of insulation in my loft"
+msgstr "Ydy, mae o leiaf 270mm o inswleiddio yn fy atig i"
+
+#: help_to_heat/frontdoor/schemas.py:309 help_to_heat/frontdoor/schemas.py:494
+msgid "No, there is less than 270mm of insulation in my loft"
+msgstr "Nac ydy, mae llai na 270mm o inswleiddio yn fy atig i "
+
+#: help_to_heat/frontdoor/schemas.py:321
+msgid "Sits directly below the roof with no other flat above it"
+msgstr "Yn gorwedd yn union o dan y to heb unrhyw fflat arall uwch ei phen"
+
+#: help_to_heat/frontdoor/schemas.py:326
+msgid "Has another flat above, and another below"
+msgstr "Mae fflat arall uwchben, ac un arall odani"
+
+#: help_to_heat/frontdoor/schemas.py:332
+msgid ""
+"The lowest flat in the building with no flat beneath - typically at street "
+"level but may be a basement"
+msgstr ""
+"Y fflat isaf yn yr adeilad heb fflat odani - fel arfer ar lefel y stryd ond "
+"gall fod yn islawr"
+
+#: help_to_heat/frontdoor/schemas.py:340 help_to_heat/frontdoor/schemas.py:362
+msgid "Does not share any of its walls with another house or building"
+msgstr "Nid yw'n rhannu unrhyw un o'i waliau â thŷ neu adeilad arall"
+
+#: help_to_heat/frontdoor/schemas.py:345 help_to_heat/frontdoor/schemas.py:367
+msgid "Is attached to one other house or building"
+msgstr "Mae wedi'i gysylltu ag un tŷ neu adeilad arall"
+
+#: help_to_heat/frontdoor/schemas.py:350 help_to_heat/frontdoor/schemas.py:372
+msgid "Sits in the middle with a house or building on each side"
+msgstr "Yn sefyll yn y canol gyda thŷ neu adeilad o boptu iddo"
+
+#: help_to_heat/frontdoor/schemas.py:355 help_to_heat/frontdoor/schemas.py:377
+msgid ""
+"Sits at the end of a row of similar houses with one house attached to it"
+msgstr "Yn sefyll ar ben rhes o dai tebyg gydag un tŷ ynghlwm wrtho"
+
+#: help_to_heat/frontdoor/schemas.py:417
+msgid ""
+"Other wall types could include cob walls, timber framed, system built, steel "
+"framed or other non-traditional build types"
+msgstr ""
+"Gallai mathau eraill o waliau gynnwys waliau cob, waliau ffrâm pren, "
+"adeiladu system, fframiau dur neu fathau eraill o adeiladau anhraddodiadol"
+
+#: help_to_heat/frontdoor/views.py:43
+msgid "Select where the property is located"
+msgstr "Dewiswch beth yw lleoliad yr eiddo"
+
+#: help_to_heat/frontdoor/views.py:44
+msgid "Select if you own the property"
+msgstr "Dewiswch os yw'r eiddo'n perthyn i chi"
+
+#: help_to_heat/frontdoor/views.py:46
+msgid "Enter Address line 1"
+msgstr "Rhowch linell 1 y cyfeiriad"
+
+#: help_to_heat/frontdoor/views.py:47
+msgid "Enter a postcode"
+msgstr "Rhowch god post"
+
+#: help_to_heat/frontdoor/views.py:48
+#: help_to_heat/templates/frontdoor/address-select.html:14
+msgid "Select your address"
+msgstr "Dewiswch eich cyfeiriad"
+
+#: help_to_heat/frontdoor/views.py:49
+msgid "Enter your Town or city"
+msgstr "Rhowch eich tref neu'ch dinas"
+
+#: help_to_heat/frontdoor/views.py:50
+msgid "Enter the Council Tax Band of the property"
+msgstr "Rhowch Fand Treth Gyngor yr eiddo"
+
+#: help_to_heat/frontdoor/views.py:51
+msgid "Select if your EPC rating is correct or not, or that you don’t know"
+msgstr ""
+"Dewiswch a yw eich cyfraddiad EPC yn gywir neu beidio, neu nad ydych chi'n "
+"gwybod"
+
+#: help_to_heat/frontdoor/views.py:52
+msgid ""
+"Select if anyone in your household is receiving any benefits listed below"
+msgstr ""
+"Dewiswch a oes unrhyw un yn eich aelwyd chi'n cael unrhyw un neu ragor o'r "
+"budd-daliadau isod"
+
+#: help_to_heat/frontdoor/views.py:53
+msgid "Select your household income"
+msgstr "Dewiswch incwm eich aelwyd"
+
+#: help_to_heat/frontdoor/views.py:54
+msgid "Select your property type"
+msgstr "Dewiswch eich math o eiddo"
+
+#: help_to_heat/frontdoor/views.py:55
+msgid "Select the number of bedrooms the property has"
+msgstr "Dewiswch nifer yr ystafelloedd gwely sydd gan yr eiddo"
+
+#: help_to_heat/frontdoor/views.py:56
+msgid "Select the type of walls the property has"
+msgstr "Dewiswch y math o waliau sydd gan yr eiddo"
+
+#: help_to_heat/frontdoor/views.py:57
+msgid ""
+"Select if the walls of the property are insulated or not, or if you don’t "
+"know"
+msgstr ""
+"Dewiswch a ydy waliau'r eiddo wedi'u hinswleiddio neu beidio, neu nad ydych "
+"chi'n gwybod"
+
+#: help_to_heat/frontdoor/views.py:58
+msgid "Select if you have a loft that has been converted into a room or not"
+msgstr "Dewiswch a oes gennych chi atig sydd wedi'i droi'n ystafell neu beidio"
+
+#: help_to_heat/frontdoor/views.py:59
+msgid "Select whether or not you have access to the loft"
+msgstr "Dewiswch a oes modd mynd i'r atig neu beidio"
+
+#: help_to_heat/frontdoor/views.py:60
+msgid "Select whether or not your loft is fully insulated"
+msgstr "Dewiswch a ydy'ch atig wedi'i inswleiddio'n llawn neu beidio"
+
+#: help_to_heat/frontdoor/views.py:61
+#: help_to_heat/templates/frontdoor/supplier.html:14
+msgid "Select your home energy supplier from the list below"
+msgstr "Dewiswch eich cyflenwr ynni cartref chi o blith y rhestr isod"
+
+#: help_to_heat/frontdoor/views.py:62
+msgid "Enter your first name"
+msgstr "Rhowch eich enw cyntaf"
+
+#: help_to_heat/frontdoor/views.py:63
+msgid "Enter your last name"
+msgstr "Rhowch eich enw olaf"
+
+#: help_to_heat/frontdoor/views.py:64
+msgid "Enter your address"
+msgstr "Rhowch eich cyfeiriad"
+
+#: help_to_heat/frontdoor/views.py:65
+msgid "Enter your contact number"
+msgstr "Rhowch eich rhif ffôn"
+
+#: help_to_heat/frontdoor/views.py:66
+msgid ""
+"Please confirm that you agree to the use of your information by checking "
+"this box"
+msgstr ""
+"Rhowch gadarnhad eich bod yn cytuno i'ch gwybodaeth gael ei defnyddio drwy "
+"roi tic yn y blwch hwn"
+
+
+#: help_to_heat/templates/frontdoor/address-manual.html:5
+msgid ""
+"Enter the property address manually - Check eligibility for Great British "
+"Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/address-manual.html:13
+#: help_to_heat/templates/frontdoor/address.html:13
+msgid "What is the property's address?"
+msgstr "Beth yw cyfeiriad yr eiddo?"
+
+#: help_to_heat/templates/frontdoor/address-manual.html:16
+msgid "Address line 1"
+msgstr "Llinell 1 y cyfeiriad"
+
+#: help_to_heat/templates/frontdoor/address-manual.html:19
+msgid "Address line 2 (optional)"
+msgstr "Llinell 2 y cyfeiriad (dewisol)"
+
+#: help_to_heat/templates/frontdoor/address-manual.html:22
+msgid "Town or city"
+msgstr "Tref neu ddinas"
+
+#: help_to_heat/templates/frontdoor/address-manual.html:25
+msgid "County (optional)"
+msgstr "Sir (dewisol)"
+
+#: help_to_heat/templates/frontdoor/address-manual.html:28
+#: help_to_heat/templates/frontdoor/address.html:22
+msgid "Postcode"
+msgstr "Cod post"
+
+#: help_to_heat/templates/frontdoor/address-select.html:5
+msgid ""
+"Select the property address - Check eligibility for Great British Insulation "
+"Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/address-select.html:21
+msgid "No addresses found"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/address-select.html:25
+msgid "I can't find my address. I want to enter it manually"
+msgstr "Dwi'n methu gweld fy nghyfeiriad i. Hoffwn ei roi fy hunan."
+
+#: help_to_heat/templates/frontdoor/address.html:5
+msgid ""
+"What is the property address? - Check eligibility for Great British "
+"Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/address.html:15
+msgid ""
+"We use this information to search the Energy Performance of Buildings "
+"Register for an Energy Performance Certificate that matches your address"
+msgstr ""
+"Rydyn ni’n defnyddio'r wybodaeth yma i chwilio drwy’r Gofrestr Perfformiad "
+"Ynni Adeiladau i ddod o hyd i Dystysgrif Perfformiad Ynni sy'n cyd-fynd â'ch "
+"cyfeiriad chi"
+
+#: help_to_heat/templates/frontdoor/address.html:19
+msgid "Building name or number"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/address.html:27
+msgid "Enter address manually"
+msgstr "Rhoi’r cyfeiriad eich hunan"
+
+#: help_to_heat/templates/frontdoor/base.html:7
+msgid "Great British Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/base.html:38
+msgid "Cookies we are using on our service"
+msgstr "Cwcis rydyn ni'n eu defnyddio ar ein gwasanaeth"
+
+#: help_to_heat/templates/frontdoor/base.html:41
+msgid ""
+"We will use necessary cookies when you use this service to help you move "
+"around the site."
+msgstr ""
+"Byddwn yn defnyddio cwcis angenrheidiol wrth ichi ddefnyddio'r gwasanaeth "
+"yma, a hynny i'ch helpu i symud o amgylch y wefan."
+
+#: help_to_heat/templates/frontdoor/base.html:44
+msgid ""
+"We will also use analytic cookies using Google Analytics to tell us how you "
+"got to our service, the pages you visit, and how long you spent on them. "
+"Analytics cookies help us to improve our service. We do not allow Google to "
+"use or share the data about how you use this site and the data is stored "
+"anonymously."
+msgstr ""
+"Byddwn hefyd yn defnyddio cwcis dadansoddeg gan ddefnyddio Google Analytics "
+"i ddweud wrthon ni sut daethoch chi i'n gwasanaeth, y tudalennau rydych "
+"chi'n ymweld â nhw a faint o amser rydych chi wedi'i dreulio arnyn nhw. Mae "
+"cwcis dadansoddeg yn ein helpu i wella'n gwasanaeth. Dydyn ni ddim yn "
+"caniatáu i Google ddefnyddio na rhannu'r data am sut rydych chi'n "
+"defnyddio'r wefan yma ac mae'r data'n cael ei storio'n ddienw."
+
+#: help_to_heat/templates/frontdoor/base.html:53
+msgid "Accept cookies"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/base.html:54
+msgid "Reject cookies"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/base.html:55
+msgid "View cookies we use on this service"
+msgstr "Gweld y cwcis rydyn ni'n eu defnyddio ar y gwasanaeth yma"
+
+#: help_to_heat/templates/frontdoor/base.html:62
+msgid "Skip to main content"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/base.html:89
+msgid "Check eligibility for Great British Insulation Scheme"
+msgstr "Gwirio'ch Cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain"
+
+#: help_to_heat/templates/frontdoor/base.html:102
+msgid "This is a new service – your "
+msgstr "Gwasanaeth newydd yw hwn – bydd eich "
+
+#: help_to_heat/templates/frontdoor/base.html:104
+msgid "feedback"
+msgstr "adborth"
+
+#: help_to_heat/templates/frontdoor/base.html:104
+msgid " will help us to improve it."
+msgstr " yn ein helpu i'w wella."
+
+#: help_to_heat/templates/frontdoor/base.html:151
+msgid "Support links"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/base.html:156
+msgid "Privacy Policy"
+msgstr "Polisi Preifatrwydd"
+
+#: help_to_heat/templates/frontdoor/base.html:163
+msgid "Accessibility Statement"
+msgstr "Datganiad Hygyrchedd"
+
+#: help_to_heat/templates/frontdoor/base.html:174
+msgid "All content is available under the "
+msgstr "Mae'r cynnwys i gyd ar gael o dan "
+
+#: help_to_heat/templates/frontdoor/base.html:176
+msgid "Open Government Licence v3.0"
+msgstr "Drwydded Llywodraeth Agored v3.0"
+
+#: help_to_heat/templates/frontdoor/base.html:177
+msgid ", except where otherwise stated"
+msgstr ", ac eithrio lle nodir fel arall"
+
+#: help_to_heat/templates/frontdoor/benefits.html:5
+msgid ""
+"Do you receive benefits? - Check eligibility for Great British Insulation "
+"Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/benefits.html:14
+msgid "Is anyone in your household receiving any of the following benefits?"
+msgstr ""
+"Oes unrhyw un yn eich aelwyd chi'n cael unrhyw un o'r budd-daliadau canlynol?"
+
+#: help_to_heat/templates/frontdoor/benefits.html:18
+msgid ""
+"This information is used to determine the level of support you can get. "
+"There is energy-saving help for those who receive benefits as well as those "
+"who don't."
+msgstr ""
+"Mae'r wybodaeth yma'n cael ei defnyddio i bennu lefel y cymorth y gallwch ei "
+"gael. Mae yna gymorth arbed ynni i'r rhai sy'n cael budd-daliadau yn ogystal "
+"â'r rhai nad ydyn nhw'n eu cael."
+
+#: help_to_heat/templates/frontdoor/benefits.html:20
+msgid "Select yes if they are receiving any of the following:"
+msgstr "Dewiswch 'oes' os ydyn nhw'n cael unrhyw un neu ragor o'r canlynol:"
+
+#: help_to_heat/templates/frontdoor/benefits.html:23
+msgid "Income based Jobseekers Allowance"
+msgstr "Lwfans Ceisio Gwaith yn seiliedig ar incwm"
+
+#: help_to_heat/templates/frontdoor/benefits.html:24
+msgid "Income related Employment and Support Allowance"
+msgstr "Lwfans Cyflogaeth a Chymorth sy'n gysylltiedig ag Incwm"
+
+#: help_to_heat/templates/frontdoor/benefits.html:25
+msgid "Income Support"
+msgstr "Cymorth Incwm"
+
+#: help_to_heat/templates/frontdoor/benefits.html:26
+msgid "Pension Credit Guarantee Credit"
+msgstr "Credyd Gwarant Credyd Pensiwn"
+
+#: help_to_heat/templates/frontdoor/benefits.html:27
+msgid "Working Tax Credit"
+msgstr "Credyd Treth Gwaith"
+
+#: help_to_heat/templates/frontdoor/benefits.html:28
+msgid "Child Tax Credit"
+msgstr "Credyd Treth Plant"
+
+#: help_to_heat/templates/frontdoor/benefits.html:29
+msgid "Universal Credit"
+msgstr "Credyd Cynhwysol"
+
+#: help_to_heat/templates/frontdoor/benefits.html:30
+msgid "Housing Benefit"
+msgstr "Budd-dal Tai"
+
+#: help_to_heat/templates/frontdoor/benefits.html:31
+msgid "Pension Credit Savings Credit"
+msgstr "Credyd Cynilo Credyd Pensiwn"
+
+#: help_to_heat/templates/frontdoor/benefits.html:32
+msgid "Child Benefit"
+msgstr "Budd-dal Plant"
+
+#: help_to_heat/templates/frontdoor/benefits.html:34
+msgid "You may be asked to provide evidence of this at a later stage."
+msgstr "Efallai y gofynnir ichi ddarparu tystiolaeth o hyn yn nes ymlaen."
+
+#: help_to_heat/templates/frontdoor/bulb-warning-page.html:5
+#: help_to_heat/templates/frontdoor/bulb-warning-page.html:10
+msgid "Your referral will be sent to Octopus Energy"
+msgstr "Bydd eich atgyfeiriad yn cael ei anfon at Octopus Energy"
+
+#: help_to_heat/templates/frontdoor/bulb-warning-page.html:11
+msgid ""
+"Bulb is now owned by Octopus Energy. Your referral will be sent to Octopus "
+"Energy to help with your application."
+msgstr ""
+"Erbyn hyn, mae Bulb yn perthyn i Octopus Energy. Bydd eich atgyfeiriad yn "
+"cael ei anfon at Octopus Energy i helpu gyda'ch cais."
+
+#: help_to_heat/templates/frontdoor/confirm-and-submit.html:5
+msgid ""
+"Confirm and submit - Check eligibility for Great British Insulation Scheme - "
+"GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/confirm-and-submit.html:9
+#: help_to_heat/templates/frontdoor/summary.html:9
+msgid "Submit"
+msgstr "Cyflwyno"
+
+#: help_to_heat/templates/frontdoor/confirm-and-submit.html:10
+msgid "Confirm and submit"
+msgstr "Cadarnhau a chyflwyno"
+
+#: help_to_heat/templates/frontdoor/confirm-and-submit.html:24
+#, python-format
+msgid ""
+"I agree for my personal details to be shared with %(supplier)s to see if my "
+"property is eligible for support from the Great British Insulation Scheme "
+"and to contact me about my referral. I agree that they may share my personal "
+"details with their approved delivery partners and installers to check my "
+"eligibility, my property's suitability, and to contact me."
+msgstr ""
+"Dwi'n cytuno i'm manylion personol gael eu rhannu gyda %(supplier)s i  weld "
+"a yw fy eiddo i'n gymwys i gael cymorth gan Gynllun Inswleiddio Mawr Prydain "
+"ac i gysylltu â mi ynglŷn â'm hatgyfeiriad. Dwi'n cytuno y cân nhw rannu fy "
+"manylion personol i gyda'u partneriaid a'u gosodwyr cymeradwy i wirio fy "
+"nghymhwystra i, addasrwydd fy eiddo i, ac i gysylltu â mi."
+
+#: help_to_heat/templates/frontdoor/confirm-and-submit.html:26
+msgid "Further information on our GDPR UK Privacy Policy"
+msgstr ""
+"Rhagor o wybodaeth am ein Polisi Preifatrwydd o dan GDPR y Deyrnas Unedig"
+
+#: help_to_heat/templates/frontdoor/confirm-and-submit.html:27
+msgid "What is the Energy Company Obligation?"
+msgstr "Beth yw’r Rhwymedigaeth Cwmni Ynni?"
+
+#: help_to_heat/templates/frontdoor/confirm-and-submit.html:29
+msgid ""
+"The Great British Insulation Scheme is the latest of a series of schemes "
+"that have operated since 2013 requiring energy suppliers to help people to "
+"make their homes more energy efficient. This family of schemes has been "
+"called the Energy Company Obligation (ECO). Alongside the Great British "
+"Insulation Scheme, a complementary ECO4 scheme is also operating. Households "
+"on low incomes or who are vulnerable to the effects of living in a cold home "
+"may be able to get help through this scheme."
+msgstr ""
+"Cynllun Inswleiddio Mawr Prydain yw'r diweddaraf mewn cyfres o gynlluniau "
+"sydd ar waith ers 2013 sy'n ei gwneud yn ofynnol i gyflenwyr ynni helpu pobl "
+"i wneud eu aelwydydd yn fwy effeithlon o ran ynni. Mae'r teulu hwn o "
+"gynlluniau wedi cael eu galw'n Rhwymedigaeth Cwmni Ynni (ECO). Ochr yn ochr "
+"â Chynllun Inswleiddio Mawr Prydain, mae cynllun ECO4 cydategol hefyd yn "
+"gweithredu. Efallai y bydd aelwydydd ar incwm isel neu aelwydydd sy'n agored "
+"i effeithiau byw mewn aelwyd oer yn gallu cael help drwy'r cynllun yma."
+
+#: help_to_heat/templates/frontdoor/contact-details.html:5
+msgid ""
+"What are your contact details? - Check eligibility for Great British "
+"Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/contact-details.html:13
+msgid "Add your personal and contact details"
+msgstr "Ychwanegwch eich manylion personol a'ch manylion cysylltu"
+
+#: help_to_heat/templates/frontdoor/contact-details.html:17
+#, python-format
+msgid ""
+"The details entered below will be used by %(supplier)s and their "
+"subcontractors to review your referral and provide you with relevant "
+"updates. Emails will be used to provide you with updates and telephone calls "
+"to discuss measure details."
+msgstr ""
+"Bydd y manylion a nodir isod yn cael eu defnyddio gan %(supplier)s a'u "
+"hisgontractwyr i adolygu'ch atgyfeiriad a rhoi diweddariadau perthnasol "
+"ichi. Bydd negeseuon ebost yn cael eu defnyddio i roi diweddariadau a "
+"galwadau ffôn ichi i drafod manylion y mesurau."
+
+#: help_to_heat/templates/frontdoor/contact-details.html:20
+msgid "Personal details"
+msgstr "Manylion personol"
+
+#: help_to_heat/templates/frontdoor/contact-details.html:30
+#: help_to_heat/templates/frontdoor/privacy-policy.html:192
+msgid "Contact details"
+msgstr "Manylion cysylltu"
+
+#: help_to_heat/templates/frontdoor/contact-details.html:33
+msgid ""
+"We will need at least one of these for an energy supplier to be able to "
+"contact you."
+msgstr ""
+"Bydd arnon ni angen o leiaf un o'r rhain er mwyn i gyflenwr ynni allu "
+"cysylltu â chi."
+
+#: help_to_heat/templates/frontdoor/contact-details.html:36
+msgid "Email address"
+msgstr "Cyfeiriad ebost"
+
+#: help_to_heat/templates/frontdoor/contact-details.html:39
+msgid "Contact number"
+msgstr "Rhif ffôn"
+
+#: help_to_heat/templates/frontdoor/cookies.html:4
+msgid ""
+"Cookie information - Check eligibility for Great British Insulation Scheme - "
+"GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/cookies.html:22
+msgid "You've set your cookie preferences."
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/cookies.html:27
+msgid "Cookies"
+msgstr "Cwcis"
+
+#: help_to_heat/templates/frontdoor/cookies.html:29
+msgid "puts small files (known as 'cookies') on your computer."
+msgstr "yn gosod ffeiliau bach (o'r enw ‘cwcis') ar eich cyfrifiadur."
+
+#: help_to_heat/templates/frontdoor/cookies.html:31
+msgid ""
+"These cookies are used across the Check eligibility for Great British "
+"Insulation Scheme website."
+msgstr ""
+"Mae'r cwcis yma yn cael eu defnyddio ar draws gwefan Gwirio'ch cymhwystra ar "
+"gyfer Cynllun Inswleiddio Mawr Prydain."
+
+#: help_to_heat/templates/frontdoor/cookies.html:33
+msgid ""
+"We only set cookies when JavaScript is running in your browser and you've "
+"accepted them. If you choose not to run Javascript, the information on this "
+"page will not apply to you."
+msgstr ""
+"Dim ond pan fydd JavaScript yn rhedeg yn eich porwr a'ch bod chi wedi'u "
+"derbyn y byddwn ni'n gosod cwcis ar eich cyfrifiadur. Os ydych chi'n dewis "
+"peidio â rhedeg Javascript, fydd yr wybodaeth ar y tudalen yma ddim yn "
+"gymwys i chi."
+
+#: help_to_heat/templates/frontdoor/cookies.html:35
+msgid "Find out "
+msgstr "Darganfod "
+
+#: help_to_heat/templates/frontdoor/cookies.html:36
+msgid "how to manage cookies"
+msgstr "sut i reoli cwcis"
+
+#: help_to_heat/templates/frontdoor/cookies.html:36
+msgid " from the Information Commissioner's Office."
+msgstr " gan Swyddfa'r Comisiynydd Gwybodaeth."
+
+#: help_to_heat/templates/frontdoor/cookies.html:40
+msgid "Essential cookies (strictly necessary)"
+msgstr "Cwcis hanfodol (cwbl angenrheidiol)"
+
+#: help_to_heat/templates/frontdoor/cookies.html:42
+msgid ""
+"We use an essential cookie to remember when you accept or reject cookies on "
+"our website."
+msgstr ""
+"Rydyn ni'n defnyddio cwci hanfodol er mwyn cofio pryd rydych chi'n derbyn "
+"neu'n gwrthod cwcis ar ein gwefan."
+
+#: help_to_heat/templates/frontdoor/cookies.html:46
+msgid "Essential cookies we use"
+msgstr "Cwcis hanfodol rydyn ni'n eu defnyddio"
+
+#: help_to_heat/templates/frontdoor/cookies.html:49
+#: help_to_heat/templates/frontdoor/cookies.html:86
+msgid "Name"
+msgstr "Enw"
+
+#: help_to_heat/templates/frontdoor/cookies.html:50
+#: help_to_heat/templates/frontdoor/cookies.html:87
+#: help_to_heat/templates/frontdoor/privacy-policy.html:51
+msgid "Purpose"
+msgstr "Diben"
+
+#: help_to_heat/templates/frontdoor/cookies.html:51
+#: help_to_heat/templates/frontdoor/cookies.html:88
+msgid "Expires"
+msgstr "Yn dod i ben"
+
+#: help_to_heat/templates/frontdoor/cookies.html:57
+msgid "Saves your cookie consent settings"
+msgstr "Yn cadw'ch gosodiadau cydsyniad cwcis"
+
+#: help_to_heat/templates/frontdoor/cookies.html:58
+msgid "1 year"
+msgstr "1 flwyddyn"
+
+#: help_to_heat/templates/frontdoor/cookies.html:64
+msgid "Analytics cookies (strictly necessary) (optional)"
+msgstr "Cwcis dadansoddeg (cwbl angenrheidiol) (dewisol)"
+
+#: help_to_heat/templates/frontdoor/cookies.html:66
+msgid ""
+"We use Google Analytics software to understand how people use the Check "
+"eligibility for Great British Insulation Scheme. We do this to help make "
+"sure the site is meeting the needs of its users and to help us make "
+"improvements."
+msgstr ""
+"Rydyn ni'n defnyddio meddalwedd Google Analytics i ddeall sut mae pobl yn "
+"defnyddio Gwirio’ch Cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain. "
+"Rydyn ni'n gwneud hyn i helpu i sicrhau bod y wefan yn ateb anghenion ei "
+"defnyddwyr ac i'n helpu i wneud gwelliannau."
+
+#: help_to_heat/templates/frontdoor/cookies.html:68
+msgid ""
+"We do not collect or store your personal information (for example your name "
+"or address) so this information cannot be used to identify who you are."
+msgstr ""
+"Dydyn ni ddim yn casglu nac yn storio'ch gwybodaeth bersonol (er enghraifft "
+"eich enw neu'ch cyfeiriad) felly does dim modd i'r wybodaeth yma gael ei "
+"defnyddio i gael gwybod pwy ydych chi."
+
+#: help_to_heat/templates/frontdoor/cookies.html:70
+msgid "We do not allow Google to use or share our analytics data."
+msgstr ""
+"Dydyn ni ddim yn caniatáu i Google ddefnyddio'n data dadansoddeg ni na'i "
+"rannu."
+
+#: help_to_heat/templates/frontdoor/cookies.html:72
+msgid "Google Analytics stores information about:"
+msgstr "Mae Google Analytics yn storio gwybodaeth am y canlynol:"
+
+#: help_to_heat/templates/frontdoor/cookies.html:75
+msgid "the pages you visit"
+msgstr "y tudalennau rydych chi'n ymweld â nhw"
+
+#: help_to_heat/templates/frontdoor/cookies.html:76
+msgid "how long you spend on each page"
+msgstr "faint o amser rydych chi'n ei dreulio ar bob tudalen"
+
+#: help_to_heat/templates/frontdoor/cookies.html:77
+msgid "how you arrived at the site"
+msgstr "sut daethoch chi i'r wefan"
+
+#: help_to_heat/templates/frontdoor/cookies.html:78
+msgid "what you click on while you visit the site"
+msgstr "ar beth rydych chi'n clicio tra byddwch yn ymweld â'r wefan"
+
+#: help_to_heat/templates/frontdoor/cookies.html:79
+msgid "the device and browser you use"
+msgstr "y ddyfais a'r porwr rydych chi'n eu defnyddio"
+
+#: help_to_heat/templates/frontdoor/cookies.html:83
+msgid "Analytics cookies we use"
+msgstr "Cwcis dadansoddeg rydyn ni'n eu defnyddio"
+
+#: help_to_heat/templates/frontdoor/cookies.html:94
+#: help_to_heat/templates/frontdoor/cookies.html:99
+msgid ""
+"Helps us count how many people visit the Check eligibility for Great British "
+"Insulation Scheme by telling us if you've visited before."
+msgstr ""
+"Yn ein helpu i gyfrif faint sy'n ymweld â Gwirio’ch Cymhwystra ar gyfer "
+"Cynllun Inswleiddio Mawr Prydain drwy ddweud wrthon ni a ydych chi wedi bod "
+"yma o'r blaen."
+
+#: help_to_heat/templates/frontdoor/cookies.html:95
+msgid "2 years"
+msgstr "2 flynedd"
+
+#: help_to_heat/templates/frontdoor/cookies.html:100
+msgid "24 hours"
+msgstr "24 awr"
+
+#: help_to_heat/templates/frontdoor/cookies.html:103
+msgid "_gat_UA-[random number]"
+msgstr "_gat_UA-[rhif ar hap]"
+
+#: help_to_heat/templates/frontdoor/cookies.html:104
+msgid "Used to reduce the number of requests."
+msgstr "Yn cael ei ddefnyddio i leihau nifer y ceisiadau."
+
+#: help_to_heat/templates/frontdoor/cookies.html:105
+msgid "1 minute"
+msgstr "1 funud"
+
+#: help_to_heat/templates/frontdoor/cookies.html:111
+msgid "Save cookie settings"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/council-tax-band.html:5
+msgid ""
+"What is the property's council tax band? - Check eligibility for Great "
+"British Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/council-tax-band.html:14
+msgid "What is the council tax band of your property?"
+msgstr "Beth yw band treth gyngor eich eiddo?"
+
+#: help_to_heat/templates/frontdoor/council-tax-band.html:19
+msgid "Select your council tax band from the list below"
+msgstr "Dewiswch eich band treth gyngor o'r rhestr isod"
+
+#: help_to_heat/templates/frontdoor/council-tax-band.html:20
+msgid "If you're unsure, you can check your property's council tax band."
+msgstr "Os nad ydych yn siŵr, gallwch wirio band treth gyngor eich eiddo."
+
+#: help_to_heat/templates/frontdoor/country.html:5
+msgid ""
+"Where is the property located? - Check eligibility for Great British "
+"Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/country.html:14
+msgid "Where is the property located?"
+msgstr "Beth yw lleoliad yr eiddo?"
+
+#: help_to_heat/templates/frontdoor/epc-disagree.html:5
+msgid ""
+"An EPC was not found for this property - Check eligibility for Great British "
+"Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/epc-disagree.html:10
+msgid ""
+"We did not find a complete Energy Performance Certificate for your property"
+msgstr ""
+"Chawson ni ddim gafael ar Dystysgrif Perfformiad Ynni gyflawn ar gyfer eich "
+"iddo"
+
+#: help_to_heat/templates/frontdoor/epc-disagree.html:12
+msgid "This could be because:"
+msgstr "Rhesymau posibl am hyn yw:"
+
+#: help_to_heat/templates/frontdoor/epc-disagree.html:14
+msgid "there isn't an EPC for your property"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/epc-disagree.html:15
+msgid "your property is a new build"
+msgstr "bod eich eiddo yn adeilad newydd"
+
+#: help_to_heat/templates/frontdoor/epc-disagree.html:16
+msgid "your address is saved in a different format"
+msgstr "bod eich cyfeiriad wedi cael ei gadw mewn fformat gwahanol"
+
+#: help_to_heat/templates/frontdoor/epc-disagree.html:19
+msgid ""
+"You can continue without an Energy Performance Certificate, We will need to "
+"ask you some questions to work out which home improvement schemes your "
+"property is eligible for. There will be guidance to support you along the way"
+msgstr ""
+"Gallwch barhau heb Dystysgrif Perfformiad Ynni, ond bydd angen inni ofyn "
+"cwestiynau ichi er mwyn penderfynu pa gynlluniau gwella aelwyd y mae eich "
+"eiddo yn gymwys ar eu cyfer. Bydd yna ganllawiau i'ch helpu ar hyd y ffordd."
+
+#: help_to_heat/templates/frontdoor/epc-ineligible.html:5
+#: help_to_heat/templates/frontdoor/ineligible.html:5
+msgid ""
+"You are ineligible for support - Check eligibility for Great British "
+"Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/epc-ineligible.html:11
+msgid "It's likely that your home already has suitable energy saving measures"
+msgstr "Mae'n debygol bod gan eich aelwyd fesurau arbed ynni addas yn barod"
+
+#: help_to_heat/templates/frontdoor/epc-ineligible.html:13
+msgid ""
+"This service is for homes with lower energy performance ratings, from D to G."
+msgstr ""
+"Mae'r gwasanaeth hwn ar gyfer aelwydydd sydd â chyfraddiad perfformiad ynni "
+"is, o D i G."
+
+#: help_to_heat/templates/frontdoor/epc.html:5
+msgid ""
+"What is the EPC of this property? - Check eligibility for Great British "
+"Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/epc.html:11
+msgid "Find your EPC"
+msgstr "Chwilio am eich EPC"
+
+#: help_to_heat/templates/frontdoor/epc.html:12
+msgid "We found an Energy Performance Certificate that might be yours"
+msgstr ""
+"Fe gawson ni afael ar Dystysgrif Perfformiad Ynni a allai fod yn perthyn i "
+"chi"
+
+#: help_to_heat/templates/frontdoor/epc.html:14
+msgid ""
+"This certificate may be registered to your property or one of the properties "
+"nearby that shares part of your address."
+msgstr ""
+"Fe allai'r dystysgrif yma fod wedi'i chofrestru ar gyfer eich eiddo chi neu "
+"un o'r eiddo cyfagos sy'n rhannu rhan o'ch cyfeiriad."
+
+#: help_to_heat/templates/frontdoor/epc.html:20
+msgid "Certificate"
+msgstr "Tystysgrif"
+
+#: help_to_heat/templates/frontdoor/epc.html:25
+msgid "Registered address"
+msgstr "Cyfeiriad cofrestredig"
+
+#: help_to_heat/templates/frontdoor/epc.html:30
+msgid "EPC rating"
+msgstr "Cyfraddiad EPC "
+
+#: help_to_heat/templates/frontdoor/epc.html:38
+msgid "Is this your EPC?"
+msgstr "Ai eich EPC chi yw hon?"
+
+#: help_to_heat/templates/frontdoor/feedback-thanks.html:5
+msgid ""
+"Thanks for the feedback - Check eligibility for Great British Insulation "
+"Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/feedback.html:5
+msgid ""
+"Give us some feedback - Check eligibility for Great British Insulation "
+"Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/holding-page.html:3
+msgid ""
+"Holding Page - Check eligibility for Great British Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:4
+msgid ""
+"Homepage - Check eligibility for Great British Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:11
+msgid "Check if you may be eligible for the Great British Insulation Scheme"
+msgstr "Gwirio'ch Cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain"
+
+#: help_to_heat/templates/frontdoor/homepage.html:13
+msgid "You can use this service to:"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:15
+msgid "check if you may be eligible for help to insulate your property"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:29
+msgid "Insulation measures you can get referred for"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:36
+msgid "cavity wall insulation"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:37
+msgid "solid wall insulation (internal or external)"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:38
+msgid "loft insulation"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:39
+msgid "flat or pitched roof insulation"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:40
+msgid "underfloor insulation"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:41
+msgid "solid floor insulation"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:42
+msgid "park home insulation"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:43
+msgid "room-in-roof insulation"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:49
+msgid "Who can use this service "
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:50
+msgid "You can use this service if you are: "
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:52
+msgid "a homeowner or landlord"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:53
+msgid ""
+"a tenant who rents from a private landlord, estate agent, or a housing "
+"association"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:58
+msgid "Before you start"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:59
+msgid "You will be asked for information about: "
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:61
+msgid "the address and Council Tax band of the property"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:64
+msgid "whether your household income is above or below £31,000 per year"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:65
+msgid "details of the type of walls and insulation in the property"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:76
+msgid "Start now"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:83
+msgid "If you need help to apply "
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:84
+msgid ""
+"If you cannot apply online or need help with your application, contact the "
+"helpline team."
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:87
+msgid "Telephone: 0800 098 7938"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:88
+msgid "Monday to Friday, 8am to 6pm (except bank holidays)"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/homepage.html:89
+msgid "Saturday, 9am to 12pm"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/household-income.html:5
+msgid ""
+"What is your household income? - Check eligibility for Great British "
+"Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/household-income.html:14
+msgid "What is your annual household income?"
+msgstr "Beth yw incwm blynyddol eich aelwyd?"
+
+#: help_to_heat/templates/frontdoor/household-income.html:19
+msgid ""
+"Your annual household income is the total income before paying tax for all "
+"adults living in your home."
+msgstr ""
+"Incwm blynyddol eich aelwyd yw cyfanswm yr incwm cyn talu treth ar gyfer pob "
+"oedolyn sy'n byw ar eich aelwyd."
+
+#: help_to_heat/templates/frontdoor/household-income.html:25
+msgid "Why we need this info"
+msgstr "Pam mae arnon ni angen yr wybodaeth yma"
+
+#: help_to_heat/templates/frontdoor/household-income.html:29
+msgid ""
+"Your annual household income is used to work out how much support you can "
+"get through each scheme."
+msgstr ""
+"Mae incwm blynyddol eich aelwyd yn cael ei ddefnyddio i gyfrifo faint o "
+"gymorth y gallwch ei gael drwy bob cynllun. "
+
+#: help_to_heat/templates/frontdoor/ineligible.html:10
+#: help_to_heat/templates/frontdoor/schemes.html:45
+msgid "Your property is not eligible"
+msgstr "Dyw eich eiddo chi ddim yn gymwys"
+
+#: help_to_heat/templates/frontdoor/ineligible.html:12
+msgid ""
+"Based on your answers, your property is not eligible to access energy-saving "
+"measures."
+msgstr ""
+"Ar sail eich atebion, nid yw'ch eiddo yn gymwys i gael mesurau arbed ynni."
+
+#: help_to_heat/templates/frontdoor/ineligible.html:13
+msgid ""
+"This is likely because your property’s council tax band is too high. This "
+"service is for properties in an eligible council tax band (A to D in England "
+"and A to E in Scotland and Wales)."
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/loft-access.html:5
+msgid ""
+"Do you have access to the loft? - Check eligibility for Great British "
+"Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/loft-access.html:17
+msgid ""
+"You may have a loft hatch, access ladder or stairs that could allow an "
+"insulation installer to get into the loft space."
+msgstr ""
+"Efallai bod gennych chi agoriad i'r atig, ysgol neu risiau a allai ganiatáu "
+"i osodwr inswleiddiad fynd i mewn i'r lle yn yr atig."
+
+#: help_to_heat/templates/frontdoor/loft-access.html:20
+msgid "Homes of your type typically "
+msgstr "Fel arfer mae gan aelwydydd o'ch math chi "
+
+#: help_to_heat/templates/frontdoor/loft-access.html:20
+msgid "have access to their loft"
+msgstr "fynediad i'r atig"
+
+#: help_to_heat/templates/frontdoor/loft-insulation.html:5
+msgid ""
+"Does your loft have insulation? - Check eligibility for Great British "
+"Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/loft-insulation.html:14
+msgid "Is your loft fully insulated?"
+msgstr "Ydy'ch atig wedi'i inswleiddio'n llawn?"
+
+#: help_to_heat/templates/frontdoor/loft-insulation.html:18
+msgid ""
+"A loft is fully insulated if it has more than 270mm (about 10-11 inches) of "
+"insulation covering the whole loft, usually laid on the 'floor' of the loft "
+"with one layer between the horizontal timbers and another layer going across "
+"them to bring the insulation up to the required level."
+msgstr ""
+"Mae atig wedi'i inswleiddio'n llawn os oes ganddo fwy na 270mm (tua 10-11 "
+"modfedd) o inswleiddiad sy'n gorchuddio'r atig cyfan, fel arfer wedi'i osod "
+"ar 'lawr' yr atig gydag un haen rhwng y coed llorweddol a haen arall yn mynd "
+"ar eu traws i godi'r deunydd inswleiddio i'r lefel ofynnol."
+
+#: help_to_heat/templates/frontdoor/loft-insulation.html:24
+#: help_to_heat/templates/frontdoor/wall-insulation.html:28
+msgid "Help me answer this question"
+msgstr "Helpwch fi i ateb y cwestiwn yma"
+
+#: help_to_heat/templates/frontdoor/loft-insulation.html:29
+msgid ""
+"If your home was built after 2002, or you have installed loft insulation "
+"since 2002, it is likely that it is fully insulated."
+msgstr ""
+"Os cafodd eich aelwyd ei adeiladu ar ôl 2002, neu os ydych chi wedi gosod "
+"inswleiddiad yn yr atig ers 2002, mae'n debygol ei fod wedi'i inswleiddio'n "
+"llawn."
+
+#: help_to_heat/templates/frontdoor/loft.html:5
+msgid ""
+"Is there a loft? - Check eligibility for Great British Insulation Scheme - "
+"GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/loft.html:14
+msgid "Do you have a loft that hasn't been converted into a room?"
+msgstr "Oes gennych chi atig sydd heb ei droi'n ystafell?"
+
+#: help_to_heat/templates/frontdoor/loft.html:20
+msgid "Help me decide if I have a loft"
+msgstr "Helpwch fi i benderfynu a oes gen i atig"
+
+#: help_to_heat/templates/frontdoor/loft.html:25
+msgid ""
+"A loft is an unheated space without walls and ceilings, immediately beneath "
+"the pitched roof. You will usually be able to see the roof timbers."
+msgstr ""
+"Mae atig yn fan sydd heb ei chynhesu ac sydd heb waliau a nenfwd, yn union o "
+"dan y to crib. Fel arfer byddwch yn gallu gweld coed y to."
+
+#: help_to_heat/templates/frontdoor/loft.html:28
+msgid ""
+"If all the space under your pitched roof, or nearly all the space, is used "
+"as living space with finished walls and ceilings then the loft has been "
+"converted into a room."
+msgstr ""
+"Os yw'r cyfan o'r lle o dan grib y to, neu bron y cyfan o'r lle, yn cael ei "
+"ddefnyddio fel lle byw gyda waliau a nenfydau gorffenedig, yna mae'r atig "
+"wedi'i droi'n ystafell."
+
+#: help_to_heat/templates/frontdoor/northern-ireland.html:4
+msgid ""
+"Northern Ireland - Check eligibility for Great British Insulation Scheme - "
+"GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/northern-ireland.html:8
+#: help_to_heat/templates/frontdoor/privacy-policy.html:10
+#: help_to_heat/templates/frontdoor/schemes.html:11
+#: help_to_heat/templates/macros.html:3 help_to_heat/templates/macros.html:114
+msgid "Back"
+msgstr "Yn ôl"
+
+#: help_to_heat/templates/frontdoor/northern-ireland.html:11
+msgid "This service is not available for homes in Northern Ireland"
+msgstr "Nid yw'r gwasanaeth yma ar gael i aelwydydd yng Ngogledd Iwerddon"
+
+#: help_to_heat/templates/frontdoor/northern-ireland.html:12
+msgid ""
+"The energy efficiency support available through this scheme is available to "
+"homes in England, Wales and Scotland. For advice on energy support measures "
+"in Northern Ireland visit the "
+msgstr ""
+"Mae'r cymorth effeithlonrwydd ynni sydd ar gael drwy'r cynllun yma ar gael i "
+"aelwydydd yng Nghymru, Lloegr a'r Alban. I gael cyngor ar fesurau cymorth "
+"ynni yng Ngogledd Iwerddon, ewch i "
+
+#: help_to_heat/templates/frontdoor/northern-ireland.html:12
+msgid "NI Direct government services website"
+msgstr "wefan gwasanaethau llywodraeth NI Direct"
+
+#: help_to_heat/templates/frontdoor/number-of-bedrooms.html:5
+msgid ""
+"How many bedrooms does your property have? - Check eligibility for Great "
+"British Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/number-of-bedrooms.html:14
+msgid "How many bedrooms does the property have?"
+msgstr "Faint o ystafelloedd gwely sydd gan yr eiddo?"
+
+#: help_to_heat/templates/frontdoor/number-of-bedrooms.html:18
+msgid ""
+"Select the total number of bedrooms the property has. Include all bedrooms "
+"even if you use them for something else, like a home office."
+msgstr ""
+"Dewiswch nifer yr ystafelloedd gwely sydd gan yr eiddo. Dylech gynnwys pob "
+"ystafell wely hyd yn oed os ydych chi'n eu defnyddio ar gyfer rhywbeth "
+"arall, fel swyddfa gartref."
+
+#: help_to_heat/templates/frontdoor/own-property.html:5
+msgid ""
+"Do you own your own property? - Check eligibility for Great British "
+"Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/own-property.html:14
+msgid "Do you own the property?"
+msgstr "Ydy'r eiddo'n perthyn i chi?"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:4
+msgid ""
+"Privacy policy - Check eligibility for Great British Insulation Scheme - GOV."
+"UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:11
+msgid "Privacy Notice – the Great British Insulation Scheme"
+msgstr "Hysbysiad Preifatrwydd – Cynllun Inswleiddio Mawr Prydain "
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:13
+msgid ""
+"This notice is provided to meet the requirements of the UK General Data "
+"Protection Regulation (UK GDPR) and Data Protection Act 2018 (DPA) to "
+"provide transparency in how we process and use personal data collected for "
+"the GOV.UK referral service for the Great British Insulation Scheme (GB "
+"Insulation Scheme), and your rights. It is made under Articles 13 and 14 of "
+"the UK GDPR."
+msgstr ""
+"Mae'r hysbysiad yma wedi'i ddarparu i ateb gofynion Rheoliad Cyffredinol y "
+"Deyrnas Unedig ar Ddiogelu Data (GDPR y Deyrnas Unedig) a Deddf Diogelu Data "
+"2018 (Deddf 2018) er mwyn bod yn dryloyw o ran sut rydyn ni'n prosesu ac yn "
+"defnyddio data personol sy'n cael ei gasglu ar ran gwasanaeth atgyfeirio GOV."
+"UK ar gyfer Cynllun Inswleiddio Mawr Prydain, a'ch hawliau chi. Mae'r "
+"hysbysiad wedi'i wneud o dan Erthyglau 13 a 14 o GDPR y Deyrnas Unedig."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:16
+msgid ""
+"The Check Eligibility for GB Insulation service allows users to check their "
+"eligibility for help with energy efficiency measures through relevant "
+"government schemes, specifically the Great British Insulation Scheme. Users "
+"will also be advised where additional help through the Energy Company "
+"Obligation (ECO4) may be available. If the service gives an indication that "
+"the user and their property may be eligible for support, based on "
+"information that the user is invited to provide, then they can create a "
+"referral that will make their details available to an energy supplier. This "
+"will usually be their own energy provider unless the user themselves selects "
+"another."
+msgstr ""
+"Mae gwasanaeth Gwirio’ch Cymhwystra ar gyfer Cynllun Inswleiddio Mawr "
+"Prydain yn galluogi'r defnyddwyr i wirio a ydyn nhw'n gymwys i gael cymorth "
+"gyda mesurau effeithlonrwydd ynni trwy gynlluniau perthnasol y llywodraeth, "
+"ac yn benodol Cynllun Inswleiddio Mawr Prydain. Bydd y defnyddwyr hefyd yn "
+"cael eu hysbysu lle gall cymorth ychwanegol fod ar gael drwy'r Rhwymedigaeth "
+"Cwmni Ynni (ECO4). Os yw'r gwasanaeth yn rhoi arwydd y gallai'r defnyddiwr "
+"a'i eiddo fod yn gymwys i gael cymorth, ar sail yr wybodaeth y gwahoddir y "
+"defnyddiwr i'w darparu, yna gall y gwasanaeth greu atgyfeiriad a fydd yn "
+"sicrhau bod eu manylion ar gael i gyflenwr ynni. Fel arfer eu darparwr ynni "
+"eu hunain fydd hwn oni bai bod y defnyddiwr ei hun yn dewis un arall."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:19
+msgid ""
+"This privacy notice relates to how your data is used in connection with the "
+"service and covers information saved as you proceed through the application "
+"and after you submit your application."
+msgstr ""
+"Mae'r hysbysiad preifatrwydd yma yn ymwneud â sut mae'ch data'n cael ei "
+"ddefnyddio mewn cysylltiad â'r gwasanaeth ac mae'n cynnwys gwybodaeth a "
+"gadwyd wrth ichi fynd ymlaen â'r cais ac ar ôl ichi gyflwyno'ch cais."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:22
+msgid ""
+"The Department for Energy Security and Net Zero and related energy suppliers "
+"are the independent data controllers for your data. This privacy notice does "
+"not cover energy suppliers and how they use your data. You should also read "
+"your chosen energy supplier’s privacy notice to understand how they use your "
+"data. They are also required to manage your personal data in a way that "
+"meets the UK GDPR and DPA."
+msgstr ""
+"Yr Adran Diogelwch Ynni a Sero Net a'r cyflenwyr ynni perthynol yw'r "
+"rheolwyr data annibynnol ar gyfer eich data. Nid yw'r hysbysiad preifatrwydd "
+"hwn yn cynnwys cyflenwyr ynni a sut maen nhw'n defnyddio'ch data. Dylech "
+"hefyd ddarllen hysbysiad preifatrwydd eich cyflenwr ynni dewisol chi er mwyn "
+"deall sut maen nhw'n defnyddio'ch data. Mae hefyd yn ofynnol iddyn nhw "
+"reoli'ch data personol mewn ffordd sy'n bodloni GDPR y Deyrnas Unedig a "
+"Deddf 2018."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:26
+msgid "Your data"
+msgstr "Eich data chi"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:29
+msgid "We will process the following personal data:"
+msgstr "Byddwn yn prosesu'r data personol a ganlyn:"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:32
+#: help_to_heat/templates/frontdoor/privacy-policy.html:92
+msgid "Your first name and last name"
+msgstr "Eich enw cyntaf a'ch enw olaf"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:33
+msgid "The property’s council tax band"
+msgstr "Band treth gyngor yr eiddo"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:34
+msgid "The property’s address"
+msgstr "Cyfeiriad yr eiddo"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:35
+msgid "The property’s post code"
+msgstr "Cod post yr eiddo"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:36
+msgid "The property’s EPC rating"
+msgstr "Cyfraddiad EPC yr eiddo"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:37
+msgid ""
+"Questions or feedback you leave, including your email address if you contact "
+"us"
+msgstr ""
+"Cwestiynau neu adborth y byddwch chi'n eu gadael, gan gynnwys eich cyfeiriad "
+"ebost os byddwch yn cysylltu â ni"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:38
+#: help_to_heat/templates/frontdoor/privacy-policy.html:96
+msgid "If anyone in your household is receiving benefits"
+msgstr "A oes unrhyw un yn eich aelwyd yn cael budd-daliadau"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:39
+msgid "If your annual household is above or below £31,000"
+msgstr "A yw incwm blynyddol eich aelwyd yn uwch neu'n is na £31,000"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:40
+msgid "Information about your property"
+msgstr "Gwybodaeth am eich eiddo"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:41
+msgid "Building characteristics"
+msgstr "Nodweddion yr adeilad"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:42
+msgid "Information about measures installed in your property"
+msgstr "Gwybodaeth am fesurau sydd wedi'u gosod yn eich eiddo"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:43
+#: help_to_heat/templates/frontdoor/privacy-policy.html:101
+msgid "Your email address and phone number when you have provided these"
+msgstr ""
+"Eich cyfeiriad ebost a'ch rhif ffôn pan fyddwch chi wedi darparu'r rhain"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:47
+msgid ""
+"This data is collected as you proceed through the application process and "
+"when you submit your application."
+msgstr ""
+"Mae'r data yma'n cael ei gasglu wrth ichi symud drwy'r broses ymgeisio ac "
+"wrth ichi gyflwyno'ch cais."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:55
+msgid ""
+"To enable the Check Eligibility for GB Insulation service to allow you to "
+"check if you might be eligible for help with energy efficiency measures."
+msgstr ""
+"Galluogi gwasanaeth Gwirio’ch Cymhwystra ar gyfer Cynllun Inswleiddio Mawr "
+"Prydain i ganiatáu ichi a allech fod yn gymwys i gael cymorth gyda mesurau "
+"effeithlonrwydd ynni."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:58
+msgid ""
+"We also collect your personal data to help energy suppliers and their "
+"installers (only when you refer):"
+msgstr ""
+"Rydyn ni hefyd yn casglu'ch data personol i helpu cyflenwyr ynni a’u "
+"gosodwyr i wneud y canlynol (dim ond pan fyddwch yn atgyfeirio):"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:62
+msgid "Verify your identity"
+msgstr "Dilysu pwy ydych chi"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:63
+msgid ""
+"Confirm what type of energy-saving support your property may be eligible for"
+msgstr ""
+"Cadarnhau pa fath o gymorth arbed ynni y gallai'ch eiddo fod yn gymwys i'w "
+"gael"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:66
+msgid ""
+"We also collect your personal data to help improve our services so we can:"
+msgstr ""
+"Rydyn ni hefyd yn casglu'ch data personol i helpu i wella'n gwasanaethau er "
+"mwyn inni:"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:69
+msgid ""
+"Send email confirmation of your referral (if you provide an email address)"
+msgstr ""
+"Anfon cadarnhad ebost o'ch atgyfeiriad (os byddwch yn darparu cyfeiriad "
+"ebost)"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:70
+msgid "Analyse uptake of the service"
+msgstr "Dadansoddi'r niferoedd sy'n manteisio ar y gwasanaeth"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:71
+msgid ""
+"Provide support via our call centre if you encounter any issues or need "
+"advice and guidance"
+msgstr ""
+"Rhoi cymorth trwy'n canolfan alwadau os byddwch yn dod ar draws unrhyw "
+"broblemau neu angen cyngor ac arweiniad"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:72
+msgid "Monitor the success of referrals made by this service"
+msgstr ""
+"Monitro llwyddiant yr atgyfeiriadau sy'n cael eu gwneud gan y gwasanaeth yma"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:73
+msgid "Evaluate and improve the service based on any feedback provided"
+msgstr "Gwerthuso a gwella'r gwasanaeth ar sail unrhyw adborth a ddarperir"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:74
+msgid "Monitor use of the site to identify security threats"
+msgstr "Monitro'r defnydd ar y wefan er mwyn adnabod bygythiadau i ddiogelwch"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:78
+msgid "Legal basis of processing"
+msgstr "Sail gyfreithlon y prosesu"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:82
+msgid ""
+"The legal basis for processing your personal data is processing is necessary "
+"for the performance of a task carried out in the public interest. In this "
+"case, to support the installation of energy-saving measures to properties at "
+"reduced cost to households."
+msgstr ""
+"Y sail gyfreithlon dros brosesu'ch data personol yw bod y prosesu'n "
+"angenrheidiol er mwyn cyflawni tasg sy'n cael ei chyflawni er budd y cyhoedd "
+"sef, yn yr achos hwn, helpu i osod mesurau arbed ynni mewn eiddo am gost is "
+"i'r aelwydydd."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:86
+msgid "Recipients"
+msgstr "Derbynwyr"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:89
+msgid ""
+"We will share the following data with your chosen energy supplier and their "
+"installers:"
+msgstr ""
+"Byddwn yn rhannu'r data a ganlyn gyda'ch dewis gyflenwr ynni a'u gosodwyr:"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:93
+msgid "The property's postcode and address"
+msgstr "Cod post a chyfeiriad yr eiddo"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:94
+msgid "The property's council tax band"
+msgstr "Band treth gyngor yr eiddo"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:95
+msgid "The property's EPC rating"
+msgstr "Cyfraddiad EPC yr eiddo"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:97
+msgid "If your annual household income is above or below £31,000"
+msgstr "A yw incwm blynyddol eich aelwyd yn uwch neu'n is na £31,000"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:98
+msgid "The number of bedrooms in your property"
+msgstr "Nifer yr ystafelloedd gwely yn eich eiddo"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:99
+msgid "Your property's wall insulation"
+msgstr "Inswleiddiad waliau'ch eiddo"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:100
+msgid "Your property's loft insulation"
+msgstr "Inswleiddiad atig eich eiddo"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:105
+msgid "The purpose of this is to:"
+msgstr "Diben gwneud hyn yw:"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:108
+msgid ""
+"Make a referral to energy suppliers, if your property might be eligible for "
+"energy-saving measures"
+msgstr ""
+"Gwneud atgyfeiriad at gyflenwyr ynni, os gallai'ch eiddo fod yn gymwys i "
+"gael mesurau arbed ynni"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:109
+msgid "Help energy suppliers confirm your information"
+msgstr "Helpu cyflenwyr ynni i gadarnhau'ch gwybodaeth"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:110
+msgid ""
+"Help energy suppliers contact you to arrange a visit to the property, based "
+"on your eligibility for the Great British insulation Scheme"
+msgstr ""
+"Helpu cyflenwyr ynni i gysylltu â chi i drefnu ymweliad â'r eiddo, ar sail "
+"eich cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:114
+msgid ""
+"We have a data sharing agreement with energy suppliers so that we can share "
+"your personal data with them to deliver this service. Your energy supplier "
+"will also share your personal data with their installers during the "
+"processing of your application. The sharing of the data between energy "
+"suppliers, energy suppliers' installers and the Department for Energy "
+"Security and Net Zero is for the purpose of administration, delivery, "
+"reporting, monitoring, evaluation and fraud prevention necessary within the "
+"Great British Insulation scheme."
+msgstr ""
+"Mae gennyn ni gytundeb rhannu data gyda chyflenwyr ynni fel y gallwn "
+"rannu'ch data personol chi gyda nhw i ddarparu'r gwasanaeth yma. Bydd eich "
+"cyflenwr ynni hefyd yn rhannu'ch data personol gyda'u gosodwyr nhw wrth "
+"brosesu'ch cais. Mae'r data'n cael ei rannu rhwng cyflenwyr ynni, gosodwyr "
+"cyflenwyr ynni a'r Adran Diogelwch Ynni a Sero Net at ddibenion gweinyddu, "
+"cyflwyno, adrodd, monitro, gwerthuso ac atal twyll sy'n angenrheidiol o fewn "
+"Cynllun Inswleiddio Mawr Prydain."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:117
+msgid ""
+"When you use the call centre assisted service the service will be provided "
+"by ResQ may also exchange information provided on calls and other "
+"correspondence with the Department for Energy Security and Net Zero when "
+"there is a need to process your application, if you cannot use the digital "
+"service. Calls to the call centre will be recorded and retained for up to "
+"two years."
+msgstr ""
+"Pan fyddwch chi'n defnyddio'r gwasanaeth â chymorth y ganolfan alwadau, "
+"caiff y gwasanaeth ei ddarparu gan ResQ a allai hefyd gyfnewid gwybodaeth a "
+"ddarperir ar alwadau a gohebiaeth arall gyda'r Adran Diogelwch Ynni a Sero "
+"Net pan fydd angen prosesu'ch cais, os na allwch chi ddefnyddio'r gwasanaeth "
+"digidol. Bydd galwadau i'r ganolfan alwadau yn cael eu recordio a'u cadw am "
+"hyd at ddwy flynedd."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:120
+msgid ""
+"We may share your name and address with a contracted provider to contact you "
+"in writing to conduct research and evaluation about the service so we can "
+"deliver the scheme effectively and analyse the impact of the scheme. Any "
+"research is voluntary and will not affect the outcome of your application. "
+"You would have the right to withdraw at any time using the contact details "
+"provided by the contracted provider at the time of the research request."
+msgstr ""
+"Gallwn rannu'ch enw a'ch cyfeiriad gyda darparwr dan gontract i gysylltu â "
+"chi mewn ysgrifen i wneud gwaith ymchwilio a gwerthuso ynglŷn a'r gwasanaeth "
+"er mwyn inni gyflawni'r cynllun yn effeithiol a dadansoddi effaith y "
+"cynllun. Mae unrhyw ymchwil yn wirfoddol ac ni fydd yn effeithio ar "
+"ganlyniad eich cais. Byddai gennych chi hawl i dynnu'n ôl unrhyw bryd drwy "
+"ddefnyddio'r manylion cysylltu a ddarparwyd gan y darparwr dan gontract adeg "
+"y cais ymchwil."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:123
+msgid ""
+"We will share your data with other government bodies or energy suppliers if "
+"we are required to do so by law - for example, by court order, or to prevent "
+"fraud or other crime."
+msgstr ""
+"Byddwn yn rhannu'ch data gyda chyrff eraill y llywodraeth neu gyflenwyr ynni "
+"os yw'n ofynnol inni wneud hynny yn ôl y gyfraith, er enghraifft, drwy "
+"orchymyn llys, neu i atal twyll neu droseddau eraill."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:126
+msgid "Retention"
+msgstr "Cadw gwybodaeth"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:129
+msgid ""
+"We will only keep your personal data for as long as required to support the "
+"delivery, evaluation and scrutiny of the service."
+msgstr ""
+"Dim ond cyhyd ag sy'n ofynnol i gefnogi'r gwaith o gyflwyno, gwerthuso a "
+"chraffu ar y gwasanaeth y byddwn yn cadw'ch data personol."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:132
+msgid ""
+"Personal data will be retained for up to two years after the GB Insulation "
+"Scheme has ended. Following this, the data will be securely deleted after "
+"collection in line with the Department for Energy Security and Net Zero "
+"policy."
+msgstr ""
+"Bydd data personol yn cael ei gadw am hyd at ddwy flynedd ar ôl i Gynllun "
+"Inswleiddio Mawr Prydain ddod i ben. Yn dilyn hyn, bydd y data'n cael ei "
+"ddileu'n ddiogel ar ôl ei gasglu yn unol â pholisi'r Adran Diogelwch Ynni a "
+"Sero Net."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:135
+msgid ""
+"During this time it will be accessible by the Department for Energy Security "
+"and Net Zero and your energy supplier."
+msgstr ""
+"Yn ystod y cyfnod hwn bydd modd iddo gael ei weld gan yr Adran Diogelwch "
+"Ynni a Sero Net a'ch cyflenwr ynni."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:139
+msgid "Your rights"
+msgstr "Eich hawliau"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:142
+msgid ""
+"You have the right to request information about how your personal data are "
+"processed, and to request a copy of that personal data."
+msgstr ""
+"Mae gennych chi hawl i ofyn am wybodaeth am sut mae'ch data personol yn cael "
+"ei brosesu, ac i ofyn am gopi o'r data personol hwnnw."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:145
+msgid ""
+"You have the right to request that any inaccuracies in your personal data "
+"are rectified without delay. You have the right to request that any "
+"incomplete personal data are completed, including by means of a "
+"supplementary statement."
+msgstr ""
+"Mae gennych chi hawl i ofyn i unrhyw anghywirdebau yn eich data personol "
+"gael eu cywiro'n ddi-oed. Mae gennych chi hawl i ofyn i unrhyw ddata "
+"personol anghyflawn gael ei gwblhau, gan gynnwys trwy ddatganiad atodol."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:148
+msgid ""
+"You have the right to request that your personal data are erased if there is "
+"no longer a justification for them to be processed."
+msgstr ""
+"Mae gennych chi hawl i ofyn i'ch data personol gael ei ddileu os nad oes "
+"cyfiawnhad dros ei brosesu mwyach."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:151
+msgid ""
+"You have the right in certain circumstances (for example, where accuracy is "
+"contested) to request that the processing of your personal data is "
+"restricted."
+msgstr ""
+"Mae gennych chi hawl dan rai amgylchiadau (er enghraifft, pan fyddwch chi'n "
+"dadlau nad yw'n gywir) i ofyn i'r gwaith prosesu ar eich data personol gael "
+"ei gyfyngu."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:154
+msgid ""
+"You have the right to object to the processing of your personal data where "
+"it is processed for direct marketing purposes."
+msgstr ""
+"Mae gennych chi hawl i wrthwynebu prosesu'ch data personol pan fo'n cael ei "
+"brosesu at ddibenion marchnata uniongyrchol."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:157
+msgid ""
+"You have the right to object to the processing of your personal data "
+"including the right to object to automated processing."
+msgstr ""
+"Mae gennych chi hawl i wrthwynebu prosesu'ch data personol gan gynnwys yr "
+"hawl i wrthwynebu prosesu awtomataidd."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:161
+msgid "International transfers"
+msgstr "Trosglwyddiadau rhyngwladol"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:165
+msgid ""
+"We design, build and run our systems to make sure that your data is as safe "
+"as possible at all stages, both while it's processed and when it's stored."
+msgstr ""
+"Rydyn ni'n dylunio, yn adeiladu ac yn rhedeg ein systemau i sicrhau bod eich "
+"data mor ddiogel â phosibl ym mhob cyfnod, a hynny tra bo'n cael ei brosesu "
+"a phan gaiff ei storio."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:169
+msgid ""
+"As your personal data is stored on our IT infrastructure and shared with our "
+"data processors Microsoft, GOV.UK Notify and Amazon Web Services, it may be "
+"transferred and stored securely in the UK and European Economic Area. Where "
+"it is the case that your personal data is stored outside the UK and EEA it "
+"will be subject to equivalent legal protection through the use of Model "
+"Contract Clauses."
+msgstr ""
+"Gan fod eich data personol yn cael ei storio ar ein seilwaith TG a'i rannu "
+"gyda'n proseswyr data, sef Microsoft, GOV.UK Notify ac Amazon Web Services, "
+"caniateir iddo gael ei drosglwyddo a'i storio'n ddiogel yn y Deyrnas Unedig "
+"a'r Ardal Economaidd Ewropeaidd (AEE). Os yw eich data personol yn cael ei "
+"storio y tu allan i'r Deyrnas Unedig a'r AEE, bydd yn dod o dan amddiffyniad "
+"cyfreithiol cyfatebol trwy ddefnyddio Cymalau Contract Enghreifftiol."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:173
+msgid "Complaints"
+msgstr "Cwyno"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:177
+msgid ""
+"If you consider that your personal data has been misused or mishandled, you "
+"may make a complaint to the Information Commissioner, who is an independent "
+"regulator."
+msgstr ""
+"Os ydych chi o'r farn bod eich data personol wedi cael ei gamddefnyddio neu "
+"ei gam-drin, gallwch wneud cwyn i'r Comisiynydd Gwybodaeth, sy'n "
+"rheoleiddiwr annibynnol."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:180
+msgid "The Information Commissioner can be contacted at:"
+msgstr "Gallwch gysylltu â'r Comisiynydd Gwybodaeth yma:"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:182
+msgid "Information Commissioner's Office"
+msgstr "Swyddfa'r Comisiynydd Gwybodaeth"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:187
+msgid "Website:"
+msgstr "Gwefan:"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:189
+msgid ""
+"Any complaint to the Information Commissioner is without prejudice to your "
+"right to seek redress through the courts."
+msgstr ""
+"Mae unrhyw gŵyn i'r Comisiynydd Gwybodaeth yn cael ei gwneud heb ragfarn "
+"i'ch hawl i geisio iawn drwy'r llysoedd."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:195
+msgid ""
+"The data controller for your personal data is the Department for Energy "
+"Security and Net Zero"
+msgstr ""
+"Y rheolwr data ar gyfer eich data personol yw'r Adran Diogelwch Ynni a Sero "
+"Net"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:197
+msgid "You can contact the Data Protection Officer at:"
+msgstr "Gallwch gysylltu â'r Swyddog Diogelu Data yma:"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:203
+msgid "Email: "
+msgstr "Ebost: "
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:207
+msgid "Changes to this policy"
+msgstr "Newidiadau yn y polisi yma"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:211
+msgid ""
+"We may change this privacy policy. In that case, the 'last updated' date at "
+"the bottom of this page will also change. Any changes to this privacy policy "
+"will apply to you and your data immediately."
+msgstr ""
+"Gallwn newid y polisi preifatrwydd yma. Os felly, bydd dyddiad y "
+"'diweddariad diwethaf' ar waelod y tudalen hwn hefyd yn newid. Bydd unrhyw "
+"newidiadau yn y polisi preifatrwydd yma yn gymwys i chi a'ch data ar unwaith."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:212
+msgid ""
+"If these changes affect how your personal data is processed, we will take "
+"reasonable steps to let you know."
+msgstr ""
+"Os bydd y newidiadau hyn yn effeithio ar sut mae'ch data personol yn cael ei "
+"brosesu, byddwn yn cymryd camau rhesymol i roi gwybod ichi."
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:213
+msgid "Last updated 21 June 2023"
+msgstr "Y diweddariad diwethaf 21 Mehefin 2023"
+
+#: help_to_heat/templates/frontdoor/privacy-policy.html:215
+msgid "Change Log:"
+msgstr "Log Newidiadau:"
+
+#: help_to_heat/templates/frontdoor/property-subtype.html:5
+msgid ""
+"What is the subtype of your property? - Check eligibility for Great British "
+"Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/property-subtype.html:14
+#, python-format
+msgid "What kind of %(property_type)s do you have?"
+msgstr "Pa fath o %(property_type)s sydd gennych?"
+
+#: help_to_heat/templates/frontdoor/property-subtype.html:20
+#: help_to_heat/templates/frontdoor/property-type.html:21
+msgid "Why do we need to know this?"
+msgstr "Pam mae angen inni wybod hyn?"
+
+#: help_to_heat/templates/frontdoor/property-subtype.html:24
+#: help_to_heat/templates/frontdoor/property-type.html:25
+msgid ""
+"Energy use varies between different buildings, particularly for heating."
+msgstr ""
+"Mae'r defnydd o ynni yn amrywio rhwng gwahanol adeiladau, yn enwedig ar "
+"gyfer gwres."
+
+#: help_to_heat/templates/frontdoor/property-subtype.html:25
+#: help_to_heat/templates/frontdoor/property-type.html:26
+msgid ""
+"Some home improvements are only possible or appropriate for certain "
+"buildings."
+msgstr ""
+"Mae rhai gwelliannau i'r aelwyd yn bosibl neu'n briodol mewn mathau penodol "
+"o adeiladau yn unig."
+
+#: help_to_heat/templates/frontdoor/property-type.html:5
+msgid ""
+"What type is your property? - Check eligibility for Great British Insulation "
+"Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/property-type.html:14
+msgid "What kind of property do you have?"
+msgstr "Pa fath o eiddo sydd gennych?"
+
+#: help_to_heat/templates/frontdoor/schemes.html:5
+msgid ""
+"Schemes you are eligible for - Check eligibility for Great British "
+"Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/schemes.html:18
+msgid "Information based on your answers"
+msgstr "Gwybodaeth wedi'i seilio ar eich atebion"
+
+#: help_to_heat/templates/frontdoor/schemes.html:19
+msgid "Based on your answers you can register for help through:"
+msgstr "Ar sail eich atebion, gallwch gofrestru i gael help drwy gyfrwng:"
+
+#: help_to_heat/templates/frontdoor/schemes.html:28
+msgid ""
+"You can create a referral to your home energy supplier, which will get in "
+"touch to arrange an assessment of your home. This will identify which "
+"insulation measures would be most suitable, to help you to keep your home "
+"warm and save you money on your energy bills. They will also advise where "
+"any additional help with the energy efficiency of your home is available."
+msgstr ""
+"Gallwch greu atgyfeiriad at eich cyflenwr ynni cartref, a fydd yn cysylltu â "
+"chi i drefnu asesiad o'ch aelwyd. Bydd hyn yn nodi pa fesurau inswleiddio "
+"fyddai fwyaf addas, i'ch helpu i gadw'ch aelwyd yn gynnes ac arbed arian "
+"ichi ar eich biliau ynni. Byddan nhw hefyd yn dweud a oes unrhyw gymorth "
+"ychwanegol ar gael ynglŷn ag effeithlonrwydd ynni eich aelwyd."
+
+#: help_to_heat/templates/frontdoor/schemes.html:29
+msgid ""
+"Depending on the outcome of the assessment, you may be asked to make a "
+"financial contribution for an installation to go ahead. It would then be "
+"your decision whether you wish to proceed."
+msgstr ""
+"Gan ddibynnu ar ganlyniad yr asesiad, efallai y gofynnir ichi wneud "
+"cyfraniad ariannol er mwyn i’r gwaith fynd yn ei flaen. Eich penderfyniad "
+"chi wedyn yw a ydych chi am fwrw ymlaen ai peidio."
+
+#: help_to_heat/templates/frontdoor/schemes.html:35
+msgid "Create a referral"
+msgstr "Creu atgyfeiriad"
+
+#: help_to_heat/templates/frontdoor/schemes.html:47
+msgid ""
+"This is likely because your property's council tax band is too high. This "
+"service is for properties in an eligible council tax band (A to D in England "
+"and A to E in Scotland and Wales)."
+msgstr ""
+"Y rheswm tebygol am hyn yw bod band treth gyngor eich eiddo yn rhy uchel. "
+"Mae'r gwasanaeth hwn ar gyfer eiddo mewn band treth gyngor cymwys (A i D yn "
+"Lloegr ac A i E yng Nghymru a'r Alban)."
+
+#: help_to_heat/templates/frontdoor/service_unavailable.html:4
+msgid ""
+"Service unavailable - Check eligibility for Great British Insulation Scheme "
+"- GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/success.html:4
+msgid ""
+"Referral completed - Check eligibility for Great British Insulation Scheme - "
+"GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/success.html:12
+#, python-format
+msgid "Your details have been submitted to %(supplier)s"
+msgstr "Mae'ch manylion chi wedi'u cyflwyno i %(supplier)s"
+
+#: help_to_heat/templates/frontdoor/success.html:15
+msgid ""
+"If you provided an email address in your referral then we have sent you a "
+"confirmation email."
+msgstr ""
+"Os rhoesoch chi gyfeiriad ebost yn eich atgyfeiriad, yna rydyn ni wedi anfon "
+"neges gadarnhau atoch."
+
+#: help_to_heat/templates/frontdoor/success.html:16
+#: help_to_heat/templates/frontdoor/success.html:29
+msgid "You can "
+msgstr "Gallwch "
+
+#: help_to_heat/templates/frontdoor/success.html:16
+msgid "save or print a copy of your referral"
+msgstr "gadw neu argraffu copi o'ch atgyfeiriad"
+
+#: help_to_heat/templates/frontdoor/success.html:17
+msgid "What happens next?"
+msgstr "Beth sy'n digwydd nesaf?"
+
+#: help_to_heat/templates/frontdoor/success.html:19
+msgid ""
+"We have sent your referral to the energy supplier you selected. They will "
+"contact you within 10 working days to confirm they have received this and "
+"about next steps."
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/success.html:21
+msgid "You do not need to create another referral at any point."
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/success.html:23
+msgid ""
+"Once the energy supplier has confirmed they have received your referral, "
+"they will review this and determine whether your property is applicable for "
+"energy efficiency improvements. They may ask you for more information. You "
+"will be notified of the outcome of the review process."
+msgstr ""
+"Unwaith y bydd y cyflenwr ynni wedi cadarnhau eu bod wedi cael eich "
+"atgyfeiriad, fe fyddan nhw'n adolygu'ch atgyfeiriad ac yn penderfynu a yw "
+"eich eiddo yn gymwys i gael gwelliannau i'r cartref. Efallai y byddan nhw'n "
+"gofyn am ragor o wybodaeth. Cewch wybod am ganlyniad y broses adolygu."
+
+#: help_to_heat/templates/frontdoor/success.html:25
+msgid ""
+"Properties that are applicable for home energy efficiency improvements must "
+"have a home survey completed. Your energy supplier will organise this with "
+"you."
+msgstr ""
+"Rhaid i eiddo sy'n gymwys i gael gwelliannau i'r cartref gael arolwg cartref "
+"wedi'i gwblhau. Bydd eich cyflenwr ynni yn trefnu hyn gyda chi."
+
+#: help_to_heat/templates/frontdoor/success.html:27
+msgid ""
+"Contacting the energy supplier about your referral after 10 working days"
+msgstr ""
+"Cysylltu â'r cyflenwr ynni ynghylch eich atgyfeiriad ar ôl 10 diwrnod gwaith"
+
+#: help_to_heat/templates/frontdoor/success.html:29
+msgid "find contact details for the energy supplier (opens in new tab)"
+msgstr ""
+"ddod o hyd i fanylion cysylltu'r cyflenwr ynni (yn agor mewn tab newydd)"
+
+#: help_to_heat/templates/frontdoor/success.html:29
+msgid " if you need to contact them."
+msgstr "os oes angen ichi gysylltu â nhw."
+
+#: help_to_heat/templates/frontdoor/success.html:31
+msgid ""
+"You do not need to contact the energy supplier unless it has been more than "
+"10 working days since you submitted the referral and you have not yet "
+"received a confirmation email from them."
+msgstr ""
+"Does dim angen ichi gysylltu â'r cyflenwr ynni oni bai wedi mwy na X o "
+"ddiwrnodau gwaith wedi mynd heibio ers ichi gyflwyno'r atgyfeiriad ac nad "
+"ydych wedi cael neges gadarnhau ganddyn nhw drwy'r ebost eto."
+
+#: help_to_heat/templates/frontdoor/success.html:33
+msgid "Access more household energy support"
+msgstr "Sicrhau mwy o gymorth gydag ynni cartref"
+
+#: help_to_heat/templates/frontdoor/success.html:34
+msgid "You can:"
+msgstr "Rydych chi'n gallu:"
+
+#: help_to_heat/templates/frontdoor/success.html:36
+msgid "get "
+msgstr "cael "
+
+#: help_to_heat/templates/frontdoor/success.html:36
+msgid ""
+"help with your energy bills from the Help for Households service (opens in a "
+"new tab)"
+msgstr ""
+"help gyda'ch biliau ynni gan y gwasanaeth Cymorth i Aelwydydd (yn agor mewn "
+"tab newydd)"
+
+#: help_to_heat/templates/frontdoor/success.html:37
+#: help_to_heat/templates/frontdoor/success.html:38
+msgid "visit "
+msgstr "edrych ar "
+
+#: help_to_heat/templates/frontdoor/success.html:37
+msgid ""
+"household energy-saving tips from the Energy Savings Trust (opens in a new "
+"tab)"
+msgstr ""
+"awgrymiadau arbed ynni gartref gan yr Ymddiriedolaeth Arbed Ynni (yn agor "
+"mewn tab newydd)"
+
+#: help_to_heat/templates/frontdoor/success.html:38
+msgid "household'energy-saving tips from Citizen's Advice (opens in a new tab)"
+msgstr ""
+"awgrymiadau arbed ynni gartref gan Gyngor ar Bopeth (yn agor mewn tab newydd)"
+
+#: help_to_heat/templates/frontdoor/summary.html:5
+msgid ""
+"A summary of your answers - Check eligibility for Great British Insulation "
+"Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/summary.html:11
+msgid "Check your answers"
+msgstr "Gwiriwch eich atebion"
+
+#: help_to_heat/templates/frontdoor/supplier.html:5
+msgid ""
+"Choose your supplier - Check eligibility for Great British Insulation Scheme "
+"- GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/supplier.html:18
+msgid ""
+"If your home energy supplier is not listed, you can select any energy "
+"supplier from the list"
+msgstr ""
+"Os nad yw'ch cyflenwr ynni cartref chi wedi'i restru, cewch ddewis unrhyw "
+"gyflenwr ynni o'r rhestr"
+
+#: help_to_heat/templates/frontdoor/wall-insulation.html:5
+msgid ""
+"Do your walls have insulation? - Check eligibility for Great British "
+"Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/wall-insulation.html:14
+msgid "Are your walls insulated?"
+msgstr "Ydy'ch waliau chi wedi'u hinswleiddio?"
+
+#: help_to_heat/templates/frontdoor/wall-insulation.html:18
+msgid ""
+"Cavity walls built before 1991 are typically uninsulated, unless you or "
+"someone before you had insulation installed."
+msgstr ""
+"At ei gilydd, dyw waliau ceudod a adeiladwyd cyn 1991 ddim wedi'u "
+"hinswleiddio, oni bai eich bod chi neu rywun cyn chi wedi trefnu i "
+"insiwleiddiad gael ei osod."
+
+#: help_to_heat/templates/frontdoor/wall-insulation.html:22
+msgid ""
+"Cavity walls built after 1991 were typically built with insulating material "
+"between the outer and inner walls."
+msgstr ""
+"Fel arfer, cafodd waliau ceudod a adeiladwyd ar ôl 1991 eu hadeiladu â "
+"deunydd inswleiddio rhwng y waliau allanol a mewnol."
+
+#: help_to_heat/templates/frontdoor/wall-insulation.html:32
+msgid ""
+"Homes built after 1991 were typically built with insulating material between "
+"the outer and inner walls."
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/wall-insulation.html:34
+msgid ""
+"If your home was converted, for example it was a shop or other commercial "
+"premises before, it may have been built without insulation."
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/wall-type.html:5
+msgid ""
+"What type of walls does your property have? - Check eligibility for Great "
+"British Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/wall-type.html:14
+msgid "What kind of walls does your property have?"
+msgstr "Pa fath o waliau sydd gan eich eiddo?"
+
+#: help_to_heat/templates/frontdoor/wall-type.html:18
+msgid ""
+"Solid walls may be made from brick or stone. If your home was built before "
+"1930, it's likely to have solid walls."
+msgstr ""
+"Gall waliau solet fod wedi'u gwneud o frics neu gerrig. Os cafodd eich "
+"aelwyd ei godi cyn 1930, mae'n debygol mai waliau solet sydd ganddo."
+
+#: help_to_heat/templates/frontdoor/wall-type.html:22
+msgid ""
+"Most homes built after 1930 have cavity walls. Cavity walls have a gap, or "
+"cavity, between the wall outside and wall inside."
+msgstr ""
+"Mae gan y rhan fwyaf o aelwydydd a adeiladwyd ar ôl 1930 waliau ceudod. Mae "
+"gan waliau ceudod fwlch, neu geudod, rhwng y wal y tu allan a'r wal y tu "
+"mewn."
+
+#: help_to_heat/templates/frontdoor/wall-type.html:26
+msgid ""
+"You may have both types. For example, you have a pre-1930 home with an "
+"extension built later than 1930."
+msgstr ""
+"Efallai bod gennych chi'r ddau fath, er enghraifft, bod gennych chi gartref "
+"cyn 1930 gydag estyniad a gafodd ei godi yn hwyrach na 1930."
+
+#: help_to_heat/templates/frontdoor/wall-type.html:32
+msgid "Help me choose which wall type I have"
+msgstr "Helpwch fi i ddewis pa fath o wal sydd gen i"
+
+#: help_to_heat/templates/frontdoor/wall-type.html:37
+msgid ""
+"Solid brick walls will have an alternating pattern, with some bricks laid "
+"across the wall so you can see the smaller ends from the outside."
+msgstr ""
+"Bydd gan waliau brics solet batrwm bob yn ail, gyda rhai brics wedi'u gosod "
+"ar draws y wal fel y gallwch weld y pennau llai o'r tu allan."
+
+#: help_to_heat/templates/frontdoor/wall-type.html:41
+msgid ""
+"If your home has cavity walls, the bricks typically have an even pattern "
+"with all bricks laid lengthways."
+msgstr ""
+"Os oes gan eich aelwyd waliau ceudod, fel arfer mae gan y brics batrwm cyson "
+"gyda'r holl frics wedi'u gosod ar eu hyd."
+
+#: help_to_heat/templates/frontdoor/wall-type.html:45
+msgid ""
+"If the brickwork has been covered, you may be able to tell by measuring the "
+"width of the wall. Measure the depth of the wall by a window or door on one "
+"of your external walls."
+msgstr ""
+"Os yw'r gwaith brics wedi'i orchuddio, efallai y byddwch yn gallu dweud trwy "
+"fesur lled y wal. Mesurwch ddyfnder y wal wrth ffenestr neu ddrws ar un o'ch "
+"waliau allanol."
+
+#: help_to_heat/templates/frontdoor/wall-type.html:49
+msgid ""
+"If a brick wall is more than 260mm thick, then it is probably a cavity wall."
+msgstr ""
+"Os yw wal frics yn fwy na 260mm o drwch, yna mae'n debyg mai wal ceudod yw "
+"hi."
+
+#: help_to_heat/templates/frontdoor/wall-type.html:53
+msgid ""
+"A narrower wall is probably a solid wall. Stone walls may be thicker still "
+"but are usually solid."
+msgstr ""
+"Mae'n debygol bod wal gulach yn wal solet. Gall waliau cerrig fod yn fwy "
+"trwchus o hyd ond fel arfer maen nhw'n solet."
+
+#: help_to_heat/templates/macros.html:1
+msgid "Continue"
+msgstr "Parhau"
+
+#: help_to_heat/templates/macros.html:77
+msgid "There is a problem"
+msgstr "Mae yna broblem"
+
+#: help_to_heat/templates/macros.html:104
+msgid "Change"
+msgstr "Newid"
+
+#: help_to_heat/templates/macros.html:120
+msgid "Find other support"
+msgstr "Dod o hyd i gymorth arall"
+
+#: help_to_heat/templates/macros.html:122
+msgid ""
+"Check out what other help you can get with your energy bills from the "
+"government's "
+msgstr ""
+"Edrychwch i weld pa help arall y gallwch ei gael gyda'ch biliau ynni drwy "
+"gynllun y llywodraeth, "
+
+#: help_to_heat/templates/macros.html:123
+msgid "Help for Households"
+msgstr "Cymorth i Aelwydydd"
+
+#: help_to_heat/templates/macros.html:126
+msgid "Find out if you can get support from your local council from the "
+msgstr "Darganfyddwch a allwch chi gael cymorth gan eich cyngor lleol drwy'r "
+
+#: help_to_heat/templates/macros.html:127
+msgid "Household Support Fund"
+msgstr "Gronfa Cymorth i Aelwydydd"

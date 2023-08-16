@@ -1,84 +1,99 @@
 {% extends "frontdoor/base.html" %}
 
 {% block title %}
-  <title>Homepage - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+<title>{{_("Homepage - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-      <h1 class="govuk-heading-l">Check if you may be eligible for the Great British Insulation Scheme</h1>
+<div class="govuk-grid-row">
 
-      <p class="govuk-body">You can use this service to:</p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li>check if you may be eligible for help to insulate your property</li>
-        <li>create a referral to an energy supplier to verify eligibility, assess your property and confirm what insulation could be offered</li>
-      </ul>
+  <div class="govuk-grid-column-two-thirds">
+    <h1 class="govuk-heading-l">{{_("Check if you may be eligible for the Great British Insulation Scheme")}}</h1>
 
-      <p class="govuk-body">After your referral is created, an energy supplier may need to organise for an installer to visit your property and check which measures are suitable.</p>
+    <p class="govuk-body">{{_("You can use this service to:")}}</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>{{_("check if you may be eligible for help to insulate your property")}}</li>
+      <li>{{_("create a referral to an energy supplier to verify eligibility, assess your property and confirm what
+        insulation could be offered")}}</li>
+    </ul>
 
-      <p class="govuk-body">You should be contacted within 10 working days by the supplier, but the overall process may take several months to complete.</p>
+    <p class="govuk-body">{{_("After your referral is created, an energy supplier may need to organise for an installer to
+      visit your property and check which measures are suitable.")}}</p>
 
-      <p class="govuk-body">You may be asked to make a financial contribution, depending on the outcome of the property assessment and insulation recommended.</p>
+    <p class="govuk-body">{{_("You should be contacted within 10 working days by the supplier, but the overall process may
+      take several months to complete.")}}</p>
 
-      <h2 class="govuk-heading-m">Insulation measures you can get referred for </h2>
+    <p class="govuk-body">{{_("You may be asked to make a financial contribution, depending on the outcome of the property
+      assessment and insulation recommended.")}}</p>
 
-      <p class="govuk-body">The following measures are available through the Great British Insulation Scheme. An assessment of your property will identify which would be best for you, to help you to keep your home warm and save you money on your energy bills:</p>
+    <h2 class="govuk-heading-m">{{_("Insulation measures you can get referred for")}}</h2>
 
-      <ul class="govuk-list govuk-list--bullet">
-        <li>cavity wall insulation</li>
-        <li>solid wall insulation (internal or external)</li>
-        <li>loft insulation</li>
-        <li>flat or pitched roof insulation</li>
-        <li>underfloor insulation</li>
-        <li>solid floor insulation</li>
-        <li>park home insulation</li>
-        <li>room-in-roof insulation</li>
-      </ul>
+    <p class="govuk-body">{{_("The following measures are available through the Great British Insulation Scheme. An
+      assessment of your property will identify which would be best for you, to help you to keep your home warm and save
+      you money on your energy bills:")}}</p>
 
-      <p class="govuk-body">You will also be advised if any other help with improving the energy efficiency of your home is available.</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>{{_("cavity wall insulation")}}</li>
+      <li>{{_("solid wall insulation (internal or external)")}}</li>
+      <li>{{_("loft insulation")}}</li>
+      <li>{{_("flat or pitched roof insulation")}}</li>
+      <li>{{_("underfloor insulation")}}</li>
+      <li>{{_("solid floor insulation")}}</li>
+      <li>{{_("park home insulation")}}</li>
+      <li>{{_("room-in-roof insulation")}}</li>
+    </ul>
 
-      <h2 class="govuk-heading-m">Who can use this service </h2>
-      <p class="govuk-body">You can use this service if you are: </p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li>a homeowner or landlord</li>
-        <li>a tenant who rents from a private landlord, estate agent, or a housing association</li>
-      </ul>
-      <p class="govuk-body">If you are a tenant, you will need your landlord’s permission before any insulation can be installed. You should speak to your landlord before using this service.</p>
+    <p class="govuk-body">{{_("You will also be advised if any other help with improving the energy efficiency of your home
+      is available.")}}</p>
 
-      <h2 class="govuk-heading-m">Before you start</h2>
-      <p class="govuk-body">You will be asked for information about: </p>
-      <ul class="govuk-list govuk-list--bullet">
-        <li>the address and Council Tax band of the property</li>
-        <li>any benefits you, or anyone living in your household receives as this helps determine if you may be eligible for additional measures through these schemes</li>
-        <li>whether your household income is above or below £31,000 per year</li>
-        <li>details of the type of walls and insulation in the property</li>
-      </ul>
+    <h2 class="govuk-heading-m">{{_("Who can use this service ")}}</h2>
+    <p class="govuk-body">{{_("You can use this service if you are: ")}}</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>{{_("a homeowner or landlord")}}</li>
+      <li>{{_("a tenant who rents from a private landlord, estate agent, or a housing association")}}</li>
+    </ul>
+    <p class="govuk-body">{{_("If you are a tenant, you will need your landlord’s permission before any insulation can be
+      installed. You should speak to your landlord before using this service.")}}</p>
 
-      <p class="govuk-body">If you are applying as a landlord, you will need to provide these details for the occupants of the property.</p>
-      <p class="govuk-body">You will be asked to give permission for your details to be shared with an energy supplier and installers they work with before you are referred. If you do not want to share your information or proceed with the application, you can close the service at any time.</p>
+    <h2 class="govuk-heading-m">{{_("Before you start")}}</h2>
+    <p class="govuk-body">{{_("You will be asked for information about: ")}}</p>
+    <ul class="govuk-list govuk-list--bullet">
+      <li>{{_("the address and Council Tax band of the property")}}</li>
+      <li>{{_("any benefits you, or anyone living in your household receives as this helps determine if you may be eligible
+        for additional measures through these schemes")}}</li>
+      <li>{{_("whether your household income is above or below £31,000 per year")}}</li>
+      <li>{{_("details of the type of walls and insulation in the property")}}</li>
+    </ul>
 
-      <a href="{{next_url}}" role="button" draggable="false" class="govuk-button govuk-button--start" data-module="govuk-button">
-        Start now
-        <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19"
-          viewBox="0 0 33 40" aria-hidden="true" focusable="false">
-          <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
-        </svg>
-      </a>
+    <p class="govuk-body">{{_("If you are applying as a landlord, you will need to provide these details for the occupants of
+      the property.")}}</p>
+    <p class="govuk-body">{{_("You will be asked to give permission for your details to be shared with an energy supplier and
+      installers they work with before you are referred. If you do not want to share your information or proceed with
+      the application, you can close the service at any time.")}}</p>
 
-      <h2 class="govuk-heading-m">If you need help to apply </h2>
-      <p class="govuk-body">If you cannot apply online or need help with your application, contact the helpline team.</p>
+    <a href="{{next_url}}" role="button" draggable="false" class="govuk-button govuk-button--start"
+      data-module="govuk-button">
+      {{_("Start now")}}
+      <svg class="govuk-button__start-icon" xmlns="http://www.w3.org/2000/svg" width="17.5" height="19"
+        viewBox="0 0 33 40" aria-hidden="true" focusable="false">
+        <path fill="currentColor" d="M0 0h13l20 20-20 20H0l20-20z" />
+      </svg>
+    </a>
 
-      <ul class="govuk-list">
-        <li>Telephone: 0800 098 7938</li>
-        <li>Monday to Friday, 8am to 6pm (except bank holidays)</li>
-        <li>Saturday, 9am to 12pm</li>
-      </ul>
-      <p class="govuk-body">
-        <a class="govuk-link" href="https://www.gov.uk/call-charges" target="_blank" rel="noopener" role="link">Find out about call charges</a>
-      </p>
+    <h2 class="govuk-heading-m">{{_("If you need help to apply ")}}</h2>
+    <p class="govuk-body">{{_("If you cannot apply online or need help with your application, contact the helpline team.")}}</p>
 
-    </div>
+    <ul class="govuk-list">
+      <li>{{_("Telephone: 0800 098 7938")}}</li>
+      <li>{{_("Monday to Friday, 8am to 6pm (except bank holidays)")}}</li>
+      <li>{{_("Saturday, 9am to 12pm")}}</li>
+    </ul>
+    <p class="govuk-body">
+      <a class="govuk-link" href="https://www.gov.uk/call-charges" target="_blank" rel="noopener" role="link">{{_("Find out
+        about call charges")}}</a>
+    </p>
+
   </div>
+</div>
 
 {% endblock %}

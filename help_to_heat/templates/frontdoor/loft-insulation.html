@@ -2,7 +2,7 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>Does your loft have insulation? - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("Does your loft have insulation? - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
@@ -11,23 +11,22 @@
       <fieldset class="govuk-fieldset" {% if errors %} aria-describedby="question-loft_insulation-error" {% endif %}>
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
           <h1 class="govuk-fieldset__heading">
-            Is your loft fully insulated?
+            {{_("Is your loft fully insulated?")}}
           </h1>
         </legend>
-        <p class="govuk-body">A loft is fully insulated if it has more than 270mm (about 10-11 inches) of insulation
-          covering the whole loft, usually laid on the "floor" of the loft with one layer
-          between the horizontal timbers and another layer going across them to bring the insulation
-          up to the required level.</p>
+        <p class="govuk-body">
+          {{_("A loft is fully insulated if it has more than 270mm (about 10-11 inches) of insulation covering the whole loft, usually laid on the 'floor' of the loft with one layer between the horizontal timbers and another layer going across them to bring the insulation up to the required level.")}}
+        </p>
 
         <details class="govuk-details" data-module="govuk-details">
           <summary class="govuk-details__summary">
             <span class="govuk-details__summary-text">
-              Help me answer this question
+              {{_("Help me answer this question")}}
             </span>
           </summary>
           <div class="govuk-details__text">
             <p class="govuk-body">
-              If your home was built after 2002, or you have installed loft insulation since 2002, it is likely that it is fully insulated.
+              {{_("If your home was built after 2002, or you have installed loft insulation since 2002, it is likely that it is fully insulated.")}}
             </p>
           </div>
         </details>

@@ -2,7 +2,7 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>Do you own your own property? - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("Do you own your own property? - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
@@ -11,7 +11,7 @@
       <fieldset class="govuk-fieldset" {% if errors %} aria-describedby="question-own_property-error" {% endif %}>
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
           <h1 class="govuk-fieldset__heading">
-            Do you own the property?
+            {{_("Do you own the property?")}}
           </h1>
         </legend>
 

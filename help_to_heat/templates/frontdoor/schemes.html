@@ -2,21 +2,21 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>Schemes you are eligible for - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("Schemes you are eligible for - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
 
   {% if eligible_schemes %}
-    <a href="{{prev_url}}" class="govuk-back-link">Back</a>
+    <a href="{{prev_url}}" class="govuk-back-link">{{_("Back")}}</a>
     <div class="govuk-grid-row">
       <div class="govuk-grid-column-two-thirds">
 
         <form method="POST" novalidate>
           {{csrf_input}}
           <div class="govuk-form-group">
-            <h1 class="govuk-heading-l">Information based on your answers</h1>
-            <p class="govuk-body">Based on your answers you can register for help through:</p>
+            <h1 class="govuk-heading-l">{{_("Information based on your answers")}}</h1>
+            <p class="govuk-body">{{_("Based on your answers you can register for help through:")}}</p>
           </div>
 
           <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
@@ -25,14 +25,14 @@
               <p class="govuk-notification-banner__heading">
 
                 <h2 class="govuk-heading-m">{{eligible_schemes|join(", ")}}</h2>
-                <p class="govuk-body">You can create a referral to your home energy supplier, which will get in touch to arrange an assessment of your home. This will identify which insulation measures would be most suitable, to help you to keep your home warm and save you money on your energy bills. They will also advise where any additional help with the energy efficiency of your home is available.</p>
-                <p class="govuk-body">Depending on the outcome of the assessment, you may be asked to make a financial contribution for an installation to go ahead. It would then be your decision whether you wish to proceed.</p>
+                <p class="govuk-body">{{_("You can create a referral to your home energy supplier, which will get in touch to arrange an assessment of your home. This will identify which insulation measures would be most suitable, to help you to keep your home warm and save you money on your energy bills. They will also advise where any additional help with the energy efficiency of your home is available.")}}</p>
+                <p class="govuk-body">{{_("Depending on the outcome of the assessment, you may be asked to make a financial contribution for an installation to go ahead. It would then be your decision whether you wish to proceed.")}}</p>
               </p>
             </div>
           </div>
 
           <button class="govuk-button" data-module="govuk-button">
-            Create a referral
+            {{_("Create a referral")}}
           </button>
         </form>
       </div>
@@ -42,9 +42,9 @@
 
     {% call macros.further_help() -%}
 
-      <h1 class="govuk-heading-l">Your property is not eligible</h1>
+      <h1 class="govuk-heading-l">{{_("Your property is not eligible")}}</h1>
 
-      <p class="govuk-body">This is likely because your property's council tax band is too high. This service is for properties in an eligible council tax band (A to D in England and A to E in Scotland and Wales).</p>
+      <p class="govuk-body">{{_("This is likely because your property's council tax band is too high. This service is for properties in an eligible council tax band (A to D in England and A to E in Scotland and Wales).")}}</p>
 
     {%- endcall %}
 

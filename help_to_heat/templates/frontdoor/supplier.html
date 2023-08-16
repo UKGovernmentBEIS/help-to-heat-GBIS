@@ -2,7 +2,7 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>Choose your supplier - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("Choose your supplier - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
@@ -11,11 +11,11 @@
       <fieldset class="govuk-fieldset"{% if errors %} aria-describedby="question-supplier-error" {% endif %}>
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
           <h1 class="govuk-fieldset__heading">
-            Select your home energy supplier from the list below
+            {{_("Select your home energy supplier from the list below")}}
           </h1>
         </legend>
 
-        <p class="govuk-body">If your home energy supplier is not listed, you can select any energy supplier from the list.</p>
+        <p class="govuk-body">{{_("If your home energy supplier is not listed, you can select any energy supplier from the list")}}.</p>
 
         {{macros.radios('supplier', supplier_options, data, errors)}}
 

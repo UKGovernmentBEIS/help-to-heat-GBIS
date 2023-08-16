@@ -2,7 +2,7 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>Do your walls have insulation? - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("Do your walls have insulation? - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
@@ -11,28 +11,27 @@
       <fieldset class="govuk-fieldset"{% if errors %} aria-describedby="question-wall_insulation-error" {% endif %}>
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
           <h1 class="govuk-fieldset__heading">
-            Are your walls insulated?
+            {{_("Are your walls insulated?")}}
           </h1>
         </legend>
         <p class="govuk-body">
-          Cavity walls built before 1991 are typically uninsulated, unless you or someone before you had insulation installed.
+          {{_("Cavity walls built before 1991 are typically uninsulated, unless you or someone before you had insulation installed.")}}
         </p>
 
         <p class="govuk-body">
-          Cavity walls built after 1991 were typically built with insulating material between the outer and inner walls.
+          {{_("Cavity walls built after 1991 were typically built with insulating material between the outer and inner walls.")}}
         </p>
 
         <details class="govuk-details" data-module="govuk-details">
           <summary class="govuk-details__summary">
             <span class="govuk-details__summary-text">
-              Help me answer this question
+              {{_("Help me answer this question")}}
             </span>
           </summary>
           <div class="govuk-details__text">
-            <p class="govuk-body">Homes built after 1991 were typically built with insulating material between the
-              outer and inner walls.</p>
+            <p class="govuk-body">{{_("Homes built after 1991 were typically built with insulating material between the outer and inner walls.")}}</p>
             <p class="govuk-body">
-              If your home was converted, for example it was a shop or other commercial premises before, it may have been built without insulation.
+              {{_("If your home was converted, for example it was a shop or other commercial premises before, it may have been built without insulation.")}}
             </p>
           </div>
         </details>

@@ -1,7 +1,7 @@
 {% extends "frontdoor/base.html" %}
 
 {% block title %}
-  <title>Referral completed - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("Referral completed - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
@@ -9,33 +9,33 @@
     <div class="govuk-grid-column-two-thirds">
       <div class="govuk-panel govuk-panel--confirmation">
         <h1 class="govuk-panel__title">
-          Your details have been submitted to {{supplier}}
+          {{_("Your details have been submitted to %(supplier)s") % { "supplier": supplier }}}
         </h1>
       </div>
-      <p class="govuk-body">If you provided an email address in your referral then we have sent you a confirmation email.</p>
-      <p class="govuk-body">You can <a href="#" onclick="window.print();return false;" class="govuk-link">save or print a copy of your referral</a>.</p>
-      <h2 class="govuk-heading-m">What happens next?</h2>
+      <p class="govuk-body">{{_("If you provided an email address in your referral then we have sent you a confirmation email.")}}</p>
+      <p class="govuk-body">{{_("You can ")}}<a href="#" onclick="window.print();return false;" class="govuk-link">{{_("save or print a copy of your referral")}}</a>.</p>
+      <h2 class="govuk-heading-m">{{_("What happens next?")}}</h2>
 
-      <p class="govuk-body">We have sent your referral to the energy supplier you selected. They will contact you within 10 working days to confirm they have received this and about next steps.</p>
+      <p class="govuk-body">{{_("We have sent your referral to the energy supplier you selected. They will contact you within 10 working days to confirm they have received this and about next steps.")}}</p>
 
-      <p class="govuk-body">You do not need to create another referral at any point.</p>
+      <p class="govuk-body">{{_("You do not need to create another referral at any point.")}}</p>
 
-      <p class="govuk-body">Once the energy supplier has confirmed they have received your referral, they will review this and determine whether your property is applicable for energy efficiency improvements. They may ask you for more information. You will be notified of the outcome of the review process.</p>
+      <p class="govuk-body">{{_("Once the energy supplier has confirmed they have received your referral, they will review this and determine whether your property is applicable for energy efficiency improvements. They may ask you for more information. You will be notified of the outcome of the review process.")}}</p>
 
-      <p class="govuk-body">Properties that are applicable for home energy efficiency improvements must have a home survey completed. Your energy supplier will organise this with you.</p>
+      <p class="govuk-body">{{_("Properties that are applicable for home energy efficiency improvements must have a home survey completed. Your energy supplier will organise this with you.")}}</p>
 
-      <h2 class="govuk-heading-m">Contacting the energy supplier about your referral after 10 working days</h2>
+      <h2 class="govuk-heading-m">{{_("Contacting the energy supplier about your referral after 10 working days")}}</h2>
 
-      <p class="govuk-body">You can <a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/energy-company-obligation-eco/contacts-guidance-and-resources/eco-supplier-contact-details" target="_blank" rel="noopener noreferrer" class="govuk-link">find contact details for the energy supplier (opens in new tab)</a> if you need to contact them.</p>
+      <p class="govuk-body">{{_("You can ")}}<a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/energy-company-obligation-eco/contacts-guidance-and-resources/eco-supplier-contact-details" target="_blank" rel="noopener noreferrer" class="govuk-link">{{_("find contact details for the energy supplier (opens in new tab)")}}</a>{{_(" if you need to contact them.")}}</p>
 
-      <p class="govuk-body">You do not need to contact the energy supplier unless it has been more than 10 working days since you submitted the referral and you have not yet received a confirmation email from them.</p>
+      <p class="govuk-body">{{_("You do not need to contact the energy supplier unless it has been more than 10 working days since you submitted the referral and you have not yet received a confirmation email from them.")}}</p>
 
-      <h2 class="govuk-heading-m">Access more household energy support</h2>
-      <p class="govuk-body">You can:</p>
+      <h2 class="govuk-heading-m">{{_("Access more household energy support")}}</h2>
+      <p class="govuk-body">{{_("You can:")}}</p>
       <ul class="govuk-list govuk-list--bullet">
-        <li>get <a href="https://helpforhouseholds.campaign.gov.uk/help-with-your-bills/" target="_blank" rel="noopener noreferrer" class="govuk-link">help with your energy bills from the Help for Households service (opens in a new tab)</a></li>
-        <li>visit <a href="https://energysavingtrust.org.uk/hub/quick-tips-to-save-energy/" target="_blank" rel="noopener noreferrer" class="govuk-link">household energy-saving tips from the Energy Savings Trust (opens in a new tab)</a></li>
-        <li>visit <a href="https://www.citizensadvice.org.uk/consumer/energy/energy-supply/" class="govuk-link" target="_blank" rel="noopener noreferrer">household'energy-saving tips from Citizen's Advice (opens in a new tab)</a></li>
+        <li>{{_("get ")}}<a href="https://helpforhouseholds.campaign.gov.uk/help-with-your-bills/" target="_blank" rel="noopener noreferrer" class="govuk-link">{{_("help with your energy bills from the Help for Households service (opens in a new tab)")}}</a></li>
+        <li>{{_("visit ")}}<a href="https://energysavingtrust.org.uk/hub/quick-tips-to-save-energy/" target="_blank" rel="noopener noreferrer" class="govuk-link">{{_("household energy-saving tips from the Energy Savings Trust (opens in a new tab)")}}</a></li>
+        <li>{{_("visit ")}}<a href="https://www.citizensadvice.org.uk/consumer/energy/energy-supply/" class="govuk-link" target="_blank" rel="noopener noreferrer">{{_("household'energy-saving tips from Citizen's Advice (opens in a new tab)")}}</a></li>
       </ul>
 
     </div>
