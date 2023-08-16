@@ -2,7 +2,7 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>Is there a loft? - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("Is there a loft? - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
@@ -11,21 +11,21 @@
       <fieldset class="govuk-fieldset" {% if errors %} aria-describedby="question-loft-error" {% endif %}>
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
           <h1 class="govuk-fieldset__heading">
-            Do you have a loft that hasn't been converted into a room?
+            {{_("Do you have a loft that hasn't been converted into a room?")}}
           </h1>
         </legend>
         <details class="govuk-details" data-module="govuk-details">
           <summary class="govuk-details__summary">
             <span class="govuk-details__summary-text">
-              Help me decide if I have a loft
+              {{_("Help me decide if I have a loft")}}
             </span>
           </summary>
           <div class="govuk-details__text">
             <p class="govuk-body">
-              A loft is an unheated space without walls and ceilings, immediately beneath the pitched roof. You will usually be able to see the roof timbers.
+              {{_("A loft is an unheated space without walls and ceilings, immediately beneath the pitched roof. You will usually be able to see the roof timbers.")}}
             </p>
             <p class="govuk-body">
-              If all the space under your pitched roof, or nearly all the space, is used as living space with finished walls and ceilings then the loft has been converted into a room.
+              {{_("If all the space under your pitched roof, or nearly all the space, is used as living space with finished walls and ceilings then the loft has been converted into a room.")}}
             </p>
           </div>
         </details>

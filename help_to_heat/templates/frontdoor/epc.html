@@ -2,33 +2,32 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>What is the EPC of this property? - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("What is the EPC of this property? - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
   {% call macros.form_wrapper(prev_url) -%}
 
-  <span class="govuk-caption-l">Find your EPC</span>
-  <h1 class="govuk-heading-l">We found an Energy Performance Certificate that might be yours</h1>
+  <span class="govuk-caption-l">{{_("Find your EPC")}}</span>
+  <h1 class="govuk-heading-l">{{_("We found an Energy Performance Certificate that might be yours")}}</h1>
 
-  <p class="govuk-body">This certificate may be registered to your property or one of the properties nearby that
-    shares part of your address.</p>
+  <p class="govuk-body">{{_("This certificate may be registered to your property or one of the properties nearby that shares part of your address.")}}</p>
 
   <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title"
     data-module="govuk-notification-banner">
     <div class="govuk-notification-banner__header">
       <h2 class="govuk-notification-banner__title" id="govuk-notification-banner-title">
-        Certificate
+        {{_("Certificate")}}
       </h2>
     </div>
     <div class="govuk-notification-banner__content">
 
-      <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">Registered address</p>
+      <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">{{_("Registered address")}}</p>
       {% for part in address.split(',') %}
         <p class="govuk-body govuk-!-margin-bottom-1">{{ part.strip() }}</p>
       {% endfor %}
 
-      <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">EPC rating</p>
+      <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">{{_("EPC rating")}}</p>
       <p class="govuk-body">{{epc_rating}}</p>
     </div>
   </div>
@@ -36,7 +35,7 @@
     <fieldset class="govuk-fieldset" {% if errors %} aria-describedby="question-accept_suggested_epc-error" {% endif %}>
       <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
         <h1 class="govuk-fieldset__heading">
-          Is this your EPC?
+          {{_("Is this your EPC?")}}
         </h1>
       </legend>
       <input type="hidden" name="epc_rating" value="{{epc_rating}}"/>
@@ -44,7 +43,6 @@
       {{macros.radios('accept_suggested_epc', epc_display_options, data, errors)}}
     </fieldset>
   </div>
-
 
   {% endcall %}
 {% endblock %}

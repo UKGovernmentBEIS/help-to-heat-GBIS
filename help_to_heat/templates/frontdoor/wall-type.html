@@ -2,7 +2,7 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>What type of walls does your property have? - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("What type of walls does your property have? - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
@@ -11,46 +11,46 @@
       <fieldset class="govuk-fieldset"{% if errors %} aria-describedby="question-wall_type-error" {% endif %}>
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
           <h1 class="govuk-fieldset__heading">
-            What kind of walls does your property have?
+            {{_("What kind of walls does your property have?")}}
           </h1>
         </legend>
         <p class="govuk-body">
-          Solid walls may be made from brick or stone. If your home was built before 1930, it’s likely to have solid walls.
+          {{_("Solid walls may be made from brick or stone. If your home was built before 1930, it's likely to have solid walls.")}}
         </p>
 
         <p class="govuk-body">
-          Most homes built after 1930 have cavity walls. Cavity walls have a gap, or cavity, between the wall outside and wall inside.
+          {{_("Most homes built after 1930 have cavity walls. Cavity walls have a gap, or cavity, between the wall outside and wall inside.")}}
         </p>
 
         <p class="govuk-body">
-          You may have both types. For example, you have a pre-1930 home with an extension built later than 1930.
+          {{_("You may have both types. For example, you have a pre-1930 home with an extension built later than 1930.")}}
         </p>
 
         <details class="govuk-details" data-module="govuk-details">
           <summary class="govuk-details__summary">
             <span class="govuk-details__summary-text">
-              Help me choose which wall type I have
+              {{_("Help me choose which wall type I have")}}
             </span>
           </summary>
           <div class="govuk-details__text">
             <p class="govuk-body">
-              Solid brick walls will have an alternating pattern, with some bricks laid across the wall so you can see the smaller ends from the outside.
+              {{_("Solid brick walls will have an alternating pattern, with some bricks laid across the wall so you can see the smaller ends from the outside.")}}
             </p>
 
             <p class="govuk-body">
-              If your home has cavity walls, the bricks typically have an even pattern with all bricks laid lengthways.
+              {{_("If your home has cavity walls, the bricks typically have an even pattern with all bricks laid lengthways.")}}
             </p>
 
             <p class="govuk-body">
-              If the brickwork has been covered, you may be able to tell by measuring the width of the wall. Measure the depth of the wall by a window or door on one of your external walls.
+              {{_("If the brickwork has been covered, you may be able to tell by measuring the width of the wall. Measure the depth of the wall by a window or door on one of your external walls.")}}
             </p>
 
             <p class="govuk-body">
-              If a brick wall is more than 260mm thick, then it is probably a cavity wall.
+              {{_("If a brick wall is more than 260mm thick, then it is probably a cavity wall.")}}
             </p>
 
             <p class="govuk-body">
-              A narrower wall is probably a solid wall. Stone walls may be thicker still but are usually solid.
+              {{_("A narrower wall is probably a solid wall. Stone walls may be thicker still but are usually solid.")}}
             </p>
 
           </div>

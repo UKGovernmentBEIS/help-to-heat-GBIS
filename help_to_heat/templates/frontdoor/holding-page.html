@@ -1,6 +1,6 @@
 {% extends "frontdoor/base.html" %}
 {% block title %}
-<title>Holding Page - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+<title>{{_("Holding Page - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 {% block content %}
 <a href="{% if previous_path %}{{ previous_path }}{% else %}{{url('frontdoor:homepage')}}{% endif %}"

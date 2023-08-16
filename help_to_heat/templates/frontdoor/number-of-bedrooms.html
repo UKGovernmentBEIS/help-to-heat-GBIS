@@ -2,7 +2,7 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>How many bedrooms does your property have? - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("How many bedrooms does your property have? - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
@@ -11,12 +11,11 @@
       <fieldset class="govuk-fieldset" {% if errors %} aria-describedby="question-number_of_bedrooms-error" {% endif %}>
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
           <h1 class="govuk-fieldset__heading">
-            How many bedrooms does the property have?
+            {{_("How many bedrooms does the property have?")}}
           </h1>
         </legend>
 
-        <p class="govuk-body">Select the total number of bedrooms the property has. Include all bedrooms even if you use
-          them for something else, like a home office.</p>
+        <p class="govuk-body">{{_("Select the total number of bedrooms the property has. Include all bedrooms even if you use them for something else, like a home office.")}}</p>
 
         {{macros.radios('number_of_bedrooms', number_of_bedrooms_options, data, errors)}}
 

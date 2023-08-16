@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.templatetags.static import static
 from django.urls import reverse
 from django.utils.text import slugify
+from django.utils.translation import gettext
 
 
 def url(path, *args, **kwargs):
@@ -43,6 +44,8 @@ def environment(**options):
             "slugify": slugify,
             "is_checked": is_checked,
             "gtag_id": settings.GTAG_ID,
+            "_": gettext,
         }
     )
+
     return env

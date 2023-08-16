@@ -2,7 +2,7 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>Do you have access to the loft? - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("Do you have access to the loft? - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
@@ -11,15 +11,13 @@
       <fieldset class="govuk-fieldset" {% if errors %} aria-describedby="question-loft_access-error" {% endif %}>
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
           <h1 class="govuk-fieldset__heading">
-            Is there access to your loft?
+            {{_("Is there access to your loft?")}}
           </h1>
         </legend>
-        <p class="govuk-body">You may have a loft hatch, access ladder or stairs that could allow an insulation
-          installer to get into the loft space.</p>
+        <p class="govuk-body">{{_("You may have a loft hatch, access ladder or stairs that could allow an insulation installer to get into the loft space.")}}</p>
 
         <div class="govuk-inset-text">
-          <p class="govuk-body">Homes of your type typically <span class="govuk-!-font-weight-bold">have access to
-            their loft</span></p>
+          <p class="govuk-body">{{_("Homes of your type typically ")}}<span class="govuk-!-font-weight-bold">{{_("have access to their loft")}}</span></p>
         </div>
 
         {{macros.radios('loft_access', loft_access_options, data, errors)}}

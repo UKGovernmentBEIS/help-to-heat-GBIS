@@ -2,7 +2,7 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>Do you receive benefits? - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("Do you receive benefits? - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
@@ -11,27 +11,27 @@
       <fieldset class="govuk-fieldset"{% if errors %} aria-describedby="question-benefits-error" {% endif %}>
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
           <h1 class="govuk-fieldset__heading">
-            Is anyone in your household receiving any of the following benefits?
+            {{_("Is anyone in your household receiving any of the following benefits?")}}
           </h1>
         </legend>
 
-        <p class="govuk-body">This information is used to determine the level of support you can get. There is energy-saving help for those who receive benefits as well as those who don't.</p>
+        <p class="govuk-body">{{_("This information is used to determine the level of support you can get. There is energy-saving help for those who receive benefits as well as those who don't.")}}</p>
 
-        <p class="govuk-body">Select yes if they are receiving any of the following:</p>
+        <p class="govuk-body">{{_("Select yes if they are receiving any of the following:")}}</p>
 
         <ul class="govuk-list govuk-list--bullet">
-          <li>Income based Jobseekers Allowance</li>
-          <li>Income related Employment and Support Allowance</li>
-          <li>Income Support</li>
-          <li>Pension Credit Guarantee Credit</li>
-          <li>Working Tax Credit</li>
-          <li>Child Tax Credit</li>
-          <li>Universal Credit</li>
-          <li>Housing Benefit</li>
-          <li>Pension Credit Savings Credit</li>
-          <li>Child Benefit</li>
+          <li>{{_("Income based Jobseekers Allowance")}}</li>
+          <li>{{_("Income related Employment and Support Allowance")}}</li>
+          <li>{{_("Income Support")}}</li>
+          <li>{{_("Pension Credit Guarantee Credit")}}</li>
+          <li>{{_("Working Tax Credit")}}</li>
+          <li>{{_("Child Tax Credit")}}</li>
+          <li>{{_("Universal Credit")}}</li>
+          <li>{{_("Housing Benefit")}}</li>
+          <li>{{_("Pension Credit Savings Credit")}}</li>
+          <li>{{_("Child Benefit")}}</li>
         </ul>
-        <p class="govuk-body">You may be asked to provide evidence of this at a later stage.</p>
+        <p class="govuk-body">{{_("You may be asked to provide evidence of this at a later stage.")}}</p>
 
         {{macros.radios('benefits', benefits_options, data, errors)}}
 
