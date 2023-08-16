@@ -5,12 +5,12 @@ from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
 from marshmallow import ValidationError
-from .os_api import ThrottledApiException
 
 from help_to_heat import utils
 
 from ..portal import email_handler
 from . import eligibility, interface, schemas
+from .os_api import ThrottledApiException
 
 BulbSupplierConverter = interface.BulbSupplierConverter
 
@@ -88,6 +88,7 @@ def holding_page_view(request):
     previous_path = reverse("frontdoor:homepage")
     context = {"previous_path": previous_path}
     return render(request, template_name="frontdoor/holding-page.html", context=context)
+
 
 def sorry_page_view(request):
     return render(request, template_name="frontdoor/os-api-throttled.html")
@@ -307,8 +308,11 @@ class CouncilTaxBandView(PageView):
         epc = None
         if uprn:
             epc = interface.api.epc.get_epc(uprn, country)
-        return super().handle_post(request, session_id, page_name, data, is_change_page) if epc \
+        return (
+            super().handle_post(request, session_id, page_name, data, is_change_page)
+            if epc
             else redirect("frontdoor:page", session_id=session_id, page_name="benefits")
+        )
 
 
 @register_page("epc")
