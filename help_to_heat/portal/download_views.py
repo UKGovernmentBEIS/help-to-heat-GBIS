@@ -78,8 +78,14 @@ def add_extra_row_data(referral):
     epc_date = row.get("epc_date")
     epc_rating = row.get("epc_rating")
     created_at = referral.created_at.astimezone(london_tz)
+    contact_number = row.get("contact_number")
+    contact_number = '="' + contact_number + '"'
+    uprn = row.get("uprn")
+    uprn = '="' + str(uprn) + '"' if uprn else ""
     row = {
         **row,
+        "contact_number": contact_number,
+        "uprn": uprn,
         "ECO4": "Energy Company Obligation 4" in eligibility and "Yes" or "No",
         "GBIS": "Great British Insulation Scheme" in eligibility and "Yes" or "No",
         "epc_rating": epc_rating and epc_rating != "Not found" or "",
