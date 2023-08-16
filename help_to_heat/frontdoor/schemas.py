@@ -27,6 +27,7 @@ page_order = (
 )
 
 extra_pages = (
+    "applications-closed",
     "address-select",
     "address-manual",
     "epc-disagree",
@@ -49,6 +50,7 @@ page_prev_next_map = {
     "ineligible": {"prev": "benefits", "next": None},
     "northern-ireland": {"prev": "country", "next": None},
     "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
+    "applications-closed": {"prev": "supplier", "next": None},
 }
 
 summary_map = {
@@ -82,6 +84,7 @@ household_pages = {
     "country": ("country",),
     "supplier": ("supplier",),
     "bulb-warning-page": ("bulb-warning-page",),
+    "applications-closed": ("applications-closed",),
     "own-property": ("own_property",),
     "address": ("address",),
     "council-tax-band": ("council_tax_band",),
