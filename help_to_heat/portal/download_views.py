@@ -1,5 +1,7 @@
 import codecs
 import csv
+import io
+import xlsxwriter
 
 from dateutil import tz
 from django.http import HttpResponse
@@ -61,12 +63,38 @@ def download_csv_view(request):
 
 @require_http_methods(["GET"])
 @decorators.requires_team_leader_or_member
+def download_xlsx_view(request):
+    referrals = models.Referral.objects.filter(referral_download=None, supplier=request.user.supplier)
+    downloaded_at = timezone.now()
+    file_name = downloaded_at.strftime("%d-%m-%Y %H_%M") + ".xlsx"
+    new_referral_download = models.ReferralDownload.objects.create(
+        created_at=downloaded_at, file_name=file_name, last_downloaded_by=request.user
+    )
+    response = create_referral_xlsx(referrals, file_name)
+    new_referral_download.save()
+    referrals.update(referral_download=new_referral_download)
+    return response
+
+@require_http_methods(["GET"])
+@decorators.requires_team_leader_or_member
 def download_csv_by_id_view(request, download_id):
     referral_download = models.ReferralDownload.objects.get(pk=download_id)
     if referral_download is None:
         return HttpResponse(status=404)
     referrals = models.Referral.objects.filter(referral_download=referral_download)
     response = create_referral_csv(referrals, referral_download.file_name)
+    referral_download.last_downloaded_by = request.user
+    referral_download.save()
+    return response
+
+@require_http_methods(["GET"])
+@decorators.requires_team_leader_or_member
+def download_xlsx_by_id_view(request, download_id):
+    referral_download = models.ReferralDownload.objects.get(pk=download_id)
+    if referral_download is None:
+        return HttpResponse(status=404)
+    referrals = models.Referral.objects.filter(referral_download=referral_download)
+    response = create_referral_xlsx(referrals, referral_download.file_name)
     referral_download.last_downloaded_by = request.user
     referral_download.save()
     return response
@@ -108,4 +136,31 @@ def create_referral_csv(referrals, file_name):
     writer.writeheader()
     for row in rows:
         writer.writerow(row)
+    return response
+
+def create_referral_xlsx(referrals, file_name):
+    # headers = {
+    #     "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    #     "Content-Disposition": f"attachment; filename=referral-data-{file_name}.csv",
+    # }
+
+    output = io.BytesIO()
+    workbook = xlsxwriter.Workbook(output)
+    worksheet = workbook.add_worksheet()
+
+    rows = [add_extra_row_data(referral) for referral in referrals]
+
+    for row_num, columns in enumerate(rows):
+        for col_num, cell_data in enumerate(columns):
+            worksheet.write(row_num, col_num, cell_data)
+
+    workbook.close()
+    output.seek(0)
+
+    response = HttpResponse(
+        output,
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    response["Content-Disposition"] = "attachment; filename=%s" % file_name
+
     return response
