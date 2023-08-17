@@ -109,9 +109,3 @@ def create_referral_csv(referrals, file_name):
     for row in rows:
         writer.writerow(row)
     return response
-
-def create_referral_xlsx(referrals, file_name):
-    headers = {
-        "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-        "Content-Disposition": f"attachment; filename=referral-data-{file_name}.csv",
-    }
