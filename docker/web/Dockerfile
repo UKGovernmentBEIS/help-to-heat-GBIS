@@ -30,6 +30,8 @@ RUN chmod +x /start.sh
 COPY ./docker/web/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
+COPY ./envs/web.template ./envs/web
+
 COPY . /app
 
 WORKDIR /app/
