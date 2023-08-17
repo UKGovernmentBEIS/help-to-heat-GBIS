@@ -55,3 +55,4 @@ urllib3==1.26.16
 waitress==2.1.2
 watchdog==3.0.0
 whitenoise==6.4.0
+XlsxWriter==3.1.2
