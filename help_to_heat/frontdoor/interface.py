@@ -86,6 +86,7 @@ class SuccessSchema(marshmallow.Schema):
 def get_addresses_from_api(postcode):
     max_results_number = 100
     offset = 0
+    key_to_use = 0
 
     json_response = OSApi(settings.OS_API_KEY).get_by_postcode(postcode, offset, max_results_number)
     if not json_response:
