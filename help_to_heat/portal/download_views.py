@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
+from help_to_heat.frontdoor import models as frontdoor_models
 from help_to_heat.frontdoor.eligibility import calculate_eligibility
 from help_to_heat.portal import decorators, models
 
@@ -118,11 +119,11 @@ def handle_create_spreadsheet_request(request, creator):
 @require_http_methods(["GET"])
 @decorators.requires_service_manager
 def download_feedback_view(request):
-    feedbacks = models.Feedback.objects.all()
+    feedbacks = frontdoor_models.Feedback.objects.all()
     downloaded_at = timezone.now()
     file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
-    new_feedback_download = models.FeedbackDownload.objects.create(
-        created_at=downloaded_at, file_name=file_name, last_downloaded_by=request.user
+    new_feedback_download = frontdoor_models.FeedbackDownload.objects.create(
+        created_at=downloaded_at, file_name=file_name
     )
     response = create_feedback_csv(feedbacks, file_name)
     new_feedback_download.save()
