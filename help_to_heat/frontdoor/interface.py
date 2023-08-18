@@ -92,6 +92,8 @@ def get_addresses_from_api(postcode):
         return []
 
     total_results_number = json_response["header"]["totalresults"]
+    if total_results_number == 0:
+        return []
     api_results = json_response["results"]
     api_results_all = api_results
 
