@@ -661,7 +661,7 @@ def test_feedback_no_session():
     assert page.has_one("h1:contains('Thank you for your feedback')")
     assert not page.all("a:contains('Back')")
 
-    feedback = frontdoor_models.Feedback.objects.latest("created_at")
+    feedback = models.Feedback.objects.latest("created_at")
     assert feedback.data["how-much"] == "Agree"
     assert feedback.data["guidance-detail"] == "Completely disagree"
     assert feedback.data["accuracy-detail"] == "Disagree"
@@ -699,7 +699,7 @@ def test_feedback_with_session():
 
     assert page.has_one("h1:contains('Thank you for your feedback')")
 
-    feedback = frontdoor_models.Feedback.objects.latest("created_at")
+    feedback = models.Feedback.objects.latest("created_at")
     assert feedback.data["how-much"] == "Agree"
     assert feedback.data["guidance-detail"] == "Completely disagree"
     assert feedback.data["accuracy-detail"] == "Disagree"

@@ -45,6 +45,16 @@ column_headings = (
     "submission_time",
 )
 
+feedback_columns = (
+    "page_name",
+    "useful_for_learning",
+    "sufficient_guidance",
+    "able_to_answer",
+    "improvement_comment",
+    "submission_date",
+    "submission_time",
+)
+
 def create_referral_csv(referrals, file_name):
     headers = {
         "Content-Type": "text/csv",
@@ -104,6 +114,20 @@ def handle_create_spreadsheet_request(request, creator):
     referrals.update(referral_download=new_referral_download)
     return response
 
+@require_http_methods(["GET"])
+@decorators.requires_service_manager
+def download_feedback_view(request):
+    feedbacks = models.Feedback.objects.filter()   # always download all feedbacks for now
+    downloaded_at = timezone.now()
+    file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
+    new_feedback_download = models.FeedbackDownload.objects.create(
+        created_at=downloaded_at, file_name=file_name, last_downloaded_by=request.user
+    )
+    response = create_feedback_csv(feedbacks, file_name)
+    new_feedback_download.save()
+    feedbacks.update(feedback_download=new_feedback_download)
+    return response
+
 
 @require_http_methods(["GET"])
 @decorators.requires_team_leader_or_member
@@ -159,3 +183,50 @@ def add_extra_row_data(referral):
         "submission_time": created_at.time().strftime("%H:%M:%S"),
     }
     return row
+
+
+def match_rows_for_feedback(feedback):
+    created_at = feedback.created_at.astimezone(london_tz)
+    page_name = feedback.page_name
+    row = dict(feedback.data)
+    row = {
+        **row,
+        "useful_for_learning": row["how-much"],
+        "sufficient_guidance": row["guidance-detail"],
+        "able_to_answer": row["accuracy-detail"],
+        "improvement_comment": row["more-detail"],
+        "page_name": page_name,
+        "submission_date": created_at.date(),
+        "submission_time": created_at.time().strftime("%H:%M:%S"),
+    }
+    return row
+
+
+def create_referral_csv(referrals, file_name):
+    headers = {
+        "Content-Type": "text/csv",
+        "Content-Disposition": f"attachment; filename=referral-data-{file_name}.csv",
+    }
+    rows = [add_extra_row_data(referral) for referral in referrals]
+    response = HttpResponse(headers=headers, charset="utf-8")
+    response.write(codecs.BOM_UTF8)
+    writer = csv.DictWriter(response, fieldnames=csv_columns, extrasaction="ignore", dialect=csv.unix_dialect)
+    writer.writeheader()
+    for row in rows:
+        writer.writerow(row)
+    return response
+
+
+def create_feedback_csv(feedbacks, file_name):
+    headers = {
+        "Content-Type": "text/csv",
+        "Content-Disposition": f"attachment; filename=feedback-data-{file_name}.csv",
+    }
+    rows = [match_rows_for_feedback(feedback) for feedback in feedbacks]
+    response = HttpResponse(headers=headers, charset="utf-8")
+    response.write(codecs.BOM_UTF8)
+    writer = csv.DictWriter(response, fieldnames=feedback_columns, extrasaction="ignore", dialect=csv.unix_dialect)
+    writer.writeheader()
+    for row in rows:
+        writer.writerow(row)
+    return response

@@ -138,6 +138,32 @@ class Referral(utils.UUIDPrimaryKeyBase, utils.TimeStampedModel):
         return f"<referral id={self.id} supplier={self.supplier}>"
 
 
+class FeedbackDownload(utils.UUIDPrimaryKeyBase, utils.TimeStampedModel):
+    file_name = models.CharField(max_length=255, blank=True, null=True)
+    last_downloaded_by = models.ForeignKey(User, blank=True, null=True, on_delete=models.PROTECT)
+
+    @property
+    def local_created_at(self):
+        return self.created_at.astimezone(london_tz)
+
+
+class Feedback(utils.UUIDPrimaryKeyBase, utils.TimeStampedModel):
+    session_id = models.UUIDField(editable=False, blank=True, null=True)
+    page_name = models.CharField(max_length=128, editable=False, blank=True, null=True)
+    data = models.JSONField(encoder=DjangoJSONEncoder, editable=False)
+    feedback_download = models.ForeignKey(
+        FeedbackDownload,
+        blank=True,
+        null=True,
+        default=None,
+        on_delete=models.PROTECT,
+        related_name="feedback_download",
+    )
+
+    def __str__(self):
+        return f"<feedback id={self.id} page_name={self.page_name}>"
+
+
 class EpcRating(utils.TimeStampedModel):
     uprn = models.CharField(max_length=12, primary_key=True)
     rating = models.CharField(max_length=32, choices=epc_rating_choices)

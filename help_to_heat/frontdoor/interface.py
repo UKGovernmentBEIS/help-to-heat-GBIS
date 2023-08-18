@@ -435,7 +435,7 @@ class EPC(Entity):
 class Feedback(Entity):
     @with_schema(load=FeedbackSchema, dump=SuccessSchema)
     def save_feedback(self, session_id, page_name, data):
-        models.Feedback.objects.create(session_id=session_id, page_name=page_name, data=data)
+        portal.models.Feedback.objects.create(session_id=session_id, page_name=page_name, data=data)
         return {"success": True}
 
 
