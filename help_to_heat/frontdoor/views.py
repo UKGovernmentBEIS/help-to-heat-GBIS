@@ -519,11 +519,19 @@ class SupplierView(PageView):
         prev_page_name, next_page_name = get_prev_next_page_name(page_name)
         request_data = dict(request.POST.dict())
         request_supplier = request_data.get("supplier")
+        # to be updated when we get full list of excluded suppliers
+        unavailable_suppliers = [
+            "Shell",
+        ]
         if request_supplier == "Bulb, now part of Octopus Energy":
             next_page_name = "bulb-warning-page"
+        if request_supplier in unavailable_suppliers:
+            next_page_name = "applications-closed"
 
         if is_change_page:
             if request_supplier == "Bulb, now part of Octopus Energy":
+                return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
+            elif request_supplier in unavailable_suppliers:
                 return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
             else:
                 assert page_name in schemas.change_page_lookup
@@ -533,6 +541,13 @@ class SupplierView(PageView):
 
 @register_page("bulb-warning-page")
 class BulbWarningPageView(PageView):
+    def get_context(self, session_id, *args, **kwargs):
+        supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        return {"supplier": supplier}
+
+
+@register_page("applications-closed")
+class ApplicationsClosedView(PageView):
     def get_context(self, session_id, *args, **kwargs):
         supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
         return {"supplier": supplier}
