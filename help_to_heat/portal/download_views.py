@@ -149,7 +149,7 @@ def create_referral_xlsx(referrals, file_name):
     worksheet = workbook.add_worksheet()
 
     rows = [add_extra_row_data(referral) for referral in referrals]
-
+    
     for row_num, columns in enumerate(rows):
         for col_num, cell_data in enumerate(columns):
             worksheet.write(row_num, col_num, cell_data)
