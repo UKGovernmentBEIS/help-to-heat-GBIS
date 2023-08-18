@@ -114,10 +114,11 @@ def handle_create_spreadsheet_request(request, creator):
     referrals.update(referral_download=new_referral_download)
     return response
 
+
 @require_http_methods(["GET"])
 @decorators.requires_service_manager
 def download_feedback_view(request):
-    feedbacks = models.Feedback.objects.filter()   # always download all feedbacks for now
+    feedbacks = models.Feedback.objects.filter()  # always download all feedbacks for now
     downloaded_at = timezone.now()
     file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
     new_feedback_download = models.FeedbackDownload.objects.create(

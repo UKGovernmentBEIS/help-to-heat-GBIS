@@ -3,7 +3,6 @@ import unittest
 import uuid
 
 from help_to_heat.frontdoor import interface
-from help_to_heat.frontdoor import models as frontdoor_models
 from help_to_heat.frontdoor.mock_os_api import EmptyOSApi, MockOSApi
 from help_to_heat.portal import models
 
