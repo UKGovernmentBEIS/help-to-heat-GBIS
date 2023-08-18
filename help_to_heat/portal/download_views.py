@@ -118,7 +118,7 @@ def handle_create_spreadsheet_request(request, creator):
 @require_http_methods(["GET"])
 @decorators.requires_service_manager
 def download_feedback_view(request):
-    feedbacks = models.Feedback.objects.filter()  # always download all feedbacks for now
+    feedbacks = models.Feedback.objects.all()
     downloaded_at = timezone.now()
     file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
     new_feedback_download = models.FeedbackDownload.objects.create(
@@ -203,31 +203,29 @@ def match_rows_for_feedback(feedback):
     return row
 
 
-def create_referral_csv(referrals, file_name):
+def create_csv(columns, rows, full_file_name):
     headers = {
         "Content-Type": "text/csv",
-        "Content-Disposition": f"attachment; filename=referral-data-{file_name}.csv",
+        "Content-Disposition": f"attachment; filename={full_file_name}.csv",
     }
-    rows = [add_extra_row_data(referral) for referral in referrals]
     response = HttpResponse(headers=headers, charset="utf-8")
     response.write(codecs.BOM_UTF8)
-    writer = csv.DictWriter(response, fieldnames=csv_columns, extrasaction="ignore", dialect=csv.unix_dialect)
+    writer = csv.DictWriter(response, fieldnames=columns, extrasaction="ignore", dialect=csv.unix_dialect)
     writer.writeheader()
     for row in rows:
         writer.writerow(row)
     return response
 
 
+def create_referral_csv(referrals, file_name):
+    rows = [add_extra_row_data(referral) for referral in referrals]
+    full_file_name = f"referral-data-{file_name}"
+    response = create_csv(csv_columns, rows, full_file_name)
+    return response
+
+
 def create_feedback_csv(feedbacks, file_name):
-    headers = {
-        "Content-Type": "text/csv",
-        "Content-Disposition": f"attachment; filename=feedback-data-{file_name}.csv",
-    }
     rows = [match_rows_for_feedback(feedback) for feedback in feedbacks]
-    response = HttpResponse(headers=headers, charset="utf-8")
-    response.write(codecs.BOM_UTF8)
-    writer = csv.DictWriter(response, fieldnames=feedback_columns, extrasaction="ignore", dialect=csv.unix_dialect)
-    writer.writeheader()
-    for row in rows:
-        writer.writerow(row)
+    full_file_name = f"feedback-data-{file_name}"
+    response = create_csv(feedback_columns, rows, full_file_name)
     return response
