@@ -23,7 +23,7 @@ class SupplierChoices(utils.Choices):
     E_ENERGY = ("e-energy", "E (Gas & Electricity) Ltd")
     ECOTRICITY = ("ecotricity", "Ecotricity")
     EDF = ("edf", "EDF")
-    EON = ("eon", "E.ON")
+    EON = ("eon", "E.ON Next")
     FOXGLOVE = ("foxglove", "Foxglove")
     OCTOPUS = ("octopus", "Octopus Energy")
     OVO = ("ovo", "OVO")

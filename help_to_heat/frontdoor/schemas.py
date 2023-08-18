@@ -463,7 +463,7 @@ supplier_options = (
     "E (Gas & Electricity) Ltd",
     "Ecotricity",
     "EDF",
-    "E.ON",
+    "E.ON Next",
     "Foxglove",
     "Octopus Energy",
     "OVO",
