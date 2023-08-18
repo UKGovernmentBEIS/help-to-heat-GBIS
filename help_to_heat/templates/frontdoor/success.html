@@ -5,6 +5,7 @@
 {% endblock %}
 
 {% block content %}
+<script src="/static/main.js"></script>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <div class="govuk-panel govuk-panel--confirmation">
@@ -13,7 +14,7 @@
         </h1>
       </div>
       <p class="govuk-body">{{_("If you provided an email address in your referral then we have sent you a confirmation email.")}}</p>
-      <p class="govuk-body">{{_("You can ")}}<a href="#" onclick="window.print();return false;" class="govuk-link">{{_("save or print a copy of your referral")}}</a>.</p>
+      <p class="govuk-body">{{_("You can ")}}<a href="#"  class="govuk-link" id="print_button">{{_("save or print a copy of your referral")}}</a>.</p>
       <h2 class="govuk-heading-m">{{_("What happens next?")}}</h2>
 
       <p class="govuk-body">{{_("We have sent your referral to the energy supplier you selected. They will contact you within 10 working days to confirm they have received this and about next steps.")}}</p>
