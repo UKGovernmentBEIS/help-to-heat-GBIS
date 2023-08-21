@@ -45,6 +45,49 @@ column_headings = (
     "submission_time",
 )
 
+def create_referral_csv(referrals, file_name):
+    headers = {
+        "Content-Type": "text/csv",
+        "Content-Disposition": f"attachment; filename=referral-data-{file_name}.csv",
+    }
+    rows = [add_extra_row_data(referral) for referral in referrals]
+    response = HttpResponse(headers=headers, charset="utf-8")
+    response.write(codecs.BOM_UTF8)
+    writer = csv.DictWriter(response, fieldnames=column_headings, extrasaction="ignore", dialect=csv.unix_dialect)
+    writer.writeheader()
+    for row in rows:
+        writer.writerow(row)
+    return response
+
+def create_referral_xlsx(referrals, file_name):
+    file_name = file_name + ".xlsx"
+    output = io.BytesIO()
+    workbook = xlsxwriter.Workbook(output)
+    worksheet = workbook.add_worksheet()
+    
+    for col_num, entry in enumerate(column_headings):
+        worksheet.write(0, col_num, entry)
+
+    rows = [add_extra_row_data(referral) for referral in referrals]
+
+    for row_num, referral_data in enumerate(rows):
+        for col_num, entry in enumerate(column_headings):
+            
+            to_write = referral_data.get(entry) or ""
+            worksheet.write(row_num + 1, col_num, to_write)
+
+    workbook.close()
+    output.seek(0)
+
+    response = HttpResponse(
+        output,
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    response["Content-Disposition"] = "attachment; filename=%s" % file_name
+
+    return response
+
+
 def handle_create_file_request(request, csv_or_xlsx_creator):
     referrals = models.Referral.objects.filter(referral_download=None, supplier=request.user.supplier)
     downloaded_at = timezone.now()
@@ -112,46 +155,3 @@ def add_extra_row_data(referral):
         "submission_time": created_at.time().strftime("%H:%M:%S"),
     }
     return row
-
-
-def create_referral_csv(referrals, file_name):
-    headers = {
-        "Content-Type": "text/csv",
-        "Content-Disposition": f"attachment; filename=referral-data-{file_name}.csv",
-    }
-    rows = [add_extra_row_data(referral) for referral in referrals]
-    response = HttpResponse(headers=headers, charset="utf-8")
-    response.write(codecs.BOM_UTF8)
-    writer = csv.DictWriter(response, fieldnames=column_headings, extrasaction="ignore", dialect=csv.unix_dialect)
-    writer.writeheader()
-    for row in rows:
-        writer.writerow(row)
-    return response
-
-def create_referral_xlsx(referrals, file_name):
-    file_name = file_name + ".xlsx"
-    output = io.BytesIO()
-    workbook = xlsxwriter.Workbook(output)
-    worksheet = workbook.add_worksheet()
-    
-    for col_num, entry in enumerate(column_headings):
-        worksheet.write(0, col_num, entry)
-
-    rows = [add_extra_row_data(referral) for referral in referrals]
-
-    for row_num, referral_data in enumerate(rows):
-        for col_num, entry in enumerate(column_headings):
-            
-            to_write = referral_data.get(entry) or ""
-            worksheet.write(row_num + 1, col_num, to_write)
-
-    workbook.close()
-    output.seek(0)
-
-    response = HttpResponse(
-        output,
-        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    )
-    response["Content-Disposition"] = "attachment; filename=%s" % file_name
-
-    return response
