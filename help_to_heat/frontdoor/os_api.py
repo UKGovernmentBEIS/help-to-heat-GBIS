@@ -1,8 +1,8 @@
+import ast
 import logging
 from http import HTTPStatus
 
 import requests
-import ast
 
 logger = logging.getLogger(__name__)
 
@@ -33,8 +33,8 @@ class OSApi:
                 status_code = e.response.status_code
                 if status_code == HTTPStatus.TOO_MANY_REQUESTS:
                     logger.error(f"The OS API usage limit has been hit for API key at index {index}.")
-                    if index == len(self.keys)-1:
-                        logger.error(f"The OS API usage limit has been hit for all API keys")
+                    if index == len(self.keys) - 1:
+                        logger.error("The OS API usage limit has been hit for all API keys")
                         raise ThrottledApiException
                     else:
                         continue
