@@ -19,3 +19,11 @@ Migrations are run automatically at startup, and suppliers are added automatical
 ## Checking code
 
     make check-python-code
+
+## Migration
+All migrations are created by Django.
+Go inside Docker - `help-to-heat` - `web-1` and run the following command in Terminal:
+
+    python manage.py makemigrations
+
+then restart the container. All required migrations will be created automatically.
