@@ -2,7 +2,7 @@
 
 {% block content %}
 <a href="{{url('portal:homepage')}}" class="govuk-back-link">Back</a>
-<h1 class="govuk-heading-l">Manage [{{supplier.name}}]'s team leads and details</h1>
+<h1 class="govuk-heading-l">Manage {{supplier.name}}'s team leads and details</h1>
 <div class="govuk-button-group">
   <a href="{{url('portal:edit-supplier', supplier.id)}}" class="govuk-button govuk-button--secondary">Edit</a>
   <a href="{{url('portal:change-supplier-disabled-status', supplier.id)}}" class="govuk-button govuk-button--secondary">{{supplier.is_disabled and "Enable" or "Disable"}}</a>
@@ -16,7 +16,6 @@
       <th scope="col" class="govuk-table__header">Names</th>
       <th scope="col" class="govuk-table__header">Email</th>
       <th scope="col" class="govuk-table__header">Status</th>
-      <th scope="col" class="govuk-table__header govuk-table__header--numeric"></th>
     </tr>
   </thead>
   <tbody class="govuk-table__body">
