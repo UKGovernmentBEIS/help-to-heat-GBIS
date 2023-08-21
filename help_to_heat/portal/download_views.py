@@ -13,7 +13,7 @@ from help_to_heat.portal import decorators, models
 
 london_tz = tz.gettz("Europe/London")
 
-csv_columns = (
+column_headings = (
     "ECO4",
     "GBIS",
     "first_name",
@@ -132,27 +132,27 @@ def create_referral_csv(referrals, file_name):
     rows = [add_extra_row_data(referral) for referral in referrals]
     response = HttpResponse(headers=headers, charset="utf-8")
     response.write(codecs.BOM_UTF8)
-    writer = csv.DictWriter(response, fieldnames=csv_columns, extrasaction="ignore", dialect=csv.unix_dialect)
+    writer = csv.DictWriter(response, fieldnames=column_headings, extrasaction="ignore", dialect=csv.unix_dialect)
     writer.writeheader()
     for row in rows:
         writer.writerow(row)
     return response
 
 def create_referral_xlsx(referrals, file_name):
-    # headers = {
-    #     "Content-Type": "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
-    #     "Content-Disposition": f"attachment; filename=referral-data-{file_name}.csv",
-    # }
-
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output)
     worksheet = workbook.add_worksheet()
+    
+    for col_num, entry in enumerate(column_headings):
+        worksheet.write(0, col_num, entry)
 
     rows = [add_extra_row_data(referral) for referral in referrals]
-    
-    for row_num, columns in enumerate(rows):
-        for col_num, cell_data in enumerate(columns):
-            worksheet.write(row_num, col_num, cell_data)
+
+    for row_num, referral_data in enumerate(rows):
+        for col_num, entry in enumerate(column_headings):
+            
+            to_write = referral_data.get(entry) or ""
+            worksheet.write(row_num + 1, col_num, to_write)
 
     workbook.close()
     output.seek(0)
