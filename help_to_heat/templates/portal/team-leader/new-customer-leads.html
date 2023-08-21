@@ -1,8 +1,14 @@
 <h1 class="govuk-heading-l">New customer leads</h1>
 <p class="govuk-body">Download a new customer leads file in CSV format.</p>
 
-<p class="govuk-!-font-size-48">Unread leads</p>
+<p class="govuk-body govuk-!-font-size-48">Unread leads</p>
 
+{% if (data.unread_leads == 0) %}
+<p class="govuk-body">There are no unread leads currently. Visit the archive to download the latest version.</p>
+
+{% else %}
 <p class="govuk-heading-xl govuk-!-font-size-80">{{data.unread_leads}}</p>
+
+{% endif %}
 
 <a href="{{data.unread_leads == 0 and '#' or url('portal:data-download')}}" {% if data.unread_leads == 0 %}Disabled{% endif %} class="govuk-button">Download latest leads</a>
