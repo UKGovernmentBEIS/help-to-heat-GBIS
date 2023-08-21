@@ -66,7 +66,7 @@
   </label>
   <input class="govuk-input" id="question-{{name}}" name="{{name}}" type="{{type}}" {% if errors.get(name) %}
     aria-describedby="question-{{name}}-error" {% endif %} autocomplete="{{autocomplete}}"
-    value="{{data.get(name, '')}}">
+    value="{{data.get(name, '')}}" maxlength="128">
 </div>
 {%- endmacro%}
 
