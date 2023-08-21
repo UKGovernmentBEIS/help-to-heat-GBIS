@@ -129,6 +129,7 @@ def create_referral_csv(referrals, file_name):
     return response
 
 def create_referral_xlsx(referrals, file_name):
+    file_name = file_name + ".xlsx"
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output)
     worksheet = workbook.add_worksheet()
