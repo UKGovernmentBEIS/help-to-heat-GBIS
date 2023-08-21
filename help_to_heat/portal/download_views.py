@@ -45,39 +45,31 @@ column_headings = (
     "submission_time",
 )
 
-
-@require_http_methods(["GET"])
-@decorators.requires_team_leader_or_member
-def download_csv_view(request):
+def handle_create_file_request(request, csv_or_xlsx_creator):
     referrals = models.Referral.objects.filter(referral_download=None, supplier=request.user.supplier)
     downloaded_at = timezone.now()
     file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
     new_referral_download = models.ReferralDownload.objects.create(
         created_at=downloaded_at, file_name=file_name, last_downloaded_by=request.user
     )
-    response = create_referral_csv(referrals, file_name)
+    response = csv_or_xlsx_creator(referrals, file_name)
     new_referral_download.save()
     referrals.update(referral_download=new_referral_download)
     return response
+
+
+@require_http_methods(["GET"])
+@decorators.requires_team_leader_or_member
+def download_csv_view(request):
+    return handle_create_file_request(request, create_referral_csv)
 
 
 @require_http_methods(["GET"])
 @decorators.requires_team_leader_or_member
 def download_xlsx_view(request):
-    referrals = models.Referral.objects.filter(referral_download=None, supplier=request.user.supplier)
-    downloaded_at = timezone.now()
-    file_name = downloaded_at.strftime("%d-%m-%Y %H_%M") + ".xlsx"
-    new_referral_download = models.ReferralDownload.objects.create(
-        created_at=downloaded_at, file_name=file_name, last_downloaded_by=request.user
-    )
-    response = create_referral_xlsx(referrals, file_name)
-    new_referral_download.save()
-    referrals.update(referral_download=new_referral_download)
-    return response
+    return handle_create_file_request(request, create_referral_xlsx)
 
-@require_http_methods(["GET"])
-@decorators.requires_team_leader_or_member
-def download_csv_by_id_view(request, download_id):
+def handle_create_file_request_by_id(request, download_id, csv_or_xlsx_creator):
     referral_download = models.ReferralDownload.objects.get(pk=download_id)
     if referral_download is None:
         return HttpResponse(status=404)
@@ -89,15 +81,13 @@ def download_csv_by_id_view(request, download_id):
 
 @require_http_methods(["GET"])
 @decorators.requires_team_leader_or_member
+def download_csv_by_id_view(request, download_id):
+    return handle_create_file_request_by_id(request, download_id, create_referral_csv)
+
+@require_http_methods(["GET"])
+@decorators.requires_team_leader_or_member
 def download_xlsx_by_id_view(request, download_id):
-    referral_download = models.ReferralDownload.objects.get(pk=download_id)
-    if referral_download is None:
-        return HttpResponse(status=404)
-    referrals = models.Referral.objects.filter(referral_download=referral_download)
-    response = create_referral_xlsx(referrals, referral_download.file_name)
-    referral_download.last_downloaded_by = request.user
-    referral_download.save()
-    return response
+    return handle_create_file_request_by_id(request, download_id, create_referral_xlsx)
 
 
 def add_extra_row_data(referral):
