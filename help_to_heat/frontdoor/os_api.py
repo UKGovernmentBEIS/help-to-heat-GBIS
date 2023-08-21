@@ -16,7 +16,7 @@ class OSApi:
         self.keys = ast.literal_eval(keys)
 
     def get_by_postcode(self, postcode, offset, max_results):
-        for key, index in enumerate(self.keys):
+        for index, key in enumerate(self.keys):
             url = f"""https://api.os.uk/search/places/v1/postcode?maxresults={max_results}
                 &postcode={postcode}&lr=EN&dataset=DPA,LPI&key={key}"""
             if offset:
