@@ -178,6 +178,10 @@ class PageView(utils.MethodDispatcher):
             "next_url": next_page_url,
             **extra_context,
         }
+        return self.handle_get(request, session_id, page_name, context)
+        
+    
+    def handle_get(self, request, session_id, page_name, context):
         response = render(request, template_name=f"frontdoor/{page_name}.html", context=context)
         response["x-vcap-request-id"] = session_id
 
@@ -187,6 +191,7 @@ class PageView(utils.MethodDispatcher):
             response["cache-control"] = "no-store"
             response["Pragma"] = "no-cache"
         return response
+
 
     def get_prev_next_urls(self, session_id, page_name):
         return get_prev_next_urls(session_id, page_name)
@@ -312,8 +317,6 @@ class CouncilTaxBandView(PageView):
             epc = interface.api.epc.get_epc(uprn, country)
         return (
             super().handle_post(request, session_id, page_name, data, is_change_page)
-            if epc
-            else redirect("frontdoor:page", session_id=session_id, page_name="benefits")
         )
 
 
@@ -335,6 +338,19 @@ class EpcView(PageView):
             "address": address,
         }
         return context
+
+    def handle_get(self, request, session_id, page_name, context):
+        session_data = interface.api.session.get_session(session_id)
+        uprn = session_data.get("uprn")
+        country = session_data.get("country")
+        uprn = session_data.get("uprn")
+        if uprn:
+            epc = interface.api.epc.get_epc(uprn, country)
+        else:
+            epc = {}
+        if not epc:
+            return redirect("frontdoor:page", session_id=session_id, page_name="benefits")
+        return super().handle_get(request, session_id, page_name, context)
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         prev_page_name, next_page_name = get_prev_next_page_name(page_name)
