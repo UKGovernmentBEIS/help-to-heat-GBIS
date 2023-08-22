@@ -8,6 +8,7 @@ from django.http import HttpResponse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
+from help_to_heat.frontdoor import models as frontdoor_models
 from help_to_heat.frontdoor.eligibility import calculate_eligibility
 from help_to_heat.portal import decorators, models
 
@@ -41,6 +42,16 @@ column_headings = (
     "loft_insulation",
     "Property main heat source",
     "supplier",
+    "submission_date",
+    "submission_time",
+)
+
+feedback_columns = (
+    "page_name",
+    "useful_for_learning",
+    "sufficient_guidance",
+    "able_to_answer",
+    "improvement_comment",
     "submission_date",
     "submission_time",
 )
@@ -106,6 +117,21 @@ def handle_create_spreadsheet_request(request, creator):
 
 
 @require_http_methods(["GET"])
+@decorators.requires_service_manager
+def download_feedback_view(request):
+    feedbacks = frontdoor_models.Feedback.objects.all()
+    downloaded_at = timezone.now()
+    file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
+    new_feedback_download = frontdoor_models.FeedbackDownload.objects.create(
+        created_at=downloaded_at, file_name=file_name
+    )
+    response = create_feedback_csv(feedbacks, file_name)
+    new_feedback_download.save()
+    feedbacks.update(feedback_download=new_feedback_download)
+    return response
+
+
+@require_http_methods(["GET"])
 @decorators.requires_team_leader_or_member
 def download_csv_view(request):
     return handle_create_spreadsheet_request(request, create_referral_csv)
@@ -159,3 +185,48 @@ def add_extra_row_data(referral):
         "submission_time": created_at.time().strftime("%H:%M:%S"),
     }
     return row
+
+
+def match_rows_for_feedback(feedback):
+    created_at = feedback.created_at.astimezone(london_tz)
+    page_name = feedback.page_name
+    row = dict(feedback.data)
+    row = {
+        **row,
+        "useful_for_learning": row["how-much"],
+        "sufficient_guidance": row["guidance-detail"],
+        "able_to_answer": row["accuracy-detail"],
+        "improvement_comment": row["more-detail"],
+        "page_name": page_name,
+        "submission_date": created_at.date(),
+        "submission_time": created_at.time().strftime("%H:%M:%S"),
+    }
+    return row
+
+
+def create_csv(columns, rows, full_file_name):
+    headers = {
+        "Content-Type": "text/csv",
+        "Content-Disposition": f"attachment; filename={full_file_name}.csv",
+    }
+    response = HttpResponse(headers=headers, charset="utf-8")
+    response.write(codecs.BOM_UTF8)
+    writer = csv.DictWriter(response, fieldnames=columns, extrasaction="ignore", dialect=csv.unix_dialect)
+    writer.writeheader()
+    for row in rows:
+        writer.writerow(row)
+    return response
+
+
+def create_referral_csv(referrals, file_name):
+    rows = [add_extra_row_data(referral) for referral in referrals]
+    full_file_name = f"referral-data-{file_name}"
+    response = create_csv(csv_columns, rows, full_file_name)
+    return response
+
+
+def create_feedback_csv(feedbacks, file_name):
+    rows = [match_rows_for_feedback(feedback) for feedback in feedbacks]
+    full_file_name = f"feedback-data-{file_name}"
+    response = create_csv(feedback_columns, rows, full_file_name)
+    return response

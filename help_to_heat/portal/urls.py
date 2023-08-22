@@ -67,6 +67,7 @@ portal_patterns = [
         name="edit-user",
     ),
     path("data-download/", download_views.download_csv_view, name="data-download"),
+    path("feedback-download/", download_views.download_feedback_view, name="feedback-download"),
     path("data-download/<uuid:download_id>/", download_views.download_csv_by_id_view, name="download-csv-by-id"),
     path("data-download-xlsx/", download_views.download_xlsx_view, name="data-download-xlsx"),
     path("data-download-xlsx/<uuid:download_id>/", download_views.download_xlsx_by_id_view, name="download-xlsx-by-id"),
