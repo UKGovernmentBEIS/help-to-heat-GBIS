@@ -61,10 +61,13 @@ def create_referral_csv(referrals, file_name):
 
 def create_referral_xlsx(referrals, file_name):
     file_name = file_name + ".xlsx"
+
+    # create an in-memory output file for our excel file
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output)
     worksheet = workbook.add_worksheet()
     
+    # write the headings
     for col_num, entry in enumerate(column_headings):
         worksheet.write(0, col_num, entry)
 
@@ -77,8 +80,9 @@ def create_referral_xlsx(referrals, file_name):
             worksheet.write(row_num + 1, col_num, to_write)
 
     workbook.close()
-    output.seek(0)
 
+    # rewind to the beginning of the stream before sending our response
+    output.seek(0)
     response = HttpResponse(
         output,
         content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
@@ -88,14 +92,14 @@ def create_referral_xlsx(referrals, file_name):
     return response
 
 
-def handle_create_file_request(request, csv_or_xlsx_creator):
+def handle_create_spreadsheet_request(request, creator):
     referrals = models.Referral.objects.filter(referral_download=None, supplier=request.user.supplier)
     downloaded_at = timezone.now()
     file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
     new_referral_download = models.ReferralDownload.objects.create(
         created_at=downloaded_at, file_name=file_name, last_downloaded_by=request.user
     )
-    response = csv_or_xlsx_creator(referrals, file_name)
+    response = creator(referrals, file_name)
     new_referral_download.save()
     referrals.update(referral_download=new_referral_download)
     return response
@@ -104,13 +108,13 @@ def handle_create_file_request(request, csv_or_xlsx_creator):
 @require_http_methods(["GET"])
 @decorators.requires_team_leader_or_member
 def download_csv_view(request):
-    return handle_create_file_request(request, create_referral_csv)
+    return handle_create_spreadsheet_request(request, create_referral_csv)
 
 
 @require_http_methods(["GET"])
 @decorators.requires_team_leader_or_member
 def download_xlsx_view(request):
-    return handle_create_file_request(request, create_referral_xlsx)
+    return handle_create_spreadsheet_request(request, create_referral_xlsx)
 
 def handle_create_file_request_by_id(request, download_id, csv_or_xlsx_creator):
     referral_download = models.ReferralDownload.objects.get(pk=download_id)
