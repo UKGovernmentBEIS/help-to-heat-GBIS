@@ -14,7 +14,7 @@ from help_to_heat.portal import decorators, models
 
 london_tz = tz.gettz("Europe/London")
 
-column_headings = (
+referral_column_headings = (
     "ECO4",
     "GBIS",
     "first_name",
@@ -46,7 +46,7 @@ column_headings = (
     "submission_time",
 )
 
-feedback_columns = (
+feedback_columns_headings = (
     "page_name",
     "useful_for_learning",
     "sufficient_guidance",
@@ -57,18 +57,24 @@ feedback_columns = (
 )
 
 
-def create_referral_csv(referrals, file_name):
+def create_csv(columns, rows, full_file_name):
     headers = {
         "Content-Type": "text/csv",
-        "Content-Disposition": f"attachment; filename=referral-data-{file_name}.csv",
+        "Content-Disposition": f"attachment; filename={full_file_name}.csv",
     }
-    rows = [add_extra_row_data(referral) for referral in referrals]
     response = HttpResponse(headers=headers, charset="utf-8")
     response.write(codecs.BOM_UTF8)
-    writer = csv.DictWriter(response, fieldnames=column_headings, extrasaction="ignore", dialect=csv.unix_dialect)
+    writer = csv.DictWriter(response, fieldnames=columns, extrasaction="ignore", dialect=csv.unix_dialect)
     writer.writeheader()
     for row in rows:
         writer.writerow(row)
+    return response
+
+
+def create_referral_csv(referrals, file_name):
+    rows = [add_extra_row_data(referral) for referral in referrals]
+    full_file_name = f"referral-data-{file_name}"
+    response = create_csv(referral_column_headings, rows, full_file_name)
     return response
 
 
@@ -81,13 +87,13 @@ def create_referral_xlsx(referrals, file_name):
     worksheet = workbook.add_worksheet()
 
     # write the headings
-    for col_num, entry in enumerate(column_headings):
+    for col_num, entry in enumerate(referral_column_headings):
         worksheet.write(0, col_num, entry)
 
     rows = [add_extra_row_data(referral) for referral in referrals]
 
     for row_num, referral_data in enumerate(rows):
-        for col_num, entry in enumerate(column_headings):
+        for col_num, entry in enumerate(referral_column_headings):
             to_write = referral_data.get(entry) or ""
             worksheet.write(row_num + 1, col_num, to_write)
 
@@ -208,29 +214,8 @@ def match_rows_for_feedback(feedback):
     return row
 
 
-def create_csv(columns, rows, full_file_name):
-    headers = {
-        "Content-Type": "text/csv",
-        "Content-Disposition": f"attachment; filename={full_file_name}.csv",
-    }
-    response = HttpResponse(headers=headers, charset="utf-8")
-    response.write(codecs.BOM_UTF8)
-    writer = csv.DictWriter(response, fieldnames=columns, extrasaction="ignore", dialect=csv.unix_dialect)
-    writer.writeheader()
-    for row in rows:
-        writer.writerow(row)
-    return response
-
-
-def create_referral_csv(referrals, file_name):
-    rows = [add_extra_row_data(referral) for referral in referrals]
-    full_file_name = f"referral-data-{file_name}"
-    response = create_csv(csv_columns, rows, full_file_name)
-    return response
-
-
 def create_feedback_csv(feedbacks, file_name):
     rows = [match_rows_for_feedback(feedback) for feedback in feedbacks]
     full_file_name = f"feedback-data-{file_name}"
-    response = create_csv(feedback_columns, rows, full_file_name)
+    response = create_csv(feedback_columns_headings, rows, full_file_name)
     return response
