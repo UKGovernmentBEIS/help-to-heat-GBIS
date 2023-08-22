@@ -46,7 +46,7 @@ referral_column_headings = (
     "submission_time",
 )
 
-feedback_columns_headings = (
+feedback_column_headings = (
     "page_name",
     "useful_for_learning",
     "sufficient_guidance",
@@ -217,5 +217,5 @@ def match_rows_for_feedback(feedback):
 def create_feedback_csv(feedbacks, file_name):
     rows = [match_rows_for_feedback(feedback) for feedback in feedbacks]
     full_file_name = f"feedback-data-{file_name}"
-    response = create_csv(feedback_columns_headings, rows, full_file_name)
+    response = create_csv(feedback_column_headings, rows, full_file_name)
     return response
