@@ -1,5 +1,7 @@
 import codecs
 import csv
+import io
+import xlsxwriter
 
 from dateutil import tz
 from django.http import HttpResponse
@@ -11,7 +13,7 @@ from help_to_heat.portal import decorators, models
 
 london_tz = tz.gettz("Europe/London")
 
-csv_columns = (
+column_headings = (
     "ECO4",
     "GBIS",
     "first_name",
@@ -43,17 +45,61 @@ csv_columns = (
     "submission_time",
 )
 
+def create_referral_csv(referrals, file_name):
+    headers = {
+        "Content-Type": "text/csv",
+        "Content-Disposition": f"attachment; filename=referral-data-{file_name}.csv",
+    }
+    rows = [add_extra_row_data(referral) for referral in referrals]
+    response = HttpResponse(headers=headers, charset="utf-8")
+    response.write(codecs.BOM_UTF8)
+    writer = csv.DictWriter(response, fieldnames=column_headings, extrasaction="ignore", dialect=csv.unix_dialect)
+    writer.writeheader()
+    for row in rows:
+        writer.writerow(row)
+    return response
 
-@require_http_methods(["GET"])
-@decorators.requires_team_leader_or_member
-def download_csv_view(request):
+def create_referral_xlsx(referrals, file_name):
+    file_name = file_name + ".xlsx"
+
+    # create an in-memory output file for our excel file
+    output = io.BytesIO()
+    workbook = xlsxwriter.Workbook(output)
+    worksheet = workbook.add_worksheet()
+    
+    # write the headings
+    for col_num, entry in enumerate(column_headings):
+        worksheet.write(0, col_num, entry)
+
+    rows = [add_extra_row_data(referral) for referral in referrals]
+
+    for row_num, referral_data in enumerate(rows):
+        for col_num, entry in enumerate(column_headings):
+            
+            to_write = referral_data.get(entry) or ""
+            worksheet.write(row_num + 1, col_num, to_write)
+
+    workbook.close()
+
+    # rewind to the beginning of the stream before sending our response
+    output.seek(0)
+    response = HttpResponse(
+        output,
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    response["Content-Disposition"] = "attachment; filename=%s" % file_name
+
+    return response
+
+
+def handle_create_spreadsheet_request(request, creator):
     referrals = models.Referral.objects.filter(referral_download=None, supplier=request.user.supplier)
     downloaded_at = timezone.now()
     file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
     new_referral_download = models.ReferralDownload.objects.create(
         created_at=downloaded_at, file_name=file_name, last_downloaded_by=request.user
     )
-    response = create_referral_csv(referrals, file_name)
+    response = creator(referrals, file_name)
     new_referral_download.save()
     referrals.update(referral_download=new_referral_download)
     return response
@@ -61,7 +107,16 @@ def download_csv_view(request):
 
 @require_http_methods(["GET"])
 @decorators.requires_team_leader_or_member
-def download_csv_by_id_view(request, download_id):
+def download_csv_view(request):
+    return handle_create_spreadsheet_request(request, create_referral_csv)
+
+
+@require_http_methods(["GET"])
+@decorators.requires_team_leader_or_member
+def download_xlsx_view(request):
+    return handle_create_spreadsheet_request(request, create_referral_xlsx)
+
+def handle_create_file_request_by_id(request, download_id, csv_or_xlsx_creator):
     referral_download = models.ReferralDownload.objects.get(pk=download_id)
     if referral_download is None:
         return HttpResponse(status=404)
@@ -70,6 +125,16 @@ def download_csv_by_id_view(request, download_id):
     referral_download.last_downloaded_by = request.user
     referral_download.save()
     return response
+
+@require_http_methods(["GET"])
+@decorators.requires_team_leader_or_member
+def download_csv_by_id_view(request, download_id):
+    return handle_create_file_request_by_id(request, download_id, create_referral_csv)
+
+@require_http_methods(["GET"])
+@decorators.requires_team_leader_or_member
+def download_xlsx_by_id_view(request, download_id):
+    return handle_create_file_request_by_id(request, download_id, create_referral_xlsx)
 
 
 def add_extra_row_data(referral):
@@ -94,18 +159,3 @@ def add_extra_row_data(referral):
         "submission_time": created_at.time().strftime("%H:%M:%S"),
     }
     return row
-
-
-def create_referral_csv(referrals, file_name):
-    headers = {
-        "Content-Type": "text/csv",
-        "Content-Disposition": f"attachment; filename=referral-data-{file_name}.csv",
-    }
-    rows = [add_extra_row_data(referral) for referral in referrals]
-    response = HttpResponse(headers=headers, charset="utf-8")
-    response.write(codecs.BOM_UTF8)
-    writer = csv.DictWriter(response, fieldnames=csv_columns, extrasaction="ignore", dialect=csv.unix_dialect)
-    writer.writeheader()
-    for row in rows:
-        writer.writerow(row)
-    return response

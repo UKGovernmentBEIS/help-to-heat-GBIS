@@ -12,3 +12,4 @@
 {% endif %}
 
 <a href="{{data.unread_leads == 0 and '#' or url('portal:data-download')}}" {% if data.unread_leads == 0 %}Disabled{% endif %} class="govuk-button">Download latest leads</a>
+<a href="{{data.unread_leads == 0 and '#' or url('portal:data-download-xlsx')}}" {% if data.unread_leads == 0 %}Disabled{% endif %} class="govuk-button">Download latest leads as xlsx</a>
