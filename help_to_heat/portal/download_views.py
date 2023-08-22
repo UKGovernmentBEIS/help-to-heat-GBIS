@@ -1,8 +1,8 @@
 import codecs
 import csv
 import io
-import xlsxwriter
 
+import xlsxwriter
 from dateutil import tz
 from django.http import HttpResponse
 from django.utils import timezone
@@ -56,6 +56,7 @@ feedback_columns = (
     "submission_time",
 )
 
+
 def create_referral_csv(referrals, file_name):
     headers = {
         "Content-Type": "text/csv",
@@ -70,6 +71,7 @@ def create_referral_csv(referrals, file_name):
         writer.writerow(row)
     return response
 
+
 def create_referral_xlsx(referrals, file_name):
     file_name = file_name + ".xlsx"
 
@@ -77,7 +79,7 @@ def create_referral_xlsx(referrals, file_name):
     output = io.BytesIO()
     workbook = xlsxwriter.Workbook(output)
     worksheet = workbook.add_worksheet()
-    
+
     # write the headings
     for col_num, entry in enumerate(column_headings):
         worksheet.write(0, col_num, entry)
@@ -86,7 +88,6 @@ def create_referral_xlsx(referrals, file_name):
 
     for row_num, referral_data in enumerate(rows):
         for col_num, entry in enumerate(column_headings):
-            
             to_write = referral_data.get(entry) or ""
             worksheet.write(row_num + 1, col_num, to_write)
 
@@ -142,6 +143,7 @@ def download_csv_view(request):
 def download_xlsx_view(request):
     return handle_create_spreadsheet_request(request, create_referral_xlsx)
 
+
 def handle_create_file_request_by_id(request, download_id, csv_or_xlsx_creator):
     referral_download = models.ReferralDownload.objects.get(pk=download_id)
     if referral_download is None:
@@ -152,10 +154,12 @@ def handle_create_file_request_by_id(request, download_id, csv_or_xlsx_creator):
     referral_download.save()
     return response
 
+
 @require_http_methods(["GET"])
 @decorators.requires_team_leader_or_member
 def download_csv_by_id_view(request, download_id):
     return handle_create_file_request_by_id(request, download_id, create_referral_csv)
+
 
 @require_http_methods(["GET"])
 @decorators.requires_team_leader_or_member
