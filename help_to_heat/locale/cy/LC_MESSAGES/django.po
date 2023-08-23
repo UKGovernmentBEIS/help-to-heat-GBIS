@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-23 15:22+0000\n"
+"POT-Creation-Date: 2023-08-23 16:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -466,6 +466,32 @@ msgstr ""
 msgid "©Crown copyright"
 msgstr "©Hawlfraint y Goron"
 
+#: help_to_heat/templates/allauth/account/password_reset_from_key_done.html:3
+#: help_to_heat/templates/allauth/account/password_reset_from_key_done.html:12
+msgid "Password has been reset"
+msgstr "Mae'r cyfrinair wedi'i ailosod"
+
+#: help_to_heat/templates/allauth/account/password_reset_from_key_done.html:6
+#: help_to_heat/templates/frontdoor/applications-closed.html:10
+#: help_to_heat/templates/frontdoor/feedback.html:11
+#: help_to_heat/templates/frontdoor/holding-page.html:7
+#: help_to_heat/templates/frontdoor/northern-ireland.html:8
+#: help_to_heat/templates/frontdoor/privacy-policy.html:10
+#: help_to_heat/templates/frontdoor/schemes.html:11
+#: help_to_heat/templates/macros.html:3 help_to_heat/templates/macros.html:114
+msgid "Back"
+msgstr "Yn ôl"
+
+#: help_to_heat/templates/allauth/account/password_reset_from_key_done.html:16
+msgid ""
+"Your password has successfully been reset. You can now return to the log in "
+"page."
+msgstr "Mae eich cyfrinair wedi'i ailosod yn llwyddiannus. Nawr gallwch fynd yn ôl i fewngofnodi."
+
+#: help_to_heat/templates/allauth/account/password_reset_from_key_done.html:18
+msgid "Log in"
+msgstr "Mewngofnodi"
+
 #: help_to_heat/templates/frontdoor/accessibility-statement.html:4
 msgid ""
 "View accessibility statement - Check eligibility for Great British "
@@ -748,16 +774,6 @@ msgid ""
 msgstr ""
 "Ceisiadau wedi cau - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr "
 "Prydain - GOV.UK"
-
-#: help_to_heat/templates/frontdoor/applications-closed.html:10
-#: help_to_heat/templates/frontdoor/feedback.html:11
-#: help_to_heat/templates/frontdoor/holding-page.html:7
-#: help_to_heat/templates/frontdoor/northern-ireland.html:8
-#: help_to_heat/templates/frontdoor/privacy-policy.html:10
-#: help_to_heat/templates/frontdoor/schemes.html:11
-#: help_to_heat/templates/macros.html:3 help_to_heat/templates/macros.html:114
-msgid "Back"
-msgstr "Yn ôl"
 
 #: help_to_heat/templates/frontdoor/applications-closed.html:11
 #, python-format
@@ -1860,13 +1876,16 @@ msgid ""
 "You will not be able to apply to the Great British Insulation Scheme until "
 "the service is available."
 msgstr ""
-"Fyddwch chi ddim yn gallu gwneud cais i Gynllun Inswleiddio Mawr Prydain nes bod y gwasanaeth ar gael."
+"Fyddwch chi ddim yn gallu gwneud cais i Gynllun Inswleiddio Mawr Prydain nes "
+"bod y gwasanaeth ar gael."
 
 #: help_to_heat/templates/frontdoor/os-api-throttled.html:16
 msgid ""
 "If you already started an application, your answers have not been saved and "
 "you will have to start again when the service is available."
-msgstr "Os ydych chi eisoes wedi dechrau cais, dyw'ch atebion ddim wedi cael eu cadw a bydd rhaid ichi ddechrau eto pan fydd y gwasanaeth ar gael."
+msgstr ""
+"Os ydych chi eisoes wedi dechrau cais, dyw'ch atebion ddim wedi cael eu cadw "
+"a bydd rhaid ichi ddechrau eto pan fydd y gwasanaeth ar gael."
 
 #: help_to_heat/templates/frontdoor/own-property.html:5
 msgid ""
@@ -2546,6 +2565,10 @@ msgstr ""
 "Gwasanaeth heb fod ar gael - Gwirio’ch cymhwystra ar gyfer Cynllun "
 "Inswleiddio Mawr Prydain - GOV.UK"
 
+#: help_to_heat/templates/frontdoor/service_unavailable.html:10
+msgid "Sorry, the service is unavailable"
+msgstr "Ymddiheuriadau, dyw'r gwasanaeth ddim ar gael"
+
 #: help_to_heat/templates/frontdoor/success.html:4
 msgid ""
 "Referral completed - Check eligibility for Great British Insulation Scheme - "
@@ -2586,10 +2609,13 @@ msgid ""
 "contact you within 10 working days to confirm they have received this and "
 "about next steps."
 msgstr ""
+"Rydyn ni wedi anfon eich cyfeiriad at y cyflenwr ynni a ddewiswyd gennych. "
+"Byddan nhw’n cysylltu â chi o fewn 10 diwrnod gwaith i gadarnhau eu bod nhw "
+"wedi cael hyn a’r camau nesaf."
 
 #: help_to_heat/templates/frontdoor/success.html:22
 msgid "You do not need to create another referral at any point."
-msgstr ""
+msgstr "Does dim angen ichi greu atgyfeiriad arall unrhyw bryd."
 
 #: help_to_heat/templates/frontdoor/success.html:24
 msgid ""
@@ -2727,6 +2753,9 @@ msgid ""
 "If your home was converted, for example it was a shop or other commercial "
 "premises before, it may have been built without insulation."
 msgstr ""
+"Os cafodd eich cartref ei drosi, er enghraifft os oedd yn arfer bod yn siop "
+"neu safle masnachol arall o'r blaen, efallai ei fod wedi'i godi heb ei "
+"inswleiddio."
 
 #: help_to_heat/templates/frontdoor/wall-type.html:5
 msgid ""
