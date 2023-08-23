@@ -762,26 +762,26 @@ msgstr "Yn ôl"
 #: help_to_heat/templates/frontdoor/applications-closed.html:11
 #, python-format
 msgid "%(supplier)s are not taking referrals just now"
-msgstr ""
+msgstr "Dyw %(supplier)s ddim yn cymryd atgyfeiriadau ar hyn o bryd"
 
 #: help_to_heat/templates/frontdoor/applications-closed.html:12
 #, python-format
 msgid "You are not able to apply to %(supplier)s using this service just now."
-msgstr ""
+msgstr "Allwch chi ddim gwneud cais i %(supplier)s drwy ddefnyddio'r gwasanaeth yma ar hyn o bryd."
 
 #: help_to_heat/templates/frontdoor/applications-closed.html:13
 msgid "You can check back again soon."
-msgstr ""
+msgstr "Gallwch ddod yn ôl eto yn fuan."
 
 #: help_to_heat/templates/frontdoor/applications-closed.html:14
 msgid "If you are a home owner in England and Wales, "
-msgstr ""
+msgstr "Os ydych chi'n berchennog cartref yng Nghymru a Lloegr, "
 
 #: help_to_heat/templates/frontdoor/applications-closed.html:16
 msgid ""
 "you can find other ways to save energy using the find ways to save energy "
 "service (opens in a new tab)"
-msgstr ""
+msgstr "gallwch ddod o hyd i ffyrdd eraill o arbed ynni drwy ddefnyddio'r gwasanaeth dod o hyd i ffyrdd o arbed ynni (yn agor mewn tab newydd)"
 
 #: help_to_heat/templates/frontdoor/base.html:7
 msgid "Great British Insulation Scheme - GOV.UK"
