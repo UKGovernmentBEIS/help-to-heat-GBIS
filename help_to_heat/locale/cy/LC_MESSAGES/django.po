@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-23 15:05+0000\n"
+"POT-Creation-Date: 2023-08-23 15:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -525,19 +525,19 @@ msgid "We’ve also made the website text as simple as possible to understand."
 msgstr ""
 "Rydyn ni hefyd wedi gwneud testun y wefan mor syml â phosibl i'w ddeall."
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:31
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:30
 msgid "How accessible this website is"
 msgstr "Pa mor hygyrch yw'r wefan yma"
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:34
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:33
 msgid "This website is fully accessible."
 msgstr "Mae'r wefan yma yn gwbl hygyrch."
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:38
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:37
 msgid "Feedback and contact information"
 msgstr "Adborth a gwybodaeth gysylltu"
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:41
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:40
 msgid ""
 "If you need information on this website in a different format like "
 "accessible PDF, large print, easy read, audio recording or braille:"
@@ -545,20 +545,20 @@ msgstr ""
 "Os oes arnoch chi angen gwybodaeth ar y wefan hon mewn fformat gwahanol fel "
 "PDF hygyrch, print bras, hawdd ei ddarllen, recordiad sain neu braille:"
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:44
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:43
 msgid "call"
 msgstr "ffoniwch "
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:45
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:44
 msgid "We’ll consider your request and get back to you in 10 working days."
 msgstr ""
 "byddwn yn ystyried eich cais ac yn cysylltu â chi o fewn 10 diwrnod gwaith."
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:49
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:48
 msgid "Reporting accessibility problems with this website"
 msgstr "Rhoi gwybod am broblemau hygyrchedd gyda'r wefan yma"
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:52
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:51
 msgid ""
 "We’re always looking to improve the accessibility of this website. If you "
 "find any problems not listed on this page or think we’re not meeting "
@@ -568,11 +568,11 @@ msgstr ""
 "gweld unrhyw broblemau sydd heb eu rhestru ar y tudalen yma neu'n credu ein "
 "bod ni heb fodloni gofynion hygyrchedd, cysylltwch â:"
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:57
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:56
 msgid "Enforcement procedure"
 msgstr "Gweithdrefn orfodi"
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:60
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:59
 msgid ""
 "The Equality and Human Rights Commission (EHRC) is responsible for enforcing "
 "the Public Sector Bodies (Websites and Mobile Applications) (No. 2) "
@@ -584,15 +584,15 @@ msgstr ""
 "Symudol) (Rhif 2) 2018 (y 'rheoliadau hygyrchedd'). Os nad ydych chi'n "
 "fodlon ar y ffordd rydyn ni'n ymateb i'ch cwyn,"
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:61
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:60
 msgid "contact the Equality Advisory and Support Service (EASS)"
 msgstr "cysylltwch â'r Gwasanaeth Cynghori a Chymorth Cydraddoldeb (EASS)"
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:65
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:64
 msgid "Contacting us by phone or visiting us in person"
 msgstr "Cysylltu â ni dros y ffôn neu ymweld â ni'n bersonol"
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:68
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:67
 msgid ""
 "We provide a text relay service for people who are D/deaf, hearing impaired "
 "or have a speech impediment."
@@ -600,7 +600,7 @@ msgstr ""
 "Rydyn ni'n darparu gwasanaeth trosglwyddo testun ar gyfer pobl sy'n fyddar, "
 "pobl sydd â nam ar eu clyw neu sydd â nam ar eu lleferydd."
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:72
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:71
 msgid ""
 "Our offices have audio induction loops, or if you contact us before your "
 "visit we can arrange a British Sign Language (BSL) interpreter."
@@ -608,15 +608,15 @@ msgstr ""
 "Mae gan ein swyddfeydd ddolenni sain, neu os byddwch yn cysylltu â ni cyn "
 "eich ymweliad gallwn drefnu dehonglydd Iaith Arwyddion Prydain (BSL)."
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:76
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:75
 msgid "Find out how to contact us"
 msgstr "Rhagor o wybodaeth am sut i gysylltu â ni: "
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:80
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:79
 msgid "Technical information about this website’s accessibility"
 msgstr "Gwybodaeth dechnegol am hygyrchedd y wefan yma"
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:83
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:82
 msgid ""
 "BEIS is committed to making its website accessible, in accordance with the "
 "Public Sector Bodies (Websites and Mobile Applications) (No. 2) "
@@ -626,23 +626,23 @@ msgstr ""
 "Hygyrchedd Cyrff y Sector Cyhoeddus (Gwefannau a Chymwysiadau Symudol) (Rhif "
 "2) 2018."
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:86
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:85
 msgid "Compliance status"
 msgstr "Statws cydymffurfio"
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:89
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:88
 msgid "This website is compliant with the"
 msgstr "Mae'r wefan yma yn cydymffurfio â "
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:90
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:89
 msgid "Web Content Accessibility Guidelines version 2.1 AA standard"
 msgstr "safon AA Canllawiau Hygyrchedd Cynnwys y We fersiwn 2.1"
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:93
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:92
 msgid "Preparation of this accessibility statement"
 msgstr "Paratoi'r datganiad hygyrchedd yma"
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:96
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:95
 msgid ""
 "This statement was prepared on 19 July 2023. It was last reviewed on 25 July "
 "2023."
@@ -650,7 +650,7 @@ msgstr ""
 "Cafodd y datganiad yma ei baratoi ar 19 Gorffennaf 2023. Y tro diwethaf iddo "
 "gael ei adolygu oedd 25 Gorffennaf 2023."
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:99
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:98
 msgid ""
 "This website was last tested on 25 July 2023. The test was carried out by "
 "Zoonou."
@@ -658,11 +658,11 @@ msgstr ""
 "Y tro diwethaf i'r wefan yma gael ei phrofi oedd 25 Gorffennaf 2023. Cafodd "
 "y prawf ei gynnal gan Zoonou."
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:102
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:101
 msgid "Zoonou used"
 msgstr "Defnyddiodd Zoonou"
 
-#: help_to_heat/templates/frontdoor/accessibility-statement.html:102
+#: help_to_heat/templates/frontdoor/accessibility-statement.html:101
 msgid "to define the pages tested and test approach."
 msgstr "i ddiffinio'r tudalennau a gâi eu profi a'r dull profi."
 
@@ -767,7 +767,9 @@ msgstr "Dyw %(supplier)s ddim yn cymryd atgyfeiriadau ar hyn o bryd"
 #: help_to_heat/templates/frontdoor/applications-closed.html:12
 #, python-format
 msgid "You are not able to apply to %(supplier)s using this service just now."
-msgstr "Allwch chi ddim gwneud cais i %(supplier)s drwy ddefnyddio'r gwasanaeth yma ar hyn o bryd."
+msgstr ""
+"Allwch chi ddim gwneud cais i %(supplier)s drwy ddefnyddio'r gwasanaeth yma "
+"ar hyn o bryd."
 
 #: help_to_heat/templates/frontdoor/applications-closed.html:13
 msgid "You can check back again soon."
@@ -781,7 +783,9 @@ msgstr "Os ydych chi'n berchennog cartref yng Nghymru a Lloegr, "
 msgid ""
 "you can find other ways to save energy using the find ways to save energy "
 "service (opens in a new tab)"
-msgstr "gallwch ddod o hyd i ffyrdd eraill o arbed ynni drwy ddefnyddio'r gwasanaeth dod o hyd i ffyrdd o arbed ynni (yn agor mewn tab newydd)"
+msgstr ""
+"gallwch ddod o hyd i ffyrdd eraill o arbed ynni drwy ddefnyddio'r gwasanaeth "
+"dod o hyd i ffyrdd o arbed ynni (yn agor mewn tab newydd)"
 
 #: help_to_heat/templates/frontdoor/base.html:7
 msgid "Great British Insulation Scheme - GOV.UK"
@@ -1836,6 +1840,33 @@ msgstr ""
 "Dewiswch nifer yr ystafelloedd gwely sydd gan yr eiddo. Dylech gynnwys pob "
 "ystafell wely hyd yn oed os ydych chi'n eu defnyddio ar gyfer rhywbeth "
 "arall, fel swyddfa gartref."
+
+#: help_to_heat/templates/frontdoor/os-api-throttled.html:4
+msgid ""
+"Sorry, there is a problem with this service - Check eligibility for Great "
+"British Insulation Scheme - GOV.UK"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/os-api-throttled.html:10
+msgid "Sorry, there is a problem with this service"
+msgstr "Ymddiheuriadau, mae yna broblem gyda'r gwasanaeth yma"
+
+#: help_to_heat/templates/frontdoor/os-api-throttled.html:14
+msgid "Try again later."
+msgstr "Rhowch gynnig arall arni yn nes ymlaen."
+
+#: help_to_heat/templates/frontdoor/os-api-throttled.html:15
+msgid ""
+"You will not be able to apply to the Great British Insulation Scheme until "
+"the service is available."
+msgstr ""
+"Fyddwch chi ddim yn gallu gwneud cais i Gynllun Inswleiddio Mawr Prydain nes bod y gwasanaeth ar gael."
+
+#: help_to_heat/templates/frontdoor/os-api-throttled.html:16
+msgid ""
+"If you already started an application, your answers have not been saved and "
+"you will have to start again when the service is available."
+msgstr "Os ydych chi eisoes wedi dechrau cais, dyw'ch atebion ddim wedi cael eu cadw a bydd rhaid ichi ddechrau eto pan fydd y gwasanaeth ar gael."
 
 #: help_to_heat/templates/frontdoor/own-property.html:5
 msgid ""
