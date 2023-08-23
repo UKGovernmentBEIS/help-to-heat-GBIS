@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-23 07:50+0000\n"
+"POT-Creation-Date: 2023-08-23 11:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,6 +93,10 @@ msgstr "Enw cyntaf"
 #: help_to_heat/templates/frontdoor/contact-details.html:26
 msgid "Last name"
 msgstr "Enw olaf"
+
+#: help_to_heat/frontdoor/schemas.py:79
+msgid "Mobile number"
+msgstr "Rhif symudol"
 
 #: help_to_heat/frontdoor/schemas.py:80
 msgid "Email"
@@ -294,7 +298,7 @@ msgstr "Nac oes, does dim modd mynd i'r atig"
 
 #: help_to_heat/frontdoor/schemas.py:295 help_to_heat/frontdoor/schemas.py:305
 msgid "No loft"
-msgstr ""
+msgstr "Dim atig"
 
 #: help_to_heat/frontdoor/schemas.py:299 help_to_heat/frontdoor/schemas.py:483
 msgid "Yes, there is at least 270mm of insulation in my loft"
@@ -352,6 +356,10 @@ msgstr "Dewiswch beth yw lleoliad yr eiddo"
 #: help_to_heat/frontdoor/views.py:44
 msgid "Select if you own the property"
 msgstr "Dewiswch os yw'r eiddo'n perthyn i chi"
+
+#: help_to_heat/frontdoor/views.py:45
+msgid "Enter building name or number"
+msgstr "Rhowch enw neu rif yr adeilad"
 
 #: help_to_heat/frontdoor/views.py:46
 msgid "Enter Address line 1"
@@ -452,19 +460,25 @@ msgstr ""
 "Rhowch gadarnhad eich bod yn cytuno i'ch gwybodaeth gael ei defnyddio drwy "
 "roi tic yn y blwch hwn"
 
+#: help_to_heat/templates/allauth/account/base.html:103
+#: help_to_heat/templates/frontdoor/base.html:183
+#: help_to_heat/templates/portal/base_generic_gov.html:164
+msgid "©Crown copyright"
+msgstr "©Hawlfraint y Goron"
+
 #: help_to_heat/templates/frontdoor/accessibility-statement.html:4
-#, fuzzy
-#| msgid "Check eligibility for Great British Insulation Scheme"
 msgid ""
 "View accessibility statement - Check eligibility for Great British "
 "Insulation Scheme - GOV.UK"
-msgstr "Gwirio'ch Cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain"
+msgstr ""
+"Gweld datganiad hygyrchedd - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/address-manual.html:5
 msgid ""
 "Enter the property address manually - Check eligibility for Great British "
 "Insulation Scheme - GOV.UK"
 msgstr ""
+"Rhoi cyfeiriad yr eiddo eich hunan - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/address-manual.html:13
 #: help_to_heat/templates/frontdoor/address.html:13
@@ -497,10 +511,11 @@ msgid ""
 "Select the property address - Check eligibility for Great British Insulation "
 "Scheme - GOV.UK"
 msgstr ""
+"Dewis cyfeiriad yr eiddo - Gwiri cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/address-select.html:21
 msgid "No addresses found"
-msgstr ""
+msgstr "Dim cyfeiriadau wedi’u canfod"
 
 #: help_to_heat/templates/frontdoor/address-select.html:25
 msgid "I can't find my address. I want to enter it manually"
@@ -511,6 +526,7 @@ msgid ""
 "What is the property address? - Check eligibility for Great British "
 "Insulation Scheme - GOV.UK"
 msgstr ""
+"Beth yw cyfeiriad yr eiddo? - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/address.html:15
 msgid ""
@@ -523,7 +539,7 @@ msgstr ""
 
 #: help_to_heat/templates/frontdoor/address.html:19
 msgid "Building name or number"
-msgstr ""
+msgstr "Enw neu rif yr adeilad"
 
 #: help_to_heat/templates/frontdoor/address.html:27
 msgid "Enter address manually"
@@ -534,6 +550,7 @@ msgid ""
 "Applications closed - Check eligibility for Great British Insulation Scheme "
 "- GOV.UK"
 msgstr ""
+"Ceisiadau wedi cau - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/applications-closed.html:10
 #: help_to_heat/templates/frontdoor/northern-ireland.html:8
@@ -569,7 +586,7 @@ msgstr ""
 
 #: help_to_heat/templates/frontdoor/base.html:7
 msgid "Great British Insulation Scheme - GOV.UK"
-msgstr ""
+msgstr "Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/base.html:38
 msgid "Cookies we are using on our service"
@@ -600,11 +617,11 @@ msgstr ""
 
 #: help_to_heat/templates/frontdoor/base.html:53
 msgid "Accept cookies"
-msgstr ""
+msgstr "Derbyn cwcis"
 
 #: help_to_heat/templates/frontdoor/base.html:54
 msgid "Reject cookies"
-msgstr ""
+msgstr "Gwrthod cwcis"
 
 #: help_to_heat/templates/frontdoor/base.html:55
 msgid "View cookies we use on this service"
@@ -612,7 +629,7 @@ msgstr "Gweld y cwcis rydyn ni'n eu defnyddio ar y gwasanaeth yma"
 
 #: help_to_heat/templates/frontdoor/base.html:62
 msgid "Skip to main content"
-msgstr ""
+msgstr "Neidio i'r prif gynnwys"
 
 #: help_to_heat/templates/frontdoor/base.html:89
 msgid "Check eligibility for Great British Insulation Scheme"
@@ -632,7 +649,7 @@ msgstr " yn ein helpu i'w wella."
 
 #: help_to_heat/templates/frontdoor/base.html:154
 msgid "Support links"
-msgstr ""
+msgstr "Dolenni cymorth"
 
 #: help_to_heat/templates/frontdoor/base.html:159
 msgid "Privacy Policy"
@@ -659,6 +676,7 @@ msgid ""
 "Do you receive benefits? - Check eligibility for Great British Insulation "
 "Scheme - GOV.UK"
 msgstr ""
+"Ydych chi'n cael budd-daliadau? - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/benefits.html:14
 msgid "Is anyone in your household receiving any of the following benefits?"
@@ -741,6 +759,7 @@ msgid ""
 "Confirm and submit - Check eligibility for Great British Insulation Scheme - "
 "GOV.UK"
 msgstr ""
+"Cadarnhau a chyflwyno - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/confirm-and-submit.html:9
 #: help_to_heat/templates/frontdoor/summary.html:9
@@ -798,6 +817,7 @@ msgid ""
 "What are your contact details? - Check eligibility for Great British "
 "Insulation Scheme - GOV.UK"
 msgstr ""
+"Beth yw'ch manylion cysylltu? - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/contact-details.html:13
 msgid "Add your personal and contact details"
@@ -846,10 +866,11 @@ msgid ""
 "Cookie information - Check eligibility for Great British Insulation Scheme - "
 "GOV.UK"
 msgstr ""
+"Gwybodaeth cwcis - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/cookies.html:22
 msgid "You've set your cookie preferences."
-msgstr ""
+msgstr "Rydych chi wedi gosod eich dewisiadau cwcis"
 
 #: help_to_heat/templates/frontdoor/cookies.html:27
 msgid "Cookies"
@@ -1021,13 +1042,14 @@ msgstr "1 funud"
 
 #: help_to_heat/templates/frontdoor/cookies.html:111
 msgid "Save cookie settings"
-msgstr ""
+msgstr "Cadw gosodiadau cwcis"
 
 #: help_to_heat/templates/frontdoor/council-tax-band.html:5
 msgid ""
 "What is the property's council tax band? - Check eligibility for Great "
 "British Insulation Scheme - GOV.UK"
 msgstr ""
+"Beth yw band Treth Gyngor yr eiddo? - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/council-tax-band.html:14
 msgid "What is the council tax band of your property?"
@@ -1046,6 +1068,7 @@ msgid ""
 "Where is the property located? - Check eligibility for Great British "
 "Insulation Scheme - GOV.UK"
 msgstr ""
+"Ble mae'r eiddo wedi'i leoli? - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/country.html:14
 msgid "Where is the property located?"
@@ -1056,6 +1079,7 @@ msgid ""
 "An EPC was not found for this property - Check eligibility for Great British "
 "Insulation Scheme - GOV.UK"
 msgstr ""
+"Does dim EPC wedi'i ganfod ar gyfer yr eiddo hwn - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/epc-disagree.html:10
 msgid ""
@@ -1070,7 +1094,7 @@ msgstr "Rhesymau posibl am hyn yw:"
 
 #: help_to_heat/templates/frontdoor/epc-disagree.html:14
 msgid "there isn't an EPC for your property"
-msgstr ""
+msgstr "Does dim EPC ar gyfer eich eiddo chi"
 
 #: help_to_heat/templates/frontdoor/epc-disagree.html:15
 msgid "your property is a new build"
@@ -1096,6 +1120,7 @@ msgid ""
 "You are ineligible for support - Check eligibility for Great British "
 "Insulation Scheme - GOV.UK"
 msgstr ""
+"Dydych chi ddim yn gymwys i gael cymorth - Gwirio'ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/epc-ineligible.html:11
 msgid "It's likely that your home already has suitable energy saving measures"
@@ -1113,6 +1138,7 @@ msgid ""
 "What is the EPC of this property? - Check eligibility for Great British "
 "Insulation Scheme - GOV.UK"
 msgstr ""
+"Beth yw EPC yr eiddo hwn? - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/epc.html:11
 msgid "Find your EPC"
@@ -1153,12 +1179,22 @@ msgid ""
 "Thanks for the feedback - Check eligibility for Great British Insulation "
 "Scheme - GOV.UK"
 msgstr ""
+"Diolch am yr adborth - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
+
+#: help_to_heat/templates/frontdoor/feedback-thanks.html:13
+msgid "Thank you for your feedback"
+msgstr "Rhowch enw neu rif yr adeilad"
+
+#: help_to_heat/templates/frontdoor/feedback-thanks.html:20
+msgid "Return to your application"
+msgstr "Dychwelyd i'ch cais"
 
 #: help_to_heat/templates/frontdoor/feedback.html:5
 msgid ""
 "Give us some feedback - Check eligibility for Great British Insulation "
 "Scheme - GOV.UK"
 msgstr ""
+"Rhowch adborth inni - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/holding-page.html:3
 msgid ""
@@ -1169,6 +1205,7 @@ msgstr ""
 msgid ""
 "Homepage - Check eligibility for Great British Insulation Scheme - GOV.UK"
 msgstr ""
+"Hafan - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/homepage.html:11
 msgid "Check if you may be eligible for the Great British Insulation Scheme"
@@ -1287,6 +1324,7 @@ msgid ""
 "What is your household income? - Check eligibility for Great British "
 "Insulation Scheme - GOV.UK"
 msgstr ""
+"Beth yw incwm eich aelwyd? - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/household-income.html:14
 msgid "What is your annual household income?"
@@ -1336,6 +1374,7 @@ msgid ""
 "Do you have access to the loft? - Check eligibility for Great British "
 "Insulation Scheme - GOV.UK"
 msgstr ""
+"Oes modd mynd i'ch atig? - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/loft-access.html:17
 msgid ""
@@ -1358,6 +1397,7 @@ msgid ""
 "Does your loft have insulation? - Check eligibility for Great British "
 "Insulation Scheme - GOV.UK"
 msgstr ""
+"Oes gan eich atig insiwleiddiad? - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/loft-insulation.html:14
 msgid "Is your loft fully insulated?"
@@ -1394,6 +1434,7 @@ msgid ""
 "Is there a loft? - Check eligibility for Great British Insulation Scheme - "
 "GOV.UK"
 msgstr ""
+"Oes yna atig? - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/loft.html:14
 msgid "Do you have a loft that hasn't been converted into a room?"
@@ -1426,6 +1467,7 @@ msgid ""
 "Northern Ireland - Check eligibility for Great British Insulation Scheme - "
 "GOV.UK"
 msgstr ""
+"Gogledd Iwerddon - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/northern-ireland.html:11
 msgid "This service is not available for homes in Northern Ireland"
@@ -1450,6 +1492,7 @@ msgid ""
 "How many bedrooms does your property have? - Check eligibility for Great "
 "British Insulation Scheme - GOV.UK"
 msgstr ""
+"Faint o ystafelloedd gwely sydd gan eich eiddo? - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/number-of-bedrooms.html:14
 msgid "How many bedrooms does the property have?"
@@ -1469,6 +1512,7 @@ msgid ""
 "Do you own your own property? - Check eligibility for Great British "
 "Insulation Scheme - GOV.UK"
 msgstr ""
+"Ydych chi'n berchen ar eich eiddo eich hun? - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/own-property.html:14
 msgid "Do you own the property?"
@@ -1479,6 +1523,7 @@ msgid ""
 "Privacy policy - Check eligibility for Great British Insulation Scheme - GOV."
 "UK"
 msgstr ""
+"Polisi preifatrwydd - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/privacy-policy.html:11
 msgid "Privacy Notice – the Great British Insulation Scheme"
@@ -2034,6 +2079,7 @@ msgid ""
 "What is the subtype of your property? - Check eligibility for Great British "
 "Insulation Scheme - GOV.UK"
 msgstr ""
+"Beth yw is-fath eich eiddo? - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/property-subtype.html:14
 #, python-format
@@ -2067,6 +2113,7 @@ msgid ""
 "What type is your property? - Check eligibility for Great British Insulation "
 "Scheme - GOV.UK"
 msgstr ""
+"Pa fath o eiddo yw eich eiddo? - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/property-type.html:14
 msgid "What kind of property do you have?"
@@ -2077,6 +2124,7 @@ msgid ""
 "Schemes you are eligible for - Check eligibility for Great British "
 "Insulation Scheme - GOV.UK"
 msgstr ""
+"Cynlluniau rydych chi'n gymwys ar eu cyfer - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/schemes.html:18
 msgid "Information based on your answers"
@@ -2129,19 +2177,21 @@ msgid ""
 "Service unavailable - Check eligibility for Great British Insulation Scheme "
 "- GOV.UK"
 msgstr ""
+"Gwasanaeth heb fod ar gael - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/success.html:4
 msgid ""
 "Referral completed - Check eligibility for Great British Insulation Scheme - "
 "GOV.UK"
 msgstr ""
+"Cwblhau atgyfeiriad - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
-#: help_to_heat/templates/frontdoor/success.html:12
+#: help_to_heat/templates/frontdoor/success.html:13
 #, python-format
 msgid "Your details have been submitted to %(supplier)s"
 msgstr "Mae'ch manylion chi wedi'u cyflwyno i %(supplier)s"
 
-#: help_to_heat/templates/frontdoor/success.html:15
+#: help_to_heat/templates/frontdoor/success.html:16
 msgid ""
 "If you provided an email address in your referral then we have sent you a "
 "confirmation email."
@@ -2149,31 +2199,31 @@ msgstr ""
 "Os rhoesoch chi gyfeiriad ebost yn eich atgyfeiriad, yna rydyn ni wedi anfon "
 "neges gadarnhau atoch."
 
-#: help_to_heat/templates/frontdoor/success.html:16
-#: help_to_heat/templates/frontdoor/success.html:29
+#: help_to_heat/templates/frontdoor/success.html:17
+#: help_to_heat/templates/frontdoor/success.html:30
 msgid "You can "
 msgstr "Gallwch "
 
-#: help_to_heat/templates/frontdoor/success.html:16
+#: help_to_heat/templates/frontdoor/success.html:17
 msgid "save or print a copy of your referral"
 msgstr "gadw neu argraffu copi o'ch atgyfeiriad"
 
-#: help_to_heat/templates/frontdoor/success.html:17
+#: help_to_heat/templates/frontdoor/success.html:18
 msgid "What happens next?"
 msgstr "Beth sy'n digwydd nesaf?"
 
-#: help_to_heat/templates/frontdoor/success.html:19
+#: help_to_heat/templates/frontdoor/success.html:20
 msgid ""
 "We have sent your referral to the energy supplier you selected. They will "
 "contact you within 10 working days to confirm they have received this and "
 "about next steps."
 msgstr ""
 
-#: help_to_heat/templates/frontdoor/success.html:21
+#: help_to_heat/templates/frontdoor/success.html:22
 msgid "You do not need to create another referral at any point."
 msgstr ""
 
-#: help_to_heat/templates/frontdoor/success.html:23
+#: help_to_heat/templates/frontdoor/success.html:24
 msgid ""
 "Once the energy supplier has confirmed they have received your referral, "
 "they will review this and determine whether your property is applicable for "
@@ -2185,7 +2235,7 @@ msgstr ""
 "eich eiddo yn gymwys i gael gwelliannau i'r cartref. Efallai y byddan nhw'n "
 "gofyn am ragor o wybodaeth. Cewch wybod am ganlyniad y broses adolygu."
 
-#: help_to_heat/templates/frontdoor/success.html:25
+#: help_to_heat/templates/frontdoor/success.html:26
 msgid ""
 "Properties that are applicable for home energy efficiency improvements must "
 "have a home survey completed. Your energy supplier will organise this with "
@@ -2194,22 +2244,22 @@ msgstr ""
 "Rhaid i eiddo sy'n gymwys i gael gwelliannau i'r cartref gael arolwg cartref "
 "wedi'i gwblhau. Bydd eich cyflenwr ynni yn trefnu hyn gyda chi."
 
-#: help_to_heat/templates/frontdoor/success.html:27
+#: help_to_heat/templates/frontdoor/success.html:28
 msgid ""
 "Contacting the energy supplier about your referral after 10 working days"
 msgstr ""
 "Cysylltu â'r cyflenwr ynni ynghylch eich atgyfeiriad ar ôl 10 diwrnod gwaith"
 
-#: help_to_heat/templates/frontdoor/success.html:29
+#: help_to_heat/templates/frontdoor/success.html:30
 msgid "find contact details for the energy supplier (opens in new tab)"
 msgstr ""
 "ddod o hyd i fanylion cysylltu'r cyflenwr ynni (yn agor mewn tab newydd)"
 
-#: help_to_heat/templates/frontdoor/success.html:29
+#: help_to_heat/templates/frontdoor/success.html:30
 msgid " if you need to contact them."
 msgstr "os oes angen ichi gysylltu â nhw."
 
-#: help_to_heat/templates/frontdoor/success.html:31
+#: help_to_heat/templates/frontdoor/success.html:32
 msgid ""
 "You do not need to contact the energy supplier unless it has been more than "
 "10 working days since you submitted the referral and you have not yet "
@@ -2219,19 +2269,19 @@ msgstr ""
 "ddiwrnodau gwaith wedi mynd heibio ers ichi gyflwyno'r atgyfeiriad ac nad "
 "ydych wedi cael neges gadarnhau ganddyn nhw drwy'r ebost eto."
 
-#: help_to_heat/templates/frontdoor/success.html:33
+#: help_to_heat/templates/frontdoor/success.html:34
 msgid "Access more household energy support"
 msgstr "Sicrhau mwy o gymorth gydag ynni cartref"
 
-#: help_to_heat/templates/frontdoor/success.html:34
+#: help_to_heat/templates/frontdoor/success.html:35
 msgid "You can:"
 msgstr "Rydych chi'n gallu:"
 
-#: help_to_heat/templates/frontdoor/success.html:36
+#: help_to_heat/templates/frontdoor/success.html:37
 msgid "get "
 msgstr "cael "
 
-#: help_to_heat/templates/frontdoor/success.html:36
+#: help_to_heat/templates/frontdoor/success.html:37
 msgid ""
 "help with your energy bills from the Help for Households service (opens in a "
 "new tab)"
@@ -2239,12 +2289,12 @@ msgstr ""
 "help gyda'ch biliau ynni gan y gwasanaeth Cymorth i Aelwydydd (yn agor mewn "
 "tab newydd)"
 
-#: help_to_heat/templates/frontdoor/success.html:37
 #: help_to_heat/templates/frontdoor/success.html:38
+#: help_to_heat/templates/frontdoor/success.html:39
 msgid "visit "
 msgstr "edrych ar "
 
-#: help_to_heat/templates/frontdoor/success.html:37
+#: help_to_heat/templates/frontdoor/success.html:38
 msgid ""
 "household energy-saving tips from the Energy Savings Trust (opens in a new "
 "tab)"
@@ -2252,7 +2302,7 @@ msgstr ""
 "awgrymiadau arbed ynni gartref gan yr Ymddiriedolaeth Arbed Ynni (yn agor "
 "mewn tab newydd)"
 
-#: help_to_heat/templates/frontdoor/success.html:38
+#: help_to_heat/templates/frontdoor/success.html:39
 msgid "household'energy-saving tips from Citizen's Advice (opens in a new tab)"
 msgstr ""
 "awgrymiadau arbed ynni gartref gan Gyngor ar Bopeth (yn agor mewn tab newydd)"
@@ -2262,6 +2312,7 @@ msgid ""
 "A summary of your answers - Check eligibility for Great British Insulation "
 "Scheme - GOV.UK"
 msgstr ""
+"Crynodeb o'ch atebion - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/summary.html:11
 msgid "Check your answers"
@@ -2272,6 +2323,7 @@ msgid ""
 "Choose your supplier - Check eligibility for Great British Insulation Scheme "
 "- GOV.UK"
 msgstr ""
+"Dewis eich cyflenwr - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/supplier.html:18
 msgid ""
@@ -2286,6 +2338,7 @@ msgid ""
 "Do your walls have insulation? - Check eligibility for Great British "
 "Insulation Scheme - GOV.UK"
 msgstr ""
+"Oes gan eich waliau inswleiddiad? - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/wall-insulation.html:14
 msgid "Are your walls insulated?"
@@ -2325,6 +2378,7 @@ msgid ""
 "What type of walls does your property have? - Check eligibility for Great "
 "British Insulation Scheme - GOV.UK"
 msgstr ""
+"Pa fath o waliau sydd gan eich eiddo? - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/wall-type.html:14
 msgid "What kind of walls does your property have?"
