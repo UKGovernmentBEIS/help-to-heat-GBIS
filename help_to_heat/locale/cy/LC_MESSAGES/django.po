@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-23 13:43+0000\n"
+"POT-Creation-Date: 2023-08-23 13:57+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -558,6 +558,7 @@ msgstr ""
 "Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/applications-closed.html:10
+#: help_to_heat/templates/frontdoor/feedback.html:11
 #: help_to_heat/templates/frontdoor/holding-page.html:7
 #: help_to_heat/templates/frontdoor/northern-ireland.html:8
 #: help_to_heat/templates/frontdoor/privacy-policy.html:10
@@ -1199,7 +1200,7 @@ msgstr ""
 
 #: help_to_heat/templates/frontdoor/feedback-thanks.html:13
 msgid "Thank you for your feedback"
-msgstr "Rhowch enw neu rif yr adeilad"
+msgstr "Diolch ichi am eich adborth"
 
 #: help_to_heat/templates/frontdoor/feedback-thanks.html:20
 msgid "Return to your application"
@@ -1212,6 +1213,48 @@ msgid ""
 msgstr ""
 "Rhowch adborth inni - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr "
 "Prydain - GOV.UK"
+
+#: help_to_heat/templates/frontdoor/feedback.html:14
+msgid "Help us improve the service"
+msgstr "Helpwch ni i wella'r gwasanaeth"
+
+#: help_to_heat/templates/frontdoor/feedback.html:23
+msgid ""
+"I found this service useful for learning about government energy efficiency "
+"support."
+msgstr "Roedd y gwasanaeth yma’n fuddiol imi ddysgu am gymorth effeithlonrwydd ynni'r llywodraeth."
+
+#: help_to_heat/templates/frontdoor/feedback.html:27
+#: help_to_heat/templates/frontdoor/feedback.html:45
+#: help_to_heat/templates/frontdoor/feedback.html:64
+msgid "How much do you agree with the statement above?"
+msgstr "I ba raddau rydych chi'n cytuno â'r gosodiad uchod?"
+
+#: help_to_heat/templates/frontdoor/feedback.html:41
+msgid ""
+"I had sufficient detail or guidance on every page to proceed to the next "
+"step."
+msgstr "Roedd digon o fanylion neu ganllawiau imi ar bob tudalen i symud ymlaen i'r cam nesaf."
+
+#: help_to_heat/templates/frontdoor/feedback.html:60
+msgid ""
+"I was able to answer all questions accurately, to the best of my knowledge."
+msgstr "Roeddwn i'n gallu ateb pob cwestiwn yn gywir, hyd eithaf fy ngwybodaeth."
+
+#: help_to_heat/templates/frontdoor/feedback.html:76
+msgid ""
+"While using our service, was there any specific aspect of this service that "
+"you believe can be improved?"
+msgstr "Wrth ddefnyddio’n gwasanaeth ni, oedd unrhyw agwedd benodol ar y gwasanaeth rydych chi’n credu bod modd ei gwella?"
+
+#: help_to_heat/templates/frontdoor/feedback.html:80
+msgid ""
+"Please do not include any personal or financial information in your response."
+msgstr "Peidiwch â chynnwys unrhyw wybodaeth bersonol neu ariannol yn eich ymateb."
+
+#: help_to_heat/templates/frontdoor/feedback.html:86
+msgid "Send feedback"
+msgstr ""
 
 #: help_to_heat/templates/frontdoor/holding-page.html:3
 msgid ""
