@@ -107,6 +107,7 @@
     </div>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+        {% if not SUPPRESS_LANGUAGE_TOGGLE %}
       <form class="gbis-language-select govuk-body" action="{{ url('frontdoor:set_language') }}" method="post"
         aria-label="Language switcher">
         {{csrf_input}}
@@ -138,10 +139,12 @@
           </li>
         </ul>
       </form>
+        {% endif %}
 
       {% block content %}
       {% endblock %}
     </main>
+
   </div>
 
   <footer class="govuk-footer " role="contentinfo">
