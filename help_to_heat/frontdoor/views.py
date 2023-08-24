@@ -476,7 +476,7 @@ class LoftInsulationView(PageView):
 
         if loft_data.get("loft", None) == "Yes, I have a loft that hasn't been converted into a room":
             _, next_page_url = get_prev_next_urls(session_id, page_name)
-            prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="loft-insulation"))
+            prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="loft-access"))
             return prev_page_url, next_page_url
         else:
             return super().get_prev_next_urls(session_id, page_name)
