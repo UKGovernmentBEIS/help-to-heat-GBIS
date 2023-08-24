@@ -343,7 +343,7 @@ property_subtype_options_map = {
             "hint": _("Sits in the middle with a house or building on each side"),
         },
         {
-            "value": "End Terrace",
+            "value": "End terrace",
             "label": _("End terrace"),
             "hint": _("Sits at the end of a row of similar houses with one house attached to it"),
         },
