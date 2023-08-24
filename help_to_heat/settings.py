@@ -23,6 +23,7 @@ FROM_EMAIL = env.str("FROM_EMAIL", default="test@example.com")
 DEBUG = env.bool("DEBUG", default=False)
 
 SUPPRESS_COOKIE_BANNER = env.bool("SUPPRESS_COOKIE_BANNER", default=False)
+SUPPRESS_LANGUAGE_TOGGLE = env.bool("SUPPRESS_LANGUAGE_TOGGLE", default=True)
 
 # TODO: Replace with fixed hosts once we know the domain
 ALLOWED_HOSTS = ["*"]

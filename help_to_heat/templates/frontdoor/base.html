@@ -51,7 +51,7 @@
                 <input type="hidden" name="prev" value="{{ request.path }}">
                 <div class="govuk-button-group">
                     <button type="submit" name="cookies" class="govuk-button" value="True">{{_("Accept cookies")}}</button>
-                    <button type="submit" name="cookies-f" class="govuk-button" value="False">{{_("Reject cookies")}}</button>
+                    <button type="submit" name="cookies" class="govuk-button" value="False">{{_("Reject cookies")}}</button>
                     <a class="govuk-link" href="/cookies">{{_("View cookies we use on this service")}}</a>
                 </div>
             </form>
@@ -107,6 +107,7 @@
     </div>
 
     <main class="govuk-main-wrapper" id="main-content" role="main">
+        {% if not SUPPRESS_LANGUAGE_TOGGLE %}
       <form class="gbis-language-select govuk-body" action="{{ url('frontdoor:set_language') }}" method="post"
         aria-label="Language switcher">
         {{csrf_input}}
@@ -138,10 +139,12 @@
           </li>
         </ul>
       </form>
+        {% endif %}
 
       {% block content %}
       {% endblock %}
     </main>
+
   </div>
 
   <footer class="govuk-footer " role="contentinfo">

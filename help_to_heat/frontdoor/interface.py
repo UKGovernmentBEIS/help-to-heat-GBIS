@@ -1,5 +1,10 @@
+import ast
+import logging
+from http import HTTPStatus
+
 import marshmallow
 import osdatahub
+import requests
 from django.conf import settings
 
 from help_to_heat import portal
@@ -222,7 +227,23 @@ class Address(Entity):
 
     @with_schema(load=GetAddressSchema, dump=FullAddressSchema)
     def get_address(self, uprn):
-        api = osdatahub.PlacesAPI(settings.OS_API_KEY)
+        logger = logging.getLogger(__name__)
+        api_keys = ast.literal_eval(settings.OS_API_KEY)
+        for index, key in enumerate(api_keys):
+            try:
+                api = osdatahub.PlacesAPI(key)
+            except requests.exceptions.HTTPError or requests.exceptions.RequestException as e:
+                status_code = e.response.status_code
+                if status_code == HTTPStatus.TOO_MANY_REQUESTS:
+                    logger.error(f"The OS API usage limit has been hit for API key at index {index}.")
+                    if index == len(api_keys) - 1:
+                        logger.error("The OS API usage limit has been hit for all API keys")
+                    else:
+                        continue
+
+                logger.error("An error occurred while attempting to fetch addresses.")
+                logger.error(e)
+                break
         api_results = api.uprn(int(uprn), dataset="LPI")["features"]
         address = api_results[0]["properties"]["ADDRESS"]
         result = {"uprn": uprn, "address": address}

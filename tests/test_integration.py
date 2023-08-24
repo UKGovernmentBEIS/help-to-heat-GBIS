@@ -23,7 +23,7 @@ def test_csv():
 
     download_datetime = "2022-07-31 23:48:59+00:00"
     with freezegun.freeze_time(download_datetime):
-        csv_page = page.click(contains="Download latest leads")
+        csv_page = page.click(contains="Download latest leads", index=0)
 
     page = client.get("/portal/")
     assert page.has_one("span:contains('2022-08-01')")

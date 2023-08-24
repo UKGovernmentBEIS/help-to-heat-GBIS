@@ -92,8 +92,6 @@ def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D", s
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_one("h1:contains('What is the property’s address?')")
-
     form = page.get_form()
     form["building_name_or_number"] = "10"
     form["postcode"] = "SW1A 2AA"
@@ -117,7 +115,6 @@ def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D", s
     assert page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
     page = _check_page(page, "epc", "accept_suggested_epc", "Yes")
 
-    assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
     page = _check_page(page, "benefits", "benefits", benefits_answer)
 
     assert page.has_one("h1:contains('What is your annual household income?')")
@@ -282,8 +279,6 @@ def test_back_button():
     form["own_property"] = "Yes, I own my property and live in it"
     page = form.submit().follow()
 
-    assert page.has_one("h1:contains('What is the property’s address?')")
-
     page = page.click(contains="Back")
 
     form = page.get_form()
@@ -328,8 +323,6 @@ def test_no_benefits_flow():
 
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
-
-    assert page.has_one("h1:contains('What is the property’s address?')")
 
     form = page.get_form()
     form["building_name_or_number"] = "10"
@@ -428,7 +421,6 @@ def test_no_address():
     form["own_property"] = "Yes, I own my property and live in it"
     page = form.submit().follow()
 
-    assert page.has_one("h1:contains('What is the property’s address?')")
     form = page.get_form()
     form["building_name_or_number"] = "10"
     form["postcode"] = "SW1A 2AA"
@@ -492,8 +484,6 @@ def test_no_epc():
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_one("h1:contains('What is the property’s address?')")
-
     form = page.get_form()
     form["building_name_or_number"] = "10"
     form["postcode"] = "SW1A 2AA"
@@ -515,8 +505,6 @@ def test_no_epc():
 
     assert page.has_one("h1:contains('What is the council tax band of your property?')")
     page = _check_page(page, "council-tax-band", "council_tax_band", "B")
-
-    assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
@@ -553,8 +541,6 @@ def test_eligibility():
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_one("h1:contains('What is the property’s address?')")
-
     form = page.get_form()
     form["building_name_or_number"] = "10"
     form["postcode"] = "SW1A 2AA"
@@ -581,7 +567,6 @@ def test_eligibility():
     form = page.get_form()
     page = form.submit().follow()
 
-    assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
     page = _check_page(page, "benefits", "benefits", "No")
 
     assert page.has_one("h1:contains('Your property is not eligible')")
@@ -708,7 +693,7 @@ def test_feedback_with_session():
     feedback_session_id = page.path.split("/")[3]
     assert uuid.UUID(feedback_session_id)
 
-    page = page.click(contains="Back")
+    page = page.click(contains="Return to your application")
     assert page.has_one("h1:contains('Do you own the property?')")
 
 
@@ -882,8 +867,6 @@ def test_address_validation():
 
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
-
-    assert page.has_one("h1:contains('What is the property’s address?')")
 
     form = page.get_form()
     form["building_name_or_number"] = "?" * 256

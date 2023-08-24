@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-17 11:07+0000\n"
+"POT-Creation-Date: 2023-08-23 07:50+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -630,27 +630,27 @@ msgstr "adborth"
 msgid " will help us to improve it."
 msgstr " yn ein helpu i'w wella."
 
-#: help_to_heat/templates/frontdoor/base.html:151
+#: help_to_heat/templates/frontdoor/base.html:154
 msgid "Support links"
 msgstr ""
 
-#: help_to_heat/templates/frontdoor/base.html:156
+#: help_to_heat/templates/frontdoor/base.html:159
 msgid "Privacy Policy"
 msgstr "Polisi Preifatrwydd"
 
-#: help_to_heat/templates/frontdoor/base.html:163
+#: help_to_heat/templates/frontdoor/base.html:166
 msgid "Accessibility Statement"
 msgstr "Datganiad Hygyrchedd"
 
-#: help_to_heat/templates/frontdoor/base.html:174
+#: help_to_heat/templates/frontdoor/base.html:177
 msgid "All content is available under the "
 msgstr "Mae'r cynnwys i gyd ar gael o dan "
 
-#: help_to_heat/templates/frontdoor/base.html:176
+#: help_to_heat/templates/frontdoor/base.html:179
 msgid "Open Government Licence v3.0"
 msgstr "Drwydded Llywodraeth Agored v3.0"
 
-#: help_to_heat/templates/frontdoor/base.html:177
+#: help_to_heat/templates/frontdoor/base.html:180
 msgid ", except where otherwise stated"
 msgstr ", ac eithrio lle nodir fel arall"
 
