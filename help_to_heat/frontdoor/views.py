@@ -61,7 +61,7 @@ missing_item_errors = {
     "supplier": _("Select your home energy supplier from the list below"),
     "first_name": _("Enter your first name"),
     "last_name": _("Enter your last name"),
-    "email": _("Enter your address"),
+    "email": _("Enter your email address"),
     "contact_number": _("Enter your contact number"),
     "permission": _("Please confirm that you agree to the use of your information by checking this box"),
 }
