@@ -494,7 +494,7 @@ msgstr "Rhowch eich enw olaf"
 
 #: help_to_heat/frontdoor/views.py:64
 msgid "Enter your email address"
-msgstr "Rhowch eich cyfeiriad ebost"
+msgstr ""
 
 #: help_to_heat/frontdoor/views.py:65
 msgid "Enter your contact number"
