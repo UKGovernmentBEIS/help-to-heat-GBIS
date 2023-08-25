@@ -568,7 +568,8 @@ multichoice_options = (
 
 
 def validate_email_or_none(value):
-    return value != "" and not validate.Email(error=_("Invalid email format"))(value)
+    if value != "" and not validate.Email()(value):
+        raise ValidationError("Invalid email format")
 
 
 postcode_regex_collection = (
