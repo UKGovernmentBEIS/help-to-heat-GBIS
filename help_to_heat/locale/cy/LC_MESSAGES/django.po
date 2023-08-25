@@ -498,7 +498,7 @@ msgstr "Rhowch eich enw olaf"
 
 #: help_to_heat/frontdoor/views.py:67
 msgid "Enter your email address"
-msgstr ""
+msgstr "Rhowch eich cyfeiriad ebost"
 
 #: help_to_heat/frontdoor/views.py:68
 msgid "Enter your contact number"
@@ -1524,7 +1524,7 @@ msgstr ""
 
 #: help_to_heat/templates/frontdoor/feedback.html:86
 msgid "Send feedback"
-msgstr ""
+msgstr "Anfon adborth"
 
 #: help_to_heat/templates/frontdoor/holding-page.html:3
 msgid ""
@@ -2798,7 +2798,7 @@ msgstr ""
 msgid ""
 "Homes built after 1991 were typically built with insulating material between "
 "the outer and inner walls."
-msgstr ""
+msgstr "Fel arfer, roedd cartrefi ar ôl 1991 yn cael eu hadeiladu gyda deunydd inswleiddio rhwng y waliau allanol a mewnol."
 
 #: help_to_heat/templates/frontdoor/wall-insulation.html:34
 msgid ""
