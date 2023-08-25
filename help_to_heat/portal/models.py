@@ -18,21 +18,20 @@ london_tz = tz.gettz("Europe/London")
 
 
 class SupplierChoices(utils.Choices):
-    # BRITISH_GAS = ("british-gas", "British Gas")
-    # BULB = ("bulb", "Bulb")
-    # E_ENERGY = ("e-energy", "E Energy")
-    # ECOTRICITY = ("ecotricity", "Ecotricity")
+    BRITISH_GAS = ("british-gas", "British Gas")
+    BULB = ("bulb", "Bulb, now part of Octopus Energy")
+    E_ENERGY = ("e-energy", "E (Gas & Electricity) Ltd")
+    ECOTRICITY = ("ecotricity", "Ecotricity")
     EDF = ("edf", "EDF")
-    EON = ("eon", "EON")
-    # ESB = ("esb", "ESB")
-    # FOXGLOVE = ("foxglove", "Foxglove")
-    # OCTOPUS = ("octopus", "Octopus")
-    # OVO = ("ovo", "OVO")
-    # SCOTTISH_POWER = ("scottish-power", "Scottish Power")
-    # SHELL = ("shell", "Shell")
+    EON = ("eon", "E.ON Next")
+    FOXGLOVE = ("foxglove", "Foxglove")
+    OCTOPUS = ("octopus", "Octopus Energy")
+    OVO = ("ovo", "OVO")
+    SCOTTISH_POWER = ("scottish-power", "Scottish Power")
+    SHELL = ("shell", "Shell")
     SO_ENERGY = ("so-energy", "So Energy")
     UTILITA = ("utilita", "Utilita")
-    # UTILITY_WAREHOUSE = ("utility-warehouse", "Utility Warehouse")
+    UTILITY_WAREHOUSE = ("utility-warehouse", "Utility Warehouse")
 
 
 class Supplier(utils.UUIDPrimaryKeyBase, utils.TimeStampedModel):

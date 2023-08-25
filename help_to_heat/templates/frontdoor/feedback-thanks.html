@@ -2,23 +2,22 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>Thanks for the feedback - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("Thanks for the feedback - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
 
-  {% if prev_url %}
-    <a href="{{prev_url}}" class="govuk-back-link">Back</a>
-  {% endif %}
-
-  <div class="govuk-grid-row">
-    <div class="govuk-grid-column-two-thirds">
-
-      <h1 class="govuk-heading-l">Thank you for your feedback</h1>
-
-      <p class="govuk-body">We will definitely read it.</p>
-
+    <div class="govuk-grid-row">
+        <div class="govuk-grid-column-two-thirds">
+            <div class="govuk-panel govuk-panel--confirmation">
+                <h1 class="govuk-panel__title">Thank you for your feedback</h1>
+            </div>
+        </div>
     </div>
-  </div>
 
+    {% if prev_url %}
+        <a href="{{ prev_url }}">
+            <button role="button" class="govuk-button" data-module="govuk-button">Return to your application</button>
+        </a>
+    {% endif %}
 {% endblock %}

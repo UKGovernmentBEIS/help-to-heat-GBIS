@@ -14,6 +14,9 @@ RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 RUN curl -o /bin/wait-for-db https://github.com/palfrey/wait-for-db/releases/download/v1.2.0/wait-for-db-linux-x86
 RUN chmod +x /bin/wait-for-db
 
+RUN apt-get update
+RUN apt-get install -y gettext
+
 RUN python3 -m pip install -U pip setuptools wheel
 
 RUN python3 -m pip install debugpy
@@ -26,6 +29,8 @@ RUN chmod +x /start.sh
 
 COPY ./docker/web/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
+
+COPY ./envs/web.template ./envs/web
 
 COPY . /app
 

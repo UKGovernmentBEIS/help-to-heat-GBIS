@@ -2,15 +2,15 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>You are ineligible for support - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("You are ineligible for support - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
   {% call macros.further_help() -%}
 
-    <h1 class="govuk-heading-l">It's likely that your home already has suitable energy saving measures</h1>
+    <h1 class="govuk-heading-l">{{_("It's likely that your home already has suitable energy saving measures")}}</h1>
 
-    <p class="govuk-body">This service is for homes with lower energy performance ratings, from D to G.</p>
+    <p class="govuk-body">{{_("This service is for homes with lower energy performance ratings, from D to G.")}}</p>
 
   {%- endcall %}
 {% endblock %}

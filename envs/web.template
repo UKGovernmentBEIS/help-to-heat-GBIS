@@ -1,0 +1,17 @@
+DJANGO_SETTINGS_MODULE=help_to_heat.settings
+PORT=8012
+DEBUG=True
+VCAP_APPLICATION='{"space_name": "local"}'
+DJANGO_SECRET_KEY='1n53cur3K3y'
+POSTGRES_HOST=help-to-heat-db
+POSTGRES_PORT=5432
+POSTGRES_DB=help-to-heat
+POSTGRES_USER=help-to-heat
+POSTGRES_PASSWORD=insecure
+PGPASSWORD=insecure
+DATABASE_URL="postgres://help-to-heat:insecure@help-to-heat-db:5432/help-to-heat"
+CONTACT_EMAIL="test@example.com"
+FROM_EMAIL="test@example.com"
+EMAIL_BACKEND_TYPE=CONSOLE
+BASE_URL=http://localhost:8012/
+OS_API_KEY=["api_key_1","api_key_2","api_key_3","api_key_4","api_key_5"]

@@ -1,5 +1,5 @@
 <h1 class="govuk-heading-l">Archive</h1>
-<p class="govuk-body">Download older versions of your customer leads in CSV format. You may want to do this if you believe you are missing customer leads.</p>
+<p class="govuk-body">Download older versions of your customer leads in CSV or Excel format. You may want to do this if you believe you are missing customer leads.</p>
 
 <table class="govuk-table">
   <thead class="govuk-table__head">
@@ -12,7 +12,7 @@
   <tbody class="govuk-table__body">
   {% for archive in data.archives %}
     <tr class="govuk-table__row">
-      <td class="govuk-table__cell"><a href="{{url('portal:download-csv-by-id', archive.id)}}" class="govuk-link">{{archive.file_name}}</a></td>
+      <td class="govuk-table__cell"><a href="{% if archive.file_name.endswith('.xlsx') %}{{url('portal:download-xlsx-by-id', archive.id)}}{% else %}{{url('portal:download-csv-by-id', archive.id)}}{% endif %}" class="govuk-link">{{archive.file_name}}</a></td>
       <td class="govuk-table__cell">
         <span>{{archive.local_created_at.strftime('%H:%M')}}</span><br>
         <span>{{archive.local_created_at.strftime('%Y-%m-%d')}}</span>

@@ -1,265 +1,218 @@
 {% extends "frontdoor/base.html" %}
 
 {% block title %}
-  <title>Privacy policy - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("Privacy policy - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <a href="{% if previous_path %}{{ previous_path }}{% else %}{{url('frontdoor:homepage')}}{% endif %}" class="govuk-back-link">Back</a>
-    <h1 class="govuk-heading-l">Privacy Notice – the Great British Insulation Scheme</h1>
-    <p class="govuk-body">This notice is provided to meet the requirements of the UK General Data Protection Regulation
-      (UK GDPR) and Data
-      Protection Act 2018 (DPA) to provide transparency in how we process and use personal data collected for the GOV.UK
-      referral service for the Great British Insulation Scheme (GB Insulation Scheme), and your rights. It is made under
-      Articles 13 and 14 of the UK GDPR.</p>
-    <p class="govuk-body">The Check Eligibility for GB Insulation service allows users to check their eligibility for
-      help with energy efficiency
-      measures through relevant government schemes, specifically the Great British Insulation Scheme. Users will also be
-      advised where additional help through the Energy Company Obligation (ECO4) may be available. If the service gives
-      an
-      indication that the user and their property may be eligible for support, based on information that the user is
-      invited
-      to provide, then they can create a referral that will make their details available to an energy supplier. This
-      will
-      usually be their own energy provider unless the user themselves selects another.</p>
-    <p class="govuk-body">This privacy notice relates to how your data is used in connection with the service and covers
-      information saved as you
-      proceed through the application and after you submit your application.</p>
-    <p class="govuk-body">The Department for Energy Security and Net Zero and related energy suppliers are the
-      independent data controllers for
-      your data. This privacy notice does not cover energy suppliers and how they use your data. You should also read
-      your
-      chosen energy supplier’s privacy notice to understand how they use your data. They are also required to manage
-      your
-      personal data in a way that meets the UK GDPR and DPA.
+    <a href="{% if previous_path %}{{ previous_path }}{% else %}{{url('frontdoor:homepage')}}{% endif %}" class="govuk-back-link">{{_("Back")}}</a>
+    <h1 class="govuk-heading-l">{{_("Privacy Notice – the Great British Insulation Scheme")}}</h1>
+    <p class="govuk-body">
+      {{_("This notice is provided to meet the requirements of the UK General Data Protection Regulation (UK GDPR) and Data Protection Act 2018 (DPA) to provide transparency in how we process and use personal data collected for the GOV.UK referral service for the Great British Insulation Scheme (GB Insulation Scheme), and your rights. It is made under Articles 13 and 14 of the UK GDPR.")}}
+    </p>
+    <p class="govuk-body">
+      {{_("The Check Eligibility for GB Insulation service allows users to check their eligibility for help with energy efficiency measures through relevant government schemes, specifically the Great British Insulation Scheme. Users will also be advised where additional help through the Energy Company Obligation (ECO4) may be available. If the service gives an indication that the user and their property may be eligible for support, based on information that the user is invited to provide, then they can create a referral that will make their details available to an energy supplier. This will usually be their own energy provider unless the user themselves selects another.")}}
+    </p>
+    <p class="govuk-body">
+      {{_("This privacy notice relates to how your data is used in connection with the service and covers information saved as you proceed through the application and after you submit your application.")}}
+    </p>
+    <p class="govuk-body">
+      {{_("The Department for Energy Security and Net Zero and related energy suppliers are the independent data controllers for your data. This privacy notice does not cover energy suppliers and how they use your data. You should also read your chosen energy supplier’s privacy notice to understand how they use your data. They are also required to manage your personal data in a way that meets the UK GDPR and DPA.")}}
     </p>
 
     <h2 class="govuk-heading-m">
-      Your data
+      {{_("Your data")}}
     </h2>
 
-    <p class="govuk-body">We will process the following personal data:</p>
+    <p class="govuk-body">{{_("We will process the following personal data:")}}</p>
 
     <ul class="govuk-list govuk-list--bullet">
-      <li>Your first name and last name</li>
-      <li>The property’s council tax band</li>
-      <li>The property’s address</li>
-      <li>The property’s post code</li>
-      <li>The property’s EPC rating</li>
-      <li>Questions or feedback you leave, including your email address if you contact us</li>
-      <li>If anyone in your household is receiving benefits</li>
-      <li>If your annual household is above or below £31,000</li>
-      <li>Information about your property</li>
-      <li>Building characteristics</li>
-      <li>Information about measures installed in your property</li>
-      <li>Your email address and phone number when you have provided these</li>
+      <li>{{_("Your first name and last name")}}</li>
+      <li>{{_("The property’s council tax band")}}</li>
+      <li>{{_("The property’s address")}}</li>
+      <li>{{_("The property’s post code")}}</li>
+      <li>{{_("The property’s EPC rating")}}</li>
+      <li>{{_("Questions or feedback you leave, including your email address if you contact us")}}</li>
+      <li>{{_("If anyone in your household is receiving benefits")}}</li>
+      <li>{{_("If your annual household is above or below £31,000")}}</li>
+      <li>{{_("Information about your property")}}</li>
+      <li>{{_("Building characteristics")}}</li>
+      <li>{{_("Information about measures installed in your property")}}</li>
+      <li>{{_("Your email address and phone number when you have provided these")}}</li>
     </ul>
 
-    <p class="govuk-body">This data is collected as you proceed through the application process and when you submit your
-      application.</p>
+    <p class="govuk-body">
+      {{_("This data is collected as you proceed through the application process and when you submit your application.")}}
+    </p>
 
     <h2 class="govuk-heading-m">
-      Purpose
+      {{_("Purpose")}}
     </h2>
 
-    <p class="govuk-body">To enable the Check Eligibility for GB Insulation service to allow you to check if you might
-      be eligible for help with
-      energy efficiency measures.</p>
-    <p class="govuk-body">We also collect your personal data to help energy suppliers and their installers (only when
-      you refer):</p>
+    <p class="govuk-body">
+      {{_("To enable the Check Eligibility for GB Insulation service to allow you to check if you might be eligible for help with energy efficiency measures.")}}
+    </p>
+    <p class="govuk-body">
+      {{_("We also collect your personal data to help energy suppliers and their installers (only when you refer):")}}
+    </p>
 
     <ul class="govuk-list govuk-list--bullet">
-      <li>Verify your identity</li>
-      <li>Confirm what type of energy-saving support your property may be eligible for</li>
+      <li>{{_("Verify your identity")}}</li>
+      <li>{{_("Confirm what type of energy-saving support your property may be eligible for")}}</li>
     </ul>
 
-    <p class="govuk-body">We also collect your personal data to help improve our services so we can:</p>
+    <p class="govuk-body">{{_("We also collect your personal data to help improve our services so we can:")}}</p>
 
     <ul class="govuk-list govuk-list--bullet">
-      <li>Send email confirmation of your referral (if you provide an email address)</li>
-      <li>Analyse uptake of the service</li>
-      <li>Provide support via our call centre if you encounter any issues or need advice and guidance</li>
-      <li>Monitor the success of referrals made by this service</li>
-      <li>Evaluate and improve the service based on any feedback provided</li>
-      <li>Monitor use of the site to identify security threats</li>
+      <li>{{_("Send email confirmation of your referral (if you provide an email address)")}}</li>
+      <li>{{_("Analyse uptake of the service")}}</li>
+      <li>{{_("Provide support via our call centre if you encounter any issues or need advice and guidance")}}</li>
+      <li>{{_("Monitor the success of referrals made by this service")}}</li>
+      <li>{{_("Evaluate and improve the service based on any feedback provided")}}</li>
+      <li>{{_("Monitor use of the site to identify security threats")}}</li>
     </ul>
 
     <h2 class="govuk-heading-m">
-      Legal basis of processing
+      {{_("Legal basis of processing")}}
     </h2>
 
-    <p class="govuk-body">The legal basis for processing your personal data is processing is necessary for the
-      performance of a task carried out
-      in the public interest. In this case, to support the installation of energy-saving measures to properties at
-      reduced cost to households.</p>
+    <p class="govuk-body">
+      {{_("The legal basis for processing your personal data is processing is necessary for the performance of a task carried out in the public interest. In this case, to support the installation of energy-saving measures to properties at reduced cost to households.")}}
+    </p>
 
     <h2 class="govuk-heading-m">
-      Recipients
+      {{_("Recipients")}}
     </h2>
 
-    <p class="govuk-body">We will share the following data with your chosen energy supplier and their installers:</p>
+    <p class="govuk-body">{{_("We will share the following data with your chosen energy supplier and their installers:")}}</p>
 
     <ul class="govuk-list govuk-list--bullet">
-      <li>Your first name and last name</li>
-      <li>The property’s postcode and address</li>
-      <li>The property’s council tax band</li>
-      <li>The property’s EPC rating</li>
-      <li>If anyone in your household is receiving benefits</li>
-      <li>If your annual household income is above or below £31,000</li>
-      <li>The number of bedrooms in your property</li>
-      <li>Your property’s wall insulation</li>
-      <li>Your property’s loft insulation</li>
-      <li>Your email address and phone number when you have provided these</li>
+      <li>{{_("Your first name and last name")}}</li>
+      <li>{{_("The property's postcode and address")}}</li>
+      <li>{{_("The property's council tax band")}}</li>
+      <li>{{_("The property's EPC rating")}}</li>
+      <li>{{_("If anyone in your household is receiving benefits")}}</li>
+      <li>{{_("If your annual household income is above or below £31,000")}}</li>
+      <li>{{_("The number of bedrooms in your property")}}</li>
+      <li>{{_("Your property's wall insulation")}}</li>
+      <li>{{_("Your property's loft insulation")}}</li>
+      <li>{{_("Your email address and phone number when you have provided these")}}</li>
     </ul>
 
 
-    <p class="govuk-body">The purpose of this is to:</p>
+    <p class="govuk-body">{{_("The purpose of this is to:")}}</p>
 
     <ul class="govuk-list govuk-list--bullet">
-      <li>Make a referral to energy suppliers, if your property might be eligible for energy-saving measures</li>
-      <li>Help energy suppliers confirm your information</li>
-      <li>Help energy suppliers contact you to arrange a visit to the property, based on your eligibility for the Great
-        British insulation Scheme</li>
+      <li>{{_("Make a referral to energy suppliers, if your property might be eligible for energy-saving measures")}}</li>
+      <li>{{_("Help energy suppliers confirm your information")}}</li>
+      <li>{{_("Help energy suppliers contact you to arrange a visit to the property, based on your eligibility for the Great British insulation Scheme")}}</li>
     </ul>
 
-    <p class="govuk-body">We have a data sharing agreement with energy suppliers so that we can share your personal data
-      with them to deliver this
-      service. Your energy supplier will also share your personal data with their installers during the processing of
-      your
-      application. The sharing of the data between energy suppliers, energy suppliers’ installers and the Department for
-      Energy Security and Net Zero is for the purpose of administration, delivery, reporting, monitoring, evaluation and
-      fraud
-      prevention necessary within the Great British Insulation scheme.
+    <p class="govuk-body">
+      {{_("We have a data sharing agreement with energy suppliers so that we can share your personal data with them to deliver this service. Your energy supplier will also share your personal data with their installers during the processing of your application. The sharing of the data between energy suppliers, energy suppliers' installers and the Department for Energy Security and Net Zero is for the purpose of administration, delivery, reporting, monitoring, evaluation and fraud prevention necessary within the Great British Insulation scheme.")}}
     </p>
-    <p class="govuk-body">When you use the call centre assisted service the service will be provided by ResQ may also
-      exchange information
-      provided on calls and other correspondence with the Department for Energy Security and Net Zero when there is a
-      need to
-      process your application, if you cannot use the digital service. Calls to the call centre will be recorded and
-      retained
-      for up to two years.
+    <p class="govuk-body">
+      {{_("When you use the call centre assisted service the service will be provided by ResQ may also exchange information provided on calls and other correspondence with the Department for Energy Security and Net Zero when there is a need to process your application, if you cannot use the digital service. Calls to the call centre will be recorded and retained for up to two years.")}}
     </p>
-    <p class="govuk-body">We may share your name and address with a contracted provider to contact you in writing to
-      conduct research and
-      evaluation about the service so we can deliver the scheme effectively and analyse the impact of the scheme. Any
-      research
-      is voluntary and will not affect the outcome of your application. You would have the right to withdraw at any time
-      using
-      the contact details provided by the contracted provider at the time of the research request.
+    <p class="govuk-body">
+      {{_("We may share your name and address with a contracted provider to contact you in writing to conduct research and evaluation about the service so we can deliver the scheme effectively and analyse the impact of the scheme. Any research is voluntary and will not affect the outcome of your application. You would have the right to withdraw at any time using the contact details provided by the contracted provider at the time of the research request.")}}
     </p>
-    <p class="govuk-body">We will share your data with other government bodies or energy suppliers if we are required to
-      do so by law - for
-      example, by court order, or to prevent fraud or other crime.
+    <p class="govuk-body">
+      {{_("We will share your data with other government bodies or energy suppliers if we are required to do so by law - for example, by court order, or to prevent fraud or other crime.")}}
     </p>
 
-    <h2 class="govuk-heading-m">Retention</h2>
+    <h2 class="govuk-heading-m">{{_("Retention")}}</h2>
 
-    <p class="govuk-body">We will only keep your personal data for as long as required to support the delivery,
-      evaluation and scrutiny of the
-      service.</p>
-    <p class="govuk-body">Personal data will be retained for up to two years after the GB Insulation Scheme has ended.
-      Following this, the data
-      will be securely deleted after collection in line with the Department for Energy Security and Net Zero policy.
+    <p class="govuk-body">
+      {{_("We will only keep your personal data for as long as required to support the delivery, evaluation and scrutiny of the service.")}}
     </p>
-    <p class="govuk-body">During this time it will be accessible by the Department for Energy Security and Net Zero and
-      your energy supplier.
+    <p class="govuk-body">
+      {{_("Personal data will be retained for up to two years after the GB Insulation Scheme has ended. Following this, the data will be securely deleted after collection in line with the Department for Energy Security and Net Zero policy.")}}
+    </p>
+    <p class="govuk-body">
+      {{_("During this time it will be accessible by the Department for Energy Security and Net Zero and your energy supplier.")}}
     </p>
 
     <h2 class="govuk-heading-m">
-      Your rights
+      {{_("Your rights")}}
     </h2>
 
-    <p class="govuk-body">You have the right to request information about how your personal data are processed, and
-      to request a copy of that
-      personal data.</p>
-    <p class="govuk-body">You have the right to request that any inaccuracies in your personal data are rectified
-      without delay.
-      You have the right to request that any incomplete personal data are completed, including by means of a
-      supplementary
-      statement.</p>
-    <p class="govuk-body">You have the right to request that your personal data are erased if there is no longer a
-      justification for them to be
-      processed.</p>
-    <p class="govuk-body">You have the right in certain circumstances (for example, where accuracy is contested) to
-      request that the processing of
-      your personal data is restricted.</p>
-    <p class="govuk-body">You have the right to object to the processing of your personal data where it is processed
-      for direct marketing
-      purposes.</p>
-    <p class="govuk-body">You have the right to object to the processing of your personal data including the right
-      to object to automated
-      processing.</p>
-
-    <h2 class="govuk-heading-m">
-      International transfers
-    </h2>
-
-    <p class="govuk-body">We design, build and run our systems to make sure that your data is as safe as possible at all
-      stages, both while it’s
-      processed and when it’s stored.
+    <p class="govuk-body">{{_("You have the right to request information about how your personal data are processed, and to request a copy of that personal data.")}}
     </p>
-
-    <p class="govuk-body">As your personal data is stored on our IT infrastructure and shared with our data processors
-      Microsoft, GOV.UK Notify
-      and Amazon Web Services, it may be transferred and stored securely in the UK and European Economic Area. Where it
-      is the
-      case that your personal data is stored outside the UK and EEA it will be subject to equivalent legal protection
-      through
-      the use of Model Contract Clauses.
+    <p class="govuk-body">
+      {{_("You have the right to request that any inaccuracies in your personal data are rectified without delay. You have the right to request that any incomplete personal data are completed, including by means of a supplementary statement.")}}
+    </p>
+    <p class="govuk-body">
+      {{_("You have the right to request that your personal data are erased if there is no longer a justification for them to be processed.")}}
+    </p>
+    <p class="govuk-body">
+      {{_("You have the right in certain circumstances (for example, where accuracy is contested) to request that the processing of your personal data is restricted.")}}
+    </p>
+    <p class="govuk-body">
+      {{_("You have the right to object to the processing of your personal data where it is processed for direct marketing purposes.")}}
+    </p>
+    <p class="govuk-body">
+      {{_("You have the right to object to the processing of your personal data including the right to object to automated processing.")}}
     </p>
 
     <h2 class="govuk-heading-m">
-      Complaints
+      {{_("International transfers")}}
     </h2>
 
-    <p class="govuk-body">If you consider that your personal data has been misused or mishandled, you may make a
-      complaint to the Information
-      Commissioner, who is an independent regulator.
+    <p class="govuk-body">
+      {{_("We design, build and run our systems to make sure that your data is as safe as possible at all stages, both while it's processed and when it's stored.")}}
     </p>
 
-    <p class="govuk-body">The Information Commissioner can be contacted at:</p>
+    <p class="govuk-body">
+      {{_("As your personal data is stored on our IT infrastructure and shared with our data processors Microsoft, GOV.UK Notify and Amazon Web Services, it may be transferred and stored securely in the UK and European Economic Area. Where it is the case that your personal data is stored outside the UK and EEA it will be subject to equivalent legal protection through the use of Model Contract Clauses.")}}
+    </p> 
 
-    <p class="govuk-body">Information Commissioner's Office</p>
+    <h2 class="govuk-heading-m">
+      {{_("Complaints")}}
+    </h2>
+
+    <p class="govuk-body">
+      {{_("If you consider that your personal data has been misused or mishandled, you may make a complaint to the Information Commissioner, who is an independent regulator.")}}
+    </p>
+
+    <p class="govuk-body">{{_("The Information Commissioner can be contacted at:")}}</p>
+
+    <p class="govuk-body">{{_("Information Commissioner's Office")}}</p>
     <p class="govuk-body">Wycliffe House</p>
     <p class="govuk-body">Water Lane</p>
     <p class="govuk-body">Wilmslow</p>
     <p class="govuk-body">Cheshire SK9 5AF</p>
-    <p class="govuk-body">Website: <a href="https://ico.org.uk/make-a-complaint/"
+    <p class="govuk-body">{{_("Website:")}} <a href="https://ico.org.uk/make-a-complaint/"
         class="govuk-link govuk-link--no-visited-state">https://ico.org.uk/make-a-complaint/</a></p>
-    <p class="govuk-body">Any complaint to the Information Commissioner is without prejudice to your right to seek
-      redress through the courts.</p>
+    <p class="govuk-body">{{_("Any complaint to the Information Commissioner is without prejudice to your right to seek redress through the courts.")}}</p>
 
     <h2 class="govuk-heading-m">
-      Contact details
+      {{_("Contact details")}}
     </h2>
 
-    <p class="govuk-body">The data controller for your personal data is the Department for Energy Security and Net Zero
+    <p class="govuk-body">{{_("The data controller for your personal data is the Department for Energy Security and Net Zero")}}
     </p>
-    <p class="govuk-body">You can contact the Data Protection Officer at:
+    <p class="govuk-body">{{_("You can contact the Data Protection Officer at:")}}
     </p>
     <p class="govuk-body">DESNZ Data Protection Officer</p>
     <p class="govuk-body">Department for Energy Security and Net Zero</p>
     <p class="govuk-body">1 Victoria Street</p>
     <p class="govuk-body">London SW1H 0ET</p>
-    <p class="govuk-body">Email: <a href="mailto:dataprotection@beis.gov.uk"
+    <p class="govuk-body">{{_("Email: ")}}<a href="mailto:dataprotection@beis.gov.uk"
         class="govuk-link govuk-link--no-visited-state">dataprotection@beis.gov.uk</a></p>
 
     <h2 class="govuk-heading-m">
-      Changes to this policy
+      {{_("Changes to this policy")}}
 
     </h2>
 
-    <p class="govuk-body">We may change this privacy policy. In that case, the ‘last updated’ date at the bottom of this
-      page will also change.
-      Any changes to this privacy policy will apply to you and your data immediately.
+    <p class="govuk-body">{{_("We may change this privacy policy. In that case, the 'last updated' date at the bottom of this page will also change. Any changes to this privacy policy will apply to you and your data immediately.")}}</p>
+    <p class="govuk-body">{{_("If these changes affect how your personal data is processed, we will take reasonable steps to let you know.")}}</p>
+    <p class="govuk-body">{{_("Last updated 21 June 2023")}}
     </p>
-    <p class="govuk-body">If these changes affect how your personal data is processed, we will take reasonable steps to
-      let you know.</p>
-    <p class="govuk-body">Last updated 21 June 2023
-    </p>
-    <p class="govuk-body">Change Log:
+    <p class="govuk-body">{{_("Change Log:")}}
     </p>
 
   </div>

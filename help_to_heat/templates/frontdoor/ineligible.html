@@ -2,15 +2,15 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>You are ineligible for support - Check eligibility for Great British Insulation Scheme - GOV.UK</title>
+  <title>{{_("You are ineligible for support - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
   {% call macros.further_help() -%}
-    <h1 class="govuk-heading-l">Your property is not eligible</h1>
+    <h1 class="govuk-heading-l">{{_("Your property is not eligible")}}</h1>
 
-    <p class="govuk-body">Based on your answers, your property is not eligible to access energy-saving measures.</p>
-    <p class="govuk-body">This is likely because your property’s council tax band is too high. This service is for properties in an eligible council tax band (A to D in England and A to E in Scotland and Wales).</p>
+    <p class="govuk-body">{{_("Based on your answers, your property is not eligible to access energy-saving measures.")}}</p>
+    <p class="govuk-body">{{_("This is likely because your property’s council tax band is too high. This service is for properties in an eligible council tax band (A to D in England and A to E in Scotland and Wales).")}}</p>
 
   {%- endcall %}
 {% endblock %}

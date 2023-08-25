@@ -1,4 +1,4 @@
-include envs/web
+include envs/web.template
 
 define _update_requirements
 	docker run -v ${PWD}/:/app/:z python:3.9-buster bash -c "pip install -U pip setuptools && pip install -U -r /app/$(1).txt && pip freeze > /app/$(1).lock"
@@ -43,3 +43,13 @@ test:
 .PHONY: psql
 psql:
 	docker-compose run ${POSTGRES_HOST} psql -U ${POSTGRES_USER} -h ${POSTGRES_HOST} ${POSTGRES_DB}
+
+.PHONY: extract-translations
+extract-translations:
+	docker-compose build web
+	docker-compose run web python manage.py makemessages --locale cy --ignore venv
+
+.PHONY: compile-translations
+compile-translations:
+	docker-compose build web
+	docker-compose run web python manage.py compilemessages --ignore venv

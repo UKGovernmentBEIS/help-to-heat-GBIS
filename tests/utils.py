@@ -14,7 +14,6 @@ from django.conf import settings
 from django.utils import timezone
 
 from help_to_heat import wsgi
-from help_to_heat.frontdoor.mock_os_api import EmptyOSApi, MockOSApi
 from help_to_heat.portal import models
 
 __here__ = pathlib.Path(__file__).parent

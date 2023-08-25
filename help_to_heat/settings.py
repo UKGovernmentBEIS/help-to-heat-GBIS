@@ -1,3 +1,5 @@
+import logging
+
 from .settings_base import (
     BASE_DIR,
     SECRET_KEY,
@@ -6,8 +8,6 @@ from .settings_base import (
     STATICFILES_DIRS,
     env,
 )
-
-import logging
 
 SECRET_KEY = SECRET_KEY
 STATIC_URL = STATIC_URL
@@ -21,6 +21,9 @@ FROM_EMAIL = env.str("FROM_EMAIL", default="test@example.com")
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = env.bool("DEBUG", default=False)
+
+SUPPRESS_COOKIE_BANNER = env.bool("SUPPRESS_COOKIE_BANNER", default=False)
+SUPPRESS_LANGUAGE_TOGGLE = env.bool("SUPPRESS_LANGUAGE_TOGGLE", default=False)
 
 # TODO: Replace with fixed hosts once we know the domain
 ALLOWED_HOSTS = ["*"]
@@ -39,6 +42,7 @@ INSTALLED_APPS = [
     "allauth",
     "allauth.account",
     "allauth.socialaccount",
+    "debug_toolbar",
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
@@ -57,12 +61,33 @@ MIDDLEWARE = [
     "csp.middleware.CSPMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
 ]
+
+
+# TODO: PC-450 Gross way to check which environment we're in, we should have a var for this
+is_developer_environment = BASE_URL == "https://dev.check-eligibility-for-gb-insulation-scheme.service.gov.uk/" or DEBUG
+
+
+def show_toolbar(request):
+    return True
+
+
+DEBUG_TOOLBAR_CONFIG = {
+    "SHOW_TOOLBAR_CALLBACK": show_toolbar,
+}
+
+if is_developer_environment:
+    import socket
+
+    hostname, _, ips = socket.gethostbyname_ex(socket.gethostname())
+    INTERNAL_IPS = [ip[: ip.rfind(".")] + ".1" for ip in ips] + ["127.0.0.1", "10.0.2.2"]
+    MIDDLEWARE = ["debug_toolbar.middleware.DebugToolbarMiddleware"] + MIDDLEWARE
 
 if BASIC_AUTH:
     MIDDLEWARE = ["help_to_heat.auth.basic_auth_middleware"] + MIDDLEWARE
@@ -96,7 +121,10 @@ TEMPLATES = [
         "DIRS": [
             BASE_DIR / "help_to_heat" / "templates",
         ],
-        "OPTIONS": {"environment": "help_to_heat.jinja2.environment"},
+        "OPTIONS": {
+            "environment": "help_to_heat.jinja2.environment",
+            "context_processors": ["help_to_heat.context_processors.add_settings_to_context"],
+        },
     },
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -144,11 +172,15 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "en-gb"
 TIME_ZONE = "UTC"
 USE_I18N = True
 USE_L10N = True
 USE_TZ = True
+
+LOCALE_PATHS = [
+    BASE_DIR / "help_to_heat/locale",
+]
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
@@ -197,5 +229,5 @@ else:
 
     try:
         debugpy.listen(("0.0.0.0", 5678))
-    except Exception as e:
-        print("Unable to bind debugpy (if you are running manage.py in local, this is expected):", e)
+    except Exception as e:  # noqa: B902
+        print("Unable to bind debugpy (if you are running manage.py in local, this is expected):", e)  # noqa: T201

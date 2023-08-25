@@ -4,12 +4,14 @@ from django.conf import settings
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
 from marshmallow import ValidationError
 
 from help_to_heat import utils
 
 from ..portal import email_handler
 from . import eligibility, interface, schemas
+from .os_api import ThrottledApiException
 
 BulbSupplierConverter = interface.BulbSupplierConverter
 
@@ -38,29 +40,30 @@ page_compulsory_field_map = {
 }
 
 missing_item_errors = {
-    "country": "Select where the property is located",
-    "own_property": "Select if you own the property",
+    "country": _("Select where the property is located"),
+    "own_property": _("Select if you own the property"),
     "building_name_or_number": "Enter building name or number",
-    "postcode": "Enter a postcode",
-    "uprn": "Select your address",
-    "town_or_city": "Enter your Town or city",
-    "council_tax_band": "Enter the Council Tax Band of the property",
-    "accept_suggested_epc": "Select if your EPC rating is correct or not, or that you don’t know",
-    "benefits": "Select if anyone in your household is receiving any benefits listed below",
-    "household_income": "Select your household income",
-    "property_type": "Select your property type",
-    "number_of_bedrooms": "Select the number of bedrooms the property has",
-    "wall_type": "Select the type of walls the property has",
-    "wall_insulation": "Select if the walls of the property are insulated or not, or if you don’t know",
-    "loft": "Select if you have a loft that has been converted into a room or not",
-    "loft_access": "Select whether or not you have access to the loft",
-    "loft_insulation": "Select whether or not your loft is fully insulated",
-    "supplier": "Select your home energy supplier from the list below",
-    "first_name": "Enter your first name",
-    "last_name": "Enter your last name",
-    "email": "Enter your address",
-    "contact_number": "Enter your contact number",
-    "permission": "Please confirm that you agree to the use of your information by checking this box",
+    "address_line_1": _("Enter Address line 1"),
+    "postcode": _("Enter a postcode"),
+    "uprn": _("Select your address"),
+    "town_or_city": _("Enter your Town or city"),
+    "council_tax_band": _("Enter the Council Tax Band of the property"),
+    "accept_suggested_epc": _("Select if your EPC rating is correct or not, or that you don’t know"),
+    "benefits": _("Select if anyone in your household is receiving any benefits listed below"),
+    "household_income": _("Select your household income"),
+    "property_type": _("Select your property type"),
+    "number_of_bedrooms": _("Select the number of bedrooms the property has"),
+    "wall_type": _("Select the type of walls the property has"),
+    "wall_insulation": _("Select if the walls of the property are insulated or not, or if you don’t know"),
+    "loft": _("Select if you have a loft that has been converted into a room or not"),
+    "loft_access": _("Select whether or not you have access to the loft"),
+    "loft_insulation": _("Select whether or not your loft is fully insulated"),
+    "supplier": _("Select your home energy supplier from the list below"),
+    "first_name": _("Enter your first name"),
+    "last_name": _("Enter your last name"),
+    "email": _("Enter your address"),
+    "contact_number": _("Enter your contact number"),
+    "permission": _("Please confirm that you agree to the use of your information by checking this box"),
 }
 
 
@@ -89,10 +92,8 @@ def holding_page_view(request):
     return render(request, template_name="frontdoor/holding-page.html", context=context)
 
 
-def holding_page_view(request):
-    previous_path = reverse("frontdoor:homepage")
-    context = {"previous_path": previous_path}
-    return render(request, template_name="frontdoor/holding-page.html", context=context)
+def sorry_page_view(request):
+    return render(request, template_name="frontdoor/os-api-throttled.html")
 
 
 def page_view(request, session_id, page_name):
@@ -164,7 +165,10 @@ class PageView(utils.MethodDispatcher):
         if "referral_created_at" in session and page_name != "success":
             return redirect("/")
 
-        extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data=data)
+        try:
+            extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data=data)
+        except ThrottledApiException:
+            return redirect("/sorry")
         context = {
             "data": data,
             "session_id": session_id,
@@ -174,11 +178,18 @@ class PageView(utils.MethodDispatcher):
             "next_url": next_page_url,
             **extra_context,
         }
+
         response = render(request, template_name=f"frontdoor/{page_name}.html", context=context)
         response["x-vcap-request-id"] = session_id
-        if "sensitive" in context and context["sensitive"]:
+
+        # Most pages will return previously entered data, which could be sensitive and thus should not be cached unless
+        # explicitly okayed.
+        if not ("safe_to_cache" in context and context["safe_to_cache"]):
             response["cache-control"] = "no-store"
             response["Pragma"] = "no-cache"
+        return self.handle_get(response, request, session_id, page_name, context)
+
+    def handle_get(self, response, request, session_id, page_name, context):
         return response
 
     def get_prev_next_urls(self, session_id, page_name):
@@ -222,7 +233,7 @@ class PageView(utils.MethodDispatcher):
 @register_page("country")
 class CountryView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"country_options": schemas.country_options}
+        return {"country_options": schemas.country_options_map}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         if data["country"] == "Northern Ireland":
@@ -296,9 +307,6 @@ class CouncilTaxBandView(PageView):
             council_tax_bands = schemas.welsh_council_tax_band_options
         return {"council_tax_band_options": council_tax_bands}
 
-    def handle_post(self, request, session_id, page_name, data, is_change_page):
-        return super().handle_post(request, session_id, page_name, data, is_change_page)
-
 
 @register_page("epc")
 class EpcView(PageView):
@@ -314,15 +322,29 @@ class EpcView(PageView):
         context = {
             "epc_rating": epc.get("rating"),
             "epc_date": epc.get("date"),
-            "epc_display_options": schemas.epc_display_options,
+            "epc_display_options": schemas.epc_display_options_map,
             "address": address,
         }
         return context
+
+    def handle_get(self, response, request, session_id, page_name, context):
+        session_data = interface.api.session.get_session(session_id)
+        uprn = session_data.get("uprn")
+        country = session_data.get("country")
+        uprn = session_data.get("uprn")
+        if uprn:
+            epc = interface.api.epc.get_epc(uprn, country)
+        else:
+            epc = {}
+        if not epc:
+            return redirect("frontdoor:page", session_id=session_id, page_name="benefits")
+        return super().handle_get(response, request, session_id, page_name, context)
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         prev_page_name, next_page_name = get_prev_next_page_name(page_name)
         epc_rating = data.get("epc_rating")
         accept_suggested_epc = data.get("accept_suggested_epc")
+
         if not epc_rating:
             return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
@@ -339,7 +361,7 @@ class EpcView(PageView):
 
 @register_page("epc-disagree")
 class EpcDisagreeView(PageView):
-    def get(self, request, session_id, page_name, errors=None, is_change_page=False):
+    def get(self, request, session_id, page_name, data=None, errors=None, is_change_page=False):
         if not errors:
             errors = {}
         data = {}
@@ -364,7 +386,7 @@ class EpcDisagreeView(PageView):
 class BenefitsView(PageView):
     def get_context(self, request, session_id, *args, **kwargs):
         context = interface.api.session.get_session(session_id)
-        return {"benefits_options": schemas.yes_no_options, "context": context}
+        return {"benefits_options": schemas.yes_no_options_map, "context": context}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         session_data = interface.api.session.get_session(session_id)
@@ -378,13 +400,13 @@ class BenefitsView(PageView):
 @register_page("household-income")
 class HouseholdIncomeView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"household_income_options": schemas.household_income_options}
+        return {"household_income_options": schemas.household_income_options_map}
 
 
 @register_page("property-type")
 class PropertyTypeView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"property_type_options": schemas.property_type_options}
+        return {"property_type_options": schemas.property_type_options_map}
 
 
 @register_page("property-subtype")
@@ -393,7 +415,7 @@ class PropertySubtypeView(PageView):
         data = interface.api.session.get_answer(session_id, "property-type")
         property_type = data["property_type"]
         return {
-            "property_type": property_type,
+            "property_type": schemas.property_subtype_titles_options_map[property_type],
             "property_subtype_options": schemas.property_subtype_options_map[property_type],
         }
 
@@ -401,25 +423,25 @@ class PropertySubtypeView(PageView):
 @register_page("number-of-bedrooms")
 class NumberOfBedroomsView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"number_of_bedrooms_options": schemas.number_of_bedrooms_options}
+        return {"number_of_bedrooms_options": schemas.number_of_bedrooms_options_map}
 
 
 @register_page("wall-type")
 class WallTypeView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"wall_type_options": schemas.wall_type_options}
+        return {"wall_type_options": schemas.wall_type_options_map}
 
 
 @register_page("wall-insulation")
 class WallInsulationView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"wall_insulation_options": schemas.wall_insulation_options}
+        return {"wall_insulation_options": schemas.wall_insulation_options_map}
 
 
 @register_page("loft")
 class LoftView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"loft_options": schemas.loft_options}
+        return {"loft_options": schemas.loft_options_map}
 
     def save_data(self, request, session_id, page_name, *args, **kwargs):
         data = request.POST.dict()
@@ -441,20 +463,20 @@ class LoftView(PageView):
 @register_page("loft-access")
 class LoftAccessView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"loft_access_options": schemas.loft_access_options}
+        return {"loft_access_options": schemas.loft_access_options_map}
 
 
 @register_page("loft-insulation")
 class LoftInsulationView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"loft_insulation_options": schemas.loft_insulation_options}
+        return {"loft_insulation_options": schemas.loft_insulation_options_map}
 
     def get_prev_next_urls(self, session_id, page_name):
         loft_data = interface.api.session.get_answer(session_id, "loft")
 
         if loft_data.get("loft", None) == "Yes, I have a loft that hasn't been converted into a room":
             _, next_page_url = get_prev_next_urls(session_id, page_name)
-            prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="loft-insulation"))
+            prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="loft-access"))
             return prev_page_url, next_page_url
         else:
             return super().get_prev_next_urls(session_id, page_name)
@@ -467,14 +489,19 @@ class SummaryView(PageView):
         summary_lines = tuple(
             {
                 "question": schemas.summary_map[question],
-                "answer": session_data.get(question),
+                "answer": self.get_answer(session_data, question),
                 "change_url": reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name)),
             }
             for page_name, questions in schemas.household_pages.items()
             for question in questions
             if question in session_data
         )
-        return {"summary_lines": summary_lines, "sensitive": True}
+        return {"summary_lines": summary_lines}
+
+    def get_answer(self, session_data, question):
+        answer = session_data.get(question)
+        answers_map = schemas.check_your_answers_options_map.get(question)
+        return answers_map[answer] if answers_map else answer
 
 
 @register_page("schemes")
@@ -496,13 +523,35 @@ class SupplierView(PageView):
         prev_page_name, next_page_name = get_prev_next_page_name(page_name)
         request_data = dict(request.POST.dict())
         request_supplier = request_data.get("supplier")
+        # to be updated when we get full list of excluded suppliers
+        unavailable_suppliers = [
+            "Shell",
+        ]
         if request_supplier == "Bulb, now part of Octopus Energy":
             next_page_name = "bulb-warning-page"
+        if request_supplier in unavailable_suppliers:
+            next_page_name = "applications-closed"
+
+        if is_change_page:
+            if request_supplier == "Bulb, now part of Octopus Energy":
+                return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
+            elif request_supplier in unavailable_suppliers:
+                return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
+            else:
+                assert page_name in schemas.change_page_lookup
+                next_page_name = schemas.change_page_lookup[page_name]
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
 
 @register_page("bulb-warning-page")
 class BulbWarningPageView(PageView):
+    def get_context(self, session_id, *args, **kwargs):
+        supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        return {"supplier": supplier}
+
+
+@register_page("applications-closed")
+class ApplicationsClosedView(PageView):
     def get_context(self, session_id, *args, **kwargs):
         supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
         return {"supplier": supplier}
@@ -541,7 +590,7 @@ class ConfirmSubmitView(PageView):
             for question in questions
         )
         supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
-        return {"summary_lines": summary_lines, "supplier": supplier, "sensitive": True}
+        return {"summary_lines": summary_lines, "supplier": supplier}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         interface.api.session.create_referral(session_id)
@@ -557,7 +606,7 @@ class ConfirmSubmitView(PageView):
 class SuccessView(PageView):
     def get_context(self, session_id, *args, **kwargs):
         supplier = BulbSupplierConverter(session_id).get_supplier_and_replace_bulb_with_octopus()
-        return {"supplier": supplier}
+        return {"supplier": supplier, "safe_to_cache": True}
 
 
 class FeedbackView(utils.MethodDispatcher):
@@ -589,7 +638,14 @@ def feedback_thanks_view(request, session_id=None, page_name=None):
 
 
 def cookies_view(request):
-    return render(request, template_name="frontdoor/cookies.html")
+    if request.method == "POST":
+        consent = request.POST.get("cookies")
+        previous_path = request.POST.get("prev")
+        response = redirect(previous_path)
+        response.set_cookie("cookiesAccepted", consent)
+        return response
+    else:
+        return render(request, template_name="frontdoor/cookies.html")
 
 
 def data_layer_js_view(request):

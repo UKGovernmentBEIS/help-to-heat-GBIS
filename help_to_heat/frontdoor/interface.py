@@ -1,11 +1,17 @@
+import ast
+import logging
+from http import HTTPStatus
+
 import marshmallow
+import osdatahub
+import requests
 from django.conf import settings
 
 from help_to_heat import portal
 from help_to_heat.utils import Entity, Interface, register_event, with_schema
 
 from . import models, schemas
-from .mock_os_api import MockOSApi
+from .os_api import OSApi
 
 
 class SaveAnswerSchema(marshmallow.Schema):
@@ -86,11 +92,13 @@ def get_addresses_from_api(postcode):
     max_results_number = 100
     offset = 0
 
-    json_response = MockOSApi(settings.OS_API_KEY).get_by_postcode(postcode, offset, max_results_number)
+    json_response = OSApi(settings.OS_API_KEY).get_by_postcode(postcode, offset, max_results_number)
     if not json_response:
         return []
 
     total_results_number = json_response["header"]["totalresults"]
+    if total_results_number == 0:
+        return []
     api_results = json_response["results"]
     api_results_all = api_results
 
@@ -102,7 +110,7 @@ def get_addresses_from_api(postcode):
         while requested_results_number < total_results_number:
             offset = requested_results_number
 
-            json_response = MockOSApi(settings.OS_API_KEY).get_by_postcode(postcode, offset, max_results_number)
+            json_response = OSApi(settings.OS_API_KEY).get_by_postcode(postcode, offset, max_results_number)
             if not json_response:
                 return []
 
@@ -133,12 +141,12 @@ class BulbSupplierConverter:
     def get_supplier_and_replace_bulb_with_octopus(self):
         supplier = self._get_supplier()
         if self._is_bulb():
-            return "Octopus"
+            return "Octopus Energy"
         return supplier
 
     def replace_bulb_with_octopus_in_session_data(self, session_data):
         if self._is_bulb():
-            session_data["supplier"] = "Octopus"
+            session_data["supplier"] = "Octopus Energy"
         return session_data
 
 
@@ -219,8 +227,25 @@ class Address(Entity):
 
     @with_schema(load=GetAddressSchema, dump=FullAddressSchema)
     def get_address(self, uprn):
-        api_results = MockOSApi(settings.OS_API_KEY).get_by_uprn(int(uprn), "LPI")["results"]
-        address = api_results[0]["LPI"]["ADDRESS"]
+        logger = logging.getLogger(__name__)
+        api_keys = ast.literal_eval(settings.OS_API_KEY)
+        for index, key in enumerate(api_keys):
+            try:
+                api = osdatahub.PlacesAPI(key)
+            except requests.exceptions.HTTPError or requests.exceptions.RequestException as e:
+                status_code = e.response.status_code
+                if status_code == HTTPStatus.TOO_MANY_REQUESTS:
+                    logger.error(f"The OS API usage limit has been hit for API key at index {index}.")
+                    if index == len(api_keys) - 1:
+                        logger.error("The OS API usage limit has been hit for all API keys")
+                    else:
+                        continue
+
+                logger.error("An error occurred while attempting to fetch addresses.")
+                logger.error(e)
+                break
+        api_results = api.uprn(int(uprn), dataset="LPI")["features"]
+        address = api_results[0]["properties"]["ADDRESS"]
         result = {"uprn": uprn, "address": address}
         return result
 
