@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-08-24 14:04+0000\n"
+"POT-Creation-Date: 2023-08-25 09:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -381,19 +381,19 @@ msgstr "Cytuno'n llwyr"
 msgid "Not sure / not applicable"
 msgstr "Ansicr / Amherthnasol"
 
-#: help_to_heat/frontdoor/schemas.py:572
+#: help_to_heat/frontdoor/schemas.py:571
 msgid "Invalid email format"
 msgstr "Fformat ebost annilys"
 
-#: help_to_heat/frontdoor/schemas.py:593
+#: help_to_heat/frontdoor/schemas.py:592
 msgid "Please enter a valid UK postcode"
 msgstr "Rhowch god post dilys yn y Deyrnas Unedig"
 
-#: help_to_heat/frontdoor/schemas.py:645
+#: help_to_heat/frontdoor/schemas.py:644
 msgid "Energy Company Obligation 4"
 msgstr "Rhwymedigaeth Cwmni Ynni 4"
 
-#: help_to_heat/frontdoor/schemas.py:646
+#: help_to_heat/frontdoor/schemas.py:645
 msgid "Great British Insulation Scheme"
 msgstr "Cynllun Inswleiddio Mawr Prydain"
 

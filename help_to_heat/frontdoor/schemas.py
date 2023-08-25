@@ -568,8 +568,7 @@ multichoice_options = (
 
 
 def validate_email_or_none(value):
-    if value != "" and not validate.Email()(value):
-        raise ValidationError(_("Invalid email format"))
+    return value != "" and not validate.Email(error=_("Invalid email format"))(value)
 
 
 postcode_regex_collection = (
@@ -642,6 +641,6 @@ class SessionSchema(Schema):
 
 
 schemes_map = {
-    "ECO4": "Energy Company Obligation 4",
-    "GBIS": "Great British Insulation Scheme",
+    "ECO4": _("Energy Company Obligation 4"),
+    "GBIS": _("Great British Insulation Scheme"),
 }
