@@ -1907,7 +1907,7 @@ msgstr ""
 msgid ""
 "Sorry, there is a problem with this service - Check eligibility for Great "
 "British Insulation Scheme - GOV.UK"
-msgstr ""
+msgstr "Ymddiheuriadau, mae yna broblem gyda'r gwasanaeth yma - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/os-api-throttled.html:10
 msgid "Sorry, there is a problem with this service"
