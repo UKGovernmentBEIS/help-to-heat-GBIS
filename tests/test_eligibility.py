@@ -10,10 +10,10 @@ from help_to_heat.portal import models
 from . import utils
 
 result_map = {
-    "GBIS": ("Great British Insulation Scheme",),
-    "ECO4": ("Energy Company Obligation 4",),
+    "GBIS": ("GBIS",),
+    "ECO4": ("ECO4",),
     "NONE": (),
-    "BOTH": ("Great British Insulation Scheme", "Energy Company Obligation 4"),
+    "BOTH": ("GBIS", "ECO4"),
 }
 
 scenarios = (

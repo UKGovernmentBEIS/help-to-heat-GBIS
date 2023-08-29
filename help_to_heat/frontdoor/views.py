@@ -42,7 +42,7 @@ page_compulsory_field_map = {
 missing_item_errors = {
     "country": _("Select where the property is located"),
     "own_property": _("Select if you own the property"),
-    "building_name_or_number": "Enter building name or number",
+    "building_name_or_number": _("Enter building name or number"),
     "address_line_1": _("Enter Address line 1"),
     "postcode": _("Enter a postcode"),
     "uprn": _("Select your address"),
@@ -61,7 +61,7 @@ missing_item_errors = {
     "supplier": _("Select your home energy supplier from the list below"),
     "first_name": _("Enter your first name"),
     "last_name": _("Enter your last name"),
-    "email": _("Enter your address"),
+    "email": _("Enter your email address"),
     "contact_number": _("Enter your contact number"),
     "permission": _("Please confirm that you agree to the use of your information by checking this box"),
 }
@@ -510,7 +510,7 @@ class SchemesView(PageView):
         session_data = interface.api.session.get_session(session_id)
         eligible_schemes = eligibility.calculate_eligibility(session_data)
         _ = interface.api.session.save_answer(session_id, "schemes", {"schemes": eligible_schemes})
-        eligible_schemes = tuple(scheme for scheme in eligible_schemes if not scheme == "Energy Company Obligation 4")
+        eligible_schemes = tuple(schemas.schemes_map[scheme] for scheme in eligible_schemes if not scheme == "ECO4")
         return {"eligible_schemes": eligible_schemes}
 
 
