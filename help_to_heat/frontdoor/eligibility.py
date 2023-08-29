@@ -21,16 +21,6 @@ country_council_tax_bands = {
 }
 
 
-def filter_scheme_names(func):
-    @functools.wraps(func)
-    def _inner(*args, **kwargs):
-        result = func(*args, **kwargs)
-        return tuple(str(schemas.schemes_map[scheme]) for scheme in result)
-
-    return _inner
-
-
-@filter_scheme_names
 def calculate_eligibility(session_data):
     """
     Calculate which schemes the user is able to use.  Based literally on the logic in the Mural file
