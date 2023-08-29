@@ -1,7 +1,4 @@
-import functools
 import logging
-
-from . import schemas
 
 logger = logging.getLogger(__name__)
 
