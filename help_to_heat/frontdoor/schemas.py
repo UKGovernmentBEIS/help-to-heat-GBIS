@@ -76,7 +76,7 @@ confirm_sumbit_map = {
     "supplier": _("Energy supplier"),
     "first_name": _("First name"),
     "last_name": _("Last name"),
-    "contact_number": "Mobile number",
+    "contact_number": _("Mobile number"),
     "email": _("Email"),
 }
 
@@ -179,6 +179,7 @@ epc_display_options_map = (
 )
 epc_validation_options_map = epc_display_options_map + (
     {
+        "label": _("Not found"),
         "value": "Not found",
     },
 )
@@ -461,20 +462,62 @@ loft_access_validation_options_map = loft_access_options_map + (
 )
 
 supplier_options = (
-    "British Gas",
-    "Bulb, now part of Octopus Energy",
-    "E (Gas & Electricity) Ltd",
-    "Ecotricity",
-    "EDF",
-    "E.ON Next",
-    "Foxglove",
-    "Octopus Energy",
-    "OVO",
-    "Scottish Power",
-    "Shell",
-    "So Energy",
-    "Utilita",
-    "Utility Warehouse",
+    {
+        "label": "British Gas",
+        "value": "British Gas",
+    },
+    {
+        "value": "Bulb, now part of Octopus Energy",
+        "label": _("Bulb, now part of Octopus Energy"),
+    },
+    {
+        "label": "E (Gas & Electricity) Ltd",
+        "value": "E (Gas & Electricity) Ltd",
+    },
+    {
+        "label": "Ecotricity",
+        "value": "Ecotricity",
+    },
+    {
+        "label": "EDF",
+        "value": "EDF",
+    },
+    {
+        "label": "E.ON Next",
+        "value": "E.ON Next",
+    },
+    {
+        "label": "Foxglove",
+        "value": "Foxglove",
+    },
+    {
+        "label": "Octopus Energy",
+        "value": "Octopus Energy",
+    },
+    {
+        "label": "OVO",
+        "value": "OVO",
+    },
+    {
+        "label": "Scottish Power",
+        "value": "Scottish Power",
+    },
+    {
+        "label": "Shell",
+        "value": "Shell",
+    },
+    {
+        "label": "So Energy",
+        "value": "So Energy",
+    },
+    {
+        "label": "Utilita",
+        "value": "Utilita",
+    },
+    {
+        "label": "Utility Warehouse",
+        "value": "Utility Warehouse",
+    },
 )
 epc_rating_options = ("A", "B", "C", "D", "E", "F", "G", "H", "Not found")
 loft_insulation_options_map = (
@@ -497,12 +540,30 @@ loft_insulation_validation_options_map = loft_insulation_options_map + (
     },
 )
 multichoice_options = (
-    "Completely disagree",
-    "Disagree",
-    "Neutral",
-    "Agree",
-    "Completely agree",
-    "Not sure / not applicable",
+    {
+        "value": "Completely disagree",
+        "label": _("Completely disagree"),
+    },
+    {
+        "value": "Disagree",
+        "label": _("Disagree"),
+    },
+    {
+        "value": "Neutral",
+        "label": _("Neutral"),
+    },
+    {
+        "value": "Agree",
+        "label": _("Agree"),
+    },
+    {
+        "value": "Completely agree",
+        "label": _("Completely agree"),
+    },
+    {
+        "value": "Not sure / not applicable",
+        "label": _("Not sure / not applicable"),
+    },
 )
 
 
@@ -529,7 +590,7 @@ class SessionSchema(Schema):
     town_or_city = fields.String(validate=validate.Length(max=128))
     county = fields.String(validate=validate.Length(max=128))
     postcode = fields.String(
-        validate=validate.Regexp(postcode_regex_collection, error="Please enter a valid UK postcode")
+        validate=validate.Regexp(postcode_regex_collection, error=_("Please enter a valid UK postcode"))
     )
     uprn = fields.Integer()
     address = fields.String(validate=validate.Length(max=512))
@@ -563,7 +624,7 @@ class SessionSchema(Schema):
     loft_insulation = fields.String(
         validate=validate.OneOf(tuple(item["value"] for item in loft_insulation_validation_options_map))
     )
-    supplier = fields.String(validate=validate.OneOf(supplier_options))
+    supplier = fields.String(validate=validate.OneOf(tuple(item["value"] for item in supplier_options)))
     first_name = fields.String(validate=validate.Length(max=128))
     last_name = fields.String(validate=validate.Length(max=128))
     contact_number = fields.String(
@@ -581,6 +642,6 @@ class SessionSchema(Schema):
 
 
 schemes_map = {
-    "ECO4": "Energy Company Obligation 4",
-    "GBIS": "Great British Insulation Scheme",
+    "ECO4": _("Energy Company Obligation 4"),
+    "GBIS": _("Great British Insulation Scheme"),
 }

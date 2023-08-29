@@ -10,14 +10,14 @@
     <div class="govuk-grid-row">
         <div class="govuk-grid-column-two-thirds">
             <div class="govuk-panel govuk-panel--confirmation">
-                <h1 class="govuk-panel__title">Thank you for your feedback</h1>
+                <h1 class="govuk-panel__title">{{_("Thank you for your feedback")}}</h1>
             </div>
         </div>
     </div>
 
     {% if prev_url %}
         <a href="{{ prev_url }}">
-            <button role="button" class="govuk-button" data-module="govuk-button">Return to your application</button>
+            <button role="button" class="govuk-button" data-module="govuk-button">{{_("Return to your application")}}</button>
         </a>
     {% endif %}
 {% endblock %}
