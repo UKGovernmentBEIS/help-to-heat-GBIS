@@ -28,8 +28,10 @@ def test_flow_northern_ireland():
     assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
 
     page = page.click(contains="Start")
-    assert page.status_code == 200
+    assert page.status_code == 302
+    page = page.follow()
 
+    assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -57,8 +59,10 @@ def test_flow_errors():
     assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
 
     page = page.click(contains="Start")
-    assert page.status_code == 200
+    assert page.status_code == 302
+    page = page.follow()
 
+    assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -183,8 +187,10 @@ def _do_happy_flow(supplier="EON"):
     assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
 
     page = page.click(contains="Start")
-    assert page.status_code == 200
+    assert page.status_code == 302
+    page = page.follow()
 
+    assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -255,8 +261,10 @@ def test_back_button():
     assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
 
     page = page.click(contains="Start")
-    assert page.status_code == 200
+    assert page.status_code == 302
+    page = page.follow()
 
+    assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -305,8 +313,10 @@ def test_no_benefits_flow():
     assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
 
     page = page.click(contains="Start")
-    assert page.status_code == 200
+    assert page.status_code == 302
+    page = page.follow()
 
+    assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -364,8 +374,10 @@ def test_summary():
     assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
 
     page = page.click(contains="Start")
-    assert page.status_code == 200
+    assert page.status_code == 302
+    page = page.follow()
 
+    assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -397,8 +409,10 @@ def test_no_address():
     assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
 
     page = page.click(contains="Start")
-    assert page.status_code == 200
+    assert page.status_code == 302
+    page = page.follow()
 
+    assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -467,8 +481,10 @@ def test_no_epc():
     assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
 
     page = page.click(contains="Start")
-    assert page.status_code == 200
+    assert page.status_code == 302
+    page = page.follow()
 
+    assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -520,8 +536,10 @@ def test_eligibility():
     assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
 
     page = page.click(contains="Start")
-    assert page.status_code == 200
+    assert page.status_code == 302
+    page = page.follow()
 
+    assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -582,8 +600,10 @@ def test_referral_email():
     assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
 
     page = page.click(contains="Start")
-    assert page.status_code == 200
+    assert page.status_code == 302
+    page = page.follow()
 
+    assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -660,6 +680,7 @@ def test_feedback_with_session():
     assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
 
     page = page.click(contains="Start")
+    page = page.follow()
 
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
@@ -707,8 +728,10 @@ def test_incorrect_referral_email():
     assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
 
     page = page.click(contains="Start")
-    assert page.status_code == 200
+    assert page.status_code == 302
+    page = page.follow()
 
+    assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -747,8 +770,10 @@ def test_referral_not_providing_email():
     assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
 
     page = page.click(contains="Start")
-    assert page.status_code == 200
+    assert page.status_code == 302
+    page = page.follow()
 
+    assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -800,8 +825,10 @@ def test_referral_not_providing_contact_number():
     assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
 
     page = page.click(contains="Start")
-    assert page.status_code == 200
+    assert page.status_code == 302
+    page = page.follow()
 
+    assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -851,8 +878,10 @@ def test_address_validation():
     assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
 
     page = page.click(contains="Start")
-    assert page.status_code == 200
+    assert page.status_code == 302
+    page = page.follow()
 
+    assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 

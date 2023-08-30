@@ -308,8 +308,10 @@ def _do_test(country, council_tax_band, epc_rating):
     assert page.status_code == 200
 
     page = page.click(contains="Start")
-    assert page.status_code == 200
+    assert page.status_code == 302
+    page = page.follow()
 
+    assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
