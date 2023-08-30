@@ -76,14 +76,18 @@ def register_page(name):
 
 
 def homepage_view(request):
-    session_id = uuid.uuid4()
-    next_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="country"))
+    start_url = reverse("frontdoor:start")
     context = {
-        "next_url": next_url,
+        "next_url": start_url,
     }
     response = render(request, template_name="frontdoor/homepage.html", context=context)
-    response["x-vcap-request-id"] = session_id
     return response
+
+
+def start_view(request):
+    session_id = uuid.uuid4()
+    next_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="country"))
+    return redirect(next_url)
 
 
 def holding_page_view(request):
