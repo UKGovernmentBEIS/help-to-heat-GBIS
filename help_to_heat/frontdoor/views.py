@@ -87,7 +87,9 @@ def homepage_view(request):
 def start_view(request):
     session_id = uuid.uuid4()
     next_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="country"))
-    return redirect(next_url)
+    response = redirect(next_url)
+    response["x-vcap-request-id"] = session_id
+    return response
 
 
 def holding_page_view(request):
