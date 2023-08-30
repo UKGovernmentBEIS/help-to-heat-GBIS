@@ -98,7 +98,7 @@ def sorry_page_view(request):
 
 
 def not_found_page_view(request, exception):
-    return render(request, template_name="frontdoor/custom-not-found-page.html")
+    return render(request, template_name="frontdoor/not-found.html")
 
 
 def page_view(request, session_id, page_name):
