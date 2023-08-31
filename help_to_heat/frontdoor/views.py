@@ -1,6 +1,7 @@
 import uuid
 
 from django.conf import settings
+from django.http import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -96,7 +97,14 @@ def sorry_page_view(request):
     return render(request, template_name="frontdoor/os-api-throttled.html")
 
 
+def not_found_page_view(request, exception):
+    return render(request, template_name="frontdoor/not-found.html")
+
+
 def page_view(request, session_id, page_name):
+    if page_name not in (schemas.page_order + schemas.extra_pages):
+        raise Http404("Invalid url")
+
     if page_name in page_map:
         return page_map[page_name](request, session_id, page_name)
 
