@@ -1,6 +1,8 @@
+import logging
 import uuid
 
 from django.conf import settings
+from django.http import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -11,11 +13,12 @@ from help_to_heat import utils
 
 from ..portal import email_handler
 from . import eligibility, interface, schemas
-from .os_api import ThrottledApiException
 
 BulbSupplierConverter = interface.BulbSupplierConverter
 
 page_map = {}
+
+logger = logging.getLogger(__name__)
 
 page_compulsory_field_map = {
     "country": ("country",),
@@ -93,10 +96,17 @@ def holding_page_view(request):
 
 
 def sorry_page_view(request):
-    return render(request, template_name="frontdoor/os-api-throttled.html")
+    return render(request, template_name="frontdoor/sorry-unavailable.html")
+
+
+def not_found_page_view(request, exception):
+    return render(request, template_name="frontdoor/not-found.html")
 
 
 def page_view(request, session_id, page_name):
+    if page_name not in (schemas.page_order + schemas.extra_pages):
+        raise Http404("Invalid url")
+
     if page_name in page_map:
         return page_map[page_name](request, session_id, page_name)
 
@@ -167,7 +177,9 @@ class PageView(utils.MethodDispatcher):
 
         try:
             extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data=data)
-        except ThrottledApiException:
+        except Exception as e:  # noqa:B902
+            logger.error("An unknown error occurred")
+            logger.error(e)
             return redirect("/sorry")
         context = {
             "data": data,

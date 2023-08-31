@@ -16,3 +16,5 @@ urlpatterns = [
 
 if settings.DEBUG:
     urlpatterns = urlpatterns + [path("admin/", admin.site.urls)]
+
+handler404 = "help_to_heat.frontdoor.views.not_found_page_view"
