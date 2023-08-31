@@ -20,6 +20,20 @@ def _add_epc(uprn, rating):
 # TODO: PC-380: Add tests for cookie banner
 
 
+def test_start_page_redirection():
+    client = utils.get_client()
+    page = client.get("/start")
+
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    page_name = page.path.split("/")[2]
+    assert page_name == "country"
+
+
 def test_flow_northern_ireland():
     client = utils.get_client()
     page = client.get("/")
