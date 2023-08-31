@@ -38,6 +38,7 @@ class OSApi:
                 logger.error("An error occurred while attempting to fetch addresses.")
                 logger.error(e)
                 break
+
         return []
 
     def perform_request(self, url):

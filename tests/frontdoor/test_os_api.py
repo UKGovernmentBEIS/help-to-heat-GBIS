@@ -16,3 +16,15 @@ def test_os_api_happy_path():
     api_client = MockClient('["key"]')
     response = api_client.get_by_postcode("w1a 1aa", 0, 100)
     assert response == mock_response
+
+
+def test_os_api_no_result():
+    mock_response = []
+
+    class MockClient(OSApi):
+        def perform_request(self, url):
+            return mock_response
+
+    api_client = MockClient('["key"]')
+    response = api_client.get_by_postcode("postcode with no addresses", 0, 100)
+    assert response == mock_response

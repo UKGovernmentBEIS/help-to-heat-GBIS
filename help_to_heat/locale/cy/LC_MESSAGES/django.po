@@ -1903,21 +1903,21 @@ msgstr ""
 "ystafell wely hyd yn oed os ydych chi'n eu defnyddio ar gyfer rhywbeth "
 "arall, fel swyddfa gartref."
 
-#: help_to_heat/templates/frontdoor/os-api-throttled.html:4
+#: help_to_heat/templates/frontdoor/sorry-unavailable.html:4
 msgid ""
 "Sorry, there is a problem with this service - Check eligibility for Great "
 "British Insulation Scheme - GOV.UK"
 msgstr "Ymddiheuriadau, mae yna broblem gyda'r gwasanaeth yma - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
-#: help_to_heat/templates/frontdoor/os-api-throttled.html:10
+#: help_to_heat/templates/frontdoor/sorry-unavailable.html:10
 msgid "Sorry, there is a problem with this service"
 msgstr "Ymddiheuriadau, mae yna broblem gyda'r gwasanaeth yma"
 
-#: help_to_heat/templates/frontdoor/os-api-throttled.html:14
+#: help_to_heat/templates/frontdoor/sorry-unavailable.html:14
 msgid "Try again later."
 msgstr "Rhowch gynnig arall arni yn nes ymlaen."
 
-#: help_to_heat/templates/frontdoor/os-api-throttled.html:15
+#: help_to_heat/templates/frontdoor/sorry-unavailable.html:15
 msgid ""
 "You will not be able to apply to the Great British Insulation Scheme until "
 "the service is available."
@@ -1925,7 +1925,7 @@ msgstr ""
 "Fyddwch chi ddim yn gallu gwneud cais i Gynllun Inswleiddio Mawr Prydain nes "
 "bod y gwasanaeth ar gael."
 
-#: help_to_heat/templates/frontdoor/os-api-throttled.html:16
+#: help_to_heat/templates/frontdoor/sorry-unavailable.html:16
 msgid ""
 "If you already started an application, your answers have not been saved and "
 "you will have to start again when the service is available."
