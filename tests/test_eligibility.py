@@ -303,13 +303,11 @@ def _do_test(country, council_tax_band, epc_rating):
     _add_epc(uprn="100023336956", rating=epc_rating)
 
     client = utils.get_client()
-    page = client.get("/")
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
 
     assert page.status_code == 200
-
-    page = page.click(contains="Start")
-    assert page.status_code == 200
-
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
