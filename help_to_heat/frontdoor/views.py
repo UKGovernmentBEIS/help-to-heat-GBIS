@@ -536,10 +536,7 @@ class SupplierView(PageView):
         request_data = dict(request.POST.dict())
         request_supplier = request_data.get("supplier")
         # to be updated when we get full list of excluded suppliers
-        unavailable_suppliers = [
-            "British Gas",
-            "Ecotricity"
-        ]
+        unavailable_suppliers = ["British Gas", "Ecotricity"]
         if request_supplier == "Bulb, now part of Octopus Energy":
             next_page_name = "bulb-warning-page"
         if request_supplier in unavailable_suppliers:
