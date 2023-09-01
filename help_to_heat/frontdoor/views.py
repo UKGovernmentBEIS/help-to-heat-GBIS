@@ -75,15 +75,6 @@ def register_page(name):
     return _inner
 
 
-def homepage_view(request):
-    start_url = reverse("frontdoor:start")
-    context = {
-        "next_url": start_url,
-    }
-    response = render(request, template_name="frontdoor/homepage.html", context=context)
-    return response
-
-
 def start_view(request):
     session_id = uuid.uuid4()
     next_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="country"))
@@ -93,7 +84,7 @@ def start_view(request):
 
 
 def holding_page_view(request):
-    previous_path = reverse("frontdoor:homepage")
+    previous_path = "https://www.gov.uk/apply-great-british-insulation-scheme"
     context = {"previous_path": previous_path}
     return render(request, template_name="frontdoor/holding-page.html", context=context)
 
@@ -141,7 +132,7 @@ def get_prev_next_page_name(page_name):
 def get_prev_next_urls(session_id, page_name):
     prev_page_name, next_page_name = get_prev_next_page_name(page_name)
     if prev_page_name == "homepage":
-        prev_page_url = reverse("frontdoor:homepage")
+        prev_page_url = "https://www.gov.uk/apply-great-british-insulation-scheme"
     else:
         prev_page_url = prev_page_name and reverse(
             "frontdoor:page", kwargs=dict(session_id=session_id, page_name=prev_page_name)
