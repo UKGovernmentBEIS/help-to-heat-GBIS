@@ -7,6 +7,8 @@ from . import (
     views,
 )
 
+SHOW_EPC_UPLOADS_PAGE = False
+
 portal_patterns = [
     path("", views.homepage_view, name="homepage"),
     path("unauthorised/", views.unauthorised_view, name="unauthorised"),
@@ -71,7 +73,6 @@ portal_patterns = [
     path("data-download/<uuid:download_id>/", download_views.download_csv_by_id_view, name="download-csv-by-id"),
     path("data-download-xlsx/", download_views.download_xlsx_view, name="data-download-xlsx"),
     path("data-download-xlsx/<uuid:download_id>/", download_views.download_xlsx_by_id_view, name="download-xlsx-by-id"),
-    path("epc-uploads/", views.EPCUploadView, name="epc-uploads"),
     path("accounts/password-reset/", authentication_views.PasswordReset, name="password-reset"),
     path("accounts/change-password/reset/", authentication_views.PasswordChange, name="password-reset-change"),
     path("accounts/password-reset-done/", authentication_views.password_reset_done, name="password-reset-done"),
@@ -91,6 +92,9 @@ portal_patterns = [
     path("accounts/login/", authentication_views.CustomLoginView, name="account_login"),
     path("accounts/", include("allauth.urls")),
 ]
+
+if SHOW_EPC_UPLOADS_PAGE:
+    portal_patterns.append(path("epc-uploads/", views.EPCUploadView, name="epc-uploads"))
 
 api_patterns = [
     path("healthcheck/", views.healthcheck_view, name="healthcheck"),
