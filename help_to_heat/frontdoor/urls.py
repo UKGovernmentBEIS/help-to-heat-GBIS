@@ -3,7 +3,7 @@ from django.urls import include, path
 from . import views
 
 frontdoor_patterns = [
-    path("", views.redirect_to_homepage_view, name="redirect_to_homepage"),
+    path("", views.redirect_to_homepage_view, name="redirect-to-homepage"),
     path("start", views.start_view, name="start"),
     path("thankyou", views.holding_page_view, name="holding-page"),
     path("sorry", views.sorry_page_view, name="sorry-unavailable"),
