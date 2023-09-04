@@ -665,13 +665,21 @@ def data_layer_js_view(request):
     return render(request, "dataLayer.js", {"gtag_id": settings.GTAG_ID}, content_type="application/x-javascript")
 
 
-def privacy_policy_view(request):
-    previous_path = request.GET.get("prev")
-    context = {"previous_path": previous_path}
+def privacy_policy_view(request, session_id=None, page_name=None):
+    prev_page_url = page_name and reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
+    context = {
+        "session_id": session_id,
+        "page_name": page_name,
+        "prev_url": prev_page_url,
+    }
     return render(request, template_name="frontdoor/privacy-policy.html", context=context)
 
 
-def accessibility_statement_view(request):
-    previous_path = request.GET.get("prev")
-    context = {"previous_path": previous_path}
+def accessibility_statement_view(request, session_id=None, page_name=None):
+    prev_page_url = page_name and reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
+    context = {
+        "session_id": session_id,
+        "page_name": page_name,
+        "prev_url": prev_page_url,
+    }
     return render(request, template_name="frontdoor/accessibility-statement.html", context=context)
