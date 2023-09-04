@@ -78,6 +78,11 @@ def register_page(name):
     return _inner
 
 
+def redirect_to_homepage_view(request):
+    next_url = "https://www.gov.uk/apply-great-british-insulation-scheme"
+    return redirect(next_url)
+
+
 def start_view(request):
     session_id = uuid.uuid4()
     next_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="country"))
