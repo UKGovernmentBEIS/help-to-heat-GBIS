@@ -215,19 +215,19 @@ OS_API_KEY = env.str("OS_API_KEY")
 
 TOTP_ISSUER = "Help to Heat Supplier Portal"
 
-if not DEBUG:
-    SESSION_COOKIE_SECURE = True
-    SESSION_EXPIRE_AT_BROWSER_CLOSE = True
-    SESSION_COOKIE_HTTPONLY = True
-    SESSION_COOKIE_AGE = 60 * 10  # 10 minutes
-    SESSION_COOKIE_SAMESITE = "Strict"
-    CSRF_COOKIE_SECURE = True
+# if not DEBUG:
+SESSION_COOKIE_SECURE = True
+SESSION_EXPIRE_AT_BROWSER_CLOSE = True
+SESSION_COOKIE_HTTPONLY = True
+SESSION_COOKIE_AGE = 60 * 10  # 10 minutes
+SESSION_COOKIE_SAMESITE = "Strict"
+CSRF_COOKIE_SECURE = True
 
-    logging.getLogger("waitress.queue").setLevel(logging.ERROR)
-else:
-    import debugpy
+logging.getLogger("waitress.queue").setLevel(logging.ERROR)
+# else:
+#     import debugpy
 
-    try:
-        debugpy.listen(("0.0.0.0", 5678))
-    except Exception as e:  # noqa: B902
-        print("Unable to bind debugpy (if you are running manage.py in local, this is expected):", e)  # noqa: T201
+#     try:
+#         debugpy.listen(("0.0.0.0", 5678))
+#     except Exception as e:  # noqa: B902
+#         print("Unable to bind debugpy (if you are running manage.py in local, this is expected):", e)  # noqa: T201
