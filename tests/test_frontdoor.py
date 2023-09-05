@@ -714,7 +714,7 @@ def test_incorrect_referral_email():
     form["email"] = "not-an-email"
     page = form.submit()
 
-    assert page.has_one("p:contains('Not a valid email address.')")
+    assert page.has_one("p:contains('Invalid email format')")
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)

@@ -2,7 +2,7 @@ import itertools
 
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
-from marshmallow import Schema, ValidationError, fields, validate
+from marshmallow import Schema, fields, validate, validates
 
 page_order = (
     "country",
@@ -627,7 +627,13 @@ class SessionSchema(Schema):
             validate.Length(max=128), validate.Regexp(phone_number_regex, error=_("Invalid contact number"))
         )
     )
-    email = fields.Email(required=False, error_messages={"invalid": _("Invalid email format")})
+    email = fields.String(required=False)
+
+    @validates("email")
+    def validate_email(self, value):
+        if value:
+            validate.Email(error=_("Invalid email format"))(value)
+
     schemes = fields.List(fields.Str())
     referral_created_at = fields.String()
     _page_name = fields.String()
