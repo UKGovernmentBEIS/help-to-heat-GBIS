@@ -2,7 +2,7 @@ import itertools
 
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
-from marshmallow import Schema, ValidationError, fields, validate
+from marshmallow import Schema, fields, validate, validates
 
 page_order = (
     "country",
@@ -567,11 +567,6 @@ multichoice_options = (
 )
 
 
-def validate_email_or_none(value):
-    if value != "" and not validate.Email()(value):
-        raise ValidationError("Invalid email format")
-
-
 postcode_regex_collection = (
     # allow both upper and lower cases, no or multiple spaces in between outward and inward code
     r"^[a-zA-Z]{1,2}\d[\da-zA-Z]?(\s*\d[a-zA-Z]{2})*$"
@@ -629,10 +624,16 @@ class SessionSchema(Schema):
     last_name = fields.String(validate=validate.Length(max=128))
     contact_number = fields.String(
         validate=validate.And(
-            validate.Length(max=128), validate.Regexp(phone_number_regex, error="please enter a contact number")
+            validate.Length(max=128), validate.Regexp(phone_number_regex, error=_("Invalid contact number"))
         )
     )
-    email = fields.String(validate=(validate_email_or_none, validate.Length(max=128)), allow_none=True)
+    email = fields.String(required=False)
+
+    @validates("email")
+    def validate_email(self, value):
+        if value:
+            validate.Email(error=_("Invalid email format"))(value)
+
     schemes = fields.List(fields.Str())
     referral_created_at = fields.String()
     _page_name = fields.String()
