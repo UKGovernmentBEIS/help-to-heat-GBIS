@@ -374,31 +374,7 @@ class EpcView(PageView):
             prev_page_name, next_page_name = get_prev_next_page_name(page_name)
             return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
         else:
-            return redirect("frontdoor:page", session_id=session_id, page_name="epc-disagree")
-
-
-@register_page("epc-disagree")
-class EpcDisagreeView(PageView):
-    def get(self, request, session_id, page_name, data=None, errors=None, is_change_page=False):
-        if not errors:
-            errors = {}
-        data = {}
-        prev_page_url, next_page_url = get_prev_next_urls(session_id, page_name)
-        extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data=data)
-        context = {
-            "data": data,
-            "session_id": session_id,
-            "errors": errors,
-            "prev_url": prev_page_url,
-            "next_url": next_page_url,
-            **extra_context,
-        }
-        return render(request, template_name=f"frontdoor/{page_name}.html", context=context)
-
-    def save_data(self, request, session_id, page_name, *args, **kwargs):
-        data = interface.api.session.save_answer(session_id, "epc", request.POST.dict())
-        return data
-
+            return redirect("frontdoor:page", session_id=session_id, page_name="benefits")
 
 @register_page("benefits")
 class BenefitsView(PageView):
