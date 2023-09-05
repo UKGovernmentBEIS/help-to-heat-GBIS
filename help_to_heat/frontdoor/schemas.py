@@ -49,7 +49,7 @@ page_prev_next_map = {
     "northern-ireland": {"prev": "country", "next": None},
     "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
     "applications-closed": {"prev": "supplier", "next": None},
-    "benefits": {"prev": "council-tax-band", "next": None},
+    "benefits": {"prev": "council-tax-band", "next": "household-income"},
 }
 
 summary_map = {

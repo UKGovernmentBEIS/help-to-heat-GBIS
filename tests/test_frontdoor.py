@@ -552,9 +552,6 @@ def test_eligibility():
     assert page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
     page = _check_page(page, "epc", "accept_suggested_epc", "No")
 
-    form = page.get_form()
-    page = form.submit().follow()
-
     page = _check_page(page, "benefits", "benefits", "No")
 
     assert page.has_one("h1:contains('Your property is not eligible')")
