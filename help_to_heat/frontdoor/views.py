@@ -14,7 +14,7 @@ from help_to_heat import utils
 from ..portal import email_handler
 from . import eligibility, interface, schemas
 
-BulbSupplierConverter = interface.BulbSupplierConverter
+SupplierConverter = interface.SupplierConverter
 
 page_map = {}
 
@@ -518,11 +518,15 @@ class SupplierView(PageView):
         unavailable_suppliers = ["British Gas", "Ecotricity"]
         if request_supplier == "Bulb, now part of Octopus Energy":
             next_page_name = "bulb-warning-page"
+        if request_supplier == "Utility Warehouse":
+            next_page_name = "utility-warehouse-warning-page"
         if request_supplier in unavailable_suppliers:
             next_page_name = "applications-closed"
 
         if is_change_page:
             if request_supplier == "Bulb, now part of Octopus Energy":
+                return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
+            elif request_supplier == "Utility Warehouse":
                 return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
             elif request_supplier in unavailable_suppliers:
                 return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
@@ -535,21 +539,28 @@ class SupplierView(PageView):
 @register_page("bulb-warning-page")
 class BulbWarningPageView(PageView):
     def get_context(self, session_id, *args, **kwargs):
-        supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        supplier = SupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        return {"supplier": supplier}
+
+
+@register_page("utility-warehouse-warning-page")
+class UtilityWarehousePageView(PageView):
+    def get_context(self, session_id, *args, **kwargs):
+        supplier = interface.api.session.get_answer(session_id, "supplier")["supplier"]
         return {"supplier": supplier}
 
 
 @register_page("applications-closed")
 class ApplicationsClosedView(PageView):
     def get_context(self, session_id, *args, **kwargs):
-        supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        supplier = SupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
         return {"supplier": supplier}
 
 
 @register_page("contact-details")
 class ContactDetailsView(PageView):
     def get_context(self, session_id, *args, **kwargs):
-        supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        supplier = SupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
         return {"supplier": supplier}
 
     def validate(self, request, session_id, page_name, data, is_change_page):
@@ -578,14 +589,14 @@ class ConfirmSubmitView(PageView):
             for page_name, questions in schemas.details_pages.items()
             for question in questions
         )
-        supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        supplier = SupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
         return {"summary_lines": summary_lines, "supplier": supplier}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         interface.api.session.create_referral(session_id)
         interface.api.session.save_answer(session_id, page_name, {"referral_created_at": str(timezone.now())})
         session_data = interface.api.session.get_session(session_id)
-        session_data = BulbSupplierConverter(session_id).replace_bulb_with_octopus_in_session_data(session_data)
+        session_data = SupplierConverter(session_id).replace_in_session_data(session_data)
         if session_data.get("email"):
             email_handler.send_referral_confirmation_email(session_data, request.LANGUAGE_CODE)
         return super().handle_post(request, session_id, page_name, data, is_change_page)
@@ -594,7 +605,7 @@ class ConfirmSubmitView(PageView):
 @register_page("success")
 class SuccessView(PageView):
     def get_context(self, session_id, *args, **kwargs):
-        supplier = BulbSupplierConverter(session_id).get_supplier_and_replace_bulb_with_octopus()
+        supplier = SupplierConverter(session_id).get_supplier_and_replace()
         return {"supplier": supplier, "safe_to_cache": True}
 
 

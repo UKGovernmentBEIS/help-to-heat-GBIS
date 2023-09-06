@@ -36,6 +36,7 @@ extra_pages = (
     "epc-ineligible",
     "ineligible",
     "bulb-warning-page",
+    "utility-warehouse-warning-page",
 )
 
 page_prev_next_map = {
@@ -48,6 +49,7 @@ page_prev_next_map = {
     "ineligible": {"prev": "benefits", "next": None},
     "northern-ireland": {"prev": "country", "next": None},
     "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
+    "utility-warehouse-warning-page": {"prev": "supplier", "next": "own-property"},
     "applications-closed": {"prev": "supplier", "next": None},
     "benefits": {"prev": "council-tax-band", "next": "household-income"},
 }
@@ -83,6 +85,7 @@ household_pages = {
     "country": ("country",),
     "supplier": ("supplier",),
     "bulb-warning-page": ("bulb-warning-page",),
+    "utility-warehouse-warning-page": ("utility-warehouse-warning-page",),
     "applications-closed": ("applications-closed",),
     "own-property": ("own_property",),
     "address": ("address",),
