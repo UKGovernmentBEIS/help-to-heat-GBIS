@@ -610,7 +610,7 @@ class ConfirmSubmitView(PageView):
         session_data = interface.api.session.get_session(session_id)
         session_data = BulbSupplierConverter(session_id).replace_bulb_with_octopus_in_session_data(session_data)
         if session_data.get("email"):
-            email_handler.send_referral_confirmation_email(session_data)
+            email_handler.send_referral_confirmation_email(session_data, request.LANGUAGE_CODE)
         return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 

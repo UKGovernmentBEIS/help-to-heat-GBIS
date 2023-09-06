@@ -1,0 +1,27 @@
+Shwmae,
+
+Mae’ch manylion chi wedi'u cyflwyno i {{supplier_name}}.
+
+# Beth sy’n digwydd nesaf?
+
+Rydyn ni wedi anfon eich atgyfeiriad at y cyflenwr ynni a ddewiswyd gennych. Byddan nhw’n cysylltu â chi o fewn 10 diwrnod gwaith i gadarnhau eu bod wedi cael eich atgyfeiriad neu i ofyn ichi roi rhagor o wybodaeth.
+
+Does dim angen ichi greu atgyfeiriad arall unrhyw bryd.
+
+Unwaith y bydd y cyflenwr ynni wedi cadarnhau eu bod wedi cael eich atgyfeiriad, byddan nhw’n ei adolygu ac yn penderfynu a yw'ch eiddo chi’n gymwys i gael gwelliannau i'r cartref. Efallai y byddan nhw’n gofyn ichi roi rhagor o wybodaeth. Fe gewch chi wybod am ganlyniad y broses adolygu.
+
+Rhaid i eiddo sy'n gymwys i gael gwelliannau i'r cartref gael arolwg cartref wedi'i gwblhau. Bydd eich cyflenwr ynni yn trefnu hyn gyda chi.
+
+# Cysylltu â'r cyflenwr ynni ynghylch eich atgyfeiriad ar ôl 10 diwrnod gwaith
+
+Gallwch [ddod o hyd i fanylion cysylltu’r cyflenwr ynni](https://www.ofgem.gov.uk/environmental-and-social-schemes/energy-company-obligation-eco/contacts-guidance-and-resources/eco-supplier-contact-details) os oes angen ichi gysylltu â nhw.
+
+Does dim angen ichi gysylltu â'r cyflenwr ynni oni bai ei bod yn fwy na 10 diwrnod gwaith ers ichi gyflwyno'r atgyfeiriad ac nad ydych wedi cael neges ebost cadarnhau ganddyn nhw eto.
+
+# Cael rhagor o gymorth ynni cartref
+
+Rydych chi’n gallu sicrhau:
+
+- [help gyda'ch biliau ynni gan y gwasanaeth Cymorth i Gartrefi](https://helpforhouseholds.campaign.gov.uk/help-with-your-bills/)
+- [awgrymiadau arbed ynni yn y cartref gan yr Ymddiriedolaeth Arbed Ynni](https://energysavingtrust.org.uk/hub/quick-tips-to-save-energy/)
+- [awgrymiadau arbed ynni yn y cartref gan Gyngor ar Bopeth](https://www.citizensadvice.org.uk/consumer/energy/energy-supply/)
