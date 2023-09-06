@@ -153,20 +153,17 @@
         <div class="govuk-footer__meta-item govuk-footer__meta-item--grow">
           <h2 class="govuk-visually-hidden">{{_("Support links")}}</h2>
           <ul class="govuk-footer__inline-list">
-            {% if request.path != "/privacy-policy/" %}
+
             <li class="govuk-footer__inline-list-item">
-              <a class="govuk-footer__link" href="/privacy-policy/?prev={{ request.path }}">
+              <a class="govuk-footer__link" href="{% if session_id and page_name %}{{url('frontdoor:privacy-policy', session_id=session_id, page_name=page_name)}}{% else %}{{url('frontdoor:privacy-policy')}}{% endif %}">
                 {{_("Privacy Policy")}}
               </a>
             </li>
-            {% endif %}
-            {% if request.path != "/accessibility-statement/" %}
             <li class="govuk-footer__inline-list-item">
-              <a class="govuk-footer__link" href="/accessibility-statement/?prev={{ request.path }}">
+              <a class="govuk-footer__link" href="{% if session_id and page_name %}{{url('frontdoor:accessibility-statement', session_id=session_id, page_name=page_name)}}{% else %}{{url('frontdoor:accessibility-statement')}}{% endif %}">
                 {{_("Accessibility Statement")}}
               </a>
             </li>
-            {% endif %}
           </ul>
           <svg aria-hidden="true" focusable="false" class="govuk-footer__licence-logo"
             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 483.2 195.7" height="17" width="41">

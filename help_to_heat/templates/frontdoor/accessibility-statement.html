@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block content %}
-  <a href="{% if previous_path %}{{ previous_path }}{% else %}{{url('frontdoor:homepage')}}{% endif %}" class="govuk-back-link">Back</a>
+  <a href="{% if prev_url %}{{ prev_url }}{% else %}{{'https://www.gov.uk/apply-great-british-insulation-scheme'}}{% endif %}" class="govuk-back-link">Back</a>
   <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
       <h1 class="govuk-heading-l">{{_("Accessibility Statement")}}</h1>
