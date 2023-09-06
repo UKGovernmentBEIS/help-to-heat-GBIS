@@ -369,7 +369,6 @@ class EpcView(PageView):
         if (epc_rating in ("A", "B", "C")) and (accept_suggested_epc == "Yes"):
             return redirect("frontdoor:page", session_id=session_id, page_name="epc-ineligible")
 
-        choice = data["accept_suggested_epc"]
         prev_page_name, next_page_name = get_prev_next_page_name(page_name)
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
