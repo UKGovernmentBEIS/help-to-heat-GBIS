@@ -90,9 +90,8 @@ def _send_token_email(user, subject, template_name, from_address, url_name, toke
             recipient_list=[user.email],
         )
         return response
-    except Exception as err:  # noqa: B902
-        logger.error("An error occured while attempting to send an email.")
-        logger.error(err)
+    except Exception:  # noqa: B902
+        logger.exception("An error occured while attempting to send an email.")
 
 
 def _send_normal_email(subject, template_name, from_address, to_address, context):
@@ -105,9 +104,8 @@ def _send_normal_email(subject, template_name, from_address, to_address, context
             recipient_list=[to_address],
         )
         return response
-    except Exception as err:  # noqa: B902
-        logger.error("An error occured while attempting to send an email.")
-        logger.error(err)
+    except Exception:  # noqa: B902
+        logger.exception("An error occured while attempting to send an email.")
 
 
 def send_password_reset_email(user):

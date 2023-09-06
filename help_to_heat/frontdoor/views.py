@@ -179,9 +179,8 @@ class PageView(utils.MethodDispatcher):
 
         try:
             extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data=data)
-        except Exception as e:  # noqa:B902
-            logger.error("An unknown error occurred")
-            logger.error(e)
+        except Exception:  # noqa:B902
+            logger.exception("An unknown error occurred")
             return redirect("/sorry")
         context = {
             "data": data,
@@ -220,6 +219,9 @@ class PageView(utils.MethodDispatcher):
             except ValidationError as val_errors:
                 errors = {field: val_errors.messages["data"][field][0] for field in val_errors.messages["data"]}
                 return self.get(request, session_id, page_name, data=data, errors=errors, is_change_page=is_change_page)
+            except Exception:  # noqa:B902
+                logger.exception("An unknown error occurred saving data")
+                return redirect("/sorry")
             return self.handle_post(request, session_id, page_name, data, is_change_page)
 
     def save_data(self, request, session_id, page_name, *args, **kwargs):

@@ -11,7 +11,7 @@ from help_to_heat import portal
 from help_to_heat.utils import Entity, Interface, register_event, with_schema
 
 from . import models, schemas
-from .os_api import OSApi
+from .os_api import OSApi, ThrottledApiException
 
 
 class SaveAnswerSchema(marshmallow.Schema):
@@ -238,16 +238,23 @@ class Address(Entity):
                     logger.error(f"The OS API usage limit has been hit for API key at index {index}.")
                     if index == len(api_keys) - 1:
                         logger.error("The OS API usage limit has been hit for all API keys")
+                        raise ThrottledApiException
                     else:
                         continue
 
-                logger.error("An error occurred while attempting to fetch addresses.")
-                logger.error(e)
+                logger.exception("An error occurred while attempting to fetch addresses.")
                 break
-        api_results = api.uprn(int(uprn), dataset="LPI")["features"]
-        address = api_results[0]["properties"]["ADDRESS"]
-        result = {"uprn": uprn, "address": address}
-        return result
+
+        try:
+            api_results = api.uprn(int(uprn), dataset="LPI")["features"]
+            address = api_results[0]["properties"]["ADDRESS"]
+            result = {"uprn": uprn, "address": address}
+            return result
+        except requests.exceptions.HTTPError or requests.exceptions.RequestException as e:
+            if e.response.status_code == HTTPStatus.TOO_MANY_REQUESTS:
+                raise ThrottledApiException
+            else:
+                raise e
 
     def is_current_residential(self, lpi):
         return (

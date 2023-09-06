@@ -679,6 +679,7 @@ def test_feedback_with_session():
     page = page.click(contains="Return to your application")
     assert page.has_one("h1:contains('Do you own the property?')")
 
+
 def test_privacy_policy_with_session():
     client = utils.get_client()
     page = client.get("/start")
@@ -694,16 +695,17 @@ def test_privacy_policy_with_session():
     form = page.get_form()
     form["supplier"] = "Utilita"
     page = form.submit().follow()
-    
+
     assert page.has_one("h1:contains('Do you own the property?')")
 
     page = page.click(contains="Privacy Policy")
 
     privacy_policy_session_id = page.path.split("/")[2]
     assert uuid.UUID(privacy_policy_session_id)
-    
+
     page = page.click(contains="Back")
     assert page.has_one("h1:contains('Do you own the property?')")
+
 
 def test_accessibility_statement_with_session():
     client = utils.get_client()
@@ -720,16 +722,17 @@ def test_accessibility_statement_with_session():
     form = page.get_form()
     form["supplier"] = "Utilita"
     page = form.submit().follow()
-    
+
     assert page.has_one("h1:contains('Do you own the property?')")
 
     page = page.click(contains="Accessibility Statement")
 
     privacy_policy_session_id = page.path.split("/")[2]
     assert uuid.UUID(privacy_policy_session_id)
-    
+
     page = page.click(contains="Back")
     assert page.has_one("h1:contains('Do you own the property?')")
+
 
 def test_accessibility_statement_then_privacy_policy_with_session():
     client = utils.get_client()
@@ -746,7 +749,7 @@ def test_accessibility_statement_then_privacy_policy_with_session():
     form = page.get_form()
     form["supplier"] = "Utilita"
     page = form.submit().follow()
-    
+
     assert page.has_one("h1:contains('Do you own the property?')")
 
     page = page.click(contains="Accessibility Statement")
@@ -754,7 +757,7 @@ def test_accessibility_statement_then_privacy_policy_with_session():
 
     privacy_policy_session_id = page.path.split("/")[2]
     assert uuid.UUID(privacy_policy_session_id)
-    
+
     page = page.click(contains="Back")
     assert page.has_one("h1:contains('Do you own the property?')")
 
