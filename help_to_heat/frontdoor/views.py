@@ -370,11 +370,9 @@ class EpcView(PageView):
             return redirect("frontdoor:page", session_id=session_id, page_name="epc-ineligible")
 
         choice = data["accept_suggested_epc"]
-        if choice in ("Yes", "Not found"):
-            prev_page_name, next_page_name = get_prev_next_page_name(page_name)
-            return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
-        else:
-            return redirect("frontdoor:page", session_id=session_id, page_name="benefits")
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
+        return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+
 
 @register_page("benefits")
 class BenefitsView(PageView):
