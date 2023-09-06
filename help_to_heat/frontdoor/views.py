@@ -31,6 +31,7 @@ page_compulsory_field_map = {
     "benefits": ("benefits",),
     "household-income": ("household_income",),
     "property-type": ("property_type",),
+    "property-subtype": ("property_subtype",),
     "number-of-bedrooms": ("number_of_bedrooms",),
     "wall-type": ("wall_type",),
     "wall-insulation": ("wall_insulation",),
@@ -55,6 +56,7 @@ missing_item_errors = {
     "benefits": _("Select if anyone in your household is receiving any benefits listed below"),
     "household_income": _("Select your household income"),
     "property_type": _("Select your property type"),
+    "property_subtype": _("Select your property type"),
     "number_of_bedrooms": _("Select the number of bedrooms the property has"),
     "wall_type": _("Select the type of walls the property has"),
     "wall_insulation": _("Select if the walls of the property are insulated or not, or if you don’t know"),
@@ -179,9 +181,8 @@ class PageView(utils.MethodDispatcher):
 
         try:
             extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data=data)
-        except Exception as e:  # noqa:B902
-            logger.error("An unknown error occurred")
-            logger.error(e)
+        except Exception:  # noqa:B902
+            logger.exception("An unknown error occurred")
             return redirect("/sorry")
         context = {
             "data": data,
@@ -220,6 +221,9 @@ class PageView(utils.MethodDispatcher):
             except ValidationError as val_errors:
                 errors = {field: val_errors.messages["data"][field][0] for field in val_errors.messages["data"]}
                 return self.get(request, session_id, page_name, data=data, errors=errors, is_change_page=is_change_page)
+            except Exception:  # noqa:B902
+                logger.exception("An unknown error occurred saving data")
+                return redirect("/sorry")
             return self.handle_post(request, session_id, page_name, data, is_change_page)
 
     def save_data(self, request, session_id, page_name, *args, **kwargs):
