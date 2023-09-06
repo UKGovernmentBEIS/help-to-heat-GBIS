@@ -18,4 +18,4 @@ def digital_assistance_view(request):
     # response = render(next_url)
     # response.set_cookie("digital_assistance", True)
 
-    return render(request, template_name="digitalassistance.html", context={})
+    return render(request, template_name="frontdoor/digitalassistance.html", context={})
