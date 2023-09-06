@@ -679,6 +679,85 @@ def test_feedback_with_session():
     page = page.click(contains="Return to your application")
     assert page.has_one("h1:contains('Do you own the property?')")
 
+def test_privacy_policy_with_session():
+    client = utils.get_client()
+    page = client.get("/start")
+    page = page.follow()
+
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    form = page.get_form()
+    form["country"] = "Scotland"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Utilita"
+    page = form.submit().follow()
+    
+    assert page.has_one("h1:contains('Do you own the property?')")
+
+    page = page.click(contains="Privacy Policy")
+
+    privacy_policy_session_id = page.path.split("/")[2]
+    assert uuid.UUID(privacy_policy_session_id)
+    
+    page = page.click(contains="Back")
+    assert page.has_one("h1:contains('Do you own the property?')")
+
+def test_accessibility_statement_with_session():
+    client = utils.get_client()
+    page = client.get("/start")
+    page = page.follow()
+
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    form = page.get_form()
+    form["country"] = "Scotland"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Utilita"
+    page = form.submit().follow()
+    
+    assert page.has_one("h1:contains('Do you own the property?')")
+
+    page = page.click(contains="Accessibility Statement")
+
+    privacy_policy_session_id = page.path.split("/")[2]
+    assert uuid.UUID(privacy_policy_session_id)
+    
+    page = page.click(contains="Back")
+    assert page.has_one("h1:contains('Do you own the property?')")
+
+def test_accessibility_statement_then_privacy_policy_with_session():
+    client = utils.get_client()
+    page = client.get("/start")
+    page = page.follow()
+
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    form = page.get_form()
+    form["country"] = "Scotland"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Utilita"
+    page = form.submit().follow()
+    
+    assert page.has_one("h1:contains('Do you own the property?')")
+
+    page = page.click(contains="Accessibility Statement")
+    page = page.click(contains="Privacy Policy")
+
+    privacy_policy_session_id = page.path.split("/")[2]
+    assert uuid.UUID(privacy_policy_session_id)
+    
+    page = page.click(contains="Back")
+    assert page.has_one("h1:contains('Do you own the property?')")
+
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 @utils.mock_os_api
@@ -714,7 +793,7 @@ def test_incorrect_referral_email():
     form["email"] = "not-an-email"
     page = form.submit()
 
-    assert page.has_one("p:contains('Not a valid email address.')")
+    assert page.has_one("p:contains('Invalid email format')")
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)

@@ -610,7 +610,7 @@ class ConfirmSubmitView(PageView):
         session_data = interface.api.session.get_session(session_id)
         session_data = BulbSupplierConverter(session_id).replace_bulb_with_octopus_in_session_data(session_data)
         if session_data.get("email"):
-            email_handler.send_referral_confirmation_email(session_data)
+            email_handler.send_referral_confirmation_email(session_data, request.LANGUAGE_CODE)
         return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
@@ -665,13 +665,21 @@ def data_layer_js_view(request):
     return render(request, "dataLayer.js", {"gtag_id": settings.GTAG_ID}, content_type="application/x-javascript")
 
 
-def privacy_policy_view(request):
-    previous_path = request.GET.get("prev")
-    context = {"previous_path": previous_path}
+def privacy_policy_view(request, session_id=None, page_name=None):
+    prev_page_url = page_name and reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
+    context = {
+        "session_id": session_id,
+        "page_name": page_name,
+        "prev_url": prev_page_url,
+    }
     return render(request, template_name="frontdoor/privacy-policy.html", context=context)
 
 
-def accessibility_statement_view(request):
-    previous_path = request.GET.get("prev")
-    context = {"previous_path": previous_path}
+def accessibility_statement_view(request, session_id=None, page_name=None):
+    prev_page_url = page_name and reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
+    context = {
+        "session_id": session_id,
+        "page_name": page_name,
+        "prev_url": prev_page_url,
+    }
     return render(request, template_name="frontdoor/accessibility-statement.html", context=context)
