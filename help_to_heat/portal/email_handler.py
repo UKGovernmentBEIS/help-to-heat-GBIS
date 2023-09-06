@@ -125,9 +125,10 @@ def send_invite_email(user):
 def send_referral_confirmation_email(session_data, language_code):
     if language_code.startswith("cy"):
         data = EMAIL_MAPPING["referral-confirmation-cy"]
+        data["subject"] = "Cwblhau atgyfeiriad"
     else:
         data = EMAIL_MAPPING["referral-confirmation"]
-    data["subject"] = f"Referral to {session_data.get('supplier')} successful"
+        data["subject"] = f"Referral to {session_data.get('supplier')} successful"
     context = {"supplier_name": session_data.get("supplier")}
     return _send_normal_email(to_address=session_data.get("email"), context=context, **data)
 
