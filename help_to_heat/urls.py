@@ -12,6 +12,7 @@ urlpatterns = [
     path("portal/", include((portal_patterns, "portal"))),
     path("", include((frontdoor_patterns, "frontdoor"))),
     path("__debug__/", include("debug_toolbar.urls")),
+    path("digitalassistance", views.digital_assistance_view),
 ]
 
 if settings.DEBUG:
