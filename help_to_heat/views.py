@@ -14,8 +14,4 @@ def robots_txt_view(request):
 
 
 def digital_assistance_view(request):
-    # next_url = "https://www.gov.uk/apply-great-british-insulation-scheme"
-    # response = render(next_url)
-    # response.set_cookie("digital_assistance", True)
-
     return render(request, template_name="frontdoor/digitalassistance.html", context={})
