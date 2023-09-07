@@ -30,7 +30,6 @@ extra_pages = (
     "applications-closed",
     "address-select",
     "address-manual",
-    "epc-disagree",
     "loft-access",
     "loft-insulation",
     "northern-ireland",
@@ -42,7 +41,6 @@ extra_pages = (
 page_prev_next_map = {
     "address-select": {"prev": "address", "next": "council-tax-band"},
     "address-manual": {"prev": "address", "next": "council-tax-band"},
-    "epc-disagree": {"prev": "address", "next": "benefits"},
     "loft": {"prev": "wall-insulation", "next": "loft-access"},
     "loft-access": {"prev": "loft", "next": "loft-insulation"},
     "loft-insulation": {"prev": "loft-access", "next": "summary"},
@@ -51,6 +49,7 @@ page_prev_next_map = {
     "northern-ireland": {"prev": "country", "next": None},
     "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
     "applications-closed": {"prev": "supplier", "next": None},
+    "benefits": {"prev": "council-tax-band", "next": "household-income"},
 }
 
 summary_map = {
