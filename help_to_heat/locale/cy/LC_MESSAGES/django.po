@@ -2734,15 +2734,6 @@ msgstr ""
 "Os nad yw'ch cyflenwr ynni cartref chi wedi'i restru, cewch ddewis unrhyw "
 "gyflenwr ynni o'r rhestr"
 
-#: help_to_heat/templates/frontdoor/utility-warehouse-warning-page.html:5
-#: help_to_heat/templates/frontdoor/utility-warehouse-warning-page.html:10
-msgid "Your referral will be sent to E.ON Next"
-msgstr "welsh"
-
-#: help_to_heat/templates/frontdoor/utility-warehouse-warning-page.html:11
-msgid "E.ON Next is receiving referrals on behalf of Utility Warehouse."
-msgstr "welsh here"
-
 #: help_to_heat/templates/frontdoor/wall-insulation.html:5
 msgid ""
 "Do your walls have insulation? - Check eligibility for Great British "
