@@ -96,10 +96,6 @@ def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D", s
         form = page.get_form()
         assert page.has_text("Your referral will be sent to Octopus Energy")
         page = form.submit().follow()
-    if supplier == "Utility Warehouse":
-        form = page.get_form()
-        assert page.has_text("Your referral will be sent to E.ON Next")
-        page = form.submit().follow()
 
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
@@ -237,8 +233,6 @@ def _do_happy_flow(supplier="EON"):
     supplier_shown = supplier
     if supplier == "Bulb, now part of Octopus Energy":
         supplier_shown = "Octopus Energy"
-    if supplier == "Utility Warehouse":
-        supplier_shown = "E.ON Next"
 
     assert page.has_one(f"h1:contains('Your details have been submitted to {supplier_shown}')")
 
@@ -945,19 +939,4 @@ def test_bulb_to_octopus():
 
     referral = models.Referral.objects.get(session_id=session_id)
     assert referral.supplier.name == "Octopus Energy"
-    referral.delete()
-
-
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
-@utils.mock_os_api
-def test_utility_warehouse_to_eon():
-    supplier = "Utility Warehouse"
-
-    session_id = _do_happy_flow(supplier=supplier)
-
-    referral_email_text = utils.get_latest_email_text("freddy.flibble@example.com")
-    assert "Your details have been submitted to E.ON Next." in referral_email_text
-
-    referral = models.Referral.objects.get(session_id=session_id)
-    assert referral.supplier.name == "E.ON Next"
     referral.delete()
