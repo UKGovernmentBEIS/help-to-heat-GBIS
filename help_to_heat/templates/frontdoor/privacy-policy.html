@@ -7,7 +7,7 @@
 {% block content %}
 <div class="govuk-grid-row">
   <div class="govuk-grid-column-two-thirds">
-    <a href="{% if previous_path %}{{ previous_path }}{% else %}{{url('frontdoor:homepage')}}{% endif %}" class="govuk-back-link">{{_("Back")}}</a>
+    <a href="{% if prev_url %}{{ prev_url }}{% else %}{{'https://www.gov.uk/apply-great-british-insulation-scheme'}}{% endif %}" class="govuk-back-link">{{_("Back")}}</a>
     <h1 class="govuk-heading-l">{{_("Privacy Notice – the Great British Insulation Scheme")}}</h1>
     <p class="govuk-body">
       {{_("This notice is provided to meet the requirements of the UK General Data Protection Regulation (UK GDPR) and Data Protection Act 2018 (DPA) to provide transparency in how we process and use personal data collected for the GOV.UK referral service for the Great British Insulation Scheme (GB Insulation Scheme), and your rights. It is made under Articles 13 and 14 of the UK GDPR.")}}

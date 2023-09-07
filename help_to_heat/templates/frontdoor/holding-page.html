@@ -3,29 +3,25 @@
 <title>{{_("Holding Page - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 {% block content %}
-<a href="{% if previous_path %}{{ previous_path }}{% else %}{{url('frontdoor:homepage')}}{% endif %}"
-    class="govuk-back-link">Back</a>
+<a href="{% if previous_path %}{{ previous_path }}{% else %}{{"https://www.gov.uk/apply-great-british-insulation-scheme"}}{% endif %}"
+    class="govuk-back-link">{{_("Back")}}</a>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
-        <h1 class="govuk-heading-l">The testing phase for this service has now finished</h1>
-        <p class="govuk-body">You can check if you may be eligible for support from the Great British Insulation Scheme
-            when the service launches in the coming weeks.</p>
-        <p class="govuk-body">Find out more about <a class="govuk-link"
+        <h1 class="govuk-heading-l">{{_("The testing phase for this service has now finished")}}</h1>
+        <p class="govuk-body">{{_("You can check if you may be eligible for support from the Great British Insulation Scheme when the service launches in the coming weeks.")}}</p>
+        <p class="govuk-body">{{_("Find out more about ")}}<a class="govuk-link"
                 href="https://www.gov.uk/government/publications/more-help-to-improve-the-energy-efficiency-of-your-home-through-the-great-british-insulation-scheme/great-british-insulation-scheme"
-                target="_blank" rel="noopener">the Great British Insulation Scheme (opens in a new tab)</a>.</p>
-        <h2 class="govuk-heading-m">Access more household energy support</h2>
-        <p class="govuk-body">You can:</p>
+                target="_blank" rel="noopener">{{_("the Great British Insulation Scheme (opens in a new tab)")}}</a>.</p>
+        <h2 class="govuk-heading-m">{{_("Access more household energy support")}}</h2>
+        <p class="govuk-body">{{_("You can:")}}</p>
         <ul class="govuk-list govuk-list--bullet">
-            <li>get: <a class="govuk-link" href="https://helpforhouseholds.campaign.gov.uk/help-with-your-bills/"
-                    target="_blank" rel="noopener">help with your energy bills from the Help for Households service
-                    (opens in a new tab)</a></li>
-            <li>visit: <a class="govuk-link" href="https://energysavingtrust.org.uk/energy-at-home/" target="_blank"
-                    rel="noopener">access household energy-saving tips from the Energy Savings Trust (opens in a new
-                    tab)</a></li>
-            <li>visit: <a class="govuk-link"
+            <li>{{_("get: ")}}<a class="govuk-link" href="https://helpforhouseholds.campaign.gov.uk/help-with-your-bills/"
+                    target="_blank" rel="noopener">{{_("help with your energy bills from the Help for Households service (opens in a new tab)")}}</a></li>
+            <li>{{_("visit: ")}}<a class="govuk-link" href="https://energysavingtrust.org.uk/energy-at-home/" target="_blank"
+                    rel="noopener">{{_("access household energy-saving tips from the Energy Savings Trust (opens in a new tab)")}}</a></li>
+            <li>{{_("visit: ")}}<a class="govuk-link"
                     href="https://www.citizensadvice.org.uk/consumer/energy/energy-supply/save-energy-at-home/get-help-with-the-cost-of-energy-efficiency/"
-                    target="_blank" rel="noopener">household energy-saving tips from Citizen’s Advice (opens in a new
-                    tab)</a></li>
+                    target="_blank" rel="noopener">{{_("household energy-saving tips from Citizen’s Advice (opens in a new tab)")}}</a></li>
         </ul>
     </div>
 </div>

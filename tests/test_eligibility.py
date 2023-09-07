@@ -10,10 +10,10 @@ from help_to_heat.portal import models
 from . import utils
 
 result_map = {
-    "GBIS": ("Great British Insulation Scheme",),
-    "ECO4": ("Energy Company Obligation 4",),
+    "GBIS": ("GBIS",),
+    "ECO4": ("ECO4",),
     "NONE": (),
-    "BOTH": ("Great British Insulation Scheme", "Energy Company Obligation 4"),
+    "BOTH": ("GBIS", "ECO4"),
 }
 
 scenarios = (
@@ -303,13 +303,11 @@ def _do_test(country, council_tax_band, epc_rating):
     _add_epc(uprn="100023336956", rating=epc_rating)
 
     client = utils.get_client()
-    page = client.get("/")
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
 
     assert page.status_code == 200
-
-    page = page.click(contains="Start")
-    assert page.status_code == 200
-
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 

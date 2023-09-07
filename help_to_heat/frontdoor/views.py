@@ -1,6 +1,8 @@
+import logging
 import uuid
 
 from django.conf import settings
+from django.http import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
@@ -11,11 +13,12 @@ from help_to_heat import utils
 
 from ..portal import email_handler
 from . import eligibility, interface, schemas
-from .os_api import ThrottledApiException
 
-BulbSupplierConverter = interface.BulbSupplierConverter
+SupplierConverter = interface.SupplierConverter
 
 page_map = {}
+
+logger = logging.getLogger(__name__)
 
 page_compulsory_field_map = {
     "country": ("country",),
@@ -28,6 +31,7 @@ page_compulsory_field_map = {
     "benefits": ("benefits",),
     "household-income": ("household_income",),
     "property-type": ("property_type",),
+    "property-subtype": ("property_subtype",),
     "number-of-bedrooms": ("number_of_bedrooms",),
     "wall-type": ("wall_type",),
     "wall-insulation": ("wall_insulation",),
@@ -42,7 +46,7 @@ page_compulsory_field_map = {
 missing_item_errors = {
     "country": _("Select where the property is located"),
     "own_property": _("Select if you own the property"),
-    "building_name_or_number": "Enter building name or number",
+    "building_name_or_number": _("Enter building name or number"),
     "address_line_1": _("Enter Address line 1"),
     "postcode": _("Enter a postcode"),
     "uprn": _("Select your address"),
@@ -52,6 +56,7 @@ missing_item_errors = {
     "benefits": _("Select if anyone in your household is receiving any benefits listed below"),
     "household_income": _("Select your household income"),
     "property_type": _("Select your property type"),
+    "property_subtype": _("Select your property type"),
     "number_of_bedrooms": _("Select the number of bedrooms the property has"),
     "wall_type": _("Select the type of walls the property has"),
     "wall_insulation": _("Select if the walls of the property are insulated or not, or if you don’t know"),
@@ -61,7 +66,7 @@ missing_item_errors = {
     "supplier": _("Select your home energy supplier from the list below"),
     "first_name": _("Enter your first name"),
     "last_name": _("Enter your last name"),
-    "email": _("Enter your address"),
+    "email": _("Enter your email address"),
     "contact_number": _("Enter your contact number"),
     "permission": _("Please confirm that you agree to the use of your information by checking this box"),
 }
@@ -75,28 +80,37 @@ def register_page(name):
     return _inner
 
 
-def homepage_view(request):
+def redirect_to_homepage_view(request):
+    next_url = "https://www.gov.uk/apply-great-british-insulation-scheme"
+    return redirect(next_url)
+
+
+def start_view(request):
     session_id = uuid.uuid4()
     next_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="country"))
-    context = {
-        "next_url": next_url,
-    }
-    response = render(request, template_name="frontdoor/homepage.html", context=context)
+    response = redirect(next_url)
     response["x-vcap-request-id"] = session_id
     return response
 
 
 def holding_page_view(request):
-    previous_path = reverse("frontdoor:homepage")
+    previous_path = "https://www.gov.uk/apply-great-british-insulation-scheme"
     context = {"previous_path": previous_path}
     return render(request, template_name="frontdoor/holding-page.html", context=context)
 
 
 def sorry_page_view(request):
-    return render(request, template_name="frontdoor/os-api-throttled.html")
+    return render(request, template_name="frontdoor/sorry-unavailable.html")
+
+
+def not_found_page_view(request, exception):
+    return render(request, template_name="frontdoor/not-found.html")
 
 
 def page_view(request, session_id, page_name):
+    if page_name not in (schemas.page_order + schemas.extra_pages):
+        raise Http404("Invalid url")
+
     if page_name in page_map:
         return page_map[page_name](request, session_id, page_name)
 
@@ -135,7 +149,7 @@ def get_prev_next_page_name(page_name):
 def get_prev_next_urls(session_id, page_name):
     prev_page_name, next_page_name = get_prev_next_page_name(page_name)
     if prev_page_name == "homepage":
-        prev_page_url = reverse("frontdoor:homepage")
+        prev_page_url = "https://www.gov.uk/apply-great-british-insulation-scheme"
     else:
         prev_page_url = prev_page_name and reverse(
             "frontdoor:page", kwargs=dict(session_id=session_id, page_name=prev_page_name)
@@ -167,7 +181,8 @@ class PageView(utils.MethodDispatcher):
 
         try:
             extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data=data)
-        except ThrottledApiException:
+        except Exception:  # noqa:B902
+            logger.exception("An unknown error occurred")
             return redirect("/sorry")
         context = {
             "data": data,
@@ -206,6 +221,9 @@ class PageView(utils.MethodDispatcher):
             except ValidationError as val_errors:
                 errors = {field: val_errors.messages["data"][field][0] for field in val_errors.messages["data"]}
                 return self.get(request, session_id, page_name, data=data, errors=errors, is_change_page=is_change_page)
+            except Exception:  # noqa:B902
+                logger.exception("An unknown error occurred saving data")
+                return redirect("/sorry")
             return self.handle_post(request, session_id, page_name, data, is_change_page)
 
     def save_data(self, request, session_id, page_name, *args, **kwargs):
@@ -351,35 +369,8 @@ class EpcView(PageView):
         if (epc_rating in ("A", "B", "C")) and (accept_suggested_epc == "Yes"):
             return redirect("frontdoor:page", session_id=session_id, page_name="epc-ineligible")
 
-        choice = data["accept_suggested_epc"]
-        if choice in ("Yes", "Not found"):
-            prev_page_name, next_page_name = get_prev_next_page_name(page_name)
-            return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
-        else:
-            return redirect("frontdoor:page", session_id=session_id, page_name="epc-disagree")
-
-
-@register_page("epc-disagree")
-class EpcDisagreeView(PageView):
-    def get(self, request, session_id, page_name, data=None, errors=None, is_change_page=False):
-        if not errors:
-            errors = {}
-        data = {}
-        prev_page_url, next_page_url = get_prev_next_urls(session_id, page_name)
-        extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data=data)
-        context = {
-            "data": data,
-            "session_id": session_id,
-            "errors": errors,
-            "prev_url": prev_page_url,
-            "next_url": next_page_url,
-            **extra_context,
-        }
-        return render(request, template_name=f"frontdoor/{page_name}.html", context=context)
-
-    def save_data(self, request, session_id, page_name, *args, **kwargs):
-        data = interface.api.session.save_answer(session_id, "epc", request.POST.dict())
-        return data
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
+        return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
 
 @register_page("benefits")
@@ -510,7 +501,7 @@ class SchemesView(PageView):
         session_data = interface.api.session.get_session(session_id)
         eligible_schemes = eligibility.calculate_eligibility(session_data)
         _ = interface.api.session.save_answer(session_id, "schemes", {"schemes": eligible_schemes})
-        eligible_schemes = tuple(scheme for scheme in eligible_schemes if not scheme == "Energy Company Obligation 4")
+        eligible_schemes = tuple(schemas.schemes_map[scheme] for scheme in eligible_schemes if not scheme == "ECO4")
         return {"eligible_schemes": eligible_schemes}
 
 
@@ -524,18 +515,17 @@ class SupplierView(PageView):
         request_data = dict(request.POST.dict())
         request_supplier = request_data.get("supplier")
         # to be updated when we get full list of excluded suppliers
-        unavailable_suppliers = [
-            "Shell",
-        ]
+        converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
+        unavailable_suppliers = ["British Gas", "Ecotricity"]
         if request_supplier == "Bulb, now part of Octopus Energy":
             next_page_name = "bulb-warning-page"
+        if request_supplier == "Utility Warehouse":
+            next_page_name = "utility-warehouse-warning-page"
         if request_supplier in unavailable_suppliers:
             next_page_name = "applications-closed"
 
         if is_change_page:
-            if request_supplier == "Bulb, now part of Octopus Energy":
-                return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
-            elif request_supplier in unavailable_suppliers:
+            if (request_supplier in converted_suppliers) or (request_supplier in unavailable_suppliers):
                 return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
             else:
                 assert page_name in schemas.change_page_lookup
@@ -546,21 +536,28 @@ class SupplierView(PageView):
 @register_page("bulb-warning-page")
 class BulbWarningPageView(PageView):
     def get_context(self, session_id, *args, **kwargs):
-        supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        supplier = SupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        return {"supplier": supplier}
+
+
+@register_page("utility-warehouse-warning-page")
+class UtilityWarehousePageView(PageView):
+    def get_context(self, session_id, *args, **kwargs):
+        supplier = interface.api.session.get_answer(session_id, "supplier")["supplier"]
         return {"supplier": supplier}
 
 
 @register_page("applications-closed")
 class ApplicationsClosedView(PageView):
     def get_context(self, session_id, *args, **kwargs):
-        supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        supplier = SupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
         return {"supplier": supplier}
 
 
 @register_page("contact-details")
 class ContactDetailsView(PageView):
     def get_context(self, session_id, *args, **kwargs):
-        supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        supplier = SupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
         return {"supplier": supplier}
 
     def validate(self, request, session_id, page_name, data, is_change_page):
@@ -589,23 +586,23 @@ class ConfirmSubmitView(PageView):
             for page_name, questions in schemas.details_pages.items()
             for question in questions
         )
-        supplier = BulbSupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        supplier = SupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
         return {"summary_lines": summary_lines, "supplier": supplier}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         interface.api.session.create_referral(session_id)
         interface.api.session.save_answer(session_id, page_name, {"referral_created_at": str(timezone.now())})
         session_data = interface.api.session.get_session(session_id)
-        session_data = BulbSupplierConverter(session_id).replace_bulb_with_octopus_in_session_data(session_data)
+        session_data = SupplierConverter(session_id).replace_in_session_data(session_data)
         if session_data.get("email"):
-            email_handler.send_referral_confirmation_email(session_data)
+            email_handler.send_referral_confirmation_email(session_data, request.LANGUAGE_CODE)
         return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
 @register_page("success")
 class SuccessView(PageView):
     def get_context(self, session_id, *args, **kwargs):
-        supplier = BulbSupplierConverter(session_id).get_supplier_and_replace_bulb_with_octopus()
+        supplier = SupplierConverter(session_id).get_supplier_and_replace()
         return {"supplier": supplier, "safe_to_cache": True}
 
 
@@ -653,13 +650,21 @@ def data_layer_js_view(request):
     return render(request, "dataLayer.js", {"gtag_id": settings.GTAG_ID}, content_type="application/x-javascript")
 
 
-def privacy_policy_view(request):
-    previous_path = request.GET.get("prev")
-    context = {"previous_path": previous_path}
+def privacy_policy_view(request, session_id=None, page_name=None):
+    prev_page_url = page_name and reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
+    context = {
+        "session_id": session_id,
+        "page_name": page_name,
+        "prev_url": prev_page_url,
+    }
     return render(request, template_name="frontdoor/privacy-policy.html", context=context)
 
 
-def accessibility_statement_view(request):
-    previous_path = request.GET.get("prev")
-    context = {"previous_path": previous_path}
+def accessibility_statement_view(request, session_id=None, page_name=None):
+    prev_page_url = page_name and reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
+    context = {
+        "session_id": session_id,
+        "page_name": page_name,
+        "prev_url": prev_page_url,
+    }
     return render(request, template_name="frontdoor/accessibility-statement.html", context=context)

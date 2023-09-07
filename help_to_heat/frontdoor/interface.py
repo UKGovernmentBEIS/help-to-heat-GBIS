@@ -11,7 +11,7 @@ from help_to_heat import portal
 from help_to_heat.utils import Entity, Interface, register_event, with_schema
 
 from . import models, schemas
-from .os_api import OSApi
+from .os_api import OSApi, ThrottledApiException
 
 
 class SaveAnswerSchema(marshmallow.Schema):
@@ -122,7 +122,7 @@ def get_addresses_from_api(postcode):
     return api_results_all
 
 
-class BulbSupplierConverter:
+class SupplierConverter:
     def __init__(self, session_id):
         self.session_id = session_id
 
@@ -132,21 +132,28 @@ class BulbSupplierConverter:
     def _is_bulb(self):
         return self._get_supplier() == "Bulb, now part of Octopus Energy"
 
+    def _is_utility_warehouse(self):
+        return self._get_supplier() == "Utility Warehouse"
+
     def get_supplier_and_add_comma_after_bulb(self):
         supplier = self._get_supplier()
         if self._is_bulb():
             return supplier + ", "
         return supplier
 
-    def get_supplier_and_replace_bulb_with_octopus(self):
+    def get_supplier_and_replace(self):
         supplier = self._get_supplier()
         if self._is_bulb():
             return "Octopus Energy"
+        if self._is_utility_warehouse():
+            return "E.ON Next"
         return supplier
 
-    def replace_bulb_with_octopus_in_session_data(self, session_data):
+    def replace_in_session_data(self, session_data):
         if self._is_bulb():
             session_data["supplier"] = "Octopus Energy"
+        if self._is_utility_warehouse():
+            session_data["supplier"] = "E.ON Next"
         return session_data
 
 
@@ -179,7 +186,7 @@ class Session(Entity):
     @register_event(models.Event, "Referral created")
     def create_referral(self, session_id):
         session_data = api.session.get_session(session_id)
-        data = BulbSupplierConverter(session_id).replace_bulb_with_octopus_in_session_data(session_data)
+        data = SupplierConverter(session_id).replace_in_session_data(session_data)
         supplier = portal.models.Supplier.objects.get(name=data["supplier"])
         referral = portal.models.Referral.objects.create(session_id=session_id, data=data, supplier=supplier)
         referral_data = {"id": referral.id, "session_id": referral.session_id, "data": referral.data}
@@ -238,16 +245,23 @@ class Address(Entity):
                     logger.error(f"The OS API usage limit has been hit for API key at index {index}.")
                     if index == len(api_keys) - 1:
                         logger.error("The OS API usage limit has been hit for all API keys")
+                        raise ThrottledApiException
                     else:
                         continue
 
-                logger.error("An error occurred while attempting to fetch addresses.")
-                logger.error(e)
+                logger.exception("An error occurred while attempting to fetch addresses.")
                 break
-        api_results = api.uprn(int(uprn), dataset="LPI")["features"]
-        address = api_results[0]["properties"]["ADDRESS"]
-        result = {"uprn": uprn, "address": address}
-        return result
+
+        try:
+            api_results = api.uprn(int(uprn), dataset="LPI")["features"]
+            address = api_results[0]["properties"]["ADDRESS"]
+            result = {"uprn": uprn, "address": address}
+            return result
+        except requests.exceptions.HTTPError or requests.exceptions.RequestException as e:
+            if e.response.status_code == HTTPStatus.TOO_MANY_REQUESTS:
+                raise ThrottledApiException
+            else:
+                raise e
 
     def is_current_residential(self, lpi):
         return (

@@ -23,11 +23,7 @@ class OSApi:
                 url += f"&offset={offset}"
 
             try:
-                response = requests.get(url)
-                response.raise_for_status()
-                json_response = response.json()
-
-                return json_response
+                return self.perform_request(url)
 
             except requests.exceptions.HTTPError or requests.exceptions.RequestException as e:
                 status_code = e.response.status_code
@@ -39,7 +35,13 @@ class OSApi:
                     else:
                         continue
 
-                logger.error("An error occurred while attempting to fetch addresses.")
-                logger.error(e)
+                logger.exception("An error occurred while attempting to fetch addresses.")
                 break
         return []
+
+    def perform_request(self, url):
+        response = requests.get(url)
+        response.raise_for_status()
+        json_response = response.json()
+
+        return json_response

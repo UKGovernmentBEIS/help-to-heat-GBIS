@@ -66,6 +66,10 @@ EMAIL_MAPPING = {
         "from_address": settings.FROM_EMAIL,
         "template_name": "portal/email/referral-confirmation.txt",
     },
+    "referral-confirmation-cy": {
+        "from_address": settings.FROM_EMAIL,
+        "template_name": "portal/email/referral-confirmation-cy.txt",
+    },
 }
 
 
@@ -86,9 +90,8 @@ def _send_token_email(user, subject, template_name, from_address, url_name, toke
             recipient_list=[user.email],
         )
         return response
-    except Exception as err:  # noqa: B902
-        logger.error("An error occured while attempting to send an email.")
-        logger.error(err)
+    except Exception:  # noqa: B902
+        logger.exception("An error occured while attempting to send an email.")
 
 
 def _send_normal_email(subject, template_name, from_address, to_address, context):
@@ -101,9 +104,8 @@ def _send_normal_email(subject, template_name, from_address, to_address, context
             recipient_list=[to_address],
         )
         return response
-    except Exception as err:  # noqa: B902
-        logger.error("An error occured while attempting to send an email.")
-        logger.error(err)
+    except Exception:  # noqa: B902
+        logger.exception("An error occured while attempting to send an email.")
 
 
 def send_password_reset_email(user):
@@ -118,9 +120,13 @@ def send_invite_email(user):
     return _send_token_email(user, **data)
 
 
-def send_referral_confirmation_email(session_data):
-    data = EMAIL_MAPPING["referral-confirmation"]
-    data["subject"] = f"Referral to {session_data.get('supplier')} successful"
+def send_referral_confirmation_email(session_data, language_code):
+    if language_code.startswith("cy"):
+        data = EMAIL_MAPPING["referral-confirmation-cy"]
+        data["subject"] = "Cwblhau atgyfeiriad"
+    else:
+        data = EMAIL_MAPPING["referral-confirmation"]
+        data["subject"] = f"Referral to {session_data.get('supplier')} successful"
     context = {"supplier_name": session_data.get("supplier")}
     return _send_normal_email(to_address=session_data.get("email"), context=context, **data)
 

@@ -8,10 +8,10 @@
 {% block content %}
 
   {% if prev_url %}
-    <a href="{{prev_url}}" class="govuk-back-link">Back</a>
+    <a href="{{prev_url}}" class="govuk-back-link">{{_("Back")}}</a>
   {% endif %}
 
-<h1 class="govuk-heading-l">Help us improve the service</h1>
+<h1 class="govuk-heading-l">{{_("Help us improve the service")}}</h1>
 <form id="feedback" method="post" novalidate>
     {{csrf_input}}
 
@@ -20,11 +20,11 @@
       <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
         <h1 class="govuk-label-wrapper">
           <label class="govuk-label govuk-label--m" for="how-useful-detail">
-            I found this service useful for learning about government energy efficiency support.
+            {{_("I found this service useful for learning about government energy efficiency support.")}}
           </label>
         </h1>
         <div id="how-useful-detail-hint" class="govuk-hint">
-          How much do you agree with the statement above?
+          {{_("How much do you agree with the statement above?")}}
         </div>
       </legend>
 
@@ -38,11 +38,11 @@
       <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
         <h1 class="govuk-label-wrapper">
           <label class="govuk-label govuk-label--m" for="guidance-detail">
-            I had sufficient detail or guidance on every page to proceed to the next step.
+            {{_("I had sufficient detail or guidance on every page to proceed to the next step.")}}
           </label>
         </h1>
         <div id="guidance-detail-hint" class="govuk-hint">
-          How much do you agree with the statement above?
+          {{_("How much do you agree with the statement above?")}}
         </div>
 
       </legend>
@@ -57,11 +57,11 @@
       <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
         <h1 class="govuk-label-wrapper">
           <label class="govuk-label govuk-label--m" for="accuracy-detail">
-            I was able to answer all questions accurately, to the best of my knowledge.
+            {{_("I was able to answer all questions accurately, to the best of my knowledge.")}}
           </label>
         </h1>
         <div id="accuracy-detail-hint" class="govuk-hint">
-          How much do you agree with the statement above?
+          {{_("How much do you agree with the statement above?")}}
         </div>
       </legend>
 
@@ -73,17 +73,17 @@
   <div class="govuk-form-group govuk-!-padding-bottom-7">
     <h1 class="govuk-label-wrapper">
       <label class="govuk-label govuk-label--m" for="more-detail">
-        While using our service, was there any specific aspect of this service that you believe can be improved?
+        {{_("While using our service, was there any specific aspect of this service that you believe can be improved?")}}
       </label>
     </h1>
     <div id="more-detail-hint" class="govuk-hint">
-      Please do not include any personal or financial information in your response.
+      {{_("Please do not include any personal or financial information in your response.")}}
     </div>
     <textarea class="govuk-textarea" id="more-detail" name="more-detail" rows="8" aria-describedby="more-detail-hint"></textarea>
   </div>
 
   <button class="govuk-button" data-module="govuk-button">
-    Send feedback
+    {{_("Send feedback")}}
   </button>
 </form>
 {% endblock %}

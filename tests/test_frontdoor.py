@@ -20,16 +20,27 @@ def _add_epc(uprn, rating):
 # TODO: PC-380: Add tests for cookie banner
 
 
+def test_start_page_redirection():
+    client = utils.get_client()
+    page = client.get("/start")
+
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    page_name = page.path.split("/")[2]
+    assert page_name == "country"
+
+
 def test_flow_northern_ireland():
     client = utils.get_client()
-    page = client.get("/")
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
 
     assert page.status_code == 200
-    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
-
-    page = page.click(contains="Start")
-    assert page.status_code == 200
-
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -51,14 +62,11 @@ def test_flow_northern_ireland():
 
 def test_flow_errors():
     client = utils.get_client()
-    page = client.get("/")
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
 
     assert page.status_code == 200
-    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
-
-    page = page.click(contains="Start")
-    assert page.status_code == 200
-
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -87,6 +95,10 @@ def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D", s
     if supplier == "Bulb, now part of Octopus Energy":
         form = page.get_form()
         assert page.has_text("Your referral will be sent to Octopus Energy")
+        page = form.submit().follow()
+    if supplier == "Utility Warehouse":
+        form = page.get_form()
+        assert page.has_text("Your referral will be sent to E.ON Next")
         page = form.submit().follow()
 
     assert page.has_text("Do you own the property?")
@@ -177,14 +189,11 @@ def test_happy_flow():
 
 def _do_happy_flow(supplier="EON"):
     client = utils.get_client()
-    page = client.get("/")
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
 
     assert page.status_code == 200
-    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
-
-    page = page.click(contains="Start")
-    assert page.status_code == 200
-
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -228,6 +237,8 @@ def _do_happy_flow(supplier="EON"):
     supplier_shown = supplier
     if supplier == "Bulb, now part of Octopus Energy":
         supplier_shown = "Octopus Energy"
+    if supplier == "Utility Warehouse":
+        supplier_shown = "E.ON Next"
 
     assert page.has_one(f"h1:contains('Your details have been submitted to {supplier_shown}')")
 
@@ -249,14 +260,11 @@ def _make_check_page(session_id):
 
 def test_back_button():
     client = utils.get_client()
-    page = client.get("/")
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
 
     assert page.status_code == 200
-    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
-
-    page = page.click(contains="Start")
-    assert page.status_code == 200
-
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -299,14 +307,11 @@ def test_back_button():
 @utils.mock_os_api
 def test_no_benefits_flow():
     client = utils.get_client()
-    page = client.get("/")
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
 
     assert page.status_code == 200
-    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
-
-    page = page.click(contains="Start")
-    assert page.status_code == 200
-
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -358,14 +363,11 @@ def test_no_benefits_flow():
 @utils.mock_os_api
 def test_summary():
     client = utils.get_client()
-    page = client.get("/")
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
 
     assert page.status_code == 200
-    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
-
-    page = page.click(contains="Start")
-    assert page.status_code == 200
-
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -391,14 +393,11 @@ def test_summary():
 @utils.mock_os_api
 def test_no_address():
     client = utils.get_client()
-    page = client.get("/")
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
 
     assert page.status_code == 200
-    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
-
-    page = page.click(contains="Start")
-    assert page.status_code == 200
-
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -461,14 +460,11 @@ def test_no_address():
 @utils.mock_os_api
 def test_no_epc():
     client = utils.get_client()
-    page = client.get("/")
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
 
     assert page.status_code == 200
-    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
-
-    page = page.click(contains="Start")
-    assert page.status_code == 200
-
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -511,17 +507,15 @@ def test_no_epc():
 @utils.mock_os_api
 def test_eligibility():
     client = utils.get_client()
-    page = client.get("/")
+    page = client.get("/start")
 
     epc_rating = "D"
     council_tax_band = "G"
 
-    assert page.status_code == 200
-    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
+    assert page.status_code == 302
+    page = page.follow()
 
-    page = page.click(contains="Start")
     assert page.status_code == 200
-
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -564,9 +558,6 @@ def test_eligibility():
     assert page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
     page = _check_page(page, "epc", "accept_suggested_epc", "No")
 
-    form = page.get_form()
-    page = form.submit().follow()
-
     page = _check_page(page, "benefits", "benefits", "No")
 
     assert page.has_one("h1:contains('Your property is not eligible')")
@@ -576,14 +567,11 @@ def test_eligibility():
 @utils.mock_os_api
 def test_referral_email():
     client = utils.get_client()
-    page = client.get("/")
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
 
     assert page.status_code == 200
-    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
-
-    page = page.click(contains="Start")
-    assert page.status_code == 200
-
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -634,7 +622,8 @@ def test_referral_email():
 
 def test_feedback_no_session():
     client = utils.get_client()
-    page = client.get("/")
+    page = client.get("/start")
+    page = page.follow()
     page = page.click(contains="feedback")
     form = page.get_form()
     form["how-much"] = "Agree"
@@ -655,11 +644,8 @@ def test_feedback_no_session():
 
 def test_feedback_with_session():
     client = utils.get_client()
-    page = client.get("/")
-
-    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
-
-    page = page.click(contains="Start")
+    page = client.get("/start")
+    page = page.follow()
 
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
@@ -697,18 +683,97 @@ def test_feedback_with_session():
     assert page.has_one("h1:contains('Do you own the property?')")
 
 
+def test_privacy_policy_with_session():
+    client = utils.get_client()
+    page = client.get("/start")
+    page = page.follow()
+
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    form = page.get_form()
+    form["country"] = "Scotland"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Utilita"
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Do you own the property?')")
+
+    page = page.click(contains="Privacy Policy")
+
+    privacy_policy_session_id = page.path.split("/")[2]
+    assert uuid.UUID(privacy_policy_session_id)
+
+    page = page.click(contains="Back")
+    assert page.has_one("h1:contains('Do you own the property?')")
+
+
+def test_accessibility_statement_with_session():
+    client = utils.get_client()
+    page = client.get("/start")
+    page = page.follow()
+
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    form = page.get_form()
+    form["country"] = "Scotland"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Utilita"
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Do you own the property?')")
+
+    page = page.click(contains="Accessibility Statement")
+
+    privacy_policy_session_id = page.path.split("/")[2]
+    assert uuid.UUID(privacy_policy_session_id)
+
+    page = page.click(contains="Back")
+    assert page.has_one("h1:contains('Do you own the property?')")
+
+
+def test_accessibility_statement_then_privacy_policy_with_session():
+    client = utils.get_client()
+    page = client.get("/start")
+    page = page.follow()
+
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    form = page.get_form()
+    form["country"] = "Scotland"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Utilita"
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Do you own the property?')")
+
+    page = page.click(contains="Accessibility Statement")
+    page = page.click(contains="Privacy Policy")
+
+    privacy_policy_session_id = page.path.split("/")[2]
+    assert uuid.UUID(privacy_policy_session_id)
+
+    page = page.click(contains="Back")
+    assert page.has_one("h1:contains('Do you own the property?')")
+
+
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 @utils.mock_os_api
 def test_incorrect_referral_email():
     client = utils.get_client()
-    page = client.get("/")
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
 
     assert page.status_code == 200
-    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
-
-    page = page.click(contains="Start")
-    assert page.status_code == 200
-
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -734,21 +799,18 @@ def test_incorrect_referral_email():
     form["email"] = "not-an-email"
     page = form.submit()
 
-    assert page.has_one("p:contains('Not a valid email address.')")
+    assert page.has_one("p:contains('Invalid email format')")
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 @utils.mock_os_api
 def test_referral_not_providing_email():
     client = utils.get_client()
-    page = client.get("/")
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
 
     assert page.status_code == 200
-    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
-
-    page = page.click(contains="Start")
-    assert page.status_code == 200
-
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -794,14 +856,11 @@ def test_referral_not_providing_email():
 @utils.mock_os_api
 def test_referral_not_providing_contact_number():
     client = utils.get_client()
-    page = client.get("/")
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
 
     assert page.status_code == 200
-    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
-
-    page = page.click(contains="Start")
-    assert page.status_code == 200
-
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -845,14 +904,11 @@ def test_referral_not_providing_contact_number():
 
 def test_address_validation():
     client = utils.get_client()
-    page = client.get("/")
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
 
     assert page.status_code == 200
-    assert page.has_one("h1:contains('Check if you may be eligible for the Great British Insulation Scheme')")
-
-    page = page.click(contains="Start")
-    assert page.status_code == 200
-
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
@@ -889,4 +945,19 @@ def test_bulb_to_octopus():
 
     referral = models.Referral.objects.get(session_id=session_id)
     assert referral.supplier.name == "Octopus Energy"
+    referral.delete()
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
+@utils.mock_os_api
+def test_utility_warehouse_to_eon():
+    supplier = "Utility Warehouse"
+
+    session_id = _do_happy_flow(supplier=supplier)
+
+    referral_email_text = utils.get_latest_email_text("freddy.flibble@example.com")
+    assert "Your details have been submitted to E.ON Next." in referral_email_text
+
+    referral = models.Referral.objects.get(session_id=session_id)
+    assert referral.supplier.name == "E.ON Next"
     referral.delete()
