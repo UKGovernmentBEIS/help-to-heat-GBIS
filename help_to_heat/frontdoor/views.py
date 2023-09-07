@@ -515,6 +515,7 @@ class SupplierView(PageView):
         request_data = dict(request.POST.dict())
         request_supplier = request_data.get("supplier")
         # to be updated when we get full list of excluded suppliers
+        converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
         unavailable_suppliers = ["British Gas", "Ecotricity"]
         if request_supplier == "Bulb, now part of Octopus Energy":
             next_page_name = "bulb-warning-page"
@@ -524,11 +525,7 @@ class SupplierView(PageView):
             next_page_name = "applications-closed"
 
         if is_change_page:
-            if request_supplier == "Bulb, now part of Octopus Energy":
-                return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
-            elif request_supplier == "Utility Warehouse":
-                return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
-            elif request_supplier in unavailable_suppliers:
+            if (request_supplier in converted_suppliers) or (request_supplier in unavailable_suppliers):
                 return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
             else:
                 assert page_name in schemas.change_page_lookup
