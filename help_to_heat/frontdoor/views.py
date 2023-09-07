@@ -536,7 +536,7 @@ class SupplierView(PageView):
 @register_page("bulb-warning-page")
 class BulbWarningPageView(PageView):
     def get_context(self, session_id, *args, **kwargs):
-        supplier = SupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
         return {"supplier": supplier}
 
 
@@ -550,14 +550,14 @@ class UtilityWarehousePageView(PageView):
 @register_page("applications-closed")
 class ApplicationsClosedView(PageView):
     def get_context(self, session_id, *args, **kwargs):
-        supplier = SupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
         return {"supplier": supplier}
 
 
 @register_page("contact-details")
 class ContactDetailsView(PageView):
     def get_context(self, session_id, *args, **kwargs):
-        supplier = SupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
         return {"supplier": supplier}
 
     def validate(self, request, session_id, page_name, data, is_change_page):
@@ -586,7 +586,7 @@ class ConfirmSubmitView(PageView):
             for page_name, questions in schemas.details_pages.items()
             for question in questions
         )
-        supplier = SupplierConverter(session_id).get_supplier_and_add_comma_after_bulb()
+        supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
         return {"summary_lines": summary_lines, "supplier": supplier}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
@@ -602,7 +602,7 @@ class ConfirmSubmitView(PageView):
 @register_page("success")
 class SuccessView(PageView):
     def get_context(self, session_id, *args, **kwargs):
-        supplier = SupplierConverter(session_id).get_supplier_and_replace()
+        supplier = SupplierConverter(session_id).get_supplier_on_success_page()
         return {"supplier": supplier, "safe_to_cache": True}
 
 
