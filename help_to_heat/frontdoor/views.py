@@ -71,6 +71,23 @@ missing_item_errors = {
     "permission": _("Please confirm that you agree to the use of your information by checking this box"),
 }
 
+# to be updated when we get full list of excluded suppliers
+converted_suppliers = ["Bulb, now part of Octopus Energy"]
+unavailable_suppliers = ["British Gas", "Ecotricity", "Utility Warehouse"]
+
+
+def unavailable_supplier_redirect(session_id):
+    session_data = interface.api.session.get_session(session_id)
+    supplier = session_data["supplier"]
+    if supplier not in unavailable_suppliers:
+        return None
+
+    if supplier == "Utility Warehouse":
+        next_page_name = "application-closed-utility-warehouse"
+    else:
+        next_page_name = "applications-closed"
+    return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+
 
 def register_page(name):
     def _inner(func):
@@ -494,6 +511,12 @@ class SummaryView(PageView):
         answers_map = schemas.check_your_answers_options_map.get(question)
         return answers_map[answer] if answers_map else answer
 
+    def handle_post(self, request, session_id, page_name, data, is_change_page):
+        supplier_redirect = unavailable_supplier_redirect(session_id)
+        if supplier_redirect is not None:
+            return supplier_redirect
+        return super().handle_post(request, session_id, page_name, data, is_change_page)
+
 
 @register_page("schemes")
 class SchemesView(PageView):
@@ -514,13 +537,12 @@ class SupplierView(PageView):
         prev_page_name, next_page_name = get_prev_next_page_name(page_name)
         request_data = dict(request.POST.dict())
         request_supplier = request_data.get("supplier")
-        # to be updated when we get full list of excluded suppliers
-        converted_suppliers = ["Bulb, now part of Octopus Energy"]
-        unavailable_suppliers = ["British Gas", "Ecotricity", "Utility Warehouse"]
         if request_supplier == "Bulb, now part of Octopus Energy":
             next_page_name = "bulb-warning-page"
         if request_supplier in unavailable_suppliers:
             next_page_name = "applications-closed"
+        if request_supplier == "Utility Warehouse":
+            next_page_name = "application-closed-utility-warehouse"
 
         if is_change_page:
             if (request_supplier in converted_suppliers) or (request_supplier in unavailable_suppliers):
@@ -533,6 +555,13 @@ class SupplierView(PageView):
 
 @register_page("bulb-warning-page")
 class BulbWarningPageView(PageView):
+    def get_context(self, session_id, *args, **kwargs):
+        supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
+        return {"supplier": supplier}
+
+
+@register_page("application-closed-utility-warehouse")
+class UtilityWarehouseApplicationClosedPageView(PageView):
     def get_context(self, session_id, *args, **kwargs):
         supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
         return {"supplier": supplier}
@@ -581,6 +610,9 @@ class ConfirmSubmitView(PageView):
         return {"summary_lines": summary_lines, "supplier": supplier}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
+        supplier_redirect = unavailable_supplier_redirect(session_id)
+        if supplier_redirect is not None:
+            return supplier_redirect
         interface.api.session.create_referral(session_id)
         interface.api.session.save_answer(session_id, page_name, {"referral_created_at": str(timezone.now())})
         session_data = interface.api.session.get_session(session_id)
