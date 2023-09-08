@@ -132,28 +132,21 @@ class SupplierConverter:
     def _is_bulb(self):
         return self._get_supplier() == "Bulb, now part of Octopus Energy"
 
-    def _is_utility_warehouse(self):
-        return self._get_supplier() == "Utility Warehouse"
-
-    def get_supplier_and_add_comma_after_bulb(self):
+    def get_supplier_on_general_pages(self):
         supplier = self._get_supplier()
         if self._is_bulb():
             return supplier + ", "
         return supplier
 
-    def get_supplier_and_replace(self):
+    def get_supplier_on_success_page(self):
         supplier = self._get_supplier()
         if self._is_bulb():
             return "Octopus Energy"
-        if self._is_utility_warehouse():
-            return "E.ON Next"
         return supplier
 
     def replace_in_session_data(self, session_data):
         if self._is_bulb():
             session_data["supplier"] = "Octopus Energy"
-        if self._is_utility_warehouse():
-            session_data["supplier"] = "E.ON Next"
         return session_data
 
 

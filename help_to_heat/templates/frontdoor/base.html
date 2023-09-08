@@ -193,6 +193,9 @@
   <script async src="https://www.googletagmanager.com/gtag/js?id={{gtag_id}}"></script>
   <script src="{{url('frontdoor:data-layer-js')}}"></script>
   {% endif %}
+
+  {% block latescripts %}
+  {% endblock %}
 </body>
 
 </html>
