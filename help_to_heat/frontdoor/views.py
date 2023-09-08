@@ -76,6 +76,19 @@ converted_suppliers = ["Bulb, now part of Octopus Energy"]
 unavailable_suppliers = ["British Gas", "Ecotricity", "Utility Warehouse"]
 
 
+def unavailable_supplier_redirect(session_id):
+    session_data = interface.api.session.get_session(session_id)
+    supplier = session_data["supplier"]
+    if supplier not in unavailable_suppliers:
+        return None
+
+    if supplier == "Utility Warehouse":
+        next_page_name = "application-closed-utility-warehouse"
+    else:
+        next_page_name = "applications-closed"
+    return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+
+
 def register_page(name):
     def _inner(func):
         page_map[name] = func
@@ -499,14 +512,9 @@ class SummaryView(PageView):
         return answers_map[answer] if answers_map else answer
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        session_data = interface.api.session.get_session(session_id)
-        supplier = session_data["supplier"]
-        if supplier in unavailable_suppliers:
-            if supplier == "Utility Warehouse":
-                next_page_name = "application-closed-utility-warehouse"
-            else:
-                next_page_name = "applications-closed"
-            return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+        supplier_redirect = unavailable_supplier_redirect(session_id)
+        if supplier_redirect is not None:
+            return supplier_redirect
         return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
@@ -603,6 +611,9 @@ class ConfirmSubmitView(PageView):
         return {"summary_lines": summary_lines, "supplier": supplier}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
+        supplier_redirect = unavailable_supplier_redirect(session_id)
+        if supplier_redirect is not None:
+            return supplier_redirect
         interface.api.session.create_referral(session_id)
         interface.api.session.save_answer(session_id, page_name, {"referral_created_at": str(timezone.now())})
         session_data = interface.api.session.get_session(session_id)
