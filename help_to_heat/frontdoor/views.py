@@ -73,7 +73,7 @@ missing_item_errors = {
 
 # to be updated when we get full list of excluded suppliers
 converted_suppliers = ["Bulb, now part of Octopus Energy"]
-unavailable_suppliers = ["British Gas", "Ecotricity", "Utility Warehouse"]
+unavailable_suppliers = ["British Gas", "Utility Warehouse"]
 
 
 def unavailable_supplier_redirect(session_id):
