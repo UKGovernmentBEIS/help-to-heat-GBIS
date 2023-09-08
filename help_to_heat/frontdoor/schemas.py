@@ -28,6 +28,7 @@ page_order = (
 
 extra_pages = (
     "applications-closed",
+    "application-closed-utility-warehouse",
     "address-select",
     "address-manual",
     "loft-access",
@@ -51,6 +52,7 @@ page_prev_next_map = {
     "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
     "utility-warehouse-warning-page": {"prev": "supplier", "next": "own-property"},
     "applications-closed": {"prev": "supplier", "next": None},
+    "application-closed-utility-warehouse": {"prev": "supplier", "next": None},
     "benefits": {"prev": "council-tax-band", "next": "household-income"},
 }
 
@@ -87,6 +89,7 @@ household_pages = {
     "bulb-warning-page": ("bulb-warning-page",),
     "utility-warehouse-warning-page": ("utility-warehouse-warning-page",),
     "applications-closed": ("applications-closed",),
+    "application-closed-utility-warehouse": ("application-closed-utility-warehouse",),
     "own-property": ("own_property",),
     "address": ("address",),
     "council-tax-band": ("council_tax_band",),
