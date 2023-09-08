@@ -518,7 +518,6 @@ class SummaryView(PageView):
         return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
-
 @register_page("schemes")
 class SchemesView(PageView):
     def get_context(self, request, session_id, *args, **kwargs):
