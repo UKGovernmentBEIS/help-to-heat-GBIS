@@ -1,6 +1,7 @@
 import os
 
 from django.http import HttpResponse
+from django.shortcuts import render
 
 from help_to_heat import settings
 
@@ -10,3 +11,7 @@ def robots_txt_view(request):
     with open(file_path, "r") as f:
         content = f.read()
     return HttpResponse(content, content_type="text/plain")
+
+
+def digital_assistance_view(request):
+    return render(request, template_name="frontdoor/digitalassistance.html", context={})
