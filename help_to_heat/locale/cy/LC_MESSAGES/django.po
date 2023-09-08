@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-07 09:24+0000\n"
+"POT-Creation-Date: 2023-09-07 13:32+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -2733,15 +2733,6 @@ msgid ""
 msgstr ""
 "Os nad yw'ch cyflenwr ynni cartref chi wedi'i restru, cewch ddewis unrhyw "
 "gyflenwr ynni o'r rhestr"
-
-#: help_to_heat/templates/frontdoor/utility-warehouse-warning-page.html:5
-#: help_to_heat/templates/frontdoor/utility-warehouse-warning-page.html:10
-msgid "Your referral will be sent to E.ON Next"
-msgstr "welsh"
-
-#: help_to_heat/templates/frontdoor/utility-warehouse-warning-page.html:11
-msgid "E.ON Next is receiving referral on behalf of Utility Warehouse."
-msgstr "welsh here"
 
 #: help_to_heat/templates/frontdoor/wall-insulation.html:5
 msgid ""
