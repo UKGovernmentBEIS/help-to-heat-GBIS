@@ -1,2 +1,5 @@
 User-agent: *
-Disallow: /portal/
+Disallow: /portal
+Disallow: /start
+Disallow: /digitalassistance
+Disallow: /privacy-policy
