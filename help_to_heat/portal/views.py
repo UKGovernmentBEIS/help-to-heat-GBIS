@@ -49,7 +49,8 @@ def homepage_view(request):
 @decorators.requires_service_manager
 def service_manager_homepage_view(request):
     template = "portal/service-manager/homepage.html"
-    suppliers = models.Supplier.objects.all()
+    suppliers_to_hide = ["Bulb, now part of Octopus Energy"]
+    suppliers = [supplier for supplier in models.Supplier.objects.all() if supplier.name not in suppliers_to_hide]
     data = {
         "suppliers": suppliers,
     }
