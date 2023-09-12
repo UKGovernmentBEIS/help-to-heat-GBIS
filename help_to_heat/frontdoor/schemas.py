@@ -38,6 +38,7 @@ extra_pages = (
     "ineligible",
     "bulb-warning-page",
     "utility-warehouse-warning-page",
+    "park-home",
 )
 
 page_prev_next_map = {
@@ -54,12 +55,14 @@ page_prev_next_map = {
     "applications-closed": {"prev": "supplier", "next": None},
     "application-closed-utility-warehouse": {"prev": "supplier", "next": None},
     "benefits": {"prev": "council-tax-band", "next": "household-income"},
+    "park-home": {"prev": "own-property", "next": "address"},
 }
 
 summary_map = {
     "country": _("Country of property"),
     "supplier": _("Energy supplier"),
     "own_property": pgettext_lazy("summary page", "Do you own the property?"),
+    "park-home": _("temp text temp text temp text"),
     "address": _("Property address"),
     "council_tax_band": _("Council tax band"),
     "epc_rating": _("Energy Performance Certificate"),
@@ -86,6 +89,7 @@ confirm_sumbit_map = {
 household_pages = {
     "country": ("country",),
     "supplier": ("supplier",),
+    "park-home": ("park-home",),
     "bulb-warning-page": ("bulb-warning-page",),
     "utility-warehouse-warning-page": ("utility-warehouse-warning-page",),
     "applications-closed": ("applications-closed",),
@@ -166,6 +170,16 @@ own_property_options_map = (
     {
         "value": "Yes, I am the property owner but I lease the property to one or more tenants",
         "label": _("Yes, I am the property owner but I lease the property to one or more tenants"),
+    },
+)
+park_home_options_map = (
+    {
+        "value": "Yes",
+        "label": _("Yes"),
+    },
+    {
+        "value": "No",
+        "label": _("No"),
     },
 )
 epc_display_options_map = (
@@ -584,6 +598,7 @@ phone_number_regex = r"^[\d\s\+]*$"
 class SessionSchema(Schema):
     country = fields.String(validate=validate.OneOf(tuple(item["value"] for item in country_options_map)))
     own_property = fields.String(validate=validate.OneOf(tuple(item["value"] for item in own_property_options_map)))
+    park_home = fields.String(validate=validate.OneOf(tuple(item["value"] for item in park_home_options_map)))
     address_line_1 = fields.String(validate=validate.Length(max=128))
     address_line_2 = fields.String(validate=validate.Length(max=128))
     building_name_or_number = fields.String(validate=validate.Length(max=128))
