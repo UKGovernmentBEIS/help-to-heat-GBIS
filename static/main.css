@@ -46,3 +46,7 @@
   border-right: none;
 }
 
+.gbis-language-select__button-text {
+    font-weight: normal;
+    color: #0b0c0c;
+}
