@@ -99,7 +99,7 @@ SECURE_HSTS_SECONDS = 300
 # Content Security Policy configurations
 CSP_DEFAULT_SRC = ("'self'",)
 CSP_SCRIPT_SRC = ("'self'", "https://www.googletagmanager.com/")
-CSP_CONNECT_SRC = ("'self'",)
+CSP_CONNECT_SRC = ("'self'", "*.google-analytics.com/")
 CSP_IMG_SRC = ("'self'",)
 CSP_STYLE_SRC = ("'self'",)
 CSP_BASE_URI = ("'self'",)
