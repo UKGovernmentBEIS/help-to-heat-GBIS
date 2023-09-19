@@ -39,6 +39,8 @@ extra_pages = (
     "bulb-warning-page",
     "utility-warehouse-warning-page",
     "park-home",
+    "park-home-main-residence",
+    "park-home-application-closed"
 )
 
 page_prev_next_map = {
@@ -56,13 +58,16 @@ page_prev_next_map = {
     "application-closed-utility-warehouse": {"prev": "supplier", "next": None},
     "benefits": {"prev": "council-tax-band", "next": "household-income"},
     "park-home": {"prev": "own-property", "next": "address"},
+    "park-home-main-residence": {"prev": "park-home", "next": "address"},
+    "park-home-application-closed": {"prev": "park-home-main-residence", "next": "none"},
 }
 
 summary_map = {
     "country": _("Country of property"),
     "supplier": _("Energy supplier"),
     "own_property": pgettext_lazy("summary page", "Do you own the property?"),
-    "park-home": _("temp text temp text temp text"),
+    "park_home": _("Do you live in a park home?"),
+    "park_home_main_residence": _("Is the park home your main residence?"),
     "address": _("Property address"),
     "council_tax_band": _("Council tax band"),
     "epc_rating": _("Energy Performance Certificate"),
@@ -89,7 +94,9 @@ confirm_sumbit_map = {
 household_pages = {
     "country": ("country",),
     "supplier": ("supplier",),
-    "park-home": ("park-home",),
+    "park-home": ("park_home",),
+    "park-home-main-residence": ("park_home_main_residence",),
+    "park-home-application-closed": ("park-home-application-closed",),
     "bulb-warning-page": ("bulb-warning-page",),
     "utility-warehouse-warning-page": ("utility-warehouse-warning-page",),
     "applications-closed": ("applications-closed",),
@@ -173,6 +180,16 @@ own_property_options_map = (
     },
 )
 park_home_options_map = (
+    {
+        "value": "Yes",
+        "label": _("Yes"),
+    },
+    {
+        "value": "No",
+        "label": _("No"),
+    },
+)
+park_home_main_residence_options_map = (
     {
         "value": "Yes",
         "label": _("Yes"),
@@ -595,10 +612,15 @@ postcode_regex_collection = (
 phone_number_regex = r"^[\d\s\+]*$"
 
 
+all_property_types = tuple(item["value"] for item in property_type_options_map) + ("Park home",)
+all_property_subtypes = tuple(item["value"] for value in property_subtype_options_map.values() for item in value) + ("Park home",)
+
+
 class SessionSchema(Schema):
     country = fields.String(validate=validate.OneOf(tuple(item["value"] for item in country_options_map)))
     own_property = fields.String(validate=validate.OneOf(tuple(item["value"] for item in own_property_options_map)))
     park_home = fields.String(validate=validate.OneOf(tuple(item["value"] for item in park_home_options_map)))
+    park_home_main_residence = fields.String(validate=validate.OneOf(tuple(item["value"] for item in park_home_main_residence_options_map)))
     address_line_1 = fields.String(validate=validate.Length(max=128))
     address_line_2 = fields.String(validate=validate.Length(max=128))
     building_name_or_number = fields.String(validate=validate.Length(max=128))
@@ -619,11 +641,9 @@ class SessionSchema(Schema):
     household_income = fields.String(
         validate=validate.OneOf(tuple(item["value"] for item in household_income_options_map))
     )
-    property_type = fields.String(validate=validate.OneOf(tuple(item["value"] for item in property_type_options_map)))
+    property_type = fields.String(validate=validate.OneOf(all_property_types))
     property_subtype = fields.String(
-        validate=validate.OneOf(
-            tuple(item["value"] for value in property_subtype_options_map.values() for item in value)
-        )
+        validate=validate.OneOf(all_property_subtypes)
     )
     number_of_bedrooms = fields.String(
         validate=validate.OneOf(tuple(item["value"] for item in number_of_bedrooms_options_map))

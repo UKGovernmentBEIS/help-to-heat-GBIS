@@ -24,6 +24,7 @@ page_compulsory_field_map = {
     "country": ("country",),
     "own-property": ("own_property",),
     "park-home": ("park_home",),
+    "park-home-main-residence": ("park_home_main_residence",),
     "address": ("building_name_or_number", "postcode"),
     "address-select": ("uprn",),
     "address-manual": ("address_line_1", "town_or_city", "postcode"),
@@ -47,7 +48,8 @@ page_compulsory_field_map = {
 missing_item_errors = {
     "country": _("Select where the property is located"),
     "own_property": _("Select if you own the property"),
-    "park-home": _("please select if you live in a park home temp text"),
+    "park_home": _("Select if you live in a park home"),
+    "park_home_main_residence": _("Select if the park home is your main residence"),
     "building_name_or_number": _("Enter building name or number"),
     "address_line_1": _("Enter Address line 1"),
     "postcode": _("Enter a postcode"),
@@ -306,6 +308,51 @@ class OwnPropertyView(PageView):
 class ParkHomeView(PageView):
     def get_context(self, *args, **kwargs):
         return {"park_home_options_map": schemas.park_home_options_map}
+
+    def handle_post(self, request, session_id, page_name, data, is_change_page):
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
+        data = dict(request.POST.dict())
+        park_home = data.get("park_home")
+
+        if park_home == "Yes":
+            next_page_name = "park-home-main-residence"
+
+        if is_change_page:
+            return redirect("frontdoor:change-page", session_id=session_id, page_name="park-home-main-residence")
+
+        return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+
+
+@register_page("park-home-main-residence")
+class ParkHomeMainResidenceView(PageView):
+    def get_context(self, *args, **kwargs):
+        return {"park_home_main_residence_options_map": schemas.park_home_main_residence_options_map}
+
+    def handle_post(self, request, session_id, page_name, data, is_change_page):
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
+        data = dict(request.POST.dict())
+        park_home_main_residence = data.get("park_home_main_residence")
+
+        if park_home_main_residence == "No":
+            next_page_name = "park-home-application-closed"
+
+        if is_change_page:
+            if park_home_main_residence == "No":
+                return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+            else:
+                assert page_name in schemas.change_page_lookup
+                next_page_name = schemas.change_page_lookup[page_name]
+
+        return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+
+    def save_data(self, request, session_id, page_name, *args, **kwargs):
+        data = request.POST.dict()
+        park_home_main_residence = data.get("park_home_main_residence")
+        if park_home_main_residence == "Yes":
+            data["property_type"] = "Park home"
+            data["property_subtype"] = "Park home"
+        data = interface.api.session.save_answer(session_id, page_name, data)
+        return data
 
 
 @register_page("address")
