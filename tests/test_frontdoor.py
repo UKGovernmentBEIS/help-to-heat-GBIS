@@ -77,6 +77,53 @@ def test_flow_errors():
     assert page.has_text("Select where the property is located")
 
 
+def test_british_gas_unavailable():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "British Gas"
+    page = form.submit().follow()
+
+    assert page.has_text("British Gas are not taking referrals right now but they will be shortly")
+
+    page = page.click(contains="Back")
+    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
+
+def test_utility_warehouse_unavailable():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Utility Warehouse"
+    page = form.submit().follow()
+
+    assert page.has_text("Utility Warehouse are not taking referrals just now")
+
+    page = page.click(contains="Back")
+    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
+
+
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D", supplier="Utilita"):
     """Answer main flow with set answers"""
