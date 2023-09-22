@@ -376,7 +376,7 @@ class Address(Entity):
         if "DEPENDENT_LOCALITY" in dpa:
             line_1_parts.append(dpa["DEPENDENT_LOCALITY"].title())
 
-        if not "DEPENDENT_THOROUGHFARE_NAME" in dpa:
+        if "DEPENDENT_THOROUGHFARE_NAME" not in dpa:
             if "THOROUGHFARE_NAME" in dpa:
                 line_1_parts.append(dpa["THOROUGHFARE_NAME"].title())
         else:
