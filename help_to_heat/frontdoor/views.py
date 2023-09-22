@@ -295,11 +295,8 @@ class OwnPropertyView(PageView):
             next_page_name = "park-home"
 
         if is_change_page:
-            if own_property == "Yes, I own my property and live in it":
-                return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
-            else:
-                assert page_name in schemas.change_page_lookup
-                next_page_name = schemas.change_page_lookup[page_name]
+            assert page_name in schemas.change_page_lookup
+            next_page_name = schemas.change_page_lookup[page_name]
 
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
@@ -318,7 +315,11 @@ class ParkHomeView(PageView):
             next_page_name = "park-home-main-residence"
 
         if is_change_page:
-            return redirect("frontdoor:change-page", session_id=session_id, page_name="park-home-main-residence")
+            if park_home == "Yes":
+                return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
+            else:
+                assert page_name in schemas.change_page_lookup
+                next_page_name = schemas.change_page_lookup[page_name]
 
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
@@ -575,6 +576,7 @@ class SummaryView(PageView):
             for page_name, questions in schemas.household_pages.items()
             for question in questions
             if question in session_data
+            if question in schemas.summary_map
         )
         return {"summary_lines": summary_lines}
 

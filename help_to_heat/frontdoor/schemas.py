@@ -66,8 +66,6 @@ summary_map = {
     "country": _("Country of property"),
     "supplier": _("Energy supplier"),
     "own_property": pgettext_lazy("summary page", "Do you own the property?"),
-    "park_home": _("Do you live in a park home?"),
-    "park_home_main_residence": _("Is the park home your main residence?"),
     "address": _("Property address"),
     "council_tax_band": _("Council tax band"),
     "epc_rating": _("Energy Performance Certificate"),
