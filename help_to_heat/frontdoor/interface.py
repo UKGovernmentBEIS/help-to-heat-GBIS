@@ -381,7 +381,8 @@ class Address(Entity):
                 line_1_parts.append(dpa["THOROUGHFARE_NAME"].title())
         else:
             line_1_parts.append(dpa["DEPENDENT_THOROUGHFARE_NAME"].title())
-            line_2_parts.insert(0, dpa["THOROUGHFARE_NAME"].title())
+            if "THOROUGHFARE_NAME" in dpa:
+                line_2_parts.insert(0, dpa["THOROUGHFARE_NAME"].title())
 
         line1 = ", ".join(line for line in line_1_parts if line)
         line2 = ", ".join(line for line in line_2_parts if line)
