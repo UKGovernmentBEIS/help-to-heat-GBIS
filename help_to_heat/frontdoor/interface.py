@@ -376,13 +376,13 @@ class Address(Entity):
         if "DEPENDENT_LOCALITY" in dpa:
             line_1_parts.append(dpa["DEPENDENT_LOCALITY"].title())
 
-        if "DEPENDENT_THOROUGHFARE_NAME" not in dpa:
-            if "THOROUGHFARE_NAME" in dpa:
-                line_1_parts.append(dpa["THOROUGHFARE_NAME"].title())
-        else:
+        if "DEPENDENT_THOROUGHFARE_NAME" in dpa:
             line_1_parts.append(dpa["DEPENDENT_THOROUGHFARE_NAME"].title())
             if "THOROUGHFARE_NAME" in dpa:
                 line_2_parts.insert(0, dpa["THOROUGHFARE_NAME"].title())
+        else:
+            if "THOROUGHFARE_NAME" in dpa:
+                line_1_parts.append(dpa["THOROUGHFARE_NAME"].title())
 
         line1 = ", ".join(line for line in line_1_parts if line)
         line2 = ", ".join(line for line in line_2_parts if line)
