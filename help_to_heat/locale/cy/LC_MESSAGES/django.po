@@ -2974,12 +2974,3 @@ msgstr "Darganfyddwch a allwch chi gael cymorth gan eich cyngor lleol drwy'r "
 #: help_to_heat/templates/macros.html:127
 msgid "Household Support Fund"
 msgstr "Gronfa Cymorth i Aelwydydd"
-
-#~ msgid "2 years"
-#~ msgstr "2 flynedd"
-
-#~ msgid "24 hours"
-#~ msgstr "24 awr"
-
-#~ msgid "1 minute"
-#~ msgstr "1 funud"

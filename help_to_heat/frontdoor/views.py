@@ -288,7 +288,7 @@ class OwnPropertyView(PageView):
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         prev_page_name, next_page_name = get_prev_next_page_name(page_name)
-        data = dict(request.POST.dict())
+        data = request.POST.dict()
         own_property = data.get("own_property")
 
         if own_property == "Yes, I own my property and live in it":
@@ -308,7 +308,7 @@ class ParkHomeView(PageView):
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         prev_page_name, next_page_name = get_prev_next_page_name(page_name)
-        data = dict(request.POST.dict())
+        data = request.POST.dict()
         park_home = data.get("park_home")
 
         if park_home == "Yes":
@@ -331,7 +331,7 @@ class ParkHomeMainResidenceView(PageView):
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         prev_page_name, next_page_name = get_prev_next_page_name(page_name)
-        data = dict(request.POST.dict())
+        data = request.POST.dict()
         park_home_main_residence = data.get("park_home_main_residence")
 
         if park_home_main_residence == "No":
