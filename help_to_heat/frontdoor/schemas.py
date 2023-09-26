@@ -571,7 +571,7 @@ multichoice_options = (
 
 postcode_regex_collection = (
     # allow both upper and lower cases, no or multiple spaces in between outward and inward code
-    r"^[a-zA-Z]{1,2}\d[\da-zA-Z]?(\s*\d[a-zA-Z]{2})*$"
+    r"^\s*[a-zA-Z]{1,2}\d[\da-zA-Z]?(\s*\d[a-zA-Z]{2})*\s*$"
 )
 
 # allow only numbers, spaces and +.
