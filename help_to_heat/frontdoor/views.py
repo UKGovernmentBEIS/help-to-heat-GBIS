@@ -129,7 +129,7 @@ def not_found_page_view(request, exception):
 
 
 def page_view(request, session_id, page_name):
-    if page_name not in (schemas.page_order + schemas.extra_pages):
+    if page_name not in (schemas.page_order + schemas.extra_pages + schemas.page_order_park_home):
         raise Http404("Invalid url")
 
     if page_name in page_map:
@@ -149,26 +149,38 @@ def change_page_view(request, session_id, page_name):
     return page_map[page_name](request, session_id, page_name, is_change_page=True)
 
 
-def get_prev_next_page_name(page_name):
-    if page_name in schemas.page_prev_next_map:
-        prev_page_name = schemas.page_prev_next_map[page_name]["prev"]
-        next_page_name = schemas.page_prev_next_map[page_name]["next"]
+def get_prev_next_page_name(page_name, session_id=None):
+    property_type = None
+    if session_id:
+        session_data = interface.api.session.get_session(session_id)
+        property_type = session_data.get("property_type")
+
+    if property_type == "Park home":
+        mapping = schemas.page_prev_next_map_park_home
+        order = schemas.page_order_park_home
     else:
-        assert page_name in schemas.page_order, page_name
-        page_index = schemas.page_order.index(page_name)
+        mapping = schemas.page_prev_next_map
+        order = schemas.page_order
+
+    if page_name in mapping:
+        prev_page_name = mapping[page_name]["prev"]
+        next_page_name = mapping[page_name]["next"]
+    else:
+        assert page_name in order, page_name
+        page_index = order.index(page_name)
         if page_index == 0:
             prev_page_name = "homepage"
         else:
-            prev_page_name = schemas.pages[page_index - 1]
-        if page_index + 1 == len(schemas.pages):
+            prev_page_name = order[page_index - 1]
+        if page_index + 1 == len(order):
             next_page_name = None
         else:
-            next_page_name = schemas.pages[page_index + 1]
+            next_page_name = order[page_index + 1]
     return prev_page_name, next_page_name
 
 
 def get_prev_next_urls(session_id, page_name):
-    prev_page_name, next_page_name = get_prev_next_page_name(page_name)
+    prev_page_name, next_page_name = get_prev_next_page_name(page_name, session_id)
     if prev_page_name == "homepage":
         prev_page_url = "https://www.gov.uk/apply-great-british-insulation-scheme"
     else:
@@ -259,7 +271,7 @@ class PageView(utils.MethodDispatcher):
             assert page_name in schemas.change_page_lookup
             next_page_name = schemas.change_page_lookup[page_name]
         else:
-            _, next_page_name = get_prev_next_page_name(page_name)
+            _, next_page_name = get_prev_next_page_name(page_name, session_id)
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
     def validate(self, request, session_id, page_name, data, is_change_page):
@@ -307,7 +319,7 @@ class ParkHomeView(PageView):
         return {"park_home_options_map": schemas.park_home_options_map}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name, session_id)
         data = request.POST.dict()
         park_home = data.get("park_home")
 
@@ -323,7 +335,7 @@ class ParkHomeMainResidenceView(PageView):
         return {"park_home_main_residence_options_map": schemas.park_home_main_residence_options_map}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name, session_id)
         data = request.POST.dict()
         park_home_main_residence = data.get("park_home_main_residence")
 

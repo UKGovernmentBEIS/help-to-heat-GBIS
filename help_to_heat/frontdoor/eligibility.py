@@ -29,6 +29,11 @@ def calculate_eligibility(session_data):
     council_tax_band = session_data.get("council_tax_band")
     country = session_data.get("country")
     benefits = session_data.get("benefits")
+    property_type = session_data.get("property_type")
+
+    # "Scenario 0"
+    if property_type == "Park home":
+        return ("GBIS")
 
     # Scenario 1
     if country in country_council_tax_bands:

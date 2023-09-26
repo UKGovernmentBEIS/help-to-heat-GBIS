@@ -26,6 +26,22 @@ page_order = (
     "success",
 )
 
+page_order_park_home = (
+    "country",
+    "supplier",
+    "own-property",
+    "park-home",
+    "park-home-main-residence",
+    "address",
+    "benefits",
+    "household-income",
+    "summary",
+    "schemes",
+    "contact-details",
+    "confirm-and-submit",
+    "success",
+)
+
 extra_pages = (
     "applications-closed",
     "application-closed-utility-warehouse",
@@ -38,8 +54,6 @@ extra_pages = (
     "ineligible",
     "bulb-warning-page",
     "utility-warehouse-warning-page",
-    "park-home",
-    "park-home-main-residence",
     "park-home-application-closed"
 )
 
@@ -62,10 +76,23 @@ page_prev_next_map = {
     "park-home-application-closed": {"prev": "park-home-main-residence", "next": None},
 }
 
+page_prev_next_map_park_home = {
+    "address-select": {"prev": "address", "next": "benefits"},
+    "address-manual": {"prev": "address", "next": "benefits"},
+    "northern-ireland": {"prev": "country", "next": None},
+    "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
+    "utility-warehouse-warning-page": {"prev": "supplier", "next": "own-property"},
+    "applications-closed": {"prev": "supplier", "next": None},
+    "application-closed-utility-warehouse": {"prev": "supplier", "next": None},
+    "park-home-application-closed": {"prev": "park-home-main-residence", "next": "none"},
+}
+
 summary_map = {
     "country": _("Country of property"),
     "supplier": _("Energy supplier"),
     "own_property": pgettext_lazy("summary page", "Do you own the property?"),
+    "park_home": _("Do you live in a park home?"),
+    "park_home_main_residence": _("Is the park home your main residence?"),
     "address": _("Property address"),
     "council_tax_band": _("Council tax band"),
     "epc_rating": _("Energy Performance Certificate"),
@@ -92,14 +119,14 @@ confirm_sumbit_map = {
 household_pages = {
     "country": ("country",),
     "supplier": ("supplier",),
-    "park-home": ("park_home",),
-    "park-home-main-residence": ("park_home_main_residence",),
-    "park-home-application-closed": ("park_home_application_closed",),
     "bulb-warning-page": ("bulb-warning-page",),
     "utility-warehouse-warning-page": ("utility-warehouse-warning-page",),
     "applications-closed": ("applications-closed",),
     "application-closed-utility-warehouse": ("application-closed-utility-warehouse",),
     "own-property": ("own_property",),
+    "park-home": ("park_home",),
+    "park-home-main-residence": ("park_home_main_residence",),
+    "park-home-application-closed": ("park_home_application_closed",),
     "address": ("address",),
     "council-tax-band": ("council_tax_band",),
     "epc": ("epc_rating",),
@@ -130,7 +157,7 @@ question_page_lookup = {
     for question in questions
 }
 
-pages = page_order + extra_pages
+pages = page_order + extra_pages + page_order_park_home
 
 country_options_map = (
     {
@@ -287,6 +314,7 @@ check_your_answers_options_map = {
         "House": _("House"),
         "Bungalow": _("Bungalow"),
         "Apartment, flat or maisonette": _("Apartment, flat or maisonette"),
+        "Park home": _("Park home"),
     },
     "property_subtype": {
         "Detached": _("Detached"),
