@@ -33,7 +33,7 @@ def calculate_eligibility(session_data):
 
     # "Scenario 0"
     if property_type == "Park home":
-        return ("GBIS")
+        return ("GBIS",)
 
     # Scenario 1
     if country in country_council_tax_bands:

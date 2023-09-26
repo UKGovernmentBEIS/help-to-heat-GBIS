@@ -150,12 +150,12 @@ def change_page_view(request, session_id, page_name):
 
 
 def get_prev_next_page_name(page_name, session_id=None):
-    property_type = None
+    park_home = None
     if session_id:
         session_data = interface.api.session.get_session(session_id)
-        property_type = session_data.get("property_type")
+        park_home = session_data.get("park_home")
 
-    if property_type == "Park home":
+    if park_home == "Yes":
         mapping = schemas.page_prev_next_map_park_home
         order = schemas.page_order_park_home
     else:
@@ -323,8 +323,8 @@ class ParkHomeView(PageView):
         data = request.POST.dict()
         park_home = data.get("park_home")
 
-        if park_home == "Yes":
-            next_page_name = "park-home-main-residence"
+        if park_home == "No":
+            next_page_name = "address"
 
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
@@ -339,6 +339,9 @@ class ParkHomeMainResidenceView(PageView):
         data = request.POST.dict()
         park_home_main_residence = data.get("park_home_main_residence")
 
+        if is_change_page:
+            assert page_name in schemas.change_page_lookup
+            next_page_name = schemas.change_page_lookup[page_name]
         if park_home_main_residence == "No":
             next_page_name = "park-home-application-closed"
 
@@ -569,27 +572,31 @@ class SummaryView(PageView):
             {
                 "question": schemas.summary_map[question],
                 "answer": self.get_answer(session_data, question),
-                "change_url": reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name)) if question == "park_home" else reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name)),
+                "change_url": self.get_change_url(session_id, question, page_name),
             }
             for page_name, questions in schemas.household_pages.items()
             for question in questions
-            if question in session_data
-            if question in schemas.summary_map
             if self.show_question(session_data, question)
         )
         return {"summary_lines": summary_lines}
 
     def show_question(self, session_data, question):
         show_property_type_lines = self.get_answer(session_data, "property_type") != "Park home"
+        question_answered = question in session_data and question in schemas.summary_map
         if question == "property_type" or question == "property_subtype":
-            return show_property_type_lines
+            return show_property_type_lines and question_answered
         else:
-            return True
+            return question_answered
 
     def get_answer(self, session_data, question):
         answer = session_data.get(question)
         answers_map = schemas.check_your_answers_options_map.get(question)
         return answers_map[answer] if answers_map else answer
+
+    def get_change_url(self, session_id, question, page_name):
+        if question == "park_home":
+            return reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
+        return reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name))
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         supplier_redirect = unavailable_supplier_redirect(session_id)
