@@ -203,9 +203,9 @@ def match_rows_for_feedback(feedback):
     row = dict(feedback.data)
     row = {
         **row,
-        "useful_for_learning": row["how-much"],
-        "sufficient_guidance": row["guidance-detail"],
-        "able_to_answer": row["accuracy-detail"],
+        "useful_for_learning": row.get("how-much", "Unanswered"),
+        "sufficient_guidance": row.get("guidance-detail", "Unanswered"),
+        "able_to_answer": row.get("accuracy-detail", "Unanswered"),
         "improvement_comment": row["more-detail"],
         "page_name": page_name,
         "submission_date": created_at.date(),
