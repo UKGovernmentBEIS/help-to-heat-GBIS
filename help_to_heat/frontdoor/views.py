@@ -569,14 +569,22 @@ class SummaryView(PageView):
             {
                 "question": schemas.summary_map[question],
                 "answer": self.get_answer(session_data, question),
-                "change_url": reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name)),
+                "change_url": reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name)) if question == "park_home" else reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name)),
             }
             for page_name, questions in schemas.household_pages.items()
             for question in questions
             if question in session_data
             if question in schemas.summary_map
+            if self.show_question(session_data, question)
         )
         return {"summary_lines": summary_lines}
+
+    def show_question(self, session_data, question):
+        show_property_type_lines = self.get_answer(session_data, "property_type") != "Park home"
+        if question == "property_type" or question == "property_subtype":
+            return show_property_type_lines
+        else:
+            return True
 
     def get_answer(self, session_data, question):
         answer = session_data.get(question)
