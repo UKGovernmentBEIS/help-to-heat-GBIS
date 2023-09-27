@@ -1,6 +1,7 @@
 import codecs
 import csv
 import io
+from datetime import datetime, timedelta
 
 import xlsxwriter
 from dateutil import tz
@@ -9,9 +10,10 @@ from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
 from help_to_heat.frontdoor import models as frontdoor_models
-from help_to_heat.portal import models as portal_models
 from help_to_heat.frontdoor.eligibility import calculate_eligibility
-from help_to_heat.portal import decorators, models
+from help_to_heat.portal import decorators
+from help_to_heat.portal import models
+from help_to_heat.portal import models as portal_models
 
 london_tz = tz.gettz("Europe/London")
 
@@ -206,6 +208,16 @@ def download_referrals_all_view(request):
 
 
 @require_http_methods(["GET"])
+@decorators.requires_service_manager
+def download_referrals_last_week_view(request):
+    feedbacks = portal_models.Referral.objects.filter(created_at__gte=datetime.now() - timedelta(days=7))
+    downloaded_at = timezone.now()
+    file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
+    response = create_referral_all_xlsx(feedbacks, file_name)
+    return response
+
+
+@require_http_methods(["GET"])
 @decorators.requires_team_leader_or_member
 def download_csv_view(request):
     return handle_create_spreadsheet_request(request, create_referral_csv)
@@ -263,9 +275,17 @@ def add_extra_row_data(referral):
     }
     return row
 
+
 def add_row_data_without_pii(referral):
     row = dict(referral.data)
-    pii_keys = ["first_name", "last_name", "email", "address", "postcode", "contact_number", ]
+    pii_keys = [
+        "first_name",
+        "last_name",
+        "email",
+        "address",
+        "postcode",
+        "contact_number",
+    ]
 
     for key in pii_keys:
         row.pop(key)
@@ -284,6 +304,7 @@ def add_row_data_without_pii(referral):
         "submission_time": created_at.time().strftime("%H:%M:%S"),
     }
     return row
+
 
 def match_rows_for_feedback(feedback):
     created_at = feedback.created_at.astimezone(london_tz)
