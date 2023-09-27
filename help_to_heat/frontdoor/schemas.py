@@ -84,7 +84,7 @@ page_prev_next_map_park_home = {
     "utility-warehouse-warning-page": {"prev": "supplier", "next": "own-property"},
     "applications-closed": {"prev": "supplier", "next": None},
     "application-closed-utility-warehouse": {"prev": "supplier", "next": None},
-    "park-home-application-closed": {"prev": "park-home-main-residence", "next": "none"},
+    "park-home-application-closed": {"prev": "park-home-main-residence", "next": None},
 }
 
 summary_map = {
