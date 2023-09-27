@@ -9,6 +9,7 @@ from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
 from help_to_heat.frontdoor import models as frontdoor_models
+from help_to_heat.portal import models as portal_models
 from help_to_heat.frontdoor.eligibility import calculate_eligibility
 from help_to_heat.portal import decorators, models
 
@@ -28,6 +29,30 @@ referral_column_headings = (
     "address_line_1",
     "postcode",
     "address",
+    "council_tax_band",
+    "property_type",
+    "property_subtype",
+    "epc_rating",
+    "accept_suggested_epc",
+    "epc_date",
+    "number_of_bedrooms",
+    "wall_type",
+    "wall_insulation",
+    "loft",
+    "loft_access",
+    "loft_insulation",
+    "Property main heat source",
+    "supplier",
+    "submission_date",
+    "submission_time",
+)
+
+referral_column_headers_no_pii = (
+    "ECO4",
+    "GBIS",
+    "own_property",
+    "benefits",
+    "household_income",
     "council_tax_band",
     "property_type",
     "property_subtype",
@@ -75,6 +100,38 @@ def create_referral_csv(referrals, file_name):
     rows = [add_extra_row_data(referral) for referral in referrals]
     full_file_name = f"referral-data-{file_name}"
     response = create_csv(referral_column_headings, rows, full_file_name)
+    return response
+
+
+def create_referral_all_xlsx(referrals, file_name):
+    file_name = file_name + ".xlsx"
+
+    # create an in-memory output file for our excel file
+    output = io.BytesIO()
+    workbook = xlsxwriter.Workbook(output)
+    worksheet = workbook.add_worksheet()
+
+    # write the headings
+    for col_num, entry in enumerate(referral_column_headers_no_pii):
+        worksheet.write(0, col_num, entry)
+
+    rows = [add_row_data_without_pii(referral) for referral in referrals]
+
+    for row_num, referral_data in enumerate(rows):
+        for col_num, entry in enumerate(referral_column_headers_no_pii):
+            to_write = referral_data.get(entry) or ""
+            worksheet.write(row_num + 1, col_num, to_write)
+
+    workbook.close()
+
+    # rewind to the beginning of the stream before sending our response
+    output.seek(0)
+    response = HttpResponse(
+        output,
+        content_type="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    )
+    response["Content-Disposition"] = "attachment; filename=%s" % file_name
+
     return response
 
 
@@ -139,6 +196,16 @@ def download_feedback_view(request):
 
 
 @require_http_methods(["GET"])
+@decorators.requires_service_manager
+def download_referrals_all_view(request):
+    feedbacks = portal_models.Referral.objects.all()
+    downloaded_at = timezone.now()
+    file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
+    response = create_referral_all_xlsx(feedbacks, file_name)
+    return response
+
+
+@require_http_methods(["GET"])
 @decorators.requires_team_leader_or_member
 def download_csv_view(request):
     return handle_create_spreadsheet_request(request, create_referral_csv)
@@ -196,6 +263,27 @@ def add_extra_row_data(referral):
     }
     return row
 
+def add_row_data_without_pii(referral):
+    row = dict(referral.data)
+    pii_keys = ["first_name", "last_name", "email", "address", "postcode", "contact_number", ]
+
+    for key in pii_keys:
+        row.pop(key)
+
+    eligibility = calculate_eligibility(row)
+    epc_date = row.get("epc_date")
+    epc_rating = row.get("epc_rating")
+    created_at = referral.created_at.astimezone(london_tz)
+    row = {
+        **row,
+        "ECO4": "ECO4" in eligibility and "Yes" or "No",
+        "GBIS": "GBIS" in eligibility and "Yes" or "No",
+        "epc_rating": epc_rating and epc_rating != "Not found" or "",
+        "epc_date": epc_date and epc_date or "",
+        "submission_date": created_at.date(),
+        "submission_time": created_at.time().strftime("%H:%M:%S"),
+    }
+    return row
 
 def match_rows_for_feedback(feedback):
     created_at = feedback.created_at.astimezone(london_tz)
