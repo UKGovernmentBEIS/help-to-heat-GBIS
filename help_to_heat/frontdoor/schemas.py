@@ -59,7 +59,7 @@ page_prev_next_map = {
     "benefits": {"prev": "council-tax-band", "next": "household-income"},
     "park-home": {"prev": "own-property", "next": "address"},
     "park-home-main-residence": {"prev": "park-home", "next": "address"},
-    "park-home-application-closed": {"prev": "park-home-main-residence", "next": "none"},
+    "park-home-application-closed": {"prev": "park-home-main-residence", "next": None},
 }
 
 summary_map = {
@@ -94,7 +94,7 @@ household_pages = {
     "supplier": ("supplier",),
     "park-home": ("park_home",),
     "park-home-main-residence": ("park_home_main_residence",),
-    "park-home-application-closed": ("park-home-application-closed",),
+    "park-home-application-closed": ("park_home_application_closed",),
     "bulb-warning-page": ("bulb-warning-page",),
     "utility-warehouse-warning-page": ("utility-warehouse-warning-page",),
     "applications-closed": ("applications-closed",),

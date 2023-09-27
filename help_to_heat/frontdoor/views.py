@@ -314,13 +314,6 @@ class ParkHomeView(PageView):
         if park_home == "Yes":
             next_page_name = "park-home-main-residence"
 
-        if is_change_page:
-            if park_home == "Yes":
-                return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
-            else:
-                assert page_name in schemas.change_page_lookup
-                next_page_name = schemas.change_page_lookup[page_name]
-
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
 
@@ -336,13 +329,6 @@ class ParkHomeMainResidenceView(PageView):
 
         if park_home_main_residence == "No":
             next_page_name = "park-home-application-closed"
-
-        if is_change_page:
-            if park_home_main_residence == "No":
-                return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
-            else:
-                assert page_name in schemas.change_page_lookup
-                next_page_name = schemas.change_page_lookup[page_name]
 
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
