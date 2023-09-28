@@ -2811,6 +2811,14 @@ msgstr ""
 "Os nad yw'ch cyflenwr ynni cartref chi wedi'i restru, cewch ddewis unrhyw "
 "gyflenwr ynni o'r rhestr"
 
+#: help_to_heat/templates/frontdoor/supplier.html:20
+msgid ""
+"If you live in a park home and buy your energy from the site, select the "
+"energy supplier who supplies the site."
+msgstr ""
+"Os ydych chi'n byw mewn aelwyd mewn parc ac yn prynu'ch ynni o'r safle, "
+"dewiswch y cyflenwr ynni sy'n cyflenwi'r safle."
+
 #: help_to_heat/templates/frontdoor/wall-insulation.html:5
 msgid ""
 "Do your walls have insulation? - Check eligibility for Great British "
