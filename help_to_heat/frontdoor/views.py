@@ -82,9 +82,7 @@ def unavailable_supplier_redirect(session_id):
     if supplier not in unavailable_suppliers:
         return None
 
-    if supplier == "Utility Warehouse":
-        next_page_name = "application-closed-utility-warehouse"
-    else:
+    if supplier in unavailable_suppliers:
         next_page_name = "applications-closed"
     return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
@@ -541,8 +539,6 @@ class SupplierView(PageView):
             next_page_name = "bulb-warning-page"
         if request_supplier in unavailable_suppliers:
             next_page_name = "applications-closed"
-        if request_supplier == "Utility Warehouse":
-            next_page_name = "application-closed-utility-warehouse"
 
         if is_change_page:
             if (request_supplier in converted_suppliers) or (request_supplier in unavailable_suppliers):
@@ -555,13 +551,6 @@ class SupplierView(PageView):
 
 @register_page("bulb-warning-page")
 class BulbWarningPageView(PageView):
-    def get_context(self, session_id, *args, **kwargs):
-        supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
-        return {"supplier": supplier}
-
-
-@register_page("application-closed-utility-warehouse")
-class UtilityWarehouseApplicationClosedPageView(PageView):
     def get_context(self, session_id, *args, **kwargs):
         supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
         return {"supplier": supplier}

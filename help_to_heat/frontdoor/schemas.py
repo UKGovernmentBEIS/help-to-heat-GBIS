@@ -28,7 +28,6 @@ page_order = (
 
 extra_pages = (
     "applications-closed",
-    "application-closed-utility-warehouse",
     "address-select",
     "address-manual",
     "loft-access",
@@ -52,7 +51,6 @@ page_prev_next_map = {
     "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
     "utility-warehouse-warning-page": {"prev": "supplier", "next": "own-property"},
     "applications-closed": {"prev": "supplier", "next": None},
-    "application-closed-utility-warehouse": {"prev": "supplier", "next": None},
     "benefits": {"prev": "council-tax-band", "next": "household-income"},
 }
 
@@ -89,7 +87,6 @@ household_pages = {
     "bulb-warning-page": ("bulb-warning-page",),
     "utility-warehouse-warning-page": ("utility-warehouse-warning-page",),
     "applications-closed": ("applications-closed",),
-    "application-closed-utility-warehouse": ("application-closed-utility-warehouse",),
     "own-property": ("own_property",),
     "address": ("address",),
     "council-tax-band": ("council_tax_band",),
@@ -574,7 +571,7 @@ multichoice_options = (
 
 postcode_regex_collection = (
     # allow both upper and lower cases, no or multiple spaces in between outward and inward code
-    r"^[a-zA-Z]{1,2}\d[\da-zA-Z]?(\s*\d[a-zA-Z]{2})*$"
+    r"^\s*[a-zA-Z]{1,2}\d[\da-zA-Z]?(\s*\d[a-zA-Z]{2})*\s*$"
 )
 
 # allow only numbers, spaces and +.
