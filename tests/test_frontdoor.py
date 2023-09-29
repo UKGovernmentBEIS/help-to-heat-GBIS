@@ -100,6 +100,7 @@ def test_british_gas_unavailable():
     page = page.click(contains="Back")
     assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
 
+
 def test_utility_warehouse_unavailable():
     client = utils.get_client()
     page = client.get("/start")

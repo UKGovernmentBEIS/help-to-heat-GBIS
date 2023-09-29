@@ -1,6 +1,7 @@
 import codecs
 import csv
 import io
+from datetime import datetime, timedelta
 
 import xlsxwriter
 from dateutil import tz
@@ -10,7 +11,9 @@ from django.views.decorators.http import require_http_methods
 
 from help_to_heat.frontdoor import models as frontdoor_models
 from help_to_heat.frontdoor.eligibility import calculate_eligibility
-from help_to_heat.portal import decorators, models
+from help_to_heat.portal import decorators
+from help_to_heat.portal import models
+from help_to_heat.portal import models as portal_models
 
 london_tz = tz.gettz("Europe/London")
 
@@ -28,6 +31,30 @@ referral_column_headings = (
     "address_line_1",
     "postcode",
     "address",
+    "council_tax_band",
+    "property_type",
+    "property_subtype",
+    "epc_rating",
+    "accept_suggested_epc",
+    "epc_date",
+    "number_of_bedrooms",
+    "wall_type",
+    "wall_insulation",
+    "loft",
+    "loft_access",
+    "loft_insulation",
+    "Property main heat source",
+    "supplier",
+    "submission_date",
+    "submission_time",
+)
+
+referral_column_headings_no_pii = (
+    "ECO4",
+    "GBIS",
+    "own_property",
+    "benefits",
+    "household_income",
     "council_tax_band",
     "property_type",
     "property_subtype",
@@ -78,8 +105,13 @@ def create_referral_csv(referrals, file_name):
     return response
 
 
-def create_referral_xlsx(referrals, file_name):
+def create_referral_xlsx(referrals, file_name, exclude_pii=False):
     file_name = file_name + ".xlsx"
+
+    if exclude_pii:
+        column_headings = referral_column_headings_no_pii
+    else:
+        column_headings = referral_column_headings
 
     # create an in-memory output file for our excel file
     output = io.BytesIO()
@@ -87,13 +119,13 @@ def create_referral_xlsx(referrals, file_name):
     worksheet = workbook.add_worksheet()
 
     # write the headings
-    for col_num, entry in enumerate(referral_column_headings):
+    for col_num, entry in enumerate(column_headings):
         worksheet.write(0, col_num, entry)
 
-    rows = [add_extra_row_data(referral) for referral in referrals]
+    rows = [add_extra_row_data(referral, exclude_pii) for referral in referrals]
 
     for row_num, referral_data in enumerate(rows):
-        for col_num, entry in enumerate(referral_column_headings):
+        for col_num, entry in enumerate(column_headings):
             to_write = referral_data.get(entry) or ""
             worksheet.write(row_num + 1, col_num, to_write)
 
@@ -139,6 +171,26 @@ def download_feedback_view(request):
 
 
 @require_http_methods(["GET"])
+@decorators.requires_service_manager
+def download_referrals_all_view(request):
+    referrals = portal_models.Referral.objects.all()
+    downloaded_at = timezone.now()
+    file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
+    response = create_referral_xlsx(referrals, file_name, exclude_pii=True)
+    return response
+
+
+@require_http_methods(["GET"])
+@decorators.requires_service_manager
+def download_referrals_last_week_view(request):
+    referrals = portal_models.Referral.objects.filter(created_at__gte=datetime.now() - timedelta(days=7))
+    downloaded_at = timezone.now()
+    file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
+    response = create_referral_xlsx(referrals, file_name, exclude_pii=True)
+    return response
+
+
+@require_http_methods(["GET"])
 @decorators.requires_team_leader_or_member
 def download_csv_view(request):
     return handle_create_spreadsheet_request(request, create_referral_csv)
@@ -173,20 +225,39 @@ def download_xlsx_by_id_view(request, download_id):
     return handle_create_file_request_by_id(request, download_id, create_referral_xlsx)
 
 
-def add_extra_row_data(referral):
+def add_extra_row_data(referral, exclude_pii=False):
     row = dict(referral.data)
+    pii_keys = [
+        "first_name",
+        "last_name",
+        "email",
+        "address",
+        "postcode",
+        "contact_number",
+    ]
+
+    if exclude_pii:
+        for key in pii_keys:
+            row.pop(key)
+
     eligibility = calculate_eligibility(row)
     epc_date = row.get("epc_date")
     epc_rating = row.get("epc_rating")
     created_at = referral.created_at.astimezone(london_tz)
-    contact_number = row.get("contact_number")
-    contact_number = '="' + contact_number + '"'
-    uprn = row.get("uprn")
-    uprn = '="' + str(uprn) + '"' if uprn else ""
+
+    if not exclude_pii:
+        contact_number = row.get("contact_number")
+        contact_number = '="' + contact_number + '"'
+        uprn = row.get("uprn")
+        uprn = '="' + str(uprn) + '"' if uprn else ""
+        row = {
+            **row,
+            "contact_number": contact_number,
+            "uprn": uprn,
+        }
+
     row = {
         **row,
-        "contact_number": contact_number,
-        "uprn": uprn,
         "ECO4": "ECO4" in eligibility and "Yes" or "No",
         "GBIS": "GBIS" in eligibility and "Yes" or "No",
         "epc_rating": epc_rating and epc_rating != "Not found" or "",
