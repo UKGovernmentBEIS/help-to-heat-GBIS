@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-19 10:48+0000\n"
+"POT-Creation-Date: 2023-09-22 10:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -401,69 +401,77 @@ msgstr "Rhwymedigaeth Cwmni Ynni 4"
 msgid "Great British Insulation Scheme"
 msgstr "Cynllun Inswleiddio Mawr Prydain"
 
-#: help_to_heat/frontdoor/views.py:47
+#: help_to_heat/frontdoor/views.py:49
 msgid "Select where the property is located"
 msgstr "Dewiswch beth yw lleoliad yr eiddo"
 
-#: help_to_heat/frontdoor/views.py:48
+#: help_to_heat/frontdoor/views.py:50
 msgid "Select if you own the property"
 msgstr "Dewiswch os yw'r eiddo'n perthyn i chi"
 
-#: help_to_heat/frontdoor/views.py:49
+#: help_to_heat/frontdoor/views.py:51
+msgid "Select if you live in a park home"
+msgstr "Dewiswch os ydych chi’n byw mewn aelwyd mewn parc "
+
+#: help_to_heat/frontdoor/views.py:52
+msgid "Select if the park home is your main residence"
+msgstr "Dewiswch os eich aelwyd mewn parc yw’ch prif breswylfa "
+
+#: help_to_heat/frontdoor/views.py:53
 msgid "Enter building name or number"
 msgstr "Rhowch enw neu rif yr adeilad"
 
-#: help_to_heat/frontdoor/views.py:50
+#: help_to_heat/frontdoor/views.py:54
 msgid "Enter Address line 1"
 msgstr "Rhowch linell 1 y cyfeiriad"
 
-#: help_to_heat/frontdoor/views.py:51
+#: help_to_heat/frontdoor/views.py:55
 msgid "Enter a postcode"
 msgstr "Rhowch god post"
 
-#: help_to_heat/frontdoor/views.py:52
+#: help_to_heat/frontdoor/views.py:56
 #: help_to_heat/templates/frontdoor/address-select.html:14
 msgid "Select your address"
 msgstr "Dewiswch eich cyfeiriad"
 
-#: help_to_heat/frontdoor/views.py:53
+#: help_to_heat/frontdoor/views.py:57
 msgid "Enter your Town or city"
 msgstr "Rhowch eich tref neu'ch dinas"
 
-#: help_to_heat/frontdoor/views.py:54
+#: help_to_heat/frontdoor/views.py:58
 msgid "Enter the Council Tax Band of the property"
 msgstr "Rhowch Fand Treth Gyngor yr eiddo"
 
-#: help_to_heat/frontdoor/views.py:55
+#: help_to_heat/frontdoor/views.py:59
 msgid "Select if your EPC rating is correct or not, or that you don’t know"
 msgstr ""
 "Dewiswch a yw eich cyfraddiad EPC yn gywir neu beidio, neu nad ydych chi'n "
 "gwybod"
 
-#: help_to_heat/frontdoor/views.py:56
+#: help_to_heat/frontdoor/views.py:60
 msgid ""
 "Select if anyone in your household is receiving any benefits listed below"
 msgstr ""
 "Dewiswch a oes unrhyw un yn eich aelwyd chi'n cael unrhyw un neu ragor o'r "
 "budd-daliadau isod"
 
-#: help_to_heat/frontdoor/views.py:57
+#: help_to_heat/frontdoor/views.py:61
 msgid "Select your household income"
 msgstr "Dewiswch incwm eich aelwyd"
 
-#: help_to_heat/frontdoor/views.py:58 help_to_heat/frontdoor/views.py:59
+#: help_to_heat/frontdoor/views.py:62 help_to_heat/frontdoor/views.py:63
 msgid "Select your property type"
 msgstr "Dewiswch eich math o eiddo"
 
-#: help_to_heat/frontdoor/views.py:60
+#: help_to_heat/frontdoor/views.py:64
 msgid "Select the number of bedrooms the property has"
 msgstr "Dewiswch nifer yr ystafelloedd gwely sydd gan yr eiddo"
 
-#: help_to_heat/frontdoor/views.py:61
+#: help_to_heat/frontdoor/views.py:65
 msgid "Select the type of walls the property has"
 msgstr "Dewiswch y math o waliau sydd gan yr eiddo"
 
-#: help_to_heat/frontdoor/views.py:62
+#: help_to_heat/frontdoor/views.py:66
 msgid ""
 "Select if the walls of the property are insulated or not, or if you don’t "
 "know"
@@ -471,40 +479,40 @@ msgstr ""
 "Dewiswch a ydy waliau'r eiddo wedi'u hinswleiddio neu beidio, neu nad ydych "
 "chi'n gwybod"
 
-#: help_to_heat/frontdoor/views.py:63
+#: help_to_heat/frontdoor/views.py:67
 msgid "Select if you have a loft that has been converted into a room or not"
 msgstr "Dewiswch a oes gennych chi atig sydd wedi'i droi'n ystafell neu beidio"
 
-#: help_to_heat/frontdoor/views.py:64
+#: help_to_heat/frontdoor/views.py:68
 msgid "Select whether or not you have access to the loft"
 msgstr "Dewiswch a oes modd mynd i'r atig neu beidio"
 
-#: help_to_heat/frontdoor/views.py:65
+#: help_to_heat/frontdoor/views.py:69
 msgid "Select whether or not your loft is fully insulated"
 msgstr "Dewiswch a ydy'ch atig wedi'i inswleiddio'n llawn neu beidio"
 
-#: help_to_heat/frontdoor/views.py:66
+#: help_to_heat/frontdoor/views.py:70
 #: help_to_heat/templates/frontdoor/supplier.html:14
 msgid "Select your home energy supplier from the list below"
 msgstr "Dewiswch eich cyflenwr ynni cartref chi o blith y rhestr isod"
 
-#: help_to_heat/frontdoor/views.py:67
+#: help_to_heat/frontdoor/views.py:71
 msgid "Enter your first name"
 msgstr "Rhowch eich enw cyntaf"
 
-#: help_to_heat/frontdoor/views.py:68
+#: help_to_heat/frontdoor/views.py:72
 msgid "Enter your last name"
 msgstr "Rhowch eich enw olaf"
 
-#: help_to_heat/frontdoor/views.py:69
+#: help_to_heat/frontdoor/views.py:73
 msgid "Enter your email address"
 msgstr "Rhowch eich cyfeiriad ebost"
 
-#: help_to_heat/frontdoor/views.py:70
+#: help_to_heat/frontdoor/views.py:74
 msgid "Enter your contact number"
 msgstr "Rhowch eich rhif ffôn"
 
-#: help_to_heat/frontdoor/views.py:71
+#: help_to_heat/frontdoor/views.py:75
 msgid ""
 "Please confirm that you agree to the use of your information by checking "
 "this box"
@@ -524,6 +532,7 @@ msgid "Password has been reset"
 msgstr "Mae'r cyfrinair wedi'i ailosod"
 
 #: help_to_heat/templates/allauth/account/password_reset_from_key_done.html:6
+#: help_to_heat/templates/frontdoor/application-closed-utility-warehouse.html:10
 #: help_to_heat/templates/frontdoor/applications-closed.html:10
 #: help_to_heat/templates/frontdoor/feedback.html:11
 #: help_to_heat/templates/frontdoor/holding-page.html:7
@@ -831,6 +840,7 @@ msgstr "Enw neu rif yr adeilad"
 msgid "Enter address manually"
 msgstr "Rhoi’r cyfeiriad eich hunan"
 
+#: help_to_heat/templates/frontdoor/application-closed-utility-warehouse.html:4
 #: help_to_heat/templates/frontdoor/applications-closed.html:4
 msgid ""
 "Applications closed - Check eligibility for Great British Insulation Scheme "
@@ -855,6 +865,11 @@ msgid "Utility Warehouse are not taking referrals just now"
 msgstr "Dyw Utility Warehouse ddim yn cymryd atgyfeiriadau ar hyn o bryd"
 
 #: help_to_heat/templates/frontdoor/applications-closed.html:18
+#: help_to_heat/templates/frontdoor/application-closed-utility-warehouse.html:11
+msgid "Utility Warehouse are not taking referrals just now"
+msgstr "Dyw Utility Warehouse ddim yn cymryd atgyfeiriadau ar hyn o bryd"
+
+#: help_to_heat/templates/frontdoor/application-closed-utility-warehouse.html:12
 msgid ""
 "You are not able to apply to Utility Warehouse using this service just now "
 "but if you email your name and Utility Warehouse account number to <a href="
@@ -868,7 +883,21 @@ msgstr ""
 "no-visited-state\">gbis@uw.co.uk</a> fe gewch chi’ch hysbysu cyn gynted ag y "
 "bydd y broses atgyfeirio wedi agor."
 
-#: help_to_heat/templates/frontdoor/applications-closed.html:21
+#: help_to_heat/templates/frontdoor/application-closed-utility-warehouse.html:13
+#: help_to_heat/templates/frontdoor/applications-closed.html:14
+msgid "If you are a home owner in England and Wales, "
+msgstr "Os ydych chi'n berchennog cartref yng Nghymru a Lloegr, "
+
+#: help_to_heat/templates/frontdoor/application-closed-utility-warehouse.html:15
+#: help_to_heat/templates/frontdoor/applications-closed.html:16
+msgid ""
+"you can find other ways to save energy using the find ways to save energy "
+"service (opens in a new tab)"
+msgstr ""
+"gallwch ddod o hyd i ffyrdd eraill o arbed ynni drwy ddefnyddio'r gwasanaeth "
+"dod o hyd i ffyrdd o arbed ynni (yn agor mewn tab newydd)"
+
+#: help_to_heat/templates/frontdoor/applications-closed.html:11
 #, python-format
 msgid "%(supplier)s are not taking referrals just now"
 msgstr "Dyw %(supplier)s ddim yn cymryd atgyfeiriadau ar hyn o bryd"
@@ -891,6 +920,9 @@ msgid ""
 msgstr ""
 "gallwch ddod o hyd i ffyrdd eraill o arbed ynni drwy ddefnyddio'r gwasanaeth "
 "dod o hyd i ffyrdd o arbed ynni (yn agor mewn tab newydd)"
+#: help_to_heat/templates/frontdoor/applications-closed.html:13
+msgid "You can check back again soon."
+msgstr "Gallwch ddod yn ôl eto yn fuan."
 
 #: help_to_heat/templates/frontdoor/base.html:7
 msgid "Great British Insulation Scheme - GOV.UK"
@@ -1731,6 +1763,7 @@ msgstr ""
 "gymorth y gallwch ei gael drwy bob cynllun. "
 
 #: help_to_heat/templates/frontdoor/ineligible.html:10
+#: help_to_heat/templates/frontdoor/park-home-application-closed.html:10
 #: help_to_heat/templates/frontdoor/schemes.html:45
 msgid "Your property is not eligible"
 msgstr "Dyw eich eiddo chi ddim yn gymwys"
@@ -1903,6 +1936,51 @@ msgstr ""
 #: help_to_heat/templates/frontdoor/own-property.html:14
 msgid "Do you own the property?"
 msgstr "Ydy'r eiddo'n perthyn i chi?"
+
+#: help_to_heat/templates/frontdoor/park-home-application-closed.html:5
+msgid ""
+"Your property is not eligible - Check eligibility for Great British "
+"Insulation Scheme - GOV.UK"
+msgstr ""
+"Dyw eich eiddo chi ddim yn gymwys - Gwirio'ch cymhwystra ar gyfer "
+"Cynllun Inswleiddio Mawr Prydain - GOV.UK"
+
+#: help_to_heat/templates/frontdoor/park-home-application-closed.html:12
+msgid ""
+"Based on your answers, your property is not eligible to access energy-saving "
+"measures because it is not your main residence."
+msgstr ""
+"Ar sail eich atebion, dyw eich aelwyd mewn parc ddim yn gymwys i gael mesurau arbed ynni a hynny am nad dyma'ch prif breswylfa."
+
+#: help_to_heat/templates/frontdoor/park-home-main-residence.html:5
+msgid ""
+"Is the park home your main residence? - Check eligibility for Great British "
+"Insulation Scheme - GOV.UK"
+msgstr ""
+"Ai'r aelwyd mewn parc yw'ch prif breswylfa? - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr "
+"Prydain - GOV.UK"
+
+#: help_to_heat/templates/frontdoor/park-home-main-residence.html:14
+msgid "Is the park home your main residence?"
+msgstr "Ai'r aelwyd mewn parc yw'ch prif breswylfa?"
+
+#: help_to_heat/templates/frontdoor/park-home-main-residence.html:18
+msgid ""
+"Select no if you use your park home for only part of the year such as only "
+"during the summer."
+msgstr "Dewiswch 'nage' os ydych chi'n defnyddio'ch aelwyd mewn parc am ran o'r flwyddyn yn unig, megis yn ystod yr haf yn unig."
+
+#: help_to_heat/templates/frontdoor/park-home.html:5
+msgid ""
+"Do you live in a park home? - Check eligibility for Great British Insulation "
+"Scheme - GOV.UK"
+msgstr ""
+"Ydych chi'n byw mewn aelwyd mewn parc? - Gwirio’ch cymhwystra ar gyfer Cynllun "
+"Inswleiddio Mawr Prydain - GOV.UK"
+
+#: help_to_heat/templates/frontdoor/park-home.html:14
+msgid "Do you live in a park home?"
+msgstr "Ydych chi'n byw mewn aelwyd mewn parc?"
 
 #: help_to_heat/templates/frontdoor/privacy-policy.html:4
 msgid ""
@@ -2749,6 +2827,14 @@ msgid ""
 msgstr ""
 "Os nad yw'ch cyflenwr ynni cartref chi wedi'i restru, cewch ddewis unrhyw "
 "gyflenwr ynni o'r rhestr"
+
+#: help_to_heat/templates/frontdoor/supplier.html:20
+msgid ""
+"If you live in a park home and buy your energy from the site, select the "
+"energy supplier who supplies the site."
+msgstr ""
+"Os ydych chi'n byw mewn aelwyd mewn parc ac yn prynu'ch ynni o'r safle, "
+"dewiswch y cyflenwr ynni sy'n cyflenwi'r safle."
 
 #: help_to_heat/templates/frontdoor/wall-insulation.html:5
 msgid ""
