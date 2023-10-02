@@ -26,6 +26,22 @@ page_order = (
     "success",
 )
 
+page_order_park_home = (
+    "country",
+    "supplier",
+    "own-property",
+    "park-home",
+    "park-home-main-residence",
+    "address",
+    "benefits",
+    "household-income",
+    "summary",
+    "schemes",
+    "contact-details",
+    "confirm-and-submit",
+    "success",
+)
+
 extra_pages = (
     "applications-closed",
     "address-select",
@@ -37,6 +53,7 @@ extra_pages = (
     "ineligible",
     "bulb-warning-page",
     "utility-warehouse-warning-page",
+    "park-home-application-closed",
 )
 
 page_prev_next_map = {
@@ -52,12 +69,28 @@ page_prev_next_map = {
     "utility-warehouse-warning-page": {"prev": "supplier", "next": "own-property"},
     "applications-closed": {"prev": "supplier", "next": None},
     "benefits": {"prev": "council-tax-band", "next": "household-income"},
+    "park-home": {"prev": "own-property", "next": "address"},
+    "park-home-main-residence": {"prev": "park-home", "next": "address"},
+    "park-home-application-closed": {"prev": "park-home-main-residence", "next": None},
+}
+
+page_prev_next_map_park_home = {
+    "address-select": {"prev": "address", "next": "benefits"},
+    "address-manual": {"prev": "address", "next": "benefits"},
+    "northern-ireland": {"prev": "country", "next": None},
+    "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
+    "utility-warehouse-warning-page": {"prev": "supplier", "next": "own-property"},
+    "applications-closed": {"prev": "supplier", "next": None},
+    "application-closed-utility-warehouse": {"prev": "supplier", "next": None},
+    "park-home-application-closed": {"prev": "park-home-main-residence", "next": None},
 }
 
 summary_map = {
     "country": _("Country of property"),
     "supplier": _("Energy supplier"),
     "own_property": pgettext_lazy("summary page", "Do you own the property?"),
+    "park_home": _("Do you live in a park home?"),
+    "park_home_main_residence": _("Is the park home your main residence?"),
     "address": _("Property address"),
     "council_tax_band": _("Council tax band"),
     "epc_rating": _("Energy Performance Certificate"),
@@ -88,6 +121,9 @@ household_pages = {
     "utility-warehouse-warning-page": ("utility-warehouse-warning-page",),
     "applications-closed": ("applications-closed",),
     "own-property": ("own_property",),
+    "park-home": ("park_home",),
+    "park-home-main-residence": ("park_home_main_residence",),
+    "park-home-application-closed": ("park_home_application_closed",),
     "address": ("address",),
     "council-tax-band": ("council_tax_band",),
     "epc": ("epc_rating",),
@@ -118,7 +154,7 @@ question_page_lookup = {
     for question in questions
 }
 
-pages = page_order + extra_pages
+pages = page_order + extra_pages + page_order_park_home
 
 country_options_map = (
     {
@@ -163,6 +199,26 @@ own_property_options_map = (
     {
         "value": "Yes, I am the property owner but I lease the property to one or more tenants",
         "label": _("Yes, I am the property owner but I lease the property to one or more tenants"),
+    },
+)
+park_home_options_map = (
+    {
+        "value": "Yes",
+        "label": _("Yes"),
+    },
+    {
+        "value": "No",
+        "label": _("No"),
+    },
+)
+park_home_main_residence_options_map = (
+    {
+        "value": "Yes",
+        "label": _("Yes"),
+    },
+    {
+        "value": "No",
+        "label": _("No"),
     },
 )
 epc_display_options_map = (
@@ -255,6 +311,7 @@ check_your_answers_options_map = {
         "House": _("House"),
         "Bungalow": _("Bungalow"),
         "Apartment, flat or maisonette": _("Apartment, flat or maisonette"),
+        "Park home": _("Park home"),
     },
     "property_subtype": {
         "Detached": _("Detached"),
@@ -578,9 +635,19 @@ postcode_regex_collection = (
 phone_number_regex = r"^[\d\s\+]*$"
 
 
+all_property_types = tuple(item["value"] for item in property_type_options_map) + ("Park home",)
+all_property_subtypes = tuple(item["value"] for value in property_subtype_options_map.values() for item in value) + (
+    "Park home",
+)
+
+
 class SessionSchema(Schema):
     country = fields.String(validate=validate.OneOf(tuple(item["value"] for item in country_options_map)))
     own_property = fields.String(validate=validate.OneOf(tuple(item["value"] for item in own_property_options_map)))
+    park_home = fields.String(validate=validate.OneOf(tuple(item["value"] for item in park_home_options_map)))
+    park_home_main_residence = fields.String(
+        validate=validate.OneOf(tuple(item["value"] for item in park_home_main_residence_options_map))
+    )
     address_line_1 = fields.String(validate=validate.Length(max=128))
     address_line_2 = fields.String(validate=validate.Length(max=128))
     building_name_or_number = fields.String(validate=validate.Length(max=128))
@@ -601,12 +668,8 @@ class SessionSchema(Schema):
     household_income = fields.String(
         validate=validate.OneOf(tuple(item["value"] for item in household_income_options_map))
     )
-    property_type = fields.String(validate=validate.OneOf(tuple(item["value"] for item in property_type_options_map)))
-    property_subtype = fields.String(
-        validate=validate.OneOf(
-            tuple(item["value"] for value in property_subtype_options_map.values() for item in value)
-        )
-    )
+    property_type = fields.String(validate=validate.OneOf(all_property_types))
+    property_subtype = fields.String(validate=validate.OneOf(all_property_subtypes))
     number_of_bedrooms = fields.String(
         validate=validate.OneOf(tuple(item["value"] for item in number_of_bedrooms_options_map))
     )

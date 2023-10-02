@@ -23,6 +23,8 @@ logger = logging.getLogger(__name__)
 page_compulsory_field_map = {
     "country": ("country",),
     "own-property": ("own_property",),
+    "park-home": ("park_home",),
+    "park-home-main-residence": ("park_home_main_residence",),
     "address": ("building_name_or_number", "postcode"),
     "address-select": ("uprn",),
     "address-manual": ("address_line_1", "town_or_city", "postcode"),
@@ -46,6 +48,8 @@ page_compulsory_field_map = {
 missing_item_errors = {
     "country": _("Select where the property is located"),
     "own_property": _("Select if you own the property"),
+    "park_home": _("Select if you live in a park home"),
+    "park_home_main_residence": _("Select if the park home is your main residence"),
     "building_name_or_number": _("Enter building name or number"),
     "address_line_1": _("Enter Address line 1"),
     "postcode": _("Enter a postcode"),
@@ -123,7 +127,7 @@ def not_found_page_view(request, exception):
 
 
 def page_view(request, session_id, page_name):
-    if page_name not in (schemas.page_order + schemas.extra_pages):
+    if page_name not in (schemas.page_order + schemas.extra_pages + schemas.page_order_park_home):
         raise Http404("Invalid url")
 
     if page_name in page_map:
@@ -143,26 +147,38 @@ def change_page_view(request, session_id, page_name):
     return page_map[page_name](request, session_id, page_name, is_change_page=True)
 
 
-def get_prev_next_page_name(page_name):
-    if page_name in schemas.page_prev_next_map:
-        prev_page_name = schemas.page_prev_next_map[page_name]["prev"]
-        next_page_name = schemas.page_prev_next_map[page_name]["next"]
+def get_prev_next_page_name(page_name, session_id=None):
+    park_home = None
+    if session_id:
+        session_data = interface.api.session.get_session(session_id)
+        park_home = session_data.get("park_home")
+
+    if park_home == "Yes":
+        mapping = schemas.page_prev_next_map_park_home
+        order = schemas.page_order_park_home
     else:
-        assert page_name in schemas.page_order, page_name
-        page_index = schemas.page_order.index(page_name)
+        mapping = schemas.page_prev_next_map
+        order = schemas.page_order
+
+    if page_name in mapping:
+        prev_page_name = mapping[page_name]["prev"]
+        next_page_name = mapping[page_name]["next"]
+    else:
+        assert page_name in order, page_name
+        page_index = order.index(page_name)
         if page_index == 0:
             prev_page_name = "homepage"
         else:
-            prev_page_name = schemas.pages[page_index - 1]
-        if page_index + 1 == len(schemas.pages):
+            prev_page_name = order[page_index - 1]
+        if page_index + 1 == len(order):
             next_page_name = None
         else:
-            next_page_name = schemas.pages[page_index + 1]
+            next_page_name = order[page_index + 1]
     return prev_page_name, next_page_name
 
 
 def get_prev_next_urls(session_id, page_name):
-    prev_page_name, next_page_name = get_prev_next_page_name(page_name)
+    prev_page_name, next_page_name = get_prev_next_page_name(page_name, session_id)
     if prev_page_name == "homepage":
         prev_page_url = "https://www.gov.uk/apply-great-british-insulation-scheme"
     else:
@@ -253,7 +269,7 @@ class PageView(utils.MethodDispatcher):
             assert page_name in schemas.change_page_lookup
             next_page_name = schemas.change_page_lookup[page_name]
         else:
-            _, next_page_name = get_prev_next_page_name(page_name)
+            _, next_page_name = get_prev_next_page_name(page_name, session_id)
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
     def validate(self, request, session_id, page_name, data, is_change_page):
@@ -279,6 +295,64 @@ class CountryView(PageView):
 class OwnPropertyView(PageView):
     def get_context(self, *args, **kwargs):
         return {"own_property_options_map": schemas.own_property_options_map}
+
+    def handle_post(self, request, session_id, page_name, data, is_change_page):
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
+        data = request.POST.dict()
+        own_property = data.get("own_property")
+
+        if own_property == "Yes, I own my property and live in it":
+            next_page_name = "park-home"
+
+        if is_change_page:
+            assert page_name in schemas.change_page_lookup
+            next_page_name = schemas.change_page_lookup[page_name]
+
+        return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+
+
+@register_page("park-home")
+class ParkHomeView(PageView):
+    def get_context(self, *args, **kwargs):
+        return {"park_home_options_map": schemas.park_home_options_map}
+
+    def handle_post(self, request, session_id, page_name, data, is_change_page):
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name, session_id)
+        data = request.POST.dict()
+        park_home = data.get("park_home")
+
+        if park_home == "No":
+            next_page_name = "address"
+
+        return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+
+
+@register_page("park-home-main-residence")
+class ParkHomeMainResidenceView(PageView):
+    def get_context(self, *args, **kwargs):
+        return {"park_home_main_residence_options_map": schemas.park_home_main_residence_options_map}
+
+    def handle_post(self, request, session_id, page_name, data, is_change_page):
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name, session_id)
+        data = request.POST.dict()
+        park_home_main_residence = data.get("park_home_main_residence")
+
+        if is_change_page:
+            assert page_name in schemas.change_page_lookup
+            next_page_name = schemas.change_page_lookup[page_name]
+        if park_home_main_residence == "No":
+            next_page_name = "park-home-application-closed"
+
+        return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+
+    def save_data(self, request, session_id, page_name, *args, **kwargs):
+        data = request.POST.dict()
+        park_home_main_residence = data.get("park_home_main_residence")
+        if park_home_main_residence == "Yes":
+            data["property_type"] = "Park home"
+            data["property_subtype"] = "Park home"
+        data = interface.api.session.save_answer(session_id, page_name, data)
+        return data
 
 
 @register_page("address")
@@ -496,18 +570,31 @@ class SummaryView(PageView):
             {
                 "question": schemas.summary_map[question],
                 "answer": self.get_answer(session_data, question),
-                "change_url": reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name)),
+                "change_url": self.get_change_url(session_id, question, page_name),
             }
             for page_name, questions in schemas.household_pages.items()
             for question in questions
-            if question in session_data
+            if self.show_question(session_data, question)
         )
         return {"summary_lines": summary_lines}
+
+    def show_question(self, session_data, question):
+        show_property_type_lines = self.get_answer(session_data, "property_type") != "Park home"
+        question_answered = question in session_data and question in schemas.summary_map
+        if question == "property_type" or question == "property_subtype":
+            return show_property_type_lines and question_answered
+        else:
+            return question_answered
 
     def get_answer(self, session_data, question):
         answer = session_data.get(question)
         answers_map = schemas.check_your_answers_options_map.get(question)
         return answers_map[answer] if answers_map else answer
+
+    def get_change_url(self, session_id, question, page_name):
+        if question == "park_home":
+            return reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
+        return reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name))
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         supplier_redirect = unavailable_supplier_redirect(session_id)
