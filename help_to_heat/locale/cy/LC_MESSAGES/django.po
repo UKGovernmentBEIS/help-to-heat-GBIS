@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-09-29 16:55+0000\n"
+"POT-Creation-Date: 2023-10-02 09:27+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -157,15 +157,21 @@ msgstr ""
 "Ydy, mae'r eiddo'n perthyn i mi ond dwi'n gosod yr eiddo i un neu ragor o "
 "denantiaid"
 
-#: help_to_heat/frontdoor/schemas.py:207 
-#: help_to_heat/frontdoor/schemas.py:217
-#: help_to_heat/frontdoor/schemas.py:227
+#: help_to_heat/frontdoor/schemas.py:207
+msgctxt "park home question option"
+msgid "Yes"
+msgstr "Ydw"
+
+#: help_to_heat/frontdoor/schemas.py:211
+msgctxt "park home question option"
+msgid "No"
+msgstr "Nad ydw"
+
+#: help_to_heat/frontdoor/schemas.py:217 help_to_heat/frontdoor/schemas.py:227
 msgid "Yes"
 msgstr "Ie"
 
-#: help_to_heat/frontdoor/schemas.py:211 
-#: help_to_heat/frontdoor/schemas.py:221
-#: help_to_heat/frontdoor/schemas.py:231
+#: help_to_heat/frontdoor/schemas.py:221 help_to_heat/frontdoor/schemas.py:231
 msgid "No"
 msgstr "Nage"
 
@@ -399,23 +405,23 @@ msgstr "Cytuno'n llwyr"
 msgid "Not sure / not applicable"
 msgstr "Ansicr / Amherthnasol"
 
-#: help_to_heat/frontdoor/schemas.py:653
+#: help_to_heat/frontdoor/schemas.py:657
 msgid "Please enter a valid UK postcode"
 msgstr "Rhowch god post dilys yn y Deyrnas Unedig"
 
-#: help_to_heat/frontdoor/schemas.py:690
+#: help_to_heat/frontdoor/schemas.py:692
 msgid "Invalid contact number"
 msgstr "Rhif ffôn annilys"
 
-#: help_to_heat/frontdoor/schemas.py:698
+#: help_to_heat/frontdoor/schemas.py:700
 msgid "Invalid email format"
 msgstr "Fformat ebost annilys"
 
-#: help_to_heat/frontdoor/schemas.py:709
+#: help_to_heat/frontdoor/schemas.py:711
 msgid "Energy Company Obligation 4"
 msgstr "Rhwymedigaeth Cwmni Ynni 4"
 
-#: help_to_heat/frontdoor/schemas.py:710
+#: help_to_heat/frontdoor/schemas.py:712
 msgid "Great British Insulation Scheme"
 msgstr "Cynllun Inswleiddio Mawr Prydain"
 
@@ -887,7 +893,8 @@ msgid ""
 "\"mailto:gbis@uw.co.uk\" class=\"govuk-link govuk-link--no-visited-state"
 "\">gbis@uw.co.uk</a> you will be notified as soon as the referral process is "
 "open. "
-msgstr "Allwch chi ddim gwneud cais i Utility Warehouse drwy ddefnyddio’r gwasanaeth "
+msgstr ""
+"Allwch chi ddim gwneud cais i Utility Warehouse drwy ddefnyddio’r gwasanaeth "
 "yma ar hyn o bryd ond os anfonwch chi’ch enw a’ch rhif cyfrif Utility "
 "Warehouse at <a href=\"mailto:gbis@uw.co.uk\" class=\"govuk-link govuk-link--"
 "no-visited-state\">gbis@uw.co.uk</a> fe gewch chi’ch hysbysu cyn gynted ag y "
