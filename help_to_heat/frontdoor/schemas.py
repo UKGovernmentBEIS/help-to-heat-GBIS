@@ -204,11 +204,11 @@ own_property_options_map = (
 park_home_options_map = (
     {
         "value": "Yes",
-        "label": _("Yes"),
+        "label": pgettext_lazy("park home question option", "Yes"),
     },
     {
         "value": "No",
-        "label": _("No"),
+        "label": pgettext_lazy("park home question option", "No"),
     },
 )
 park_home_main_residence_options_map = (
