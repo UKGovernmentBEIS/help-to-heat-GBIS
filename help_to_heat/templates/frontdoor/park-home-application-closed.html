@@ -1,0 +1,15 @@
+{% extends "frontdoor/base.html" %}
+{% import "macros.html" as macros with context %}
+
+{% block title %}
+  <title>{{_("Your property is not eligible - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
+{% endblock %}
+
+{% block content %}
+  {% call macros.further_help() -%}
+    <h1 class="govuk-heading-l">{{_("Your property is not eligible")}}</h1>
+
+    <p class="govuk-body">{{_("Based on your answers, your property is not eligible to access energy-saving measures because it is not your main residence.")}}</p>
+
+  {%- endcall %}
+{% endblock %}

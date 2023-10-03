@@ -148,6 +148,9 @@ def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D", s
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
+    assert page.has_text("Do you live in a park home")
+    page = _check_page(page, "park-home", "park_home", "No")
+
     form = page.get_form()
     form["building_name_or_number"] = "10"
     form["postcode"] = "SW1A 2AA"
@@ -371,6 +374,9 @@ def test_no_benefits_flow():
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
+    assert page.has_text("Do you live in a park home")
+    page = _check_page(page, "park-home", "park_home", "No")
+
     form = page.get_form()
     form["building_name_or_number"] = "10"
     form["postcode"] = "SW1A 2AA"
@@ -443,6 +449,8 @@ def test_no_address():
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
 
+    _check_page = _make_check_page(session_id)
+
     assert page.has_one("h1:contains('Where is the property located?')")
     assert page.has_one("a:contains('Back')")
 
@@ -461,6 +469,9 @@ def test_no_address():
     form = page.get_form()
     form["own_property"] = "Yes, I own my property and live in it"
     page = form.submit().follow()
+
+    assert page.has_text("Do you live in a park home")
+    page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
     form["building_name_or_number"] = "10"
@@ -522,6 +533,9 @@ def test_no_epc():
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
+    assert page.has_text("Do you live in a park home")
+    page = _check_page(page, "park-home", "park_home", "No")
+
     form = page.get_form()
     form["building_name_or_number"] = "10"
     form["postcode"] = "SW1A 2AA"
@@ -576,6 +590,9 @@ def test_eligibility():
 
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    assert page.has_text("Do you live in a park home")
+    page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
     form["building_name_or_number"] = "10"
@@ -965,6 +982,9 @@ def test_address_validation():
 
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    assert page.has_text("Do you live in a park home")
+    page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
     form["building_name_or_number"] = "?" * 256
