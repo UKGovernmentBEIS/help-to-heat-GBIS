@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-02 09:27+0000\n"
+"POT-Creation-Date: 2023-10-12 13:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -878,43 +878,25 @@ msgstr ""
 "cyn hir"
 
 #: help_to_heat/templates/frontdoor/applications-closed.html:14
-#: help_to_heat/templates/frontdoor/applications-closed.html:23
+#: help_to_heat/templates/frontdoor/applications-closed.html:19
 msgid "You can check back again soon."
 msgstr "Gallwch ddod yn ôl eto yn fuan."
 
 #: help_to_heat/templates/frontdoor/applications-closed.html:17
-msgid "Utility Warehouse are not taking referrals just now"
-msgstr "Dyw Utility Warehouse ddim yn cymryd atgyfeiriadau ar hyn o bryd"
-
-#: help_to_heat/templates/frontdoor/applications-closed.html:18
-msgid ""
-"You are not able to apply to Utility Warehouse using this service just now "
-"but if you email your name and Utility Warehouse account number to <a href="
-"\"mailto:gbis@uw.co.uk\" class=\"govuk-link govuk-link--no-visited-state"
-"\">gbis@uw.co.uk</a> you will be notified as soon as the referral process is "
-"open. "
-msgstr ""
-"Allwch chi ddim gwneud cais i Utility Warehouse drwy ddefnyddio’r gwasanaeth "
-"yma ar hyn o bryd ond os anfonwch chi’ch enw a’ch rhif cyfrif Utility "
-"Warehouse at <a href=\"mailto:gbis@uw.co.uk\" class=\"govuk-link govuk-link--"
-"no-visited-state\">gbis@uw.co.uk</a> fe gewch chi’ch hysbysu cyn gynted ag y "
-"bydd y broses atgyfeirio wedi agor."
-
-#: help_to_heat/templates/frontdoor/applications-closed.html:21
 #, python-format
 msgid "%(supplier)s are not taking referrals just now"
 msgstr "Dyw %(supplier)s ddim yn cymryd atgyfeiriadau ar hyn o bryd"
 
-#: help_to_heat/templates/frontdoor/applications-closed.html:22
+#: help_to_heat/templates/frontdoor/applications-closed.html:18
 #, python-format
 msgid "You are not able to apply to %(supplier)s using this service just now."
 msgstr ""
 
-#: help_to_heat/templates/frontdoor/applications-closed.html:26
+#: help_to_heat/templates/frontdoor/applications-closed.html:22
 msgid "If you are a home owner in England and Wales, "
 msgstr "Os ydych chi'n berchennog cartref yng Nghymru a Lloegr, "
 
-#: help_to_heat/templates/frontdoor/applications-closed.html:28
+#: help_to_heat/templates/frontdoor/applications-closed.html:24
 msgid ""
 "you can find other ways to save energy using the find ways to save energy "
 "service (opens in a new tab)"
@@ -2829,6 +2811,15 @@ msgstr ""
 "Os ydych chi'n byw mewn aelwyd mewn parc ac yn prynu'ch ynni o'r safle, "
 "dewiswch y cyflenwr ynni sy'n cyflenwi'r safle."
 
+#: help_to_heat/templates/frontdoor/utility-warehouse-warning-page.html:5
+#: help_to_heat/templates/frontdoor/utility-warehouse-warning-page.html:10
+msgid "Your referral will be sent to E.ON Next"
+msgstr "welsh"
+
+#: help_to_heat/templates/frontdoor/utility-warehouse-warning-page.html:11
+msgid "E.ON Next is receiving referrals on behalf of Utility Warehouse."
+msgstr "welsh here"
+
 #: help_to_heat/templates/frontdoor/wall-insulation.html:5
 msgid ""
 "Do your walls have insulation? - Check eligibility for Great British "
@@ -2992,3 +2983,19 @@ msgstr "Darganfyddwch a allwch chi gael cymorth gan eich cyngor lleol drwy'r "
 #: help_to_heat/templates/macros.html:127
 msgid "Household Support Fund"
 msgstr "Gronfa Cymorth i Aelwydydd"
+
+#~ msgid "Utility Warehouse are not taking referrals just now"
+#~ msgstr "Dyw Utility Warehouse ddim yn cymryd atgyfeiriadau ar hyn o bryd"
+
+#~ msgid ""
+#~ "You are not able to apply to Utility Warehouse using this service just "
+#~ "now but if you email your name and Utility Warehouse account number to <a "
+#~ "href=\"mailto:gbis@uw.co.uk\" class=\"govuk-link govuk-link--no-visited-"
+#~ "state\">gbis@uw.co.uk</a> you will be notified as soon as the referral "
+#~ "process is open. "
+#~ msgstr ""
+#~ "Allwch chi ddim gwneud cais i Utility Warehouse drwy ddefnyddio’r "
+#~ "gwasanaeth yma ar hyn o bryd ond os anfonwch chi’ch enw a’ch rhif cyfrif "
+#~ "Utility Warehouse at <a href=\"mailto:gbis@uw.co.uk\" class=\"govuk-link "
+#~ "govuk-link--no-visited-state\">gbis@uw.co.uk</a> fe gewch chi’ch hysbysu "
+#~ "cyn gynted ag y bydd y broses atgyfeirio wedi agor."
