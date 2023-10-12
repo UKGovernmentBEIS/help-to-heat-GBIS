@@ -76,8 +76,8 @@ missing_item_errors = {
 }
 
 # to be updated when we get full list of excluded suppliers
-converted_suppliers = ["Bulb, now part of Octopus Energy"]
-unavailable_suppliers = ["British Gas", "Utility Warehouse"]
+converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
+unavailable_suppliers = ["British Gas"]
 
 
 def unavailable_supplier_redirect(session_id):
@@ -624,7 +624,7 @@ class SupplierView(PageView):
         request_supplier = request_data.get("supplier")
         # to be updated when we get full list of excluded suppliers
         converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
-        unavailable_suppliers = ["British Gas", "Ecotricity"]
+        unavailable_suppliers = ["British Gas"]
         if request_supplier == "Bulb, now part of Octopus Energy":
             next_page_name = "bulb-warning-page"
         if request_supplier == "Utility Warehouse":
@@ -639,6 +639,13 @@ class SupplierView(PageView):
                 assert page_name in schemas.change_page_lookup
                 next_page_name = schemas.change_page_lookup[page_name]
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+
+    def save_data(self, request, session_id, page_name, *args, **kwargs):
+        data = dict(request.POST.dict())
+        request_supplier = data.get("supplier")
+        data["user_selected_supplier"] = request_supplier
+        data = interface.api.session.save_answer(session_id, page_name, data)
+        return data
 
 
 @register_page("bulb-warning-page")
