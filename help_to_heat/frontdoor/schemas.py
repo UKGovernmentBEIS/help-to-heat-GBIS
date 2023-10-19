@@ -598,30 +598,76 @@ loft_insulation_validation_options_map = loft_insulation_options_map + (
         "value": "No loft",
     },
 )
-multichoice_options = (
+agreement_multichoice_options = (
     {
-        "value": "Completely disagree",
-        "label": _("Completely disagree"),
-    },
-    {
-        "value": "Disagree",
-        "label": _("Disagree"),
-    },
-    {
-        "value": "Neutral",
-        "label": _("Neutral"),
+        "value": "Completely agree",
+        "label": _("Completely agree"),
     },
     {
         "value": "Agree",
         "label": _("Agree"),
     },
     {
-        "value": "Completely agree",
-        "label": _("Completely agree"),
+        "value": "Neutral",
+        "label": _("Neutral"),
     },
     {
-        "value": "Not sure / not applicable",
-        "label": _("Not sure / not applicable"),
+        "value": "Disagree",
+        "label": _("Disagree"),
+    },
+    {
+        "value": "Completely disagree",
+        "label": _("Completely disagree"),
+    },
+)
+
+satisfaction_multichoice_options = (
+    {
+        "value": "Very satisfied",
+        "label": _("Very satisfied"),
+    },
+    {
+        "value": "Somewhat satisfied",
+        "label": _("Somewhat satisfied"),
+    },
+    {
+        "value": "Neither satisfied nor dissatisfied",
+        "label": _("Neither satisfied nor dissatisfied"),
+    },
+    {
+        "value": "Somewhat dissatisfied",
+        "label": _("Somewhat dissatisfied"),
+    },
+    {
+        "value": "Very dissatisfied",
+        "label": _("Very dissatisfied"),
+    },
+)
+
+service_usage_multichoice_options = (
+    {
+        "value": "To find ways to reduce my energy bills",
+        "label": _("To find ways to reduce my energy bills"),
+    },
+    {
+        "value": "To find ways to reduce my carbon emissions",
+        "label": _("To find ways to reduce my carbon emissions"),
+    },
+    {
+        "value": "To find ways to install a specific measure in my home",
+        "label": _("To find ways to install a specific measure in my home"),
+    },
+    {
+        "value": "To find ways to improve my EPC rating",
+        "label": _("To find ways to improve my EPC rating"),
+    },
+    {
+        "value": "To find ways to make my home more comfortable",
+        "label": _("To find ways to make my home more comfortable"),
+    },
+    {
+        "value": "Other",
+        "label": _("Other"),
     },
 )
 
