@@ -685,6 +685,7 @@ class SessionSchema(Schema):
         validate=validate.OneOf(tuple(item["value"] for item in loft_insulation_validation_options_map))
     )
     supplier = fields.String(validate=validate.OneOf(tuple(item["value"] for item in supplier_options)))
+    user_selected_supplier = fields.String(validate=validate.OneOf(tuple(item["value"] for item in supplier_options)))
     first_name = fields.String(validate=validate.Length(max=128))
     last_name = fields.String(validate=validate.Length(max=128))
     contact_number = fields.String(
