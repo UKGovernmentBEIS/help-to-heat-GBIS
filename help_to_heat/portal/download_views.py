@@ -75,9 +75,11 @@ referral_column_headings_no_pii = (
 
 feedback_column_headings = (
     "page_name",
-    "useful_for_learning",
-    "sufficient_guidance",
-    "able_to_answer",
+    "satisfaction_level",
+    "service_usage_reason",
+    "sufficient_detail_or_guidance",
+    "able_to_answer_accurately",
+    "received_desired_advice",
     "improvement_comment",
     "submission_date",
     "submission_time",
@@ -158,7 +160,7 @@ def handle_create_spreadsheet_request(request, creator):
 @require_http_methods(["GET"])
 @decorators.requires_service_manager
 def download_feedback_view(request):
-    feedbacks = frontdoor_models.Feedback.objects.all()
+    feedbacks = frontdoor_models.Feedback.objects.all().order_by("created_at")
     downloaded_at = timezone.now()
     file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
     new_feedback_download = frontdoor_models.FeedbackDownload.objects.create(
@@ -274,9 +276,11 @@ def match_rows_for_feedback(feedback):
     row = dict(feedback.data)
     row = {
         **row,
-        "useful_for_learning": row.get("how-much", "Unanswered"),
-        "sufficient_guidance": row.get("guidance-detail", "Unanswered"),
-        "able_to_answer": row.get("accuracy-detail", "Unanswered"),
+        "satisfaction_level": row.get("satisfaction", "Unanswered"),
+        "service_usage_reason": row.get("usage-reason", "Unanswered"),
+        "sufficient_detail_or_guidance": row.get("guidance", "Unanswered"),
+        "able_to_answer_accurately": row.get("accuracy", "Unanswered"),
+        "received_desired_advice": row.get("advice", "Unanswered"),
         "improvement_comment": row["more-detail"],
         "page_name": page_name,
         "submission_date": created_at.date(),

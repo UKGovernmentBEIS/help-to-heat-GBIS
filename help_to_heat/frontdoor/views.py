@@ -706,24 +706,41 @@ class SuccessView(PageView):
 
 
 class FeedbackView(utils.MethodDispatcher):
-    def get(self, request, session_id=None, page_name=None):
+    def get(self, request, session_id=None, page_name=None, errors=None):
         template_name = "frontdoor/feedback.html"
         prev_page_url = page_name and reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
         context = {
             "session_id": session_id,
             "page_name": page_name,
             "prev_url": prev_page_url,
-            "multichoice_options": schemas.multichoice_options,
+            "multichoice_options_agreement": schemas.multichoice_options_agreement,
+            "multichoice_options_satisfaction": schemas.multichoice_options_satisfaction,
+            "multichoice_options_service_usage": schemas.multichoice_options_service_usage,
+            "errors": errors
         }
         return render(request, template_name=template_name, context=context)
 
     def post(self, request, session_id=None, page_name=None):
         data = request.POST.dict()
-        interface.api.feedback.save_feedback(session_id, page_name, data)
-        if session_id and page_name:
-            return redirect("frontdoor:feedback-thanks", session_id=session_id, page_name=page_name)
+        errors = self.validate(data)
+        if errors is not None:
+            return self.get(request, session_id, page_name, errors=errors)
         else:
-            return redirect("frontdoor:feedback-thanks")
+            interface.api.feedback.save_feedback(session_id, page_name, data)
+            if session_id and page_name:
+                return redirect("frontdoor:feedback-thanks", session_id=session_id, page_name=page_name)
+
+            else:
+                return redirect("frontdoor:feedback-thanks")
+        
+    def validate(self, data):
+        if (not data.get("satisfaction")) and (not data.get("usage-reason")) and (not data.get("guidance"))  and (not data.get("accuracy")) and (not data.get("advice")) and (data.get("more-detail") == ''):
+            errors = {
+                "data": "Please answer at least one question"
+            }
+            return errors
+        else:
+            return None
 
 
 def feedback_thanks_view(request, session_id=None, page_name=None):

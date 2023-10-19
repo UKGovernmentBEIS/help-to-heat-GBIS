@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-02 09:27+0000\n"
+"POT-Creation-Date: 2023-10-19 16:48+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -382,46 +382,66 @@ msgid "Bulb, now part of Octopus Energy"
 msgstr "Bulb, sydd bellach yn rhan o Octopus"
 
 #: help_to_heat/frontdoor/schemas.py:604
-msgid "Completely disagree"
-msgstr "Anghytuno'n llwyr"
+msgid "Completely agree"
+msgstr "Cytuno'n llwyr"
 
 #: help_to_heat/frontdoor/schemas.py:608
-msgid "Disagree"
-msgstr "Anghytuno"
+msgid "Agree"
+msgstr "Cytuno"
 
 #: help_to_heat/frontdoor/schemas.py:612
 msgid "Neutral"
 msgstr "Niwtral"
 
 #: help_to_heat/frontdoor/schemas.py:616
-msgid "Agree"
-msgstr "Cytuno"
+msgid "Disagree"
+msgstr "Anghytuno"
 
 #: help_to_heat/frontdoor/schemas.py:620
-msgid "Completely agree"
-msgstr "Cytuno'n llwyr"
+msgid "Completely disagree"
+msgstr "Anghytuno'n llwyr"
 
-#: help_to_heat/frontdoor/schemas.py:624
-msgid "Not sure / not applicable"
-msgstr "Ansicr / Amherthnasol"
+#: help_to_heat/frontdoor/schemas.py:650
+msgid "To find ways to reduce my energy bills"
+msgstr ""
 
-#: help_to_heat/frontdoor/schemas.py:657
+#: help_to_heat/frontdoor/schemas.py:654
+msgid "To find ways to reduce my carbon emissions"
+msgstr ""
+
+#: help_to_heat/frontdoor/schemas.py:658
+msgid "To find ways to install a specific measure in my home"
+msgstr ""
+
+#: help_to_heat/frontdoor/schemas.py:662
+msgid "To find ways to improve my EPC rating"
+msgstr ""
+
+#: help_to_heat/frontdoor/schemas.py:666
+msgid "To find ways to make my home more comfortable"
+msgstr ""
+
+#: help_to_heat/frontdoor/schemas.py:670
+msgid "Other"
+msgstr ""
+
+#: help_to_heat/frontdoor/schemas.py:704
 msgid "Please enter a valid UK postcode"
 msgstr "Rhowch god post dilys yn y Deyrnas Unedig"
 
-#: help_to_heat/frontdoor/schemas.py:692
+#: help_to_heat/frontdoor/schemas.py:739
 msgid "Invalid contact number"
 msgstr "Rhif ffôn annilys"
 
-#: help_to_heat/frontdoor/schemas.py:700
+#: help_to_heat/frontdoor/schemas.py:747
 msgid "Invalid email format"
 msgstr "Fformat ebost annilys"
 
-#: help_to_heat/frontdoor/schemas.py:711
+#: help_to_heat/frontdoor/schemas.py:758
 msgid "Energy Company Obligation 4"
 msgstr "Rhwymedigaeth Cwmni Ynni 4"
 
-#: help_to_heat/frontdoor/schemas.py:712
+#: help_to_heat/frontdoor/schemas.py:759
 msgid "Great British Insulation Scheme"
 msgstr "Cynllun Inswleiddio Mawr Prydain"
 
@@ -1484,8 +1504,12 @@ msgid "Return to your application"
 msgstr "Dychwelyd i'ch cais"
 
 #: help_to_heat/templates/frontdoor/feedback.html:5
+#, fuzzy
+#| msgid ""
+#| "Give us some feedback - Check eligibility for Great British Insulation "
+#| "Scheme - GOV.UK"
 msgid ""
-"Give us some feedback - Check eligibility for Great British Insulation "
+"Help us improve the service - Check eligibility for Great British Insulation "
 "Scheme - GOV.UK"
 msgstr ""
 "Rhowch adborth inni - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio Mawr "
@@ -1495,21 +1519,19 @@ msgstr ""
 msgid "Help us improve the service"
 msgstr "Helpwch ni i wella'r gwasanaeth"
 
-#: help_to_heat/templates/frontdoor/feedback.html:23
-msgid ""
-"I found this service useful for learning about government energy efficiency "
-"support."
+#: help_to_heat/templates/frontdoor/feedback.html:22
+msgid "Please answer at least one question before submitting feedback"
 msgstr ""
-"Roedd y gwasanaeth yma’n fuddiol imi ddysgu am gymorth effeithlonrwydd "
-"ynni'r llywodraeth."
 
-#: help_to_heat/templates/frontdoor/feedback.html:27
-#: help_to_heat/templates/frontdoor/feedback.html:45
-#: help_to_heat/templates/frontdoor/feedback.html:64
-msgid "How much do you agree with the statement above?"
-msgstr "I ba raddau rydych chi'n cytuno â'r gosodiad uchod?"
+#: help_to_heat/templates/frontdoor/feedback.html:33
+msgid "Overall, how satisfied are you with this online service?"
+msgstr ""
 
-#: help_to_heat/templates/frontdoor/feedback.html:41
+#: help_to_heat/templates/frontdoor/feedback.html:46
+msgid "Why did you use this service today?"
+msgstr ""
+
+#: help_to_heat/templates/frontdoor/feedback.html:59
 msgid ""
 "I had sufficient detail or guidance on every page to proceed to the next "
 "step."
@@ -1517,27 +1539,42 @@ msgstr ""
 "Roedd digon o fanylion neu ganllawiau imi ar bob tudalen i symud ymlaen i'r "
 "cam nesaf."
 
-#: help_to_heat/templates/frontdoor/feedback.html:60
+#: help_to_heat/templates/frontdoor/feedback.html:63
+#: help_to_heat/templates/frontdoor/feedback.html:79
+#: help_to_heat/templates/frontdoor/feedback.html:95
+#, fuzzy
+#| msgid "How much do you agree with the statement above?"
+msgid "To what extent do you agree with the statement above?"
+msgstr "I ba raddau rydych chi'n cytuno â'r gosodiad uchod?"
+
+#: help_to_heat/templates/frontdoor/feedback.html:75
 msgid ""
 "I was able to answer all questions accurately, to the best of my knowledge."
 msgstr ""
 "Roeddwn i'n gallu ateb pob cwestiwn yn gywir, hyd eithaf fy ngwybodaeth."
 
-#: help_to_heat/templates/frontdoor/feedback.html:76
-msgid ""
-"While using our service, was there any specific aspect of this service that "
-"you believe can be improved?"
+#: help_to_heat/templates/frontdoor/feedback.html:91
+msgid "I received the advice I was looking for."
 msgstr ""
-"Wrth ddefnyddio’n gwasanaeth ni, oedd unrhyw agwedd benodol ar y gwasanaeth "
-"rydych chi’n credu bod modd ei gwella?"
 
-#: help_to_heat/templates/frontdoor/feedback.html:80
+#: help_to_heat/templates/frontdoor/feedback.html:107
+#, fuzzy
+#| msgid "Help us improve the service"
+msgid "How could we improve the service?"
+msgstr "Helpwch ni i wella'r gwasanaeth"
+
+#: help_to_heat/templates/frontdoor/feedback.html:111
+#, fuzzy
+#| msgid ""
+#| "Please do not include any personal or financial information in your "
+#| "response."
 msgid ""
-"Please do not include any personal or financial information in your response."
+"Do not include any personal or financial information, for example your "
+"National Insurance or credit card numbers."
 msgstr ""
 "Peidiwch â chynnwys unrhyw wybodaeth bersonol neu ariannol yn eich ymateb."
 
-#: help_to_heat/templates/frontdoor/feedback.html:86
+#: help_to_heat/templates/frontdoor/feedback.html:117
 msgid "Send feedback"
 msgstr "Anfon adborth"
 
@@ -2992,3 +3029,20 @@ msgstr "Darganfyddwch a allwch chi gael cymorth gan eich cyngor lleol drwy'r "
 #: help_to_heat/templates/macros.html:127
 msgid "Household Support Fund"
 msgstr "Gronfa Cymorth i Aelwydydd"
+
+#~ msgid "Not sure / not applicable"
+#~ msgstr "Ansicr / Amherthnasol"
+
+#~ msgid ""
+#~ "I found this service useful for learning about government energy "
+#~ "efficiency support."
+#~ msgstr ""
+#~ "Roedd y gwasanaeth yma’n fuddiol imi ddysgu am gymorth effeithlonrwydd "
+#~ "ynni'r llywodraeth."
+
+#~ msgid ""
+#~ "While using our service, was there any specific aspect of this service "
+#~ "that you believe can be improved?"
+#~ msgstr ""
+#~ "Wrth ddefnyddio’n gwasanaeth ni, oedd unrhyw agwedd benodol ar y "
+#~ "gwasanaeth rydych chi’n credu bod modd ei gwella?"
