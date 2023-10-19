@@ -101,30 +101,6 @@ def test_british_gas_unavailable():
     assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
 
 
-def test_utility_warehouse_unavailable():
-    client = utils.get_client()
-    page = client.get("/start")
-    assert page.status_code == 302
-    page = page.follow()
-
-    assert page.status_code == 200
-    session_id = page.path.split("/")[1]
-    assert uuid.UUID(session_id)
-
-    form = page.get_form()
-    form["country"] = "England"
-    page = form.submit().follow()
-
-    form = page.get_form()
-    form["supplier"] = "Utility Warehouse"
-    page = form.submit().follow()
-
-    assert page.has_text("Utility Warehouse are not taking referrals just now")
-
-    page = page.click(contains="Back")
-    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
-
-
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D", supplier="Utilita"):
     """Answer main flow with set answers"""
@@ -143,6 +119,10 @@ def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D", s
     if supplier == "Bulb, now part of Octopus Energy":
         form = page.get_form()
         assert page.has_text("Your referral will be sent to Octopus Energy")
+        page = form.submit().follow()
+    if supplier == "Utility Warehouse":
+        form = page.get_form()
+        assert page.has_text("Your referral will be sent to E.ON Next")
         page = form.submit().follow()
 
     assert page.has_text("Do you own the property?")
@@ -284,6 +264,8 @@ def _do_happy_flow(supplier="EON"):
     supplier_shown = supplier
     if supplier == "Bulb, now part of Octopus Energy":
         supplier_shown = "Octopus Energy"
+    if supplier == "Utility Warehouse":
+        supplier_shown = "E.ON Next"
 
     assert page.has_one(f"h1:contains('Your details have been submitted to {supplier_shown}')")
 
@@ -1007,4 +989,19 @@ def test_bulb_to_octopus():
 
     referral = models.Referral.objects.get(session_id=session_id)
     assert referral.supplier.name == "Octopus Energy"
+    referral.delete()
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
+@utils.mock_os_api
+def test_utility_warehouse_to_eon():
+    supplier = "Utility Warehouse"
+
+    session_id = _do_happy_flow(supplier=supplier)
+
+    referral_email_text = utils.get_latest_email_text("freddy.flibble@example.com")
+    assert "Your details have been submitted to E.ON Next." in referral_email_text
+
+    referral = models.Referral.objects.get(session_id=session_id)
+    assert referral.supplier.name == "E.ON Next"
     referral.delete()
