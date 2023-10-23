@@ -45,6 +45,7 @@ referral_column_headings = (
     "loft_insulation",
     "Property main heat source",
     "supplier",
+    "user_selected_supplier",
     "submission_date",
     "submission_time",
 )
@@ -69,6 +70,7 @@ referral_column_headings_no_pii = (
     "loft_insulation",
     "Property main heat source",
     "supplier",
+    "user_selected_supplier",
     "submission_date",
     "submission_time",
 )
