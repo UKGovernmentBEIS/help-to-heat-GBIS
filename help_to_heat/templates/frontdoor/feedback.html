@@ -12,72 +12,110 @@
   {% endif %}
 
 <h1 class="govuk-heading-l">{{_("Help us improve the service")}}</h1>
-<form id="feedback" method="post" novalidate>
+<form id="feedback" method="post">
     {{csrf_input}}
 
-  <div class="govuk-form-group govuk-!-padding-bottom-7">
-    <fieldset class="govuk-fieldset">
-      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-        <h1 class="govuk-label-wrapper">
-          <label class="govuk-label govuk-label--m" for="how-useful-detail">
-            {{_("I found this service useful for learning about government energy efficiency support.")}}
-          </label>
-        </h1>
-        <div id="how-useful-detail-hint" class="govuk-hint">
-          {{_("How much do you agree with the statement above?")}}
+    {% if errors %}
+    <div class="govuk-error-summary" data-module="govuk-error-summary">
+      <div role="alert">
+        <h2 class="govuk-error-summary__title">
+          {{_("There is a problem")}}
+        </h2>
+        <div class="govuk-error-summary__body">
+          <ul class="govuk-list govuk-error-summary__list">
+            <li>
+              <a href="#first-question">{{_("Please answer at least one question before submitting feedback")}}</a>
+            </li>
+          </ul>
         </div>
-      </legend>
+      </div>
+    </div>
+    {% endif %}
 
-      {{macros.radios('how-much', multichoice_options, data={}, errors={})}}
+    <div class="govuk-form-group govuk-!-padding-bottom-7" id="first-question">
+      <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+          <h2 class="govuk-label-wrapper">
+            <label class="govuk-label govuk-label--m" for="satisfaction">
+              {{_("Overall, how satisfied are you with this online service?")}}
+            </label>
+          </h2>
+        </legend>
+        {{macros.radios('satisfaction', multichoice_options_satisfaction, data={}, errors={})}}
+      </fieldset>
+    </div>
 
-    </fieldset>
-  </div>
+    <div class="govuk-form-group govuk-!-padding-bottom-7">
+      <fieldset class="govuk-fieldset">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+          <h2 class="govuk-label-wrapper">
+            <label class="govuk-label govuk-label--m" for="usage-reason">
+              {{_("Why did you use this service today?")}}
+            </label>
+          </h2>
+        </legend>
+        {{macros.radios('usage-reason', multichoice_options_service_usage, data={}, errors={})}}
+      </fieldset>
+    </div>
 
   <div class="govuk-form-group govuk-!-padding-bottom-7">
     <fieldset class="govuk-fieldset">
       <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-        <h1 class="govuk-label-wrapper">
-          <label class="govuk-label govuk-label--m" for="guidance-detail">
+        <h2 class="govuk-label-wrapper">
+          <label class="govuk-label govuk-label--m" for="guidance">
             {{_("I had sufficient detail or guidance on every page to proceed to the next step.")}}
           </label>
-        </h1>
-        <div id="guidance-detail-hint" class="govuk-hint">
-          {{_("How much do you agree with the statement above?")}}
+        </h2>
+        <div id="guidance-hint" class="govuk-hint">
+          {{_("To what extent do you agree with the above statement?")}}
         </div>
-
       </legend>
-
-      {{macros.radios('guidance-detail', multichoice_options, data={}, errors={})}}
-
+      {{macros.radios('guidance', multichoice_options_agreement, data={}, errors={})}}
     </fieldset>
   </div>
 
   <div class="govuk-form-group govuk-!-padding-bottom-7">
     <fieldset class="govuk-fieldset">
       <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
-        <h1 class="govuk-label-wrapper">
-          <label class="govuk-label govuk-label--m" for="accuracy-detail">
+        <h2 class="govuk-label-wrapper">
+          <label class="govuk-label govuk-label--m" for="accuracy">
             {{_("I was able to answer all questions accurately, to the best of my knowledge.")}}
           </label>
-        </h1>
-        <div id="accuracy-detail-hint" class="govuk-hint">
-          {{_("How much do you agree with the statement above?")}}
+        </h2>
+        <div id="accuracy-hint" class="govuk-hint">
+          {{_("To what extent do you agree with the above statement?")}}
+        </div>
+      </legend>
+      {{macros.radios('accuracy', multichoice_options_agreement, data={}, errors={})}}
+    </fieldset>
+  </div>
+
+  <div class="govuk-form-group govuk-!-padding-bottom-7">
+    <fieldset class="govuk-fieldset">
+      <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+        <h2 class="govuk-label-wrapper">
+          <label class="govuk-label govuk-label--m" for="advice">
+            {{_("I received the advice I was looking for.")}}
+          </label>
+        </h2>
+        <div id="advice-hint" class="govuk-hint">
+          {{_("To what extent do you agree with the above statement?")}}
         </div>
       </legend>
 
-      {{macros.radios('accuracy-detail', multichoice_options, data={}, errors={})}}
+      {{macros.radios('advice', multichoice_options_agreement, data={}, errors={})}}
 
     </fieldset>
   </div>
 
   <div class="govuk-form-group govuk-!-padding-bottom-7">
-    <h1 class="govuk-label-wrapper">
+    <h2 class="govuk-label-wrapper">
       <label class="govuk-label govuk-label--m" for="more-detail">
-        {{_("While using our service, was there any specific aspect of this service that you believe can be improved?")}}
+        {{_("How could we improve the service?")}}
       </label>
-    </h1>
+    </h2>
     <div id="more-detail-hint" class="govuk-hint">
-      {{_("Please do not include any personal or financial information in your response.")}}
+      {{_("Do not include any personal or financial information, for example your National Insurance or credit card numbers.")}}
     </div>
     <textarea class="govuk-textarea" id="more-detail" name="more-detail" rows="8" aria-describedby="more-detail-hint"></textarea>
   </div>
