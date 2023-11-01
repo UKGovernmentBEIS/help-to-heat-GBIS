@@ -19,9 +19,8 @@ result_map = {
 scenarios = (
     (
         {
-            "council_tax_band": "F",
             "benefits": "Yes",
-            "epc_rating": "F",
+            "epc_rating": "D",
             "country": "England",
             "own_property": "Yes, I own my property and live in it",
         },
@@ -29,9 +28,8 @@ scenarios = (
     ),
     (
         {
-            "council_tax_band": "B",
             "benefits": "Yes",
-            "epc_rating": "F",
+            "epc_rating": "G",
             "country": "England",
             "own_property": "Yes, I own my property and live in it",
         },
@@ -39,11 +37,19 @@ scenarios = (
     ),
     (
         {
-            "council_tax_band": "G",
             "benefits": "Yes",
-            "epc_rating": "F",
+            "epc_rating": "D",
             "country": "England",
-            "own_property": "Yes, I own my property and live in it",
+            "own_property": "No, I am a social housing tenant",
+        },
+        "BOTH",
+    ),
+    (
+        {
+            "benefits": "Yes",
+            "epc_rating": "E",
+            "country": "England",
+            "own_property": "No, I am a tenant",
         },
         "BOTH",
     ),
@@ -192,14 +198,14 @@ eligible_council_tax = {
 }
 
 
-def test_mural_scenario_1():
+def test_eco4_scenario_1():
     for country in eligible_council_tax:
-        for council_tax_band in eligible_council_tax[country]["eligible"]:
-            for epc_rating in ("E", "F", "G"):
+        for own_property in ("Yes, I own my property and live in it",):
+            for epc_rating in ("D", "E", "F", "G", "Not found"):
                 for benefits in ("Yes",):
                     session_data = {
                         "epc_rating": epc_rating,
-                        "council_tax_band": council_tax_band,
+                        "own_property": own_property,
                         "country": country,
                         "benefits": benefits,
                     }
@@ -208,14 +214,33 @@ def test_mural_scenario_1():
                     assert result == expected
 
 
-def test_mural_scenario_2():
+def test_eco4_scenario_2():
     for country in eligible_council_tax:
-        for council_tax_band in eligible_council_tax[country]["ineligible"]:
-            for epc_rating in ("E", "F", "G"):
+        for own_property in (
+            "No, I am a tenant",
+            "Yes, I am the property owner but I lease the property to one or more tenants",
+        ):
+            for epc_rating in ("E", "F", "G", "Not found"):
                 for benefits in ("Yes",):
                     session_data = {
                         "epc_rating": epc_rating,
-                        "council_tax_band": council_tax_band,
+                        "own_property": own_property,
+                        "country": country,
+                        "benefits": benefits,
+                    }
+                    result = calculate_eligibility(session_data)
+                    expected = result_map["BOTH"]
+                    assert result == expected
+
+
+def test_eco4_scenario_3():
+    for country in eligible_council_tax:
+        for own_property in ("No, I am a social housing tenant",):
+            for epc_rating in ("D", "E", "F", "G", "Not found"):
+                for benefits in ("Yes",):
+                    session_data = {
+                        "epc_rating": epc_rating,
+                        "own_property": own_property,
                         "country": country,
                         "benefits": benefits,
                     }
