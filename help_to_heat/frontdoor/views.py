@@ -77,7 +77,7 @@ missing_item_errors = {
 
 # to be updated when we get full list of excluded suppliers
 converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
-unavailable_suppliers = ["British Gas"]
+unavailable_suppliers = []
 
 
 def unavailable_supplier_redirect(session_id):
@@ -624,7 +624,7 @@ class SupplierView(PageView):
         request_supplier = request_data.get("supplier")
         # to be updated when we get full list of excluded suppliers
         converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
-        unavailable_suppliers = ["British Gas"]
+        unavailable_suppliers = []
         if request_supplier == "Bulb, now part of Octopus Energy":
             next_page_name = "bulb-warning-page"
         if request_supplier == "Utility Warehouse":
