@@ -15,8 +15,8 @@
           </h1>
         </legend>
 
-        {% if uprn_options %}
-          {{macros.radios('uprn', uprn_options, data, errors)}}
+        {% if rrn_options %}
+          {{macros.radios('rrn', rrn_options, data, errors)}}
         {% else %}
           <p class="govuk-body">{{_("No addresses found")}}</p>
         {% endif %}

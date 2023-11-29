@@ -26,7 +26,7 @@ page_compulsory_field_map = {
     "park-home": ("park_home",),
     "park-home-main-residence": ("park_home_main_residence",),
     "address": ("building_name_or_number", "postcode"),
-    "address-select": ("uprn",),
+    "address-select": ("rrn",),
     "address-manual": ("address_line_1", "town_or_city", "postcode"),
     "council-tax-band": ("council_tax_band",),
     "epc": ("accept_suggested_epc",),
@@ -53,7 +53,7 @@ missing_item_errors = {
     "building_name_or_number": _("Enter building name or number"),
     "address_line_1": _("Enter Address line 1"),
     "postcode": _("Enter a postcode"),
-    "uprn": _("Select your address"),
+    "rrn": _("Select your address"),
     "town_or_city": _("Enter your Town or city"),
     "council_tax_band": _("Enter the Council Tax Band of the property"),
     "accept_suggested_epc": _("Select if your EPC rating is correct or not, or that you don’t know"),
@@ -363,27 +363,53 @@ class AddressView(PageView):
 
 @register_page("address-select")
 class AddressSelectView(PageView):
+    def format_address(self, a):
+        return f"""{a['address']['addressLine1'] + ',' if a['address']['addressLine1'] else ''}
+                    {a['address']['addressLine2'] + ',' if a['address']['addressLine2'] else ''}
+                    {a['address']['addressLine3'] + ',' if a['address']['addressLine3'] else ''}
+                    {a['address']['addressLine4'] + ',' if a['address']['addressLine4'] else ''}
+                    {a['address']['town']}, {a['address']['postcode']}"""
+        
     def get_context(self, request, session_id, *args, **kwargs):
         data = interface.api.session.get_answer(session_id, "address")
         building_name_or_number = data["building_name_or_number"]
         postcode = data["postcode"]
-        addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
-        uprn_options = tuple(
+        # addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
+        # uprn_options = tuple(
+        #     {
+        #         "value": a["uprn"],
+        #         "label": f"""{a['address_line_1'] + ',' if a['address_line_1'] else ''}
+        #             {a['address_line_2'] + ',' if a['address_line_2'] else ''}
+        #             {a['town']}, {a['postcode']}""",
+        #     }
+        #     for a in addresses
+        # )
+        # return {"uprn_options": uprn_options}
+        address_and_rrn_details = interface.EPC.get_address_and_epc_rrn(building_name_or_number, postcode)
+
+        rrn_options = tuple(
             {
-                "value": a["uprn"],
-                "label": f"""{a['address_line_1'] + ',' if a['address_line_1'] else ''}
-                    {a['address_line_2'] + ',' if a['address_line_2'] else ''}
-                    {a['town']}, {a['postcode']}""",
+                "value": a["epcRrn"],
+                "label": self.format_address(a),
             }
-            for a in addresses
+            for a in address_and_rrn_details
         )
-        return {"uprn_options": uprn_options}
+        return {"rrn_options": rrn_options}
 
     def save_data(self, request, session_id, page_name, *args, **kwargs):
-        uprn = request.POST["uprn"]
-        data = interface.api.address.get_address(uprn)
-        data = interface.api.session.save_answer(session_id, page_name, data)
-        return data
+        rrn = request.POST["rrn"]
+        print(rrn)
+        # uprn = request.POST["uprn"]
+        # address_info = uprn.split("#")
+        # data = interface.api.address.get_address(uprn)
+        # print(data)
+        # building = data["building"]
+        # postcode = data["postcode"]
+        # address_line_1 = data["address"]
+        epc_data = interface.EPC.get_epc_details(rrn)
+        return epc_data
+        # data = interface.api.session.save_answer(session_id, page_name, data)
+        # return data
 
 
 @register_page("address-manual")

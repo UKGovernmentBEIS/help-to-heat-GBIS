@@ -702,7 +702,7 @@ class SessionSchema(Schema):
     postcode = fields.String(
         validate=validate.Regexp(postcode_regex_collection, error=_("Please enter a valid UK postcode"))
     )
-    uprn = fields.Integer()
+    uprn = fields.String()
     address = fields.String(validate=validate.Length(max=512))
     council_tax_band = fields.String(validate=validate.OneOf(welsh_council_tax_band_options))
     accept_suggested_epc = fields.String(
