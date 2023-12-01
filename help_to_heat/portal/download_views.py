@@ -20,6 +20,7 @@ london_tz = tz.gettz("Europe/London")
 referral_column_headings = (
     "ECO4",
     "GBIS",
+    "country",
     "first_name",
     "last_name",
     "contact_number",
@@ -53,6 +54,8 @@ referral_column_headings = (
 referral_column_headings_no_pii = (
     "ECO4",
     "GBIS",
+    "country",
+    "postcode",
     "own_property",
     "benefits",
     "household_income",
@@ -236,7 +239,6 @@ def add_extra_row_data(referral, exclude_pii=False):
         "last_name",
         "email",
         "address",
-        "postcode",
         "contact_number",
     ]
 
@@ -264,7 +266,7 @@ def add_extra_row_data(referral, exclude_pii=False):
         **row,
         "ECO4": "ECO4" in eligibility and "Yes" or "No",
         "GBIS": "GBIS" in eligibility and "Yes" or "No",
-        "epc_rating": epc_rating and epc_rating != "Not found" or "",
+        "epc_rating": epc_rating and epc_rating or "",
         "epc_date": epc_date and epc_date or "",
         "submission_date": created_at.date(),
         "submission_time": created_at.time().strftime("%H:%M:%S"),
