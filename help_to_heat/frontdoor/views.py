@@ -26,7 +26,8 @@ page_compulsory_field_map = {
     "park-home": ("park_home",),
     "park-home-main-residence": ("park_home_main_residence",),
     "address": ("building_name_or_number", "postcode"),
-    "address-select": ("rrn",),
+    "epc-select": ("rrn",),
+    "address-select": ("uprn",),
     "address-manual": ("address_line_1", "town_or_city", "postcode"),
     "council-tax-band": ("council_tax_band",),
     "epc": ("accept_suggested_epc",),
@@ -53,7 +54,8 @@ missing_item_errors = {
     "building_name_or_number": _("Enter building name or number"),
     "address_line_1": _("Enter Address line 1"),
     "postcode": _("Enter a postcode"),
-    "rrn": _("Select your address"),
+    "uprn": _("Select your address"),
+    "rrn": _("Select your EPC"),
     "town_or_city": _("Enter your Town or city"),
     "council_tax_band": _("Enter the Council Tax Band of the property"),
     "accept_suggested_epc": _("Select if your EPC rating is correct or not, or that you don’t know"),
@@ -358,35 +360,30 @@ class ParkHomeMainResidenceView(PageView):
 @register_page("address")
 class AddressView(PageView):
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        return redirect("frontdoor:page", session_id=session_id, page_name="address-select")
+        data = interface.api.session.get_answer(session_id, "address")
+        building_name_or_number = data["building_name_or_number"]
+        postcode = data["postcode"]
+        try:
+            interface.EPC.get_address_and_epc_rrn(building_name_or_number, postcode)
+            return redirect("frontdoor:page", session_id=session_id, page_name="epc-select")
+        except Exception:  # noqa: B902
+            return redirect("frontdoor:page", session_id=session_id, page_name="address-select")
 
 
-@register_page("address-select")
-class AddressSelectView(PageView):
+@register_page("epc-select")
+class EpcSelectView(PageView):
     def format_address(self, a):
         return f"""{a['address']['addressLine1'] + ',' if a['address']['addressLine1'] else ''}
                     {a['address']['addressLine2'] + ',' if a['address']['addressLine2'] else ''}
                     {a['address']['addressLine3'] + ',' if a['address']['addressLine3'] else ''}
                     {a['address']['addressLine4'] + ',' if a['address']['addressLine4'] else ''}
                     {a['address']['town']}, {a['address']['postcode']}"""
-        
+
     def get_context(self, request, session_id, *args, **kwargs):
         data = interface.api.session.get_answer(session_id, "address")
         building_name_or_number = data["building_name_or_number"]
         postcode = data["postcode"]
-        # addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
-        # uprn_options = tuple(
-        #     {
-        #         "value": a["uprn"],
-        #         "label": f"""{a['address_line_1'] + ',' if a['address_line_1'] else ''}
-        #             {a['address_line_2'] + ',' if a['address_line_2'] else ''}
-        #             {a['town']}, {a['postcode']}""",
-        #     }
-        #     for a in addresses
-        # )
-        # return {"uprn_options": uprn_options}
         address_and_rrn_details = interface.EPC.get_address_and_epc_rrn(building_name_or_number, postcode)
-
         rrn_options = tuple(
             {
                 "value": a["epcRrn"],
@@ -398,18 +395,37 @@ class AddressSelectView(PageView):
 
     def save_data(self, request, session_id, page_name, *args, **kwargs):
         rrn = request.POST["rrn"]
-        print(rrn)
-        # uprn = request.POST["uprn"]
-        # address_info = uprn.split("#")
-        # data = interface.api.address.get_address(uprn)
-        # print(data)
-        # building = data["building"]
-        # postcode = data["postcode"]
-        # address_line_1 = data["address"]
-        epc_data = interface.EPC.get_epc_details(rrn)
-        return epc_data
-        # data = interface.api.session.save_answer(session_id, page_name, data)
-        # return data
+        epc = interface.EPC.get_epc_details(rrn)
+        address = self.format_address(epc["data"]["assessment"])
+        epc_details = epc["data"]["assessment"]
+        epc_data = {"rrn": rrn, "address": address, "epc_details": epc_details}
+        data = interface.api.session.save_answer(session_id, page_name, epc_data)
+        return data
+
+
+@register_page("address-select")
+class AddressSelectView(PageView):
+    def get_context(self, request, session_id, *args, **kwargs):
+        data = interface.api.session.get_answer(session_id, "address")
+        building_name_or_number = data["building_name_or_number"]
+        postcode = data["postcode"]
+        addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
+        uprn_options = tuple(
+            {
+                "value": a["uprn"],
+                "label": f"""{a['address_line_1'] + ',' if a['address_line_1'] else ''}
+                    {a['address_line_2'] + ',' if a['address_line_2'] else ''}
+                    {a['town']}, {a['postcode']}""",
+            }
+            for a in addresses
+        )
+        return {"uprn_options": uprn_options}
+
+    def save_data(self, request, session_id, page_name, *args, **kwargs):
+        uprn = request.POST["uprn"]
+        data = interface.api.address.get_address(uprn)
+        data = interface.api.session.save_answer(session_id, page_name, data)
+        return data
 
 
 @register_page("address-manual")
@@ -445,33 +461,64 @@ class CouncilTaxBandView(PageView):
 class EpcView(PageView):
     def get_context(self, request, session_id, page_name, data):
         session_data = interface.api.session.get_session(session_id)
-        uprn = session_data.get("uprn")
-        address = session_data.get("address")
         country = session_data.get("country")
-        if uprn:
-            epc = interface.api.epc.get_epc(uprn, country)
+
+        if country == "Scotland":
+            uprn = session_data.get("uprn")
+            address = session_data.get("address")
+            country = session_data.get("country")
+            if uprn:
+                epc = interface.api.epc.get_epc_scotland(uprn, country)
+            else:
+                epc = {}
+            context = {
+                "epc_rating": epc.get("rating"),
+                "epc_date": epc.get("date"),
+                "epc_display_options": schemas.epc_display_options_map,
+                "address": address,
+            }
+            return context
         else:
-            epc = {}
-        context = {
-            "epc_rating": epc.get("rating"),
-            "epc_date": epc.get("date"),
-            "epc_display_options": schemas.epc_display_options_map,
-            "address": address,
-        }
-        return context
+            rrn = session_data.get("rrn")
+            address = session_data.get("address")
+            context = {}
+            if rrn:
+                epc = session_data.get("epc_details")
+            else:
+                epc = {}
+
+            context = {
+                "epc_rating": epc.get("currentEnergyEfficiencyBand"),
+                "epc_date": epc.get("lodgementDate"),
+                "epc_display_options": schemas.epc_display_options_map,
+                "address": address,
+            }
+            return context
 
     def handle_get(self, response, request, session_id, page_name, context):
         session_data = interface.api.session.get_session(session_id)
-        uprn = session_data.get("uprn")
         country = session_data.get("country")
-        uprn = session_data.get("uprn")
-        if uprn:
-            epc = interface.api.epc.get_epc(uprn, country)
+
+        if country == "Scotland":
+            uprn = session_data.get("uprn")
+            country = session_data.get("country")
+            uprn = session_data.get("uprn")
+            if uprn:
+                epc = interface.api.epc.get_epc_scotland(uprn, country)
+            else:
+                epc = {}
+            if not epc:
+                return redirect("frontdoor:page", session_id=session_id, page_name="benefits")
+            return super().handle_get(response, request, session_id, page_name, context)
         else:
-            epc = {}
-        if not epc:
-            return redirect("frontdoor:page", session_id=session_id, page_name="benefits")
-        return super().handle_get(response, request, session_id, page_name, context)
+            rrn = session_data.get("rrn")
+            if rrn:
+                epc = session_data.get("epc_details")
+            else:
+                epc = {}
+            if not epc:
+                return redirect("frontdoor:page", session_id=session_id, page_name="benefits")
+            return super().handle_get(response, request, session_id, page_name, context)
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         prev_page_name, next_page_name = get_prev_next_page_name(page_name)

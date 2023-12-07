@@ -11,8 +11,8 @@ from help_to_heat import portal
 from help_to_heat.utils import Entity, Interface, register_event, with_schema
 
 from . import models, schemas
-from .os_api import OSApi, ThrottledApiException
 from .epc_api import EPCApi
+from .os_api import OSApi, ThrottledApiException
 
 
 class SaveAnswerSchema(marshmallow.Schema):
@@ -51,7 +51,7 @@ class FindAddressesSchema(marshmallow.Schema):
 
 
 class GetAddressSchema(marshmallow.Schema):
-    rrn = marshmallow.fields.String()
+    uprn = marshmallow.fields.String()
 
 
 class AddressSchema(marshmallow.Schema):
@@ -255,16 +255,8 @@ class Address(Entity):
 
         try:
             api_results = api.uprn(int(uprn), dataset="LPI")["features"]
-            api_results_dpa = api.uprn(int(uprn))["features"]
             address = api_results[0]["properties"]["ADDRESS"]
-
-            if "BUILDING_NUMBER" in api_results_dpa[0]["properties"]:
-                building = api_results_dpa[0]["properties"]["BUILDING_NUMBER"] 
-            else:
-                building = api_results_dpa[0]["properties"]["BUILDING_NAME"]
-
-            postcode = api_results_dpa[0]["properties"]["POSTCODE"]
-            result = {"uprn": uprn, "address": address, "building": building, "postcode": postcode}
+            result = {"uprn": uprn, "address": address}
             return result
         except requests.exceptions.HTTPError or requests.exceptions.RequestException as e:
             if e.response.status_code == HTTPStatus.TOO_MANY_REQUESTS:
@@ -460,34 +452,33 @@ class Address(Entity):
 
 
 class EPC(Entity):
-    # @with_schema(load=GetEPCSchema, dump=EPCSchema)
-    # def get_epc(self, uprn, country):
-    #     try:
-    #         if country == "England" or country == "Wales":
-    #             epc = portal.models.EpcRating.objects.get(uprn=uprn)
-    #         elif country == "Scotland":
-    #             epc = portal.models.ScottishEpcRating.objects.get(uprn=uprn)
-    #         else:
-    #             epc = None
-    #     except (portal.models.EpcRating.DoesNotExist, portal.models.ScottishEpcRating.DoesNotExist):
-    #         epc = None
-    #     if epc:
-    #         data = {"uprn": epc.uprn, "rating": epc.rating, "date": epc.date}
-    #     else:
-    #         data = {}
-    #     return data
+    @with_schema(load=GetEPCSchema, dump=EPCSchema)
+    def get_epc_scotland(self, uprn, country):
+        try:
+            # if country == "England" or country == "Wales":
+            #     epc = portal.models.EpcRating.objects.get(uprn=uprn)
+            if country == "Scotland":
+                epc = portal.models.ScottishEpcRating.objects.get(uprn=uprn)
+            else:
+                epc = None
+        except (portal.models.EpcRating.DoesNotExist, portal.models.ScottishEpcRating.DoesNotExist):
+            epc = None
+        if epc:
+            data = {"uprn": epc.uprn, "rating": epc.rating, "date": epc.date}
+        else:
+            data = {}
+        return data
+
     def get_address_and_epc_rrn(building_name_or_number, postcode):
         token = EPCApi.get_access_token()
         data = EPCApi.get_address_and_rrn(token, building_name_or_number, postcode)
         address_and_epc_details = data["data"]["assessments"]
         return address_and_epc_details
-    
+
     def get_epc_details(epc_rrn):
         token = EPCApi.get_access_token()
         data = EPCApi.get_epc_details(token, epc_rrn)
         return data
-
-        
 
 
 class Feedback(Entity):
@@ -498,33 +489,3 @@ class Feedback(Entity):
 
 
 api = Interface(session=Session(), address=Address(), epc=EPC(), feedback=Feedback())
-
-
-
-
-
-
-[
-  {
-    "epcRrn": "1111-1111-1111-1111-1111",
-    "address": {
-      "addressLine1": "11 Acacia Avenue",
-      "addressLine2": "Upper Wellgood",
-      "addressLine3": "",
-      "addressLine4": "",
-      "town": "Fulchester",
-      "postcode": "FL23 4JA"
-    }
-  },
-  {
-    "epcRrn": "2222-2222-2222-2222-2222",
-    "address": {
-      "addressLine1": "22 Acacia Avenue",
-      "addressLine2": "Upper Wellgood",
-      "addressLine3": "",
-      "addressLine4": "",
-      "town": "Fulchester",
-      "postcode": "FL23 4JA"
-    }
-  }
-]
