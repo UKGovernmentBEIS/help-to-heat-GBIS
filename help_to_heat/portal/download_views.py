@@ -28,12 +28,14 @@ referral_column_headings = (
     "benefits",
     "household_income",
     "uprn",
+    "rrn",
     "address_line_1",
     "postcode",
     "address",
     "council_tax_band",
     "property_type",
     "property_subtype",
+    "property_main_heat_source",
     "epc_rating",
     "accept_suggested_epc",
     "epc_date",
@@ -59,6 +61,7 @@ referral_column_headings_no_pii = (
     "council_tax_band",
     "property_type",
     "property_subtype",
+    "property_main_heat_source",
     "epc_rating",
     "accept_suggested_epc",
     "epc_date",
@@ -253,11 +256,13 @@ def add_extra_row_data(referral, exclude_pii=False):
         contact_number = row.get("contact_number")
         contact_number = '="' + contact_number + '"'
         uprn = row.get("uprn")
+        rrn = row.get("rrn")
         uprn = '="' + str(uprn) + '"' if uprn else ""
         row = {
             **row,
             "contact_number": contact_number,
             "uprn": uprn,
+            "rrn": rrn,
         }
 
     row = {

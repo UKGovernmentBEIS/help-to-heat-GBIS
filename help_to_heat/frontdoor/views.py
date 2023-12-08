@@ -55,7 +55,7 @@ missing_item_errors = {
     "address_line_1": _("Enter Address line 1"),
     "postcode": _("Enter a postcode"),
     "uprn": _("Select your address"),
-    "rrn": _("Select your EPC"),
+    "rrn": _("Select your address"),
     "town_or_city": _("Enter your Town or city"),
     "council_tax_band": _("Enter the Council Tax Band of the property"),
     "accept_suggested_epc": _("Select if your EPC rating is correct or not, or that you don’t know"),
@@ -363,10 +363,17 @@ class AddressView(PageView):
         data = interface.api.session.get_answer(session_id, "address")
         building_name_or_number = data["building_name_or_number"]
         postcode = data["postcode"]
+        country = interface.api.session.get_answer(session_id, "country")["country"]
         try:
-            interface.EPC.get_address_and_epc_rrn(building_name_or_number, postcode)
-            return redirect("frontdoor:page", session_id=session_id, page_name="epc-select")
-        except Exception:  # noqa: B902
+            if country == "Scotland":
+                return redirect("frontdoor:page", session_id=session_id, page_name="address-select")
+            else:
+                interface.EPC.get_address_and_epc_rrn(building_name_or_number, postcode)
+                return redirect("frontdoor:page", session_id=session_id, page_name="epc-select")
+        except Exception as e:  # noqa: B902
+            logger.exception(f"An error occurred: {e}")
+            interface.api.session.save_answer(session_id, "epc-select", 
+                                              {"rrn": "", "epc_details": {}, "uprn": "", "property_main_heat_source": "", "epc_rating": "Not found", "accept_suggested_epc": "Not found", "epc_date": ""})
             return redirect("frontdoor:page", session_id=session_id, page_name="address-select")
 
 
@@ -396,9 +403,21 @@ class EpcSelectView(PageView):
     def save_data(self, request, session_id, page_name, *args, **kwargs):
         rrn = request.POST["rrn"]
         epc = interface.EPC.get_epc_details(rrn)
+        print(epc)
         address = self.format_address(epc["data"]["assessment"])
         epc_details = epc["data"]["assessment"]
-        epc_data = {"rrn": rrn, "address": address, "epc_details": epc_details}
+
+        if epc_details.get("uprn") is not None:
+            uprn = epc_details.get("uprn")
+        else:
+            uprn = ""
+
+        if epc_details.get("mainHeatingDescription") is not None:
+            property_main_heat_source = epc_details.get("mainHeatingDescription")
+        else:
+            property_main_heat_source = ""
+        
+        epc_data = {"rrn": rrn, "address": address, "epc_details": epc_details, "uprn": uprn, "property_main_heat_source": property_main_heat_source}
         data = interface.api.session.save_answer(session_id, page_name, epc_data)
         return data
 
@@ -444,7 +463,12 @@ class AddressManualView(PageView):
         data = {**data, "address": address}
         data = interface.api.session.save_answer(session_id, page_name, data)
         return data
-
+    
+    def handle_post(self, request, session_id, page_name, data, is_change_page):
+        interface.api.session.save_answer(session_id, "epc-select", 
+        {"rrn": "", "epc_details": {}, "uprn": "", "property_main_heat_source": "", "epc_rating": "Not found", "accept_suggested_epc": "Not found", "epc_date": ""})
+        return super().handle_post(request, session_id, page_name, data, is_change_page)
+    
 
 @register_page("council-tax-band")
 class CouncilTaxBandView(PageView):
@@ -488,7 +512,7 @@ class EpcView(PageView):
                 epc = {}
 
             context = {
-                "epc_rating": epc.get("currentEnergyEfficiencyBand"),
+                "epc_rating": epc.get("currentEnergyEfficiencyBand").upper() if epc.get("currentEnergyEfficiencyBand") else "",
                 "epc_date": epc.get("lodgementDate"),
                 "epc_display_options": schemas.epc_display_options_map,
                 "address": address,
@@ -522,7 +546,7 @@ class EpcView(PageView):
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         prev_page_name, next_page_name = get_prev_next_page_name(page_name)
-        epc_rating = data.get("epc_rating")
+        epc_rating = data.get("epc_rating").upper()
         accept_suggested_epc = data.get("accept_suggested_epc")
 
         if not epc_rating:

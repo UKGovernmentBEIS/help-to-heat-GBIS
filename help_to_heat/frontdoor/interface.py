@@ -53,6 +53,8 @@ class FindAddressesSchema(marshmallow.Schema):
 class GetAddressSchema(marshmallow.Schema):
     uprn = marshmallow.fields.String()
 
+class GetEPCSchema(marshmallow.Schema):
+    rrn = marshmallow.fields.String()
 
 class AddressSchema(marshmallow.Schema):
     uprn = marshmallow.fields.String()
@@ -68,7 +70,7 @@ class FullAddressSchema(marshmallow.Schema):
     address = marshmallow.fields.String()
 
 
-class GetEPCSchema(marshmallow.Schema):
+class GetScottishEPCSchema(marshmallow.Schema):
     uprn = marshmallow.fields.Integer()
     country = marshmallow.fields.String()
 
@@ -452,15 +454,10 @@ class Address(Entity):
 
 
 class EPC(Entity):
-    @with_schema(load=GetEPCSchema, dump=EPCSchema)
-    def get_epc_scotland(self, uprn, country):
+    @with_schema(load=GetScottishEPCSchema, dump=EPCSchema)
+    def get_epc_scotland(self, uprn):
         try:
-            # if country == "England" or country == "Wales":
-            #     epc = portal.models.EpcRating.objects.get(uprn=uprn)
-            if country == "Scotland":
-                epc = portal.models.ScottishEpcRating.objects.get(uprn=uprn)
-            else:
-                epc = None
+            epc = portal.models.ScottishEpcRating.objects.get(uprn=uprn)
         except (portal.models.EpcRating.DoesNotExist, portal.models.ScottishEpcRating.DoesNotExist):
             epc = None
         if epc:
@@ -469,11 +466,13 @@ class EPC(Entity):
             data = {}
         return data
 
+
     def get_address_and_epc_rrn(building_name_or_number, postcode):
         token = EPCApi.get_access_token()
         data = EPCApi.get_address_and_rrn(token, building_name_or_number, postcode)
         address_and_epc_details = data["data"]["assessments"]
         return address_and_epc_details
+
 
     def get_epc_details(epc_rrn):
         token = EPCApi.get_access_token()
