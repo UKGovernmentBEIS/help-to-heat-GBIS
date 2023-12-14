@@ -360,7 +360,6 @@ class ParkHomeMainResidenceView(PageView):
 @register_page("address")
 class AddressView(PageView):
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        data = interface.api.session.get_answer(session_id, "address")
         building_name_or_number = data["building_name_or_number"]
         postcode = data["postcode"]
         country = interface.api.session.get_answer(session_id, "country")["country"]
@@ -368,7 +367,10 @@ class AddressView(PageView):
             if country == "Scotland":
                 return redirect("frontdoor:page", session_id=session_id, page_name="address-select")
             else:
-                interface.EPC.get_address_and_epc_rrn(building_name_or_number, postcode)
+                address_and_rrn_details = interface.EPC.get_address_and_epc_rrn(building_name_or_number, postcode)
+                interface.api.session.save_answer(session_id, page_name, {"address_and_rrn_details": address_and_rrn_details})
+                print(page_name)
+                print(interface.api.session.get_answer(session_id, page_name))
                 return redirect("frontdoor:page", session_id=session_id, page_name="epc-select")
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
@@ -388,9 +390,7 @@ class EpcSelectView(PageView):
 
     def get_context(self, request, session_id, *args, **kwargs):
         data = interface.api.session.get_answer(session_id, "address")
-        building_name_or_number = data["building_name_or_number"]
-        postcode = data["postcode"]
-        address_and_rrn_details = interface.EPC.get_address_and_epc_rrn(building_name_or_number, postcode)
+        address_and_rrn_details = data.get("address_and_rrn_details", "")
         rrn_options = tuple(
             {
                 "value": a["epcRrn"],
@@ -402,8 +402,15 @@ class EpcSelectView(PageView):
 
     def save_data(self, request, session_id, page_name, *args, **kwargs):
         rrn = request.POST["rrn"]
-        epc = interface.EPC.get_epc_details(rrn)
-        print(epc)
+        
+        try:
+            epc = interface.EPC.get_epc_details(rrn)
+        except Exception as e:
+            logger.exception(f"An error occurred: {e}")
+            interface.api.session.save_answer(session_id, "epc-select", 
+                                              {"rrn": "", "epc_details": {}, "uprn": "", "property_main_heat_source": "", "epc_rating": "Not found", "accept_suggested_epc": "Not found", "epc_date": ""})
+            return redirect("frontdoor:page", session_id=session_id, page_name="address-select")
+
         address = self.format_address(epc["data"]["assessment"])
         epc_details = epc["data"]["assessment"]
 

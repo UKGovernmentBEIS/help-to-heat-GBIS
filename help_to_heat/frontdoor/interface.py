@@ -194,6 +194,23 @@ class Session(Entity):
         referral = portal.models.Referral.objects.create(session_id=session_id, data=data, supplier=supplier)
         referral_data = {"id": referral.id, "session_id": referral.session_id, "data": referral.data}
         return referral_data
+    
+
+    def retrieve_token(self):
+        token = models.AccessToken.objects.first()
+        if token is not None:
+            return token.access_token
+        else:
+            return None
+        
+
+    def save_token(self, new_token):
+        saved_token = models.AccessToken.objects.first()
+        if saved_token is not None: 
+            saved_token.access_token = new_token
+        else:
+            saved_token = models.AccessToken(access_token=new_token)
+        saved_token.save()
 
 
 class Address(Entity):
@@ -468,15 +485,13 @@ class EPC(Entity):
 
 
     def get_address_and_epc_rrn(building_name_or_number, postcode):
-        token = EPCApi.get_access_token()
-        data = EPCApi.get_address_and_rrn(token, building_name_or_number, postcode)
+        data = EPCApi.get_address_and_rrn(building_name_or_number, postcode)
         address_and_epc_details = data["data"]["assessments"]
         return address_and_epc_details
 
 
     def get_epc_details(epc_rrn):
-        token = EPCApi.get_access_token()
-        data = EPCApi.get_epc_details(token, epc_rrn)
+        data = EPCApi.get_epc_details(epc_rrn)
         return data
 
 
