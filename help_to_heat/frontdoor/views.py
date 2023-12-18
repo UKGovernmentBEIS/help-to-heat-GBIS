@@ -367,10 +367,8 @@ class AddressView(PageView):
             if country == "Scotland":
                 return redirect("frontdoor:page", session_id=session_id, page_name="address-select")
             else:
-                address_and_rrn_details = interface.EPC.get_address_and_epc_rrn(building_name_or_number, postcode)
+                address_and_rrn_details = interface.api.epc.get_address_and_epc_rrn(building_name_or_number, postcode)
                 interface.api.session.save_answer(session_id, page_name, {"address_and_rrn_details": address_and_rrn_details})
-                print(page_name)
-                print(interface.api.session.get_answer(session_id, page_name))
                 return redirect("frontdoor:page", session_id=session_id, page_name="epc-select")
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
@@ -404,7 +402,7 @@ class EpcSelectView(PageView):
         rrn = request.POST["rrn"]
         
         try:
-            epc = interface.EPC.get_epc_details(rrn)
+            epc = interface.api.epc.get_epc_details(rrn)
         except Exception as e:
             logger.exception(f"An error occurred: {e}")
             interface.api.session.save_answer(session_id, "epc-select", 

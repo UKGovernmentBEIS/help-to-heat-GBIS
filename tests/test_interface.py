@@ -1,10 +1,12 @@
 import datetime
+from http import HTTPStatus
 import random
 import string
 import unittest
 import uuid
 
 from help_to_heat.frontdoor import interface
+from help_to_heat.frontdoor.mock_epc_api import MockEPCApi, MockNotFoundEPCApi, MockUnauthorizedEPCApi
 from help_to_heat.frontdoor.mock_os_api import MockOSApi
 from help_to_heat.portal import models
 
@@ -53,25 +55,42 @@ def test_find_addresses():
     result = interface.api.address.find_addresses("10", "sw1a 2aa")
     assert result[0]["uprn"] == "100023336956"
 
-
 @utils.mock_os_api
 def test_get_address():
     result = interface.api.address.get_address(uprn="10")
     assert result["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
 
-
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_get_epc():
-    uprn = str(int("".join(random.choices(string.digits, k=5))))
-    data = {
-        "uprn": uprn,
-        "rating": "A",
-        "date": datetime.date(2020, 12, 25),
-    }
-    models.EpcRating.objects.create(**data)
+    assert interface.api.epc.get_address_and_epc_rrn("22", "FL23 4JA")
+    found_epc = interface.api.epc.get_epc_details("1111-1111-1111-1111-1111")
+    assert found_epc["data"]["assessment"].get("currentEnergyEfficiencyBand").upper() == "C"
 
-    found_epc = interface.api.epc.get_epc(uprn, "England")
-    assert found_epc["rating"] == data["rating"]
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)
+@utils.mock_os_api
+def test_get_epc_not_found_failure():
+    try:        
+        interface.api.epc.get_address_and_epc_rrn("10", "SW1A 2AA")
+    except Exception as e:
+        assert e.response.status_code == HTTPStatus.NOT_FOUND
+        if e.response.status_code == HTTPStatus.NOT_FOUND:
+            result = interface.api.address.get_address(uprn="10")
+            assert result["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
+        else:
+            raise e
 
-    new_uprn = "".join(random.choices(string.digits, k=5))
-    missing_epc = interface.api.epc.get_epc(new_uprn, "England")
-    assert missing_epc == {}
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockUnauthorizedEPCApi)
+@utils.mock_os_api
+def test_get_epc_not_found_failure():
+    try:        
+        interface.api.epc.get_address_and_epc_rrn("10", "SW1A 2AA")
+    except Exception as e:
+        assert e.response.status_code == HTTPStatus.UNAUTHORIZED
+        if e.response.status_code == HTTPStatus.UNAUTHORIZED:
+            result = interface.api.address.get_address(uprn="10")
+            assert result["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
+        else:
+            raise e
+
+
+
