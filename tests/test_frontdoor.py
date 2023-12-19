@@ -3,7 +3,6 @@ import unittest
 import uuid
 
 from help_to_heat.frontdoor import interface
-from help_to_heat.frontdoor import models as frontdoor_models
 from help_to_heat.frontdoor.mock_os_api import EmptyOSApi, MockOSApi
 from help_to_heat.portal import models
 
@@ -642,7 +641,11 @@ def test_feedback_no_session():
     page = client.get("/start")
     page = page.follow()
     page = page.click(contains="feedback")
-    assert "https://forms.office.com/Pages/ResponsePage.aspx?id=BXCsy8EC60O0l-ZJLRst2JbIaLaL_oJOivXjaXYvCetUMFRBRVcyWkk4TzhYU0E4NjQzWlZMWThRMC4u" in page.url
+    assert (
+        "https://forms.office.com/Pages/ResponsePage.aspx?id=BXCsy8EC60O0l-ZJLRst2JbIaLaL_"
+        "oJOivXjaXYvCetUMFRBRVcyWkk4TzhYU0E4NjQzWlZMWThRMC4u" in page.url
+    )
+
 
 def test_feedback_with_session():
     client = utils.get_client()
@@ -663,7 +666,10 @@ def test_feedback_with_session():
     assert page.has_one("h1:contains('Do you own the property?')")
 
     page = page.click(contains="feedback")
-    assert "https://forms.office.com/Pages/ResponsePage.aspx?id=BXCsy8EC60O0l-ZJLRst2JbIaLaL_oJOivXjaXYvCetUMFRBRVcyWkk4TzhYU0E4NjQzWlZMWThRMC4u" in page.url
+    assert (
+        "https://forms.office.com/Pages/ResponsePage.aspx?id=BXCsy8EC60O0l-ZJLRst2JbIaLaL_"
+        "oJOivXjaXYvCetUMFRBRVcyWkk4TzhYU0E4NjQzWlZMWThRMC4u" in page.url
+    )
 
 
 def test_feedback_validation_with_session_no_answers():
@@ -685,7 +691,10 @@ def test_feedback_validation_with_session_no_answers():
     assert page.has_one("h1:contains('Do you own the property?')")
 
     page = page.click(contains="feedback")
-    assert "https://forms.office.com/Pages/ResponsePage.aspx?id=BXCsy8EC60O0l-ZJLRst2JbIaLaL_oJOivXjaXYvCetUMFRBRVcyWkk4TzhYU0E4NjQzWlZMWThRMC4u" in page.url
+    assert (
+        "https://forms.office.com/Pages/ResponsePage.aspx?id=BXCsy8EC60O0l-ZJLRst2JbIaLaL_"
+        "oJOivXjaXYvCetUMFRBRVcyWkk4TzhYU0E4NjQzWlZMWThRMC4u" in page.url
+    )
 
 
 def test_feedback_validation_with_session_two_answers():
@@ -707,7 +716,10 @@ def test_feedback_validation_with_session_two_answers():
     assert page.has_one("h1:contains('Do you own the property?')")
 
     page = page.click(contains="feedback")
-    assert "https://forms.office.com/Pages/ResponsePage.aspx?id=BXCsy8EC60O0l-ZJLRst2JbIaLaL_oJOivXjaXYvCetUMFRBRVcyWkk4TzhYU0E4NjQzWlZMWThRMC4u" in page.url
+    assert (
+        "https://forms.office.com/Pages/ResponsePage.aspx?id=BXCsy8EC60O0l-ZJLRst2JbIaLaL_"
+        "oJOivXjaXYvCetUMFRBRVcyWkk4TzhYU0E4NjQzWlZMWThRMC4u" in page.url
+    )
 
 
 def test_privacy_policy_with_session():
