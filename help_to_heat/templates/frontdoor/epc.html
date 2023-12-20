@@ -28,7 +28,11 @@
       {% endfor %}
 
       <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">{{_("EPC rating")}}</p>
-      <p class="govuk-body">{{epc_rating}}</p>
+      
+      {% if epc_rating %}
+        <p class="govuk-body">{{ epc_rating.upper() }}</p>
+      {% endif %}
+      
     </div>
   </div>
   <div class="govuk-form-group {% if errors %}govuk-form-group--error{% endif %}">

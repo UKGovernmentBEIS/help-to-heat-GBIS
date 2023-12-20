@@ -45,6 +45,7 @@ page_order_park_home = (
 extra_pages = (
     "applications-closed",
     "address-select",
+    "epc-select",
     "address-manual",
     "loft-access",
     "loft-insulation",
@@ -58,6 +59,7 @@ extra_pages = (
 
 page_prev_next_map = {
     "address-select": {"prev": "address", "next": "council-tax-band"},
+    "epc-select": {"prev": "address", "next": "council-tax-band"},
     "address-manual": {"prev": "address", "next": "council-tax-band"},
     "loft": {"prev": "wall-insulation", "next": "loft-access"},
     "loft-access": {"prev": "loft", "next": "loft-insulation"},
@@ -76,6 +78,7 @@ page_prev_next_map = {
 
 page_prev_next_map_park_home = {
     "address-select": {"prev": "address", "next": "benefits"},
+    "epc-select": {"prev": "address", "next": "benefits"},
     "address-manual": {"prev": "address", "next": "benefits"},
     "northern-ireland": {"prev": "country", "next": None},
     "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
@@ -702,7 +705,11 @@ class SessionSchema(Schema):
     postcode = fields.String(
         validate=validate.Regexp(postcode_regex_collection, error=_("Please enter a valid UK postcode"))
     )
-    uprn = fields.Integer()
+    uprn = fields.String()
+    rrn = fields.String()
+    epc_details = fields.Dict()
+    address_and_rrn_details = fields.List(fields.Dict)
+    property_main_heat_source = fields.String()
     address = fields.String(validate=validate.Length(max=512))
     council_tax_band = fields.String(validate=validate.OneOf(welsh_council_tax_band_options))
     accept_suggested_epc = fields.String(

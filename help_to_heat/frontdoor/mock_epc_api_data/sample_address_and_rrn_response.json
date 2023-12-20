@@ -1,0 +1,29 @@
+{
+  "data": {
+      "assessments": [
+        {
+          "epcRrn": "1111-1111-1111-1111-1111",
+          "address": {
+            "addressLine1": "11 Acacia Avenue",
+            "addressLine2": "Upper Wellgood",
+            "addressLine3": "",
+            "addressLine4": "",
+            "town": "Fulchester",
+            "postcode": "FL23 4JA"
+          }
+        },
+        {
+          "epcRrn": "2222-2222-2222-2222-2222",
+          "address": {
+            "addressLine1": "22 Acacia Avenue",
+            "addressLine2": "Upper Wellgood",
+            "addressLine3": "",
+            "addressLine4": "",
+            "town": "Fulchester",
+            "postcode": "FL23 4JA"
+          }
+        }
+      ]
+  },
+  "meta": {}
+}

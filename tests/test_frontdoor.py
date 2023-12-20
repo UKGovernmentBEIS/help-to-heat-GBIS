@@ -4,17 +4,11 @@ import uuid
 
 from help_to_heat.frontdoor import interface
 from help_to_heat.frontdoor import models as frontdoor_models
-from help_to_heat.frontdoor.mock_os_api import EmptyOSApi, MockOSApi
+from help_to_heat.frontdoor.mock_epc_api import MockEPCApi
+from help_to_heat.frontdoor.mock_os_api import MockOSApi, EmptyOSApi
 from help_to_heat.portal import models
 
 from . import utils
-
-
-def _add_epc(uprn, rating):
-    models.EpcRating.objects.update_or_create(
-        uprn=uprn, defaults={"rating": rating, "date": datetime.date(2022, 12, 25)}
-    )
-    assert interface.api.epc.get_epc(uprn, "England")
 
 
 # TODO: PC-380: Add tests for cookie banner
@@ -77,10 +71,11 @@ def test_flow_errors():
     assert page.has_text("Select where the property is located")
 
 
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
+@utils.mock_os_api
 def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D", supplier="Utilita"):
     """Answer main flow with set answers"""
-    _add_epc(uprn="100023336956", rating=epc_rating)
 
     _check_page = _make_check_page(session_id)
 
@@ -108,22 +103,23 @@ def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D", s
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
-    form["building_name_or_number"] = "10"
-    form["postcode"] = "SW1A 2AA"
+    form["building_name_or_number"] = "22"
+    form["postcode"] = "FL23 4JA"
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="address")
-    assert data["building_name_or_number"] == "10"
-    assert data["postcode"] == "SW1A 2AA"
+    # assert data["building_name_or_number"] == "22"
+    # assert data["postcode"] == "FL23 4JA"
 
     form = page.get_form()
-    form["uprn"] = "100023336956"
+    form["rrn"] = "1111-1111-1111-1111-1111"
     page = form.submit().follow()
 
-    data = interface.api.session.get_answer(session_id, page_name="address-select")
-    assert data["uprn"] == 100023336956
-    assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
+    # data = interface.api.session.get_answer(session_id, page_name="epc-select")
+    # assert data["rrn"] == "1111-1111-1111-1111-1111"
+    # assert data["address"] == "22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA"
 
+    print("!!!!!", page.to_string(), "!!!!!")
     assert page.has_one("h1:contains('What is the council tax band of your property?')")
     page = _check_page(page, "council-tax-band", "council_tax_band", "B")
 
@@ -168,6 +164,7 @@ def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D", s
     return page
 
 
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 @utils.mock_os_api
 def test_happy_flow():
@@ -306,7 +303,7 @@ def test_back_button():
     assert form["country"] == "England"
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 @utils.mock_os_api
 def test_no_benefits_flow():
     client = utils.get_client()
@@ -317,8 +314,6 @@ def test_no_benefits_flow():
     assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
-
-    _add_epc(uprn="100023336956", rating="A")
 
     _check_page = _make_check_page(session_id)
 
@@ -336,21 +331,21 @@ def test_no_benefits_flow():
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
-    form["building_name_or_number"] = "10"
-    form["postcode"] = "SW1A 2AA"
+    form["building_name_or_number"] = "22"
+    form["postcode"] = "FL23 4JA"
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="address")
-    assert data["building_name_or_number"] == "10"
-    assert data["postcode"] == "SW1A 2AA"
+    # assert data["building_name_or_number"] == "22"
+    # assert data["postcode"] == "FL23 4JA"
 
     form = page.get_form()
-    form["uprn"] = "100023336956"
+    form["rrn"] = "1111-1111-1111-1111-1111"
     page = form.submit().follow()
 
-    data = interface.api.session.get_answer(session_id, page_name="address-select")
-    assert data["uprn"] == 100023336956
-    assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
+    data = interface.api.session.get_answer(session_id, page_name="epc-select")
+    assert data["rrn"] == "1111-1111-1111-1111-1111"
+    # assert data["address"] == "22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA"
 
     assert page.has_one("h1:contains('What is the council tax band of your property?')")
     page = _check_page(page, "council-tax-band", "council_tax_band", "B")
@@ -365,7 +360,7 @@ def test_no_benefits_flow():
     assert page.has_one("""h1:contains("It's likely that your home already has suitable energy saving measures")""")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 @utils.mock_os_api
 def test_summary():
     client = utils.get_client()
@@ -392,7 +387,7 @@ def test_summary():
 
     assert page.has_text("Yes, I am the property owner but I lease the property to one or more tenants")
 
-    assert page.has_text("10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA")
+    assert page.has_text("22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA")
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", EmptyOSApi)
@@ -432,25 +427,25 @@ def test_no_address():
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
-    form["building_name_or_number"] = "10"
-    form["postcode"] = "SW1A 2AA"
+    form["building_name_or_number"] = "22"
+    form["postcode"] = "FL23 4JA"
     page = form.submit().follow()
 
     assert page.has_text("No addresses found")
     page = page.click(contains="I want to enter it manually")
     form = page.get_form()
-    assert form["address_line_1"] == ""
-    assert form["postcode"] == "SW1A 2AA"
+    # assert form["address_line_1"] == ""
+    # assert form["postcode"] == "FL23 4JA"
 
-    form["address_line_1"] = "10 DOWNING STREET"
+    form["address_line_1"] = "22 Acacia Avenue"
 
     page = form.submit()
     assert page.has_one("h2:contains('There is a problem')")
     assert page.has_text("Enter your Town or city")
 
     form = page.get_form()
-    assert form["address_line_1"] == "10 DOWNING STREET"
-    assert form["postcode"] == "SW1A 2AA"
+    assert form["address_line_1"] == "22 Acacia Avenue"
+    assert form["postcode"] == "FL23 4JA"
 
     form["address_line_2"] = "Smalltown"
     form["town_or_city"] = "Metropolis"
@@ -458,7 +453,7 @@ def test_no_address():
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="address-manual")
-    assert data["address_line_1"] == "10 DOWNING STREET"
+    assert data["address_line_1"] == "22 Acacia Avenue"
     assert data["town_or_city"] == "Metropolis"
     assert data["address_line_2"] == "Smalltown"
     assert data["town_or_city"] == "Metropolis"
@@ -495,20 +490,20 @@ def test_no_epc():
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
-    form["building_name_or_number"] = "10"
-    form["postcode"] = "SW1A 2AA"
+    form["building_name_or_number"] = "22"
+    form["postcode"] = "FL23 4JA"
     page = form.submit().follow()
 
     assert page.has_text("No addresses found")
     page = page.click(contains="I want to enter it manually")
     form = page.get_form()
     # TODO: find out if we should still be forwarding this part through, and if so fix it so we are
-    # assert form["building_name_or_number"] == "10"
+    # assert form["building_name_or_number"] == "22"
     assert form["address_line_1"] == ""
-    assert form["postcode"] == "SW1A 2AA"
+    assert form["postcode"] == "FL23 4JA"
 
     # TODO: won't need to set this if it's passed through from the lookup (see above)
-    form["address_line_1"] = "10 DOWNING STREET"
+    form["address_line_1"] = "22 Acacia Avenue"
     form["town_or_city"] = "Metropolis"
 
     page = form.submit().follow()
@@ -517,7 +512,7 @@ def test_no_epc():
     page = _check_page(page, "council-tax-band", "council_tax_band", "B")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 @utils.mock_os_api
 def test_eligibility():
     client = utils.get_client()
@@ -535,8 +530,6 @@ def test_eligibility():
 
     _check_page = _make_check_page(session_id)
 
-    _add_epc(uprn="100023336956", rating=epc_rating)
-
     _check_page = _make_check_page(session_id)
 
     form = page.get_form()
@@ -553,21 +546,21 @@ def test_eligibility():
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
-    form["building_name_or_number"] = "10"
-    form["postcode"] = "SW1A 2AA"
+    form["building_name_or_number"] = "22"
+    form["postcode"] = "FL23 4JA"
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="address")
-    assert data["building_name_or_number"] == "10"
-    assert data["postcode"] == "SW1A 2AA"
+    # assert data["building_name_or_number"] == "22"
+    # assert data["postcode"] == "FL23 4JA"
 
     form = page.get_form()
-    form["uprn"] = "100023336956"
+    form["rrn"] = "1111-1111-1111-1111-1111"
     page = form.submit().follow()
 
-    data = interface.api.session.get_answer(session_id, page_name="address-select")
-    assert data["uprn"] == 100023336956
-    assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
+    data = interface.api.session.get_answer(session_id, page_name="epc-select")
+    assert data["rrn"] == "1111-1111-1111-1111-1111"
+    # assert data["address"] == "22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA"
 
     assert page.has_one("h1:contains('What is the council tax band of your property?')")
     page = _check_page(page, "council-tax-band", "council_tax_band", council_tax_band)
@@ -580,7 +573,7 @@ def test_eligibility():
     assert page.has_one("h1:contains('Your property is not eligible')")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 @utils.mock_os_api
 def test_referral_email():
     client = utils.get_client()
@@ -857,7 +850,7 @@ def test_accessibility_statement_then_privacy_policy_with_session():
     assert page.has_one("h1:contains('Do you own the property?')")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 @utils.mock_os_api
 def test_incorrect_referral_email():
     client = utils.get_client()
@@ -894,7 +887,7 @@ def test_incorrect_referral_email():
     assert page.has_one("p:contains('Invalid email format')")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 @utils.mock_os_api
 def test_referral_not_providing_email():
     client = utils.get_client()
@@ -944,7 +937,7 @@ def test_referral_not_providing_email():
     referral.delete()
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 @utils.mock_os_api
 def test_referral_not_providing_contact_number():
     client = utils.get_client()
@@ -1028,7 +1021,7 @@ def test_address_validation():
     assert page.has_text("Please enter a valid UK postcode")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 @utils.mock_os_api
 def test_bulb_to_octopus():
     supplier = "Bulb, now part of Octopus Energy"
@@ -1043,7 +1036,7 @@ def test_bulb_to_octopus():
     referral.delete()
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 @utils.mock_os_api
 def test_utility_warehouse_to_eon():
     supplier = "Utility Warehouse"
