@@ -368,12 +368,25 @@ class AddressView(PageView):
                 return redirect("frontdoor:page", session_id=session_id, page_name="address-select")
             else:
                 address_and_rrn_details = interface.api.epc.get_address_and_epc_rrn(building_name_or_number, postcode)
-                interface.api.session.save_answer(session_id, page_name, {"address_and_rrn_details": address_and_rrn_details})
+                interface.api.session.save_answer(
+                    session_id, page_name, {"address_and_rrn_details": address_and_rrn_details}
+                )
                 return redirect("frontdoor:page", session_id=session_id, page_name="epc-select")
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
-            interface.api.session.save_answer(session_id, "epc-select", 
-                                              {"rrn": "", "epc_details": {}, "uprn": "", "property_main_heat_source": "", "epc_rating": "Not found", "accept_suggested_epc": "Not found", "epc_date": ""})
+            interface.api.session.save_answer(
+                session_id,
+                "epc-select",
+                {
+                    "rrn": "",
+                    "epc_details": {},
+                    "uprn": "",
+                    "property_main_heat_source": "",
+                    "epc_rating": "Not found",
+                    "accept_suggested_epc": "Not found",
+                    "epc_date": "",
+                },
+            )
             return redirect("frontdoor:page", session_id=session_id, page_name="address-select")
 
 
@@ -400,13 +413,24 @@ class EpcSelectView(PageView):
 
     def save_data(self, request, session_id, page_name, *args, **kwargs):
         rrn = request.POST["rrn"]
-        
+
         try:
             epc = interface.api.epc.get_epc_details(rrn)
         except Exception as e:
             logger.exception(f"An error occurred: {e}")
-            interface.api.session.save_answer(session_id, "epc-select", 
-                                              {"rrn": "", "epc_details": {}, "uprn": "", "property_main_heat_source": "", "epc_rating": "Not found", "accept_suggested_epc": "Not found", "epc_date": ""})
+            interface.api.session.save_answer(
+                session_id,
+                "epc-select",
+                {
+                    "rrn": "",
+                    "epc_details": {},
+                    "uprn": "",
+                    "property_main_heat_source": "",
+                    "epc_rating": "Not found",
+                    "accept_suggested_epc": "Not found",
+                    "epc_date": "",
+                },
+            )
             return redirect("frontdoor:page", session_id=session_id, page_name="address-select")
 
         address = self.format_address(epc["data"]["assessment"])
@@ -421,8 +445,14 @@ class EpcSelectView(PageView):
             property_main_heat_source = epc_details.get("mainHeatingDescription")
         else:
             property_main_heat_source = ""
-        
-        epc_data = {"rrn": rrn, "address": address, "epc_details": epc_details, "uprn": uprn, "property_main_heat_source": property_main_heat_source}
+
+        epc_data = {
+            "rrn": rrn,
+            "address": address,
+            "epc_details": epc_details,
+            "uprn": uprn,
+            "property_main_heat_source": property_main_heat_source,
+        }
         data = interface.api.session.save_answer(session_id, page_name, epc_data)
         return data
 
@@ -468,12 +498,23 @@ class AddressManualView(PageView):
         data = {**data, "address": address}
         data = interface.api.session.save_answer(session_id, page_name, data)
         return data
-    
+
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        interface.api.session.save_answer(session_id, "epc-select", 
-        {"rrn": "", "epc_details": {}, "uprn": "", "property_main_heat_source": "", "epc_rating": "Not found", "accept_suggested_epc": "Not found", "epc_date": ""})
+        interface.api.session.save_answer(
+            session_id,
+            "epc-select",
+            {
+                "rrn": "",
+                "epc_details": {},
+                "uprn": "",
+                "property_main_heat_source": "",
+                "epc_rating": "Not found",
+                "accept_suggested_epc": "Not found",
+                "epc_date": "",
+            },
+        )
         return super().handle_post(request, session_id, page_name, data, is_change_page)
-    
+
 
 @register_page("council-tax-band")
 class CouncilTaxBandView(PageView):
@@ -517,7 +558,9 @@ class EpcView(PageView):
                 epc = {}
 
             context = {
-                "epc_rating": epc.get("currentEnergyEfficiencyBand").upper() if epc.get("currentEnergyEfficiencyBand") else "",
+                "epc_rating": epc.get("currentEnergyEfficiencyBand").upper()
+                if epc.get("currentEnergyEfficiencyBand")
+                else "",
                 "epc_date": epc.get("lodgementDate"),
                 "epc_display_options": schemas.epc_display_options_map,
                 "address": address,
