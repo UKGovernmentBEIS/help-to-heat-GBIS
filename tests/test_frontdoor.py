@@ -3,7 +3,6 @@ import unittest
 import uuid
 
 from help_to_heat.frontdoor import interface
-from help_to_heat.frontdoor import models as frontdoor_models
 from help_to_heat.frontdoor.mock_os_api import EmptyOSApi, MockOSApi
 from help_to_heat.portal import models
 
@@ -637,169 +636,15 @@ def test_referral_email():
     referral.delete()
 
 
-def test_feedback_no_session():
+def test_feedback():
     client = utils.get_client()
     page = client.get("/start")
     page = page.follow()
     page = page.click(contains="feedback")
-    form = page.get_form()
-    form["satisfaction"] = "Somewhat satisfied"
-    form["usage-reason"] = "To find ways to reduce my energy bills"
-    form["guidance"] = "Agree"
-    form["accuracy"] = "Neutral"
-    form["advice"] = "Agree"
-    form["more-detail"] = "Improvement comment"
-    page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Thank you for your feedback')")
-    assert not page.all("a:contains('Back')")
-
-    feedback = frontdoor_models.Feedback.objects.latest("created_at")
-    assert feedback.data["satisfaction"] == "Somewhat satisfied"
-    assert feedback.data["usage-reason"] == "To find ways to reduce my energy bills"
-    assert feedback.data["guidance"] == "Agree"
-    assert feedback.data["accuracy"] == "Neutral"
-    assert feedback.data["advice"] == "Agree"
-    assert feedback.data["more-detail"] == "Improvement comment"
-
-
-def test_feedback_with_session():
-    client = utils.get_client()
-    page = client.get("/start")
-    page = page.follow()
-
-    session_id = page.path.split("/")[1]
-    assert uuid.UUID(session_id)
-
-    form = page.get_form()
-    form["country"] = "Scotland"
-    page = form.submit().follow()
-
-    form = page.get_form()
-    form["supplier"] = "Utilita"
-    page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Do you own the property?')")
-
-    page = page.click(contains="feedback")
-    form = page.get_form()
-    form["satisfaction"] = "Somewhat satisfied"
-    form["usage-reason"] = "To find ways to reduce my energy bills"
-    form["guidance"] = "Agree"
-    form["accuracy"] = "Neutral"
-    form["advice"] = "Agree"
-    form["more-detail"] = "Improvement comment"
-
-    page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Thank you for your feedback')")
-
-    feedback = frontdoor_models.Feedback.objects.latest("created_at")
-    assert feedback.data["satisfaction"] == "Somewhat satisfied"
-    assert feedback.data["usage-reason"] == "To find ways to reduce my energy bills"
-    assert feedback.data["guidance"] == "Agree"
-    assert feedback.data["accuracy"] == "Neutral"
-    assert feedback.data["advice"] == "Agree"
-    assert feedback.data["more-detail"] == "Improvement comment"
-
-    feedback_session_id = page.path.split("/")[3]
-    assert uuid.UUID(feedback_session_id)
-
-    page = page.click(contains="Return to your application")
-    assert page.has_one("h1:contains('Do you own the property?')")
-
-
-def test_feedback_validation_with_session_no_answers():
-    client = utils.get_client()
-    page = client.get("/start")
-    page = page.follow()
-
-    session_id = page.path.split("/")[1]
-    assert uuid.UUID(session_id)
-
-    form = page.get_form()
-    form["country"] = "Scotland"
-    page = form.submit().follow()
-
-    form = page.get_form()
-    form["supplier"] = "Utilita"
-    page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Do you own the property?')")
-
-    page = page.click(contains="feedback")
-    form = page.get_form()
-
-    page = form.submit()
-
-    assert page.has_one("h1:contains('Help us improve the service')")
-    assert page.has_one("h2:contains('There is a problem')")
-    assert page.has_one("a:contains('Please answer at least one question before submitting feedback')")
-
-
-def test_feedback_validation_with_session_two_answers():
-    client = utils.get_client()
-    page = client.get("/start")
-    page = page.follow()
-
-    session_id = page.path.split("/")[1]
-    assert uuid.UUID(session_id)
-
-    form = page.get_form()
-    form["country"] = "Scotland"
-    page = form.submit().follow()
-
-    form = page.get_form()
-    form["supplier"] = "Utilita"
-    page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Do you own the property?')")
-
-    page = page.click(contains="feedback")
-    form = page.get_form()
-    form["satisfaction"] = "Somewhat satisfied"
-    form["more-detail"] = "Improvement comment"
-
-    page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Thank you for your feedback')")
-
-    feedback = frontdoor_models.Feedback.objects.latest("created_at")
-    assert feedback.data["satisfaction"] == "Somewhat satisfied"
-    assert feedback.data["more-detail"] == "Improvement comment"
-
-    feedback_session_id = page.path.split("/")[3]
-    assert uuid.UUID(feedback_session_id)
-
-    page = page.click(contains="Return to your application")
-    assert page.has_one("h1:contains('Do you own the property?')")
-
-
-def test_privacy_policy_with_session():
-    client = utils.get_client()
-    page = client.get("/start")
-    page = page.follow()
-
-    session_id = page.path.split("/")[1]
-    assert uuid.UUID(session_id)
-
-    form = page.get_form()
-    form["country"] = "Scotland"
-    page = form.submit().follow()
-
-    form = page.get_form()
-    form["supplier"] = "Utilita"
-    page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Do you own the property?')")
-
-    page = page.click(contains="Privacy Policy")
-
-    privacy_policy_session_id = page.path.split("/")[2]
-    assert uuid.UUID(privacy_policy_session_id)
-
-    page = page.click(contains="Back")
-    assert page.has_one("h1:contains('Do you own the property?')")
+    assert (
+        "https://forms.office.com/Pages/ResponsePage.aspx?id=BXCsy8EC60O0l-ZJLRst2JbIaLaL_"
+        "oJOivXjaXYvCetUMFRBRVcyWkk4TzhYU0E4NjQzWlZMWThRMC4u" in page.url
+    )
 
 
 def test_accessibility_statement_with_session():
