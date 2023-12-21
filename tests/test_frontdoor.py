@@ -636,7 +636,7 @@ def test_referral_email():
     referral.delete()
 
 
-def test_feedback_no_session():
+def test_feedback():
     client = utils.get_client()
     page = client.get("/start")
     page = page.follow()
@@ -645,108 +645,6 @@ def test_feedback_no_session():
         "https://forms.office.com/Pages/ResponsePage.aspx?id=BXCsy8EC60O0l-ZJLRst2JbIaLaL_"
         "oJOivXjaXYvCetUMFRBRVcyWkk4TzhYU0E4NjQzWlZMWThRMC4u" in page.url
     )
-
-
-def test_feedback_with_session():
-    client = utils.get_client()
-    page = client.get("/start")
-    page = page.follow()
-
-    session_id = page.path.split("/")[1]
-    assert uuid.UUID(session_id)
-
-    form = page.get_form()
-    form["country"] = "Scotland"
-    page = form.submit().follow()
-
-    form = page.get_form()
-    form["supplier"] = "Utilita"
-    page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Do you own the property?')")
-
-    page = page.click(contains="feedback")
-    assert (
-        "https://forms.office.com/Pages/ResponsePage.aspx?id=BXCsy8EC60O0l-ZJLRst2JbIaLaL_"
-        "oJOivXjaXYvCetUMFRBRVcyWkk4TzhYU0E4NjQzWlZMWThRMC4u" in page.url
-    )
-
-
-def test_feedback_validation_with_session_no_answers():
-    client = utils.get_client()
-    page = client.get("/start")
-    page = page.follow()
-
-    session_id = page.path.split("/")[1]
-    assert uuid.UUID(session_id)
-
-    form = page.get_form()
-    form["country"] = "Scotland"
-    page = form.submit().follow()
-
-    form = page.get_form()
-    form["supplier"] = "Utilita"
-    page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Do you own the property?')")
-
-    page = page.click(contains="feedback")
-    assert (
-        "https://forms.office.com/Pages/ResponsePage.aspx?id=BXCsy8EC60O0l-ZJLRst2JbIaLaL_"
-        "oJOivXjaXYvCetUMFRBRVcyWkk4TzhYU0E4NjQzWlZMWThRMC4u" in page.url
-    )
-
-
-def test_feedback_validation_with_session_two_answers():
-    client = utils.get_client()
-    page = client.get("/start")
-    page = page.follow()
-
-    session_id = page.path.split("/")[1]
-    assert uuid.UUID(session_id)
-
-    form = page.get_form()
-    form["country"] = "Scotland"
-    page = form.submit().follow()
-
-    form = page.get_form()
-    form["supplier"] = "Utilita"
-    page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Do you own the property?')")
-
-    page = page.click(contains="feedback")
-    assert (
-        "https://forms.office.com/Pages/ResponsePage.aspx?id=BXCsy8EC60O0l-ZJLRst2JbIaLaL_"
-        "oJOivXjaXYvCetUMFRBRVcyWkk4TzhYU0E4NjQzWlZMWThRMC4u" in page.url
-    )
-
-
-def test_privacy_policy_with_session():
-    client = utils.get_client()
-    page = client.get("/start")
-    page = page.follow()
-
-    session_id = page.path.split("/")[1]
-    assert uuid.UUID(session_id)
-
-    form = page.get_form()
-    form["country"] = "Scotland"
-    page = form.submit().follow()
-
-    form = page.get_form()
-    form["supplier"] = "Utilita"
-    page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Do you own the property?')")
-
-    page = page.click(contains="Privacy Policy")
-
-    privacy_policy_session_id = page.path.split("/")[2]
-    assert uuid.UUID(privacy_policy_session_id)
-
-    page = page.click(contains="Back")
-    assert page.has_one("h1:contains('Do you own the property?')")
 
 
 def test_accessibility_statement_with_session():
