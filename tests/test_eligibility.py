@@ -232,6 +232,7 @@ def test_eco4_scenario_2():
                     expected = result_map["BOTH"]
                     assert result == expected
 
+
 def test_eco4_scenario_3():
     for country in eligible_council_tax:
         for own_property in ("No, I am a social housing tenant",):
