@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2023-10-25 12:01+0000\n"
+"POT-Creation-Date: 2024-01-04 16:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -329,12 +329,12 @@ msgid "No loft"
 msgstr "Dim atig"
 
 #: help_to_heat/frontdoor/schemas.py:359 help_to_heat/frontdoor/schemas.py:585
-msgid "Yes, there is at least 270mm of insulation in my loft"
-msgstr "Ydy, mae o leiaf 270mm o inswleiddio yn fy atig i"
+msgid "I have more than 100 mm of loft insulation"
+msgstr "Mae gen i fwy na 100 mm o inswleiddiad atig"
 
 #: help_to_heat/frontdoor/schemas.py:362 help_to_heat/frontdoor/schemas.py:589
-msgid "No, there is less than 270mm of insulation in my loft"
-msgstr "Nac ydy, mae llai na 270mm o inswleiddio yn fy atig i "
+msgid "I have up to 100 mm of loft insulation"
+msgstr "Mae gen i hyd at 100 mm o inswleiddiad atig"
 
 #: help_to_heat/frontdoor/schemas.py:374
 msgid "Sits directly below the roof with no other flat above it"
@@ -1846,27 +1846,35 @@ msgstr ""
 "Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/loft-insulation.html:14
-msgid "Is your loft fully insulated?"
-msgstr "Ydy'ch atig wedi'i inswleiddio'n llawn?"
+msgid "How much loft insulation do you have?"
+msgstr "Faint o inswleiddiad atig sydd gennych chi?"
 
 #: help_to_heat/templates/frontdoor/loft-insulation.html:18
 msgid ""
-"A loft is fully insulated if it has more than 270mm (about 10-11 inches) of "
+"A loft is fully insulated if it has 270 mm (about 10-11 inches) of "
 "insulation covering the whole loft, usually laid on the 'floor' of the loft "
-"with one layer between the horizontal timbers and another layer going across "
-"them to bring the insulation up to the required level."
+"with one layer between the horizontal timber joists and another layer going "
+"across them to bring the insulation up to the required level."
 msgstr ""
 "Mae atig wedi'i inswleiddio'n llawn os oes ganddo fwy na 270mm (tua 10-11 "
 "modfedd) o inswleiddiad sy'n gorchuddio'r atig cyfan, fel arfer wedi'i osod "
 "ar 'lawr' yr atig gydag un haen rhwng y coed llorweddol a haen arall yn mynd "
 "ar eu traws i godi'r deunydd inswleiddio i'r lefel ofynnol."
 
-#: help_to_heat/templates/frontdoor/loft-insulation.html:24
+#: help_to_heat/templates/frontdoor/loft-insulation.html:21
+msgid ""
+"A loft with less than 100 mm of insulation could benefit from additional "
+"insulation."
+msgstr ""
+"Byddai atig â llai na 100 mm o inswleiddiad ar ei ennill pe bai’n cael "
+"rhagor o inswleiddiad."
+
+#: help_to_heat/templates/frontdoor/loft-insulation.html:27
 #: help_to_heat/templates/frontdoor/wall-insulation.html:28
 msgid "Help me answer this question"
 msgstr "Helpwch fi i ateb y cwestiwn yma"
 
-#: help_to_heat/templates/frontdoor/loft-insulation.html:29
+#: help_to_heat/templates/frontdoor/loft-insulation.html:32
 msgid ""
 "If your home was built after 2002, or you have installed loft insulation "
 "since 2002, it is likely that it is fully insulated."
@@ -1874,6 +1882,14 @@ msgstr ""
 "Os cafodd eich aelwyd ei adeiladu ar ôl 2002, neu os ydych chi wedi gosod "
 "inswleiddiad yn yr atig ers 2002, mae'n debygol ei fod wedi'i inswleiddio'n "
 "llawn."
+
+#: help_to_heat/templates/frontdoor/loft-insulation.html:35
+msgid ""
+"If you have insulation above the level of the joist it is likely to be more "
+"than 100 mm thick already."
+msgstr ""
+"Os oes gennych chi inswleiddiad uwchben lefel y distiau mae’n debygol o fod "
+"yn fwy na 100 mm o drwch yn barod."
 
 #: help_to_heat/templates/frontdoor/loft.html:5
 msgid ""
@@ -3043,3 +3059,9 @@ msgstr "Darganfyddwch a allwch chi gael cymorth gan eich cyngor lleol drwy'r "
 #: help_to_heat/templates/macros.html:127
 msgid "Household Support Fund"
 msgstr "Gronfa Cymorth i Aelwydydd"
+
+#~ msgid "Yes, there is at least 270mm of insulation in my loft"
+#~ msgstr "Ydy, mae o leiaf 270mm o inswleiddio yn fy atig i"
+
+#~ msgid "No, there is less than 270mm of insulation in my loft"
+#~ msgstr "Nac ydy, mae llai na 270mm o inswleiddio yn fy atig i "
