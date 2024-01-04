@@ -46,8 +46,8 @@ def calculate_eligibility(session_data):
     # ECO4 and GBIS scenario 2 - private rented (tenant or landlord)
     if country in country_council_tax_bands:
         if own_property in (
-                "No, I am a tenant",
-                "Yes, I am the property owner but I lease the property to one or more tenants",
+            "No, I am a tenant",
+            "Yes, I am the property owner but I lease the property to one or more tenants",
         ):
             if epc_rating in ("E", "F", "G", "Not found"):
                 if benefits in ("Yes",):
@@ -58,14 +58,6 @@ def calculate_eligibility(session_data):
         if own_property in ("No, I am a social housing tenant",):
             if epc_rating in ("D", "E", "F", "G", "Not found"):
                 if benefits in ("Yes",):
-                    return ("GBIS", "ECO4")
-                
-    # Scenario 2
-    if country in country_council_tax_bands:
-        if council_tax_band in country_council_tax_bands[country]["ineligible"]:
-            if epc_rating in ("E", "F", "G", "Not found"):
-                if benefits in ("Yes",):
-                    logger.error("Scenario 2")
                     return ("GBIS", "ECO4")
 
     # Scenario 3
