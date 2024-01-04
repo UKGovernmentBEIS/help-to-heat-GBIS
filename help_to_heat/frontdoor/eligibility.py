@@ -20,8 +20,6 @@ country_council_tax_bands = {
 
 def calculate_eligibility(session_data):
     """
-    Calculate which schemes the user is able to use.  Based literally on the logic in the Mural file
-    (hence why it is illogical)
     :param session_data:
     :return: A tuple of which schemes the person is eligible for, if any
     """
@@ -65,14 +63,12 @@ def calculate_eligibility(session_data):
         if council_tax_band in country_council_tax_bands[country]["eligible"]:
             if epc_rating in ("D", "E", "F", "G", "Not found"):
                 if benefits in ("No",):
-                    logger.error("Scenario 3a")
                     return ("GBIS",)
 
     if country in country_council_tax_bands:
         if council_tax_band in country_council_tax_bands[country]["eligible"]:
             if epc_rating in ("D", "Not Found"):
                 if benefits in ("Yes",):
-                    logger.error("Scenario 3b")
                     return ("GBIS",)
 
     # Scenario 3.1
@@ -80,7 +76,6 @@ def calculate_eligibility(session_data):
         if council_tax_band in country_council_tax_bands[country]["ineligible"]:
             if epc_rating in ("D", "Not Found"):
                 if benefits in ("Yes",):
-                    logger.error("Scenario 3.1")
                     return ("GBIS",)
 
     # Scenario 4
@@ -88,7 +83,6 @@ def calculate_eligibility(session_data):
         if council_tax_band in country_council_tax_bands[country]["ineligible"]:
             if epc_rating in ("D", "E", "F", "G"):
                 if benefits in ("No",):
-                    logger.error("Scenario 4")
                     return ()
 
     # Scenario 5
@@ -96,7 +90,6 @@ def calculate_eligibility(session_data):
         if council_tax_band in country_council_tax_bands[country]["ineligible"]:
             if epc_rating in ("Not found"):
                 if benefits in ("No",):
-                    logger.error("Scenario 5")
                     return ()
 
     return ()
