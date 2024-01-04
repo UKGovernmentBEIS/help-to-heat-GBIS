@@ -393,11 +393,16 @@ class AddressView(PageView):
 @register_page("epc-select")
 class EpcSelectView(PageView):
     def format_address(self, a):
-        return f"""{a['address']['addressLine1'] + ',' if a['address']['addressLine1'] else ''}
-                    {a['address']['addressLine2'] + ',' if a['address']['addressLine2'] else ''}
-                    {a['address']['addressLine3'] + ',' if a['address']['addressLine3'] else ''}
-                    {a['address']['addressLine4'] + ',' if a['address']['addressLine4'] else ''}
-                    {a['address']['town']}, {a['address']['postcode']}"""
+        return f"""{
+        a['address']['addressLine1'] + ', ' if a['address']['addressLine1'] else ''
+        }{
+        a['address']['addressLine2'] + ', ' if a['address']['addressLine2'] else ''
+        }{
+        a['address']['addressLine3'] + ', ' if a['address']['addressLine3'] else ''
+        }{
+        a['address']['addressLine4'] + ', ' if a['address']['addressLine4'] else ''
+        }{
+        a['address']['town']}, {a['address']['postcode']}"""
 
     def get_context(self, request, session_id, *args, **kwargs):
         data = interface.api.session.get_answer(session_id, "address")
@@ -416,7 +421,7 @@ class EpcSelectView(PageView):
 
         try:
             epc = interface.api.epc.get_epc_details(rrn)
-        except Exception as e:
+        except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
             interface.api.session.save_answer(
                 session_id,
@@ -434,6 +439,7 @@ class EpcSelectView(PageView):
             return redirect("frontdoor:page", session_id=session_id, page_name="address-select")
 
         address = self.format_address(epc["data"]["assessment"])
+
         epc_details = epc["data"]["assessment"]
 
         if epc_details.get("uprn") is not None:

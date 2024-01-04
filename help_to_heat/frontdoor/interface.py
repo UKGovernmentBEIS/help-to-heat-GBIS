@@ -196,7 +196,7 @@ class Session(Entity):
         referral = portal.models.Referral.objects.create(session_id=session_id, data=data, supplier=supplier)
         referral_data = {"id": referral.id, "session_id": referral.session_id, "data": referral.data}
         return referral_data
-    
+
 
 class Address(Entity):
     @with_schema(load=FindAddressesSchema, dump=AddressSchema(many=True))

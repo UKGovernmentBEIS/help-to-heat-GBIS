@@ -13,7 +13,7 @@
       "uprn": "001234567890",
       "lodgementDate": "2020-02-29",
       "currentEnergyEfficiencyRating": 62,
-      "currentEnergyEfficiencyBand": "e",
+      "currentEnergyEfficiencyBand": "c",
       "potentialEnergyEfficiencyRating": 0,
       "potentialEnergyEfficiencyBand": "a",
       "propertyType": "Mid-floor flat",

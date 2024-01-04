@@ -1,15 +1,16 @@
-import datetime
-from http import HTTPStatus
-import random
-import requests
-import string
 import unittest
 import uuid
+from http import HTTPStatus
+
+import requests
 
 from help_to_heat.frontdoor import interface
-from help_to_heat.frontdoor.mock_epc_api import MockEPCApi, MockNotFoundEPCApi, MockUnauthorizedEPCApi
+from help_to_heat.frontdoor.mock_epc_api import (
+    MockEPCApi,
+    MockNotFoundEPCApi,
+    MockUnauthorizedEPCApi,
+)
 from help_to_heat.frontdoor.mock_os_api import MockOSApi
-from help_to_heat.portal import models
 
 from . import utils
 
@@ -67,7 +68,7 @@ def test_get_address():
 def test_get_epc():
     assert interface.api.epc.get_address_and_epc_rrn("22", "FL23 4JA")
     found_epc = interface.api.epc.get_epc_details("1111-1111-1111-1111-1111")
-    assert found_epc["data"]["assessment"].get("currentEnergyEfficiencyBand").upper() == "C"
+    assert found_epc["data"]["assessment"].get("currentEnergyEfficiencyBand").upper() == "E"
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)

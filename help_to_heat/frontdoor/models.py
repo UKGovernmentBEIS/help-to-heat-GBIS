@@ -11,8 +11,10 @@ class Event(utils.TimeStampedModel):
     name = models.CharField(max_length=256)
     data = models.JSONField(encoder=DjangoJSONEncoder)
 
+
 class AccessToken(utils.TimeStampedModel):
     access_token = models.CharField(max_length=65535)
+
 
 class Answer(utils.UUIDPrimaryKeyBase, utils.TimeStampedModel):
     data = models.JSONField(encoder=DjangoJSONEncoder, editable=False)

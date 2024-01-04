@@ -1,13 +1,9 @@
-import datetime
 import unittest
 import uuid
 
 from help_to_heat.frontdoor import interface
 from help_to_heat.frontdoor.eligibility import calculate_eligibility
 from help_to_heat.frontdoor.mock_epc_api import MockEPCApi
-from help_to_heat.frontdoor.mock_os_api import MockOSApi
-from help_to_heat.portal import models
-from help_to_heat.frontdoor import models
 
 from . import utils
 
@@ -321,6 +317,7 @@ def test_ineligible_shortcut():
         for council_tax_band in eligible_council_tax[country]["ineligible"]:
             for epc_rating in ("D", "E", "F", "G"):
                 _do_test(country=country, council_tax_band=council_tax_band, epc_rating=epc_rating)
+
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def _do_test(country, council_tax_band, epc_rating):
