@@ -30,6 +30,7 @@ def calculate_eligibility(session_data):
     country = session_data.get("country")
     benefits = session_data.get("benefits")
     property_type = session_data.get("property_type")
+    own_property = session_data.get("own_property")
 
     # "Scenario 0"
     if property_type == "Park home":
@@ -57,6 +58,14 @@ def calculate_eligibility(session_data):
         if own_property in ("No, I am a social housing tenant",):
             if epc_rating in ("D", "E", "F", "G", "Not found"):
                 if benefits in ("Yes",):
+                    return ("GBIS", "ECO4")
+                
+    # Scenario 2
+    if country in country_council_tax_bands:
+        if council_tax_band in country_council_tax_bands[country]["ineligible"]:
+            if epc_rating in ("E", "F", "G", "Not found"):
+                if benefits in ("Yes",):
+                    logger.error("Scenario 2")
                     return ("GBIS", "ECO4")
 
     # Scenario 3
