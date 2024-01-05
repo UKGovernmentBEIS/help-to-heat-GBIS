@@ -233,6 +233,7 @@ def _do_happy_flow(supplier="EON"):
     assert page.has_text("Please confirm that you agree to the use of your information by checking this box")
     form = page.get_form()
     form["permission"] = True
+    form["acknowledge"] = True
 
     page = form.submit().follow()
 
@@ -622,6 +623,7 @@ def test_referral_email():
     assert page.has_text("Please confirm that you agree to the use of your information by checking this box")
     form = page.get_form()
     form["permission"] = True
+    form["acknowledge"] = True
 
     page = form.submit().follow()
 
@@ -780,6 +782,7 @@ def test_referral_not_providing_email():
     assert page.has_text("Please confirm that you agree to the use of your information by checking this box")
     form = page.get_form()
     form["permission"] = True
+    form["acknowledge"] = True
 
     page = form.submit().follow()
 
@@ -830,6 +833,7 @@ def test_referral_not_providing_contact_number():
     assert page.has_text("Please confirm that you agree to the use of your information by checking this box")
     form = page.get_form()
     form["permission"] = True
+    form["acknowledge"] = True
 
     page = form.submit().follow()
 
