@@ -29,67 +29,43 @@ def calculate_eligibility(session_data):
     benefits = session_data.get("benefits")
     property_type = session_data.get("property_type")
     own_property = session_data.get("own_property")
+    park_home_main_residence = session_data.get("park_home_main_residence", "No")
+    household_income = session_data.get("household_income")
 
-    # "Scenario 0"
-    if property_type == "Park home":
+    # scenario 1
+    if country not in ["England", "Scotland", "Wales"]:
+        return ()
+
+    is_in_eligible_council_band = council_tax_band in country_council_tax_bands[country]["eligible"]
+
+    if own_property == "No, I am a social housing tenant":
+        # scenario 31
+        if epc_rating in ["A", "B", "C"]:
+            return ()
+
+        # scenario 32
+        return "GBIS", "ECO4"
+
+    # scenario 2, 15
+    if property_type == "Park home" and park_home_main_residence == "No":
+        return ()
+
+    # scenario 3, 7, 11, 16, 20, 27
+    if epc_rating in ["A", "B", "C"]:
+        return ()
+
+    # scenario 4, 8, 14, 17, 22, 24, 28
+    if benefits == "Yes":
+        return "GBIS", "ECO4"
+
+    # scenario 5, 9, 12, 19, 23, 25, 29
+    if household_income == "Less than £31,000 a year":
+        return "GBIS", "ECO4"
+
+    # scenario 6, 10, 18, 21, 26
+    if property_type == "Park home" or is_in_eligible_council_band:
         return ("GBIS",)
 
-    # ECO4 and GBIS scenario 1 - home owner
-    if country in country_council_tax_bands:
-        if own_property in ("Yes, I own my property and live in it",):
-            if epc_rating in ("D", "E", "F", "G", "Not found"):
-                if benefits in ("Yes",):
-                    return ("GBIS", "ECO4")
-
-    # ECO4 and GBIS scenario 2 - private rented (tenant or landlord)
-    if country in country_council_tax_bands:
-        if own_property in (
-            "No, I am a tenant",
-            "Yes, I am the property owner but I lease the property to one or more tenants",
-        ):
-            if epc_rating in ("E", "F", "G", "Not found"):
-                if benefits in ("Yes",):
-                    return ("GBIS", "ECO4")
-
-    # ECO4 and GBIS scenario 3 - social housing tenant
-    if country in country_council_tax_bands:
-        if own_property in ("No, I am a social housing tenant",):
-            if epc_rating in ("D", "E", "F", "G", "Not found"):
-                if benefits in ("Yes",):
-                    return ("GBIS", "ECO4")
-
-    # Scenario 3
-    if country in country_council_tax_bands:
-        if council_tax_band in country_council_tax_bands[country]["eligible"]:
-            if epc_rating in ("D", "E", "F", "G", "Not found"):
-                if benefits in ("No",):
-                    return ("GBIS",)
-
-    if country in country_council_tax_bands:
-        if council_tax_band in country_council_tax_bands[country]["eligible"]:
-            if epc_rating in ("D", "Not Found"):
-                if benefits in ("Yes",):
-                    return ("GBIS",)
-
-    # Scenario 3.1
-    if country in country_council_tax_bands:
-        if council_tax_band in country_council_tax_bands[country]["ineligible"]:
-            if epc_rating in ("D", "Not Found"):
-                if benefits in ("Yes",):
-                    return ("GBIS",)
-
-    # Scenario 4
-    if country in country_council_tax_bands:
-        if council_tax_band in country_council_tax_bands[country]["ineligible"]:
-            if epc_rating in ("D", "E", "F", "G"):
-                if benefits in ("No",):
-                    return ()
-
-    # Scenario 5
-    if country in country_council_tax_bands:
-        if council_tax_band in country_council_tax_bands[country]["ineligible"]:
-            if epc_rating in ("Not found"):
-                if benefits in ("No",):
-                    return ()
-
+    # there are no other options left other than
+    # scenario 13, 30
     return ()
