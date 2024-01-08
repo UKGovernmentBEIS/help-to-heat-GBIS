@@ -2,183 +2,489 @@ import datetime
 import unittest
 import uuid
 
+import pytest
+
 from help_to_heat.frontdoor import interface
-from help_to_heat.frontdoor.eligibility import calculate_eligibility
+from help_to_heat.frontdoor.eligibility import country_council_tax_bands, calculate_eligibility
 from help_to_heat.frontdoor.mock_os_api import MockOSApi
 from help_to_heat.portal import models
 
 from . import utils
 
-result_map = {
-    "GBIS": ("GBIS",),
-    "ECO4": ("ECO4",),
-    "NONE": (),
-    "BOTH": ("GBIS", "ECO4"),
-}
 
-scenarios = (
-    (
-        {
-            "benefits": "Yes",
-            "epc_rating": "D",
-            "country": "England",
-            "own_property": "Yes, I own my property and live in it",
-        },
-        "BOTH",
-    ),
-    (
-        {
-            "benefits": "Yes",
-            "epc_rating": "G",
-            "country": "England",
-            "own_property": "Yes, I own my property and live in it",
-        },
-        "BOTH",
-    ),
-    (
-        {
-            "benefits": "Yes",
-            "epc_rating": "D",
-            "country": "England",
-            "own_property": "No, I am a social housing tenant",
-        },
-        "BOTH",
-    ),
-    (
-        {
-            "benefits": "Yes",
-            "epc_rating": "E",
-            "country": "England",
-            "own_property": "No, I am a tenant",
-        },
-        "BOTH",
-    ),
-    (
-        {
-            "council_tax_band": "D",
-            "benefits": "No",
-            "epc_rating": "E",
-            "country": "England",
-            "own_property": "Yes, I own my property and live in it",
-        },
-        "GBIS",
-    ),
-    (
-        {
-            "council_tax_band": "D",
-            "benefits": "Yes",
-            "epc_rating": "D",
-            "country": "England",
-            "own_property": "No, I am a tenant",
-        },
-        "GBIS",
-    ),
-    (
-        {
-            "council_tax_band": "F",
-            "benefits": "No",
-            "epc_rating": "D",
-            "country": "England",
-        },
-        "NONE",
-    ),
-    (
-        {
-            "council_tax_band": "F",
-            "benefits": "Yes",
-            "epc_rating": "D",
-            "country": "England",
-            "own_property": "No, I am a tenant",
-        },
-        "GBIS",
-    ),
-    (
-        {
-            "council_tax_band": "F",
-            "benefits": "No",
-            "country": "England",
-        },
-        "NONE",
-    ),
-)
+# useful slices of tax codes
+epc_ABC = ("A", "B", "C")
+epc_DEFGU = ("D", "E", "F", "G", "Not found")
+epc_FG = ("F", "G")
+epc_DEU = ("D", "E", "Not found")
+epcs = ("A", "B", "C", "D", "E", "F", "G")
 
-unknown_epc_scenarios = (
-    (
-        {
-            "council_tax_band": "B",
-            "benefits": "Yes",
-            "country": "England",
-            "own_property": "Yes, I own my property and live in it",
-        },
-        "BOTH",
-    ),
-    (
-        {
-            "council_tax_band": "G",
-            "benefits": "Yes",
-            "country": "England",
-            "own_property": "Yes, I own my property and live in it",
-        },
-        "BOTH",
-    ),
-    (
-        {
-            "council_tax_band": "D",
-            "benefits": "No",
-            "country": "England",
-            "own_property": "Yes, I own my property and live in it",
-        },
-        "GBIS",
-    ),
-    (
-        {
-            "council_tax_band": "D",
-            "benefits": "Yes",
-            "country": "England",
-            "own_property": "No, I am a tenant",
-        },
-        "BOTH",
-    ),
-    (
-        {
-            "council_tax_band": "F",
-            "benefits": "No",
-            "country": "England",
-        },
-        "NONE",
-    ),
-    (
-        {
-            "council_tax_band": "F",
-            "benefits": "Yes",
-            "country": "England",
-            "own_property": "No, I am a tenant",
-        },
-        "BOTH",
-    ),
-    (
-        {
-            "council_tax_band": "F",
-            "benefits": "No",
-            "country": "England",
-        },
-        "NONE",
-    ),
-)
+yes = "Yes"
+no = "No"
+yes_no = (yes, no)
+own_property_owner = "Yes, I own my property and live in it"
+own_property_tenant = "No, I am a tenant"
+own_property_landlord = "Yes, I am the property owner but I lease the property to one or more tenants"
+own_property_social_housing = "No, I am a social housing tenant"
+own_property_tenant_landlord = (own_property_tenant, own_property_landlord)
+own_property_options = (own_property_owner, own_property_tenant, own_property_landlord, own_property_social_housing)
+countries_england_scotland_wales = ("England", "Scotland", "Wales")
+countries_not_england_scotland_wales = ("Northern Ireland",)
+countries = countries_england_scotland_wales + countries_not_england_scotland_wales
+council_tax_bands = ("A", "B", "C", "D", "E", "F", "G", "H", "I")
+household_income_less_than_31k = "Less than £31,000 a year"
+household_income_more_than_31k = "£31,000 or more a year"
+household_incomes = (household_income_less_than_31k, household_income_more_than_31k)
+property_type_park_home = "Park home"
+property_types_not_park_home = ("House", "Bungalow", "Apartment, flat or maisonette")
+property_types = property_types_not_park_home + (property_type_park_home,)
+
+accept_both = ("ECO4", "GBIS")
+accept_gbis = ("GBIS",)
+deny = ()
 
 
-def test_eligibility():
-    for data, expected in scenarios:
-        result = calculate_eligibility(data)
-        expected = result_map[expected]
-        assert expected == result, (data, expected, result)
+@pytest.mark.parametrize("country", countries_not_england_scotland_wales)
+@pytest.mark.parametrize("property_type", property_types)
+@pytest.mark.parametrize("council_tax_band", council_tax_bands)
+@pytest.mark.parametrize("epc_rating", epcs)
+# a country not in england or wales should fail no matter what else is input
+# however testing all other possibilities is too much, so varying only a subset
+def test_scenario_1(country, property_type, council_tax_band, epc_rating):
+    assert _run_scenario(country, own_property_owner, property_type, yes, council_tax_band, epc_rating,
+                         yes, household_income_less_than_31k) == deny
 
 
-def test_eligibility_unknown_epc():
-    for data, expected in unknown_epc_scenarios:
-        result = calculate_eligibility(data)
-        expected = result_map[expected]
-        assert expected == result, (data, expected, result)
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("council_tax_band", council_tax_bands)
+@pytest.mark.parametrize("epc_rating", epcs)
+@pytest.mark.parametrize("benefits", yes_no)
+@pytest.mark.parametrize("household_income", household_incomes)
+def test_scenario_2(country, council_tax_band, epc_rating, benefits, household_income):
+    own_property = own_property_owner
+    property_type = property_type_park_home
+    park_home_main_residence = no
+
+    assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                         benefits, household_income) == deny
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("council_tax_band", council_tax_bands)
+@pytest.mark.parametrize("epc_rating", epc_ABC)
+@pytest.mark.parametrize("benefits", yes_no)
+@pytest.mark.parametrize("household_income", household_incomes)
+def test_scenario_3(country, council_tax_band, epc_rating, benefits, household_income):
+    own_property = own_property_owner
+    property_type = property_type_park_home
+    park_home_main_residence = yes
+
+    assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                         benefits, household_income) == deny
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("council_tax_band", council_tax_bands)
+@pytest.mark.parametrize("epc_rating", epc_DEFGU)
+@pytest.mark.parametrize("household_income", household_incomes)
+def test_scenario_4(country, council_tax_band, epc_rating, household_income):
+    own_property = own_property_owner
+    property_type = property_type_park_home
+    park_home_main_residence = yes
+    benefits = yes
+
+    assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                         benefits, household_income) == accept_both
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("council_tax_band", council_tax_bands)
+@pytest.mark.parametrize("epc_rating", epc_DEFGU)
+def test_scenario_5(country, council_tax_band, epc_rating):
+    own_property = own_property_owner
+    property_type = property_type_park_home
+    park_home_main_residence = yes
+    benefits = no
+    household_income = household_income_less_than_31k
+
+    assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                         benefits, household_income) == accept_both
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("council_tax_band", council_tax_bands)
+@pytest.mark.parametrize("epc_rating", epc_DEFGU)
+def test_scenario_6(country, council_tax_band, epc_rating):
+    own_property = own_property_owner
+    property_type = property_type_park_home
+    park_home_main_residence = yes
+    benefits = no
+    household_income = household_income_more_than_31k
+
+    assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                         benefits, household_income) == accept_gbis
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_ABC)
+@pytest.mark.parametrize("benefits", yes_no)
+@pytest.mark.parametrize("household_income", household_incomes)
+def test_scenario_7(country, property_type, park_home_main_residence, epc_rating, benefits, household_income):
+    own_property = own_property_owner
+
+    for council_tax_band in country_council_tax_bands[country]["eligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == deny
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_DEFGU)
+@pytest.mark.parametrize("household_income", household_incomes)
+def test_scenario_8(country, property_type, park_home_main_residence, epc_rating, household_income):
+    own_property = own_property_owner
+    benefits = yes
+
+    for council_tax_band in country_council_tax_bands[country]["eligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == accept_gbis
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_DEFGU)
+def test_scenario_9(country, property_type, park_home_main_residence, epc_rating):
+    own_property = own_property_owner
+    benefits = no
+    household_income = household_income_less_than_31k
+
+    for council_tax_band in country_council_tax_bands[country]["eligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == accept_both
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_DEFGU)
+def test_scenario_10(country, property_type, park_home_main_residence, epc_rating):
+    own_property = own_property_owner
+    benefits = no
+    household_income = household_income_more_than_31k
+
+    for council_tax_band in country_council_tax_bands[country]["eligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == accept_gbis
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_ABC)
+@pytest.mark.parametrize("benefits", yes_no)
+@pytest.mark.parametrize("household_income", household_incomes)
+def test_scenario_11(country, property_type, park_home_main_residence, epc_rating, benefits, household_income):
+    own_property = own_property_owner
+
+    for council_tax_band in country_council_tax_bands[country]["ineligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == deny
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_DEFGU)
+@pytest.mark.parametrize("household_income", household_incomes)
+def test_scenario_14(country, property_type, park_home_main_residence, epc_rating, household_income):
+    own_property = own_property_owner
+    benefits = yes
+
+    for council_tax_band in country_council_tax_bands[country]["ineligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == accept_gbis
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_DEFGU)
+def test_scenario_12(country, property_type, park_home_main_residence, epc_rating):
+    own_property = own_property_owner
+    benefits = no
+    household_income = household_income_less_than_31k
+
+    for council_tax_band in country_council_tax_bands[country]["ineligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == accept_both
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_DEFGU)
+def test_scenario_13(country, property_type, park_home_main_residence, epc_rating):
+    own_property = own_property_owner
+    benefits = no
+    household_income = household_income_more_than_31k
+
+    for council_tax_band in country_council_tax_bands[country]["ineligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == deny
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("own_property", own_property_tenant_landlord)
+@pytest.mark.parametrize("council_tax_band", council_tax_bands)
+@pytest.mark.parametrize("epc_rating", epcs)
+@pytest.mark.parametrize("benefits", yes_no)
+@pytest.mark.parametrize("household_income", household_incomes)
+def test_scenario_15(country, own_property, council_tax_band, epc_rating, benefits, household_income):
+    property_type = property_type_park_home
+    park_home_main_residence = no
+
+    assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                         benefits, household_income) == deny
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("own_property", own_property_tenant_landlord)
+@pytest.mark.parametrize("council_tax_band", council_tax_bands)
+@pytest.mark.parametrize("epc_rating", epc_ABC)
+@pytest.mark.parametrize("benefits", yes_no)
+@pytest.mark.parametrize("household_income", household_incomes)
+def test_scenario_16(country, own_property, council_tax_band, epc_rating, benefits, household_income):
+    property_type = property_type_park_home
+    park_home_main_residence = yes
+
+    assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                         benefits, household_income) == deny
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("own_property", own_property_tenant_landlord)
+@pytest.mark.parametrize("council_tax_band", council_tax_bands)
+@pytest.mark.parametrize("epc_rating", epc_DEFGU)
+@pytest.mark.parametrize("household_income", household_incomes)
+def test_scenario_17(country, own_property, council_tax_band, epc_rating, household_income):
+    property_type = property_type_park_home
+    park_home_main_residence = yes
+    benefits = yes
+
+    assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                         benefits, household_income) == accept_both
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("own_property", own_property_tenant_landlord)
+@pytest.mark.parametrize("council_tax_band", council_tax_bands)
+@pytest.mark.parametrize("epc_rating", epc_DEFGU)
+def test_scenario_19(country, own_property, council_tax_band, epc_rating):
+    property_type = property_type_park_home
+    park_home_main_residence = yes
+    benefits = no
+    household_income = household_income_less_than_31k
+
+    assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                         benefits, household_income) == accept_both
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("own_property", own_property_tenant_landlord)
+@pytest.mark.parametrize("council_tax_band", council_tax_bands)
+@pytest.mark.parametrize("epc_rating", epc_DEFGU)
+def test_scenario_18(country, own_property, council_tax_band, epc_rating):
+    own_property = own_property_owner
+    property_type = property_type_park_home
+    park_home_main_residence = yes
+    benefits = no
+    household_income = household_income_more_than_31k
+
+    assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                         benefits, household_income) == accept_gbis
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("own_property", own_property_tenant_landlord)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_ABC)
+@pytest.mark.parametrize("benefits", yes_no)
+@pytest.mark.parametrize("household_income", household_incomes)
+def test_scenario_20(country, own_property, property_type, park_home_main_residence, epc_rating, benefits, household_income):
+    for council_tax_band in country_council_tax_bands[country]["eligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == deny
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("own_property", own_property_tenant_landlord)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_FG)
+@pytest.mark.parametrize("household_income", household_incomes)
+def test_scenario_22(country, own_property, property_type, park_home_main_residence, epc_rating, household_income):
+    benefits = yes
+    for council_tax_band in country_council_tax_bands[country]["eligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == accept_both
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("own_property", own_property_tenant_landlord)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_FG)
+def test_scenario_23(country, own_property, property_type, park_home_main_residence, epc_rating):
+    benefits = yes
+    household_income = household_income_less_than_31k
+    for council_tax_band in country_council_tax_bands[country]["eligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == accept_both
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("own_property", own_property_tenant_landlord)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_FG)
+def test_scenario_21(country, own_property, property_type, park_home_main_residence, epc_rating):
+    benefits = yes
+    household_income = household_income_more_than_31k
+    for council_tax_band in country_council_tax_bands[country]["eligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == accept_gbis
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("own_property", own_property_tenant_landlord)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_DEU)
+@pytest.mark.parametrize("household_income", household_incomes)
+def test_scenario_24(country, own_property, property_type, park_home_main_residence, epc_rating, household_income):
+    benefits = yes
+    for council_tax_band in country_council_tax_bands[country]["eligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == accept_both
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("own_property", own_property_tenant_landlord)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_DEU)
+def test_scenario_25(country, own_property, property_type, park_home_main_residence, epc_rating):
+    benefits = yes
+    household_income = household_income_less_than_31k
+    for council_tax_band in country_council_tax_bands[country]["eligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == accept_both
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("own_property", own_property_tenant_landlord)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_DEU)
+def test_scenario_26(country, own_property, property_type, park_home_main_residence, epc_rating):
+    benefits = yes
+    household_income = household_income_more_than_31k
+    for council_tax_band in country_council_tax_bands[country]["eligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == accept_gbis
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("own_property", own_property_tenant_landlord)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_ABC)
+@pytest.mark.parametrize("benefits", yes_no)
+@pytest.mark.parametrize("household_income", household_incomes)
+def test_scenario_27(country, own_property, property_type, park_home_main_residence, epc_rating, benefits, household_income):
+    for council_tax_band in country_council_tax_bands[country]["ineligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == deny
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("own_property", own_property_tenant_landlord)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_DEFGU)
+@pytest.mark.parametrize("household_income", household_incomes)
+def test_scenario_28(country, own_property, property_type, park_home_main_residence, epc_rating, household_income):
+    benefits = yes
+    for council_tax_band in country_council_tax_bands[country]["ineligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == accept_both
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("own_property", own_property_tenant_landlord)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_DEFGU)
+def test_scenario_29(country, own_property, property_type, park_home_main_residence, epc_rating):
+    benefits = no
+    household_income = household_income_less_than_31k
+    for council_tax_band in country_council_tax_bands[country]["ineligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == accept_both
+
+
+@pytest.mark.parametrize("country", countries_england_scotland_wales)
+@pytest.mark.parametrize("own_property", own_property_tenant_landlord)
+@pytest.mark.parametrize("property_type", property_types_not_park_home)
+@pytest.mark.parametrize("park_home_main_residence", yes_no)
+@pytest.mark.parametrize("epc_rating", epc_DEFGU)
+def test_scenario_30(country, own_property, property_type, park_home_main_residence, epc_rating):
+    benefits = no
+    household_income = household_income_more_than_31k
+    for council_tax_band in country_council_tax_bands[country]["ineligible"]:
+        assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
+                             benefits, household_income) == deny
+
+
+@pytest.mark.parametrize("country", countries_not_england_scotland_wales)
+@pytest.mark.parametrize("council_tax_band", council_tax_bands)
+@pytest.mark.parametrize("epc_rating", epc_ABC)
+@pytest.mark.parametrize("benefits", yes_no)
+@pytest.mark.parametrize("household_income", household_incomes)
+def test_scenario_31(country, property_type, council_tax_band, epc_rating, benefits, household_income):
+    assert _run_scenario(country, own_property_owner, property_type, yes, council_tax_band, epc_rating,
+                         benefits, household_income) == deny
+
+
+@pytest.mark.parametrize("country", countries_not_england_scotland_wales)
+@pytest.mark.parametrize("council_tax_band", council_tax_bands)
+@pytest.mark.parametrize("epc_rating", epc_DEFGU)
+@pytest.mark.parametrize("benefits", yes_no)
+@pytest.mark.parametrize("household_income", household_incomes)
+def test_scenario_32(country, property_type, council_tax_band, epc_rating, benefits, household_income):
+    assert _run_scenario(country, own_property_owner, property_type, yes, council_tax_band, epc_rating,
+                         benefits, household_income) == accept_both
+
+
+def _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating, benefits, household_income):
+    return calculate_eligibility({
+        "country": country,
+        "property_type": property_type,
+        "own_property": own_property,
+        "park_home_main_residence": park_home_main_residence,
+        "council_tax_band": council_tax_band,
+        "epc_rating": epc_rating,
+        "benefits": benefits,
+        "household_income": household_income
+    })
+
+
+
 
 
 eligible_council_tax = {
@@ -196,103 +502,6 @@ eligible_council_tax = {
         "ineligible": ("F", "G"),
     },
 }
-
-
-def test_eco4_scenario_1():
-    for country in eligible_council_tax:
-        for own_property in ("Yes, I own my property and live in it",):
-            for epc_rating in ("D", "E", "F", "G", "Not found"):
-                for benefits in ("Yes",):
-                    session_data = {
-                        "epc_rating": epc_rating,
-                        "own_property": own_property,
-                        "country": country,
-                        "benefits": benefits,
-                    }
-                    result = calculate_eligibility(session_data)
-                    expected = result_map["BOTH"]
-                    assert result == expected
-
-
-def test_eco4_scenario_2():
-    for country in eligible_council_tax:
-        for own_property in (
-            "No, I am a tenant",
-            "Yes, I am the property owner but I lease the property to one or more tenants",
-        ):
-            for epc_rating in ("E", "F", "G", "Not found"):
-                for benefits in ("Yes",):
-                    session_data = {
-                        "epc_rating": epc_rating,
-                        "own_property": own_property,
-                        "country": country,
-                        "benefits": benefits,
-                    }
-                    result = calculate_eligibility(session_data)
-                    expected = result_map["BOTH"]
-                    assert result == expected
-
-
-def test_eco4_scenario_3():
-    for country in eligible_council_tax:
-        for own_property in ("No, I am a social housing tenant",):
-            for epc_rating in ("D", "E", "F", "G", "Not found"):
-                for benefits in ("Yes",):
-                    session_data = {
-                        "epc_rating": epc_rating,
-                        "own_property": own_property,
-                        "country": country,
-                        "benefits": benefits,
-                    }
-                    result = calculate_eligibility(session_data)
-                    expected = result_map["BOTH"]
-                    assert result == expected
-
-
-def test_mural_scenario_3():
-    for country in eligible_council_tax:
-        for council_tax_band in eligible_council_tax[country]["eligible"]:
-            for epc_rating in ("D", "E", "F", "G"):
-                for benefits in ("No",):
-                    session_data = {
-                        "epc_rating": epc_rating,
-                        "council_tax_band": council_tax_band,
-                        "country": country,
-                        "benefits": benefits,
-                    }
-                    result = calculate_eligibility(session_data)
-                    expected = result_map["GBIS"]
-                    assert result == expected
-
-    for country in eligible_council_tax:
-        for council_tax_band in eligible_council_tax[country]["eligible"]:
-            for epc_rating in "D":
-                for benefits in ("Yes",):
-                    session_data = {
-                        "epc_rating": epc_rating,
-                        "council_tax_band": council_tax_band,
-                        "country": country,
-                        "benefits": benefits,
-                    }
-                    result = calculate_eligibility(session_data)
-                    expected = result_map["GBIS"]
-                    assert result == expected
-
-
-def test_mural_scenario_3_1():
-    for country in eligible_council_tax:
-        for council_tax_band in eligible_council_tax[country]["ineligible"]:
-            for epc_rating in "D":
-                for benefits in ("Yes",):
-                    session_data = {
-                        "epc_rating": epc_rating,
-                        "council_tax_band": council_tax_band,
-                        "country": country,
-                        "benefits": benefits,
-                    }
-                    result = calculate_eligibility(session_data)
-                    expected = result_map["GBIS"]
-                    assert result == expected
 
 
 def _add_epc(uprn, rating):
