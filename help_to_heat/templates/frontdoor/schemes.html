@@ -16,7 +16,7 @@
           {{csrf_input}}
           <div class="govuk-form-group">
             <h1 class="govuk-heading-l">{{_("Information based on your answers")}}</h1>
-            <p class="govuk-body">{{_("Based on your answers you can register for help through:")}}</p>
+            <p class="govuk-body">{{_("Based on your answers you are eligible to be considered for the Great British Insulation Scheme. Although you are eligible, you are not guaranteed to be assisted by this scheme.")}}</p>
           </div>
 
           <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
@@ -25,8 +25,11 @@
               <p class="govuk-notification-banner__heading">
 
                 <h2 class="govuk-heading-m">{{eligible_schemes|join(", ")}}</h2>
-                <p class="govuk-body">{{_("You can create a referral to your home energy supplier, which will get in touch to arrange an assessment of your home. This will identify which insulation measures would be most suitable, to help you to keep your home warm and save you money on your energy bills. They will also advise where any additional help with the energy efficiency of your home is available.")}}</p>
-                <p class="govuk-body">{{_("Depending on the outcome of the assessment, you may be asked to make a financial contribution for an installation to go ahead. It would then be your decision whether you wish to proceed.")}}</p>
+                <p class="govuk-body">{{_("The Great British Insulation Scheme is delivered by energy suppliers. They will assess your home, either through a desktop assessment or by arranging a visit to your home. What the energy supplier can offer will depend on this assessment.")}}</p>
+                <p class="govuk-body">{{_("If you need to pay anything, you’ll find out after the assessment. You can decide not to go ahead if you do not agree with the assessment or costs.")}}</p>
+                <p class="govuk-body">{{_("The most common measures installed under this scheme are loft insulation or cavity wall insulation. These may require a financial contribution. Other insulation measures such as solid wall insulation may be available, but the energy supplier is only likely to offer them to you with a substantial financial contribution.")}}</p>
+                <p class="govuk-body">{{_("If you are comfortable with this then in the next step you can create a referral that will be sent to your chosen energy supplier.")}}</p>
+                <p class="govuk-body">{{_("By submitting a referral through this service your energy supplier will also check if you are eligible for additional help through the government’s ECO4 scheme. ECO4 is available for households on low incomes, receiving qualifying benefits, or who are vulnerable to the effects of living in a cold home.")}}</p>
               </p>
             </div>
           </div>

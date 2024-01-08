@@ -355,11 +355,11 @@ check_your_answers_options_map = {
         "No loft": _("No loft"),
     },
     "loft_insulation": {
-        "Yes, there is at least 270mm of insulation in my loft": _(
-            "Yes, there is at least 270mm of insulation in my loft"
+        "I have more than 100 mm of loft insulation": _(
+            "I have more than 100 mm of loft insulation"
         ),
-        "No, there is less than 270mm of insulation in my loft": _(
-            "No, there is less than 270mm of insulation in my loft"
+        "I have up to 100 mm of loft insulation": _(
+            "I have up to 100 mm of loft insulation"
         ),
         "I don't know": _("I don't know"),
         "No loft": _("No loft"),
@@ -581,12 +581,12 @@ supplier_options = (
 epc_rating_options = ("A", "B", "C", "D", "E", "F", "G", "H", "Not found")
 loft_insulation_options_map = (
     {
-        "value": "Yes, there is at least 270mm of insulation in my loft",
-        "label": _("Yes, there is at least 270mm of insulation in my loft"),
+        "value": "I have more than 100 mm of loft insulation",
+        "label": _("I have more than 100 mm of loft insulation"),
     },
     {
-        "value": "No, there is less than 270mm of insulation in my loft",
-        "label": _("No, there is less than 270mm of insulation in my loft"),
+        "value": "I have up to 100 mm of loft insulation",
+        "label": _("I have up to 100 mm of loft insulation"),
     },
     {
         "value": "I don't know",
