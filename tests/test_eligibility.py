@@ -112,10 +112,10 @@ def _do_test(country, council_tax_band, epc_rating):
 
 
 # useful slices of tax codes
-epc_ABC = ("A", "B", "C")
-epc_DEFGU = ("D", "E", "F", "G", "Not found")
-epc_FG = ("F", "G")
-epc_DEU = ("D", "E", "Not found")
+epc_abc = ("A", "B", "C")
+epc_defgu = ("D", "E", "F", "G", "Not found")
+epc_fg = ("F", "G")
+epc_deu = ("D", "E", "Not found")
 epcs = ("A", "B", "C", "D", "E", "F", "G")
 
 yes = "Yes"
@@ -142,12 +142,7 @@ accept_both = ("GBIS", "ECO4")
 accept_gbis = ("GBIS",)
 deny = ()
 
-count = 0
-
 def _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating, benefits, household_income):
-    global count
-    count += 1
-    print(count)
     return calculate_eligibility({
         "country": country,
         "property_type": property_type,
@@ -181,7 +176,7 @@ def test_scenario_3():
     property_type = property_type_park_home
     park_home_main_residence = yes
 
-    for (country, council_tax_band, epc_rating, benefits, household_income) in itertools.product(countries_england_scotland_wales, council_tax_bands, epc_ABC, yes_no, household_incomes):
+    for (country, council_tax_band, epc_rating, benefits, household_income) in itertools.product(countries_england_scotland_wales, council_tax_bands, epc_abc, yes_no, household_incomes):
         assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                              benefits, household_income) == deny
 
@@ -192,7 +187,7 @@ def test_scenario_4():
     park_home_main_residence = yes
     benefits = yes
 
-    for (country, council_tax_band, epc_rating, household_income) in itertools.product(countries_england_scotland_wales, council_tax_bands, epc_DEFGU, household_incomes):
+    for (country, council_tax_band, epc_rating, household_income) in itertools.product(countries_england_scotland_wales, council_tax_bands, epc_defgu, household_incomes):
         assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                              benefits, household_income) == accept_both
 
@@ -204,7 +199,7 @@ def test_scenario_5():
     benefits = no
     household_income = household_income_less_than_31k
 
-    for (country, council_tax_band, epc_rating) in itertools.product(countries_england_scotland_wales, council_tax_bands, epc_DEFGU):
+    for (country, council_tax_band, epc_rating) in itertools.product(countries_england_scotland_wales, council_tax_bands, epc_defgu):
         assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                              benefits, household_income) == accept_both
 
@@ -216,7 +211,7 @@ def test_scenario_6():
     benefits = no
     household_income = household_income_more_than_31k
 
-    for (country, council_tax_band, epc_rating) in itertools.product(countries_england_scotland_wales, council_tax_bands, epc_DEFGU):
+    for (country, council_tax_band, epc_rating) in itertools.product(countries_england_scotland_wales, council_tax_bands, epc_defgu):
         assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                              benefits, household_income) == accept_gbis
 
@@ -224,7 +219,7 @@ def test_scenario_6():
 def test_scenario_7():
     own_property = own_property_owner
 
-    for (country, property_type, park_home_main_residence, epc_rating, benefits, household_income) in itertools.product(countries_england_scotland_wales, property_types_not_park_home, yes_no, epc_ABC, yes_no, household_incomes):
+    for (country, property_type, park_home_main_residence, epc_rating, benefits, household_income) in itertools.product(countries_england_scotland_wales, property_types_not_park_home, yes_no, epc_abc, yes_no, household_incomes):
         for council_tax_band in country_council_tax_bands[country]["eligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == deny
@@ -234,7 +229,7 @@ def test_scenario_8():
     own_property = own_property_owner
     benefits = yes
 
-    for (country, property_type, park_home_main_residence, epc_rating, household_income) in itertools.product(countries_england_scotland_wales, property_types_not_park_home, yes_no, epc_DEFGU, household_incomes):
+    for (country, property_type, park_home_main_residence, epc_rating, household_income) in itertools.product(countries_england_scotland_wales, property_types_not_park_home, yes_no, epc_defgu, household_incomes):
         for council_tax_band in country_council_tax_bands[country]["eligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == accept_both
@@ -245,7 +240,7 @@ def test_scenario_9():
     benefits = no
     household_income = household_income_less_than_31k
 
-    for (country, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, property_types_not_park_home, yes_no, epc_DEFGU):
+    for (country, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, property_types_not_park_home, yes_no, epc_defgu):
         for council_tax_band in country_council_tax_bands[country]["eligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == accept_both
@@ -256,7 +251,7 @@ def test_scenario_10():
     benefits = no
     household_income = household_income_more_than_31k
 
-    for (country, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, property_types_not_park_home, yes_no, epc_DEFGU):
+    for (country, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, property_types_not_park_home, yes_no, epc_defgu):
         for council_tax_band in country_council_tax_bands[country]["eligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == accept_gbis
@@ -265,7 +260,7 @@ def test_scenario_10():
 def test_scenario_11():
     own_property = own_property_owner
 
-    for (country, property_type, park_home_main_residence, epc_rating, benefits, household_income) in itertools.product(countries_england_scotland_wales, property_types_not_park_home, yes_no, epc_ABC, yes_no, household_incomes):
+    for (country, property_type, park_home_main_residence, epc_rating, benefits, household_income) in itertools.product(countries_england_scotland_wales, property_types_not_park_home, yes_no, epc_abc, yes_no, household_incomes):
         for council_tax_band in country_council_tax_bands[country]["ineligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == deny
@@ -276,7 +271,7 @@ def test_scenario_12():
     benefits = no
     household_income = household_income_less_than_31k
 
-    for (country, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, property_types_not_park_home, yes_no, epc_DEFGU):
+    for (country, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, property_types_not_park_home, yes_no, epc_defgu):
         for council_tax_band in country_council_tax_bands[country]["ineligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == accept_both
@@ -287,7 +282,7 @@ def test_scenario_13():
     benefits = no
     household_income = household_income_more_than_31k
 
-    for (country, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, property_types_not_park_home, yes_no, epc_DEFGU):
+    for (country, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, property_types_not_park_home, yes_no, epc_defgu):
         for council_tax_band in country_council_tax_bands[country]["ineligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == deny
@@ -297,7 +292,7 @@ def test_scenario_14():
     own_property = own_property_owner
     benefits = yes
 
-    for (country, property_type, park_home_main_residence, epc_rating, household_income) in itertools.product(countries_england_scotland_wales, property_types_not_park_home, yes_no, epc_DEFGU, household_incomes):
+    for (country, property_type, park_home_main_residence, epc_rating, household_income) in itertools.product(countries_england_scotland_wales, property_types_not_park_home, yes_no, epc_defgu, household_incomes):
         for council_tax_band in country_council_tax_bands[country]["ineligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == accept_both
@@ -316,7 +311,7 @@ def test_scenario_16():
     property_type = property_type_park_home
     park_home_main_residence = yes
 
-    for (country, own_property, council_tax_band, epc_rating, benefits, household_income) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, council_tax_bands, epc_ABC, yes_no, household_incomes):
+    for (country, own_property, council_tax_band, epc_rating, benefits, household_income) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, council_tax_bands, epc_abc, yes_no, household_incomes):
         assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                              benefits, household_income) == deny
 
@@ -326,7 +321,7 @@ def test_scenario_17():
     park_home_main_residence = yes
     benefits = yes
 
-    for (country, own_property, council_tax_band, epc_rating, household_income) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, council_tax_bands, epc_DEFGU, household_incomes):
+    for (country, own_property, council_tax_band, epc_rating, household_income) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, council_tax_bands, epc_defgu, household_incomes):
         assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                              benefits, household_income) == accept_both
 
@@ -337,7 +332,7 @@ def test_scenario_18():
     benefits = no
     household_income = household_income_more_than_31k
 
-    for (country, own_property, council_tax_band, epc_rating) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, council_tax_bands, epc_DEFGU):
+    for (country, own_property, council_tax_band, epc_rating) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, council_tax_bands, epc_defgu):
         assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                              benefits, household_income) == accept_gbis
 
@@ -348,13 +343,13 @@ def test_scenario_19():
     benefits = no
     household_income = household_income_less_than_31k
 
-    for (country, own_property, council_tax_band, epc_rating) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, council_tax_bands, epc_DEFGU):
+    for (country, own_property, council_tax_band, epc_rating) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, council_tax_bands, epc_defgu):
         assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                              benefits, household_income) == accept_both
 
 
 def test_scenario_20():
-    for (country, own_property, property_type, park_home_main_residence, epc_rating, benefits, household_income) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_ABC, yes_no, household_incomes):
+    for (country, own_property, property_type, park_home_main_residence, epc_rating, benefits, household_income) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_abc, yes_no, household_incomes):
         for council_tax_band in country_council_tax_bands[country]["eligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == deny
@@ -364,7 +359,7 @@ def test_scenario_21():
     benefits = no
     household_income = household_income_more_than_31k
 
-    for (country, own_property, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_FG):
+    for (country, own_property, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_fg):
         for council_tax_band in country_council_tax_bands[country]["eligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == accept_gbis
@@ -373,7 +368,7 @@ def test_scenario_21():
 def test_scenario_22():
     benefits = yes
 
-    for (country, own_property, property_type, park_home_main_residence, epc_rating, household_income) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_FG, household_incomes):
+    for (country, own_property, property_type, park_home_main_residence, epc_rating, household_income) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_fg, household_incomes):
         for council_tax_band in country_council_tax_bands[country]["eligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == accept_both
@@ -383,7 +378,7 @@ def test_scenario_23():
     benefits = no
     household_income = household_income_less_than_31k
 
-    for (country, own_property, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_FG):
+    for (country, own_property, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_fg):
         for council_tax_band in country_council_tax_bands[country]["eligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == accept_both
@@ -392,7 +387,7 @@ def test_scenario_23():
 def test_scenario_24():
     benefits = yes
 
-    for (country, own_property, property_type, park_home_main_residence, epc_rating, household_income) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_DEU, household_incomes):
+    for (country, own_property, property_type, park_home_main_residence, epc_rating, household_income) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_deu, household_incomes):
         for council_tax_band in country_council_tax_bands[country]["eligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == accept_both
@@ -402,7 +397,7 @@ def test_scenario_25():
     benefits = no
     household_income = household_income_less_than_31k
 
-    for (country, own_property, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_DEU):
+    for (country, own_property, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_deu):
         for council_tax_band in country_council_tax_bands[country]["eligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == accept_both
@@ -412,14 +407,14 @@ def test_scenario_26():
     benefits = no
     household_income = household_income_more_than_31k
 
-    for (country, own_property, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_DEU):
+    for (country, own_property, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_deu):
         for council_tax_band in country_council_tax_bands[country]["eligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == accept_gbis
 
 
 def test_scenario_27():
-    for (country, own_property, property_type, park_home_main_residence, epc_rating, benefits, household_income) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_ABC, yes_no, household_incomes):
+    for (country, own_property, property_type, park_home_main_residence, epc_rating, benefits, household_income) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_abc, yes_no, household_incomes):
         for council_tax_band in country_council_tax_bands[country]["ineligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == deny
@@ -428,7 +423,7 @@ def test_scenario_27():
 def test_scenario_28():
     benefits = yes
 
-    for (country, own_property, property_type, park_home_main_residence, epc_rating, household_income) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_DEFGU, household_incomes):
+    for (country, own_property, property_type, park_home_main_residence, epc_rating, household_income) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_defgu, household_incomes):
         for council_tax_band in country_council_tax_bands[country]["ineligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == accept_both
@@ -438,7 +433,7 @@ def test_scenario_29():
     benefits = no
     household_income = household_income_less_than_31k
 
-    for (country, own_property, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_DEFGU):
+    for (country, own_property, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_defgu):
         for council_tax_band in country_council_tax_bands[country]["ineligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == accept_both
@@ -448,19 +443,19 @@ def test_scenario_30():
     benefits = no
     household_income = household_income_more_than_31k
 
-    for (country, own_property, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_DEFGU):
+    for (country, own_property, property_type, park_home_main_residence, epc_rating) in itertools.product(countries_england_scotland_wales, own_property_tenant_landlord, property_types_not_park_home, yes_no, epc_defgu):
         for council_tax_band in country_council_tax_bands[country]["ineligible"]:
             assert _run_scenario(country, own_property, property_type, park_home_main_residence, council_tax_band, epc_rating,
                                  benefits, household_income) == deny
 
 
 def test_scenario_31():
-    for (country, property_type, park_home_main_residence, council_tax_band, epc_rating, benefits, household_income) in itertools.product(countries_england_scotland_wales, property_types, yes_no, council_tax_bands, epc_ABC, yes_no, household_incomes):
+    for (country, property_type, park_home_main_residence, council_tax_band, epc_rating, benefits, household_income) in itertools.product(countries_england_scotland_wales, property_types, yes_no, council_tax_bands, epc_abc, yes_no, household_incomes):
         assert _run_scenario(country, own_property_social_housing, property_type, park_home_main_residence, council_tax_band, epc_rating,
                              benefits, household_income) == deny
 
 
 def test_scenario_32():
-    for (country, property_type, park_home_main_residence, council_tax_band, epc_rating, benefits, household_income) in itertools.product(countries_england_scotland_wales, property_types, yes_no, council_tax_bands, epc_DEFGU, yes_no, household_incomes):
+    for (country, property_type, park_home_main_residence, council_tax_band, epc_rating, benefits, household_income) in itertools.product(countries_england_scotland_wales, property_types, yes_no, council_tax_bands, epc_defgu, yes_no, household_incomes):
         assert _run_scenario(country, own_property_social_housing, property_type, park_home_main_residence, council_tax_band, epc_rating,
                              benefits, household_income) == accept_both
