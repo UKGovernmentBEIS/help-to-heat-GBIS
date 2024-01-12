@@ -3053,14 +3053,3 @@ msgstr "Darganfyddwch a allwch chi gael cymorth gan eich cyngor lleol drwy'r "
 #: help_to_heat/templates/macros.html:127
 msgid "Household Support Fund"
 msgstr "Gronfa Cymorth i Aelwydydd"
-
-#, fuzzy
-#~| msgid ""
-#~| "Please confirm that you agree to the use of your information by checking "
-#~| "this box"
-#~ msgid ""
-#~ "Please confirm that you acknowledge that you will be subject to further "
-#~ "checks by checking this box"
-#~ msgstr ""
-#~ "Rhowch gadarnhad eich bod yn cytuno i'ch gwybodaeth gael ei defnyddio "
-#~ "drwy roi tic yn y blwch hwn"
