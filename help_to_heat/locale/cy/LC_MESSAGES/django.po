@@ -179,7 +179,7 @@ msgstr "Nage"
 #: help_to_heat/frontdoor/schemas.py:342 help_to_heat/frontdoor/schemas.py:364
 #: help_to_heat/frontdoor/schemas.py:476 help_to_heat/frontdoor/schemas.py:494
 #: help_to_heat/frontdoor/schemas.py:593
-msgid "I don't know"
+msgid "I do not know"
 msgstr "Wn i ddim"
 
 #: help_to_heat/frontdoor/schemas.py:240
@@ -293,7 +293,7 @@ msgid "Mix of solid and cavity walls"
 msgstr "Cymysgedd o waliau solet a waliau ceudod"
 
 #: help_to_heat/frontdoor/schemas.py:335 help_to_heat/frontdoor/schemas.py:468
-msgid "I don't see my option listed"
+msgid "I do not see my option listed"
 msgstr "Dwi ddim yn gweld bod fy opsiwn i wedi'i restru"
 
 #: help_to_heat/frontdoor/schemas.py:339 help_to_heat/frontdoor/schemas.py:482
@@ -309,11 +309,11 @@ msgid "No they are not insulated"
 msgstr "Na, dydyn nhw ddim wedi'u hinswleiddio"
 
 #: help_to_heat/frontdoor/schemas.py:346 help_to_heat/frontdoor/schemas.py:500
-msgid "Yes, I have a loft that hasn't been converted into a room"
+msgid "Yes, I have a loft that has not been converted into a room"
 msgstr "Oes, mae gen i atig sydd heb ei droi'n ystafell"
 
 #: help_to_heat/frontdoor/schemas.py:349 help_to_heat/frontdoor/schemas.py:504
-msgid "No, I don't have a loft or my loft has been converted into a room"
+msgid "No, I do not have a loft or my loft has been converted into a room"
 msgstr "Nac oes, does gen i ddim atig neu mae fy atig i wedi'i droi'n ystafell"
 
 #: help_to_heat/frontdoor/schemas.py:353 help_to_heat/frontdoor/schemas.py:510
@@ -875,7 +875,7 @@ msgid "No addresses found"
 msgstr "Dim cyfeiriadau wedi’u canfod"
 
 #: help_to_heat/templates/frontdoor/address-select.html:25
-msgid "I can't find my address. I want to enter it manually"
+msgid "I cannot find my address. I want to enter it manually"
 msgstr "Dwi'n methu gweld fy nghyfeiriad i. Hoffwn ei roi fy hunan."
 
 #: help_to_heat/templates/frontdoor/address.html:5
@@ -1043,7 +1043,7 @@ msgstr ""
 msgid ""
 "This information is used to determine the level of support you can get. "
 "There is energy-saving help for those who receive benefits as well as those "
-"who don't."
+"who do not."
 msgstr ""
 "Mae'r wybodaeth yma'n cael ei defnyddio i bennu lefel y cymorth y gallwch ei "
 "gael. Mae yna gymorth arbed ynni i'r rhai sy'n cael budd-daliadau yn ogystal "
@@ -1899,7 +1899,7 @@ msgstr ""
 "Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/loft.html:14
-msgid "Do you have a loft that hasn't been converted into a room?"
+msgid "Do you have a loft that has not been converted into a room?"
 msgstr "Oes gennych chi atig sydd heb ei droi'n ystafell?"
 
 #: help_to_heat/templates/frontdoor/loft.html:20

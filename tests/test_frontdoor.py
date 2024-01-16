@@ -149,8 +149,8 @@ def _answer_house_questions(page, session_id, benefits_answer, epc_rating="D", s
     assert page.has_one("h1:contains('Are your walls insulated?')")
     page = _check_page(page, "wall-insulation", "wall_insulation", "No they are not insulated")
 
-    assert page.has_one("""h1:contains("Do you have a loft that hasn't been converted into a room?")""")
-    page = _check_page(page, "loft", "loft", "Yes, I have a loft that hasn't been converted into a room")
+    assert page.has_one("""h1:contains("Do you have a loft that has not been converted into a room?")""")
+    page = _check_page(page, "loft", "loft", "Yes, I have a loft that has not been converted into a room")
 
     assert page.has_one("h1:contains('Is there access to your loft?')")
     page = _check_page(page, "loft-access", "loft_access", "Yes, there is access to my loft")

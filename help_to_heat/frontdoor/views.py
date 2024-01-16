@@ -526,7 +526,7 @@ class LoftView(PageView):
     def save_data(self, request, session_id, page_name, *args, **kwargs):
         data = request.POST.dict()
         loft = data.get("loft")
-        if loft == "No, I don't have a loft or my loft has been converted into a room":
+        if loft == "No, I do not have a loft or my loft has been converted into a room":
             data["loft_access"] = "No loft"
             data["loft_insulation"] = "No loft"
         data = interface.api.session.save_answer(session_id, page_name, data)
@@ -535,7 +535,7 @@ class LoftView(PageView):
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         prev_page_name, next_page_name = get_prev_next_page_name(page_name)
         loft = data.get("loft")
-        if loft == "No, I don't have a loft or my loft has been converted into a room":
+        if loft == "No, I do not have a loft or my loft has been converted into a room":
             next_page_name = "summary"
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
@@ -554,7 +554,7 @@ class LoftInsulationView(PageView):
     def get_prev_next_urls(self, session_id, page_name):
         loft_data = interface.api.session.get_answer(session_id, "loft")
 
-        if loft_data.get("loft", None) == "Yes, I have a loft that hasn't been converted into a room":
+        if loft_data.get("loft", None) == "Yes, I have a loft that has not been converted into a room":
             _, next_page_url = get_prev_next_urls(session_id, page_name)
             prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="loft-access"))
             return prev_page_url, next_page_url
