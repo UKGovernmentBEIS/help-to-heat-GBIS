@@ -28,7 +28,6 @@ referral_column_headings = (
     "benefits",
     "household_income",
     "uprn",
-    "rrn",
     "address_line_1",
     "postcode",
     "address",
@@ -256,13 +255,11 @@ def add_extra_row_data(referral, exclude_pii=False):
         contact_number = row.get("contact_number")
         contact_number = '="' + contact_number + '"'
         uprn = row.get("uprn")
-        rrn = row.get("rrn")
         uprn = '="' + str(uprn) + '"' if uprn else ""
         row = {
             **row,
             "contact_number": contact_number,
             "uprn": uprn,
-            "rrn": rrn,
         }
 
     row = {

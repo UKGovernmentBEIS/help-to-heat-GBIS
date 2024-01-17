@@ -11,50 +11,37 @@ __here__ = pathlib.Path(__file__).parent
 DATA_DIR = __here__ / "mock_epc_api_data"
 
 
-class MockEPCApi:
-    files = {
-        "address_and_rrn": "sample_address_and_rrn_response.json",
-        "epc": "sample_epc_response.json",
-        "access_token": "sample_token_response.json",
-    }
+def load_test_reponse(file_name):
+    content = (DATA_DIR / file_name).read_text()
+    return json.loads(content)
 
+
+class MockEPCApi:
     def __init__(self, token):
         self.token = token
 
     def get_address_and_rrn(self, building, postcode):
-        content = (DATA_DIR / MockEPCApi.files["address_and_rrn"]).read_text()
-        return json.loads(content)
+        return load_test_reponse("sample_address_and_rrn_response.json")
 
     def get_epc_details(self, rrn):
-        content = (DATA_DIR / MockEPCApi.files["epc"]).read_text()
-        return json.loads(content)
+        return load_test_reponse("sample_epc_response.json")
 
     def get_access_token(self):
-        content = (DATA_DIR / MockEPCApi.files["access_token"]).read_text()
-        return json.loads(content)
+        return load_test_reponse("sample_token_response.json")
 
 
 class MockEPCApiWithEPCC:
-    files = {
-        "address_and_rrn": "sample_address_and_rrn_response.json",
-        "epc": "sample_epc_response_with_epc_c.json",
-        "access_token": "sample_token_response.json",
-    }
-
     def __init__(self, token):
         self.token = token
 
     def get_address_and_rrn(self, building, postcode):
-        content = (DATA_DIR / MockEPCApiWithEPCC.files["address_and_rrn"]).read_text()
-        return json.loads(content)
+        return load_test_reponse("sample_address_and_rrn_response.json")
 
     def get_epc_details(self, rrn):
-        content = (DATA_DIR / MockEPCApiWithEPCC.files["epc"]).read_text()
-        return json.loads(content)
+        return load_test_reponse("sample_epc_response_with_epc_c.json")
 
     def get_access_token(self):
-        content = (DATA_DIR / MockEPCApiWithEPCC.files["access_token"]).read_text()
-        return json.loads(content)
+        return load_test_reponse("sample_token_response.json")
 
 
 class MockUnauthorizedEPCApi(MockEPCApi):

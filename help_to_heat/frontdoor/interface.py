@@ -73,12 +73,11 @@ class FullAddressSchema(marshmallow.Schema):
 
 
 class GetScottishEPCSchema(marshmallow.Schema):
-    uprn = marshmallow.fields.Integer()
-    country = marshmallow.fields.String()
+    uprn = marshmallow.fields.String()
 
 
 class EPCSchema(marshmallow.Schema):
-    uprn = marshmallow.fields.Integer()
+    uprn = marshmallow.fields.String()
     rating = marshmallow.fields.String(validate=marshmallow.validate.OneOf(schemas.epc_rating_options))
     date = marshmallow.fields.Date()
 
@@ -460,7 +459,7 @@ class EPC(Entity):
     def get_epc_scotland(self, uprn):
         try:
             epc = portal.models.ScottishEpcRating.objects.get(uprn=uprn)
-        except (portal.models.EpcRating.DoesNotExist, portal.models.ScottishEpcRating.DoesNotExist):
+        except portal.models.ScottishEpcRating.DoesNotExist:
             epc = None
         if epc:
             data = {"uprn": epc.uprn, "rating": epc.rating, "date": epc.date}

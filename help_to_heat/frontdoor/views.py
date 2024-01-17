@@ -193,6 +193,22 @@ def get_prev_next_urls(session_id, page_name):
     return prev_page_url, next_page_url
 
 
+def reset_epc_details(session_id):
+    interface.api.session.save_answer(
+        session_id,
+        "epc-select",
+        {
+            "rrn": "",
+            "epc_details": {},
+            "uprn": "",
+            "property_main_heat_source": "",
+            "epc_rating": "Not found",
+            "accept_suggested_epc": "Not found",
+            "epc_date": "",
+        },
+    )
+
+
 class PageView(utils.MethodDispatcher):
     def get(self, request, session_id, page_name, data=None, errors=None, is_change_page=False):
         if not errors:
@@ -363,6 +379,7 @@ class AddressView(PageView):
         building_name_or_number = data["building_name_or_number"]
         postcode = data["postcode"]
         country = interface.api.session.get_answer(session_id, "country")["country"]
+        reset_epc_details(session_id)
         try:
             if country == "Scotland":
                 return redirect("frontdoor:page", session_id=session_id, page_name="address-select")
@@ -374,35 +391,22 @@ class AddressView(PageView):
                 return redirect("frontdoor:page", session_id=session_id, page_name="epc-select")
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
-            interface.api.session.save_answer(
-                session_id,
-                "epc-select",
-                {
-                    "rrn": "",
-                    "epc_details": {},
-                    "uprn": "",
-                    "property_main_heat_source": "",
-                    "epc_rating": "Not found",
-                    "accept_suggested_epc": "Not found",
-                    "epc_date": "",
-                },
-            )
             return redirect("frontdoor:page", session_id=session_id, page_name="address-select")
 
 
 @register_page("epc-select")
 class EpcSelectView(PageView):
-    def format_address(self, a):
-        return f"""{
-        a['address']['addressLine1'] + ', ' if a['address']['addressLine1'] else ''
-        }{
-        a['address']['addressLine2'] + ', ' if a['address']['addressLine2'] else ''
-        }{
-        a['address']['addressLine3'] + ', ' if a['address']['addressLine3'] else ''
-        }{
-        a['address']['addressLine4'] + ', ' if a['address']['addressLine4'] else ''
-        }{
-        a['address']['town']}, {a['address']['postcode']}"""
+    def format_address(self, address):
+        address_parts = [
+            address["addressLine1"],
+            address["addressLine2"],
+            address["addressLine3"],
+            address["addressLine4"],
+            address["town"],
+            address["postcode"],
+        ]
+        non_empty_address_parts = filter(None, address_parts)
+        return ", ".join(non_empty_address_parts)
 
     def get_context(self, request, session_id, *args, **kwargs):
         data = interface.api.session.get_answer(session_id, "address")
@@ -410,7 +414,7 @@ class EpcSelectView(PageView):
         rrn_options = tuple(
             {
                 "value": a["epcRrn"],
-                "label": self.format_address(a),
+                "label": self.format_address(a["address"]),
             }
             for a in address_and_rrn_details
         )
@@ -423,42 +427,23 @@ class EpcSelectView(PageView):
             epc = interface.api.epc.get_epc_details(rrn)
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
-            interface.api.session.save_answer(
-                session_id,
-                "epc-select",
-                {
-                    "rrn": "",
-                    "epc_details": {},
-                    "uprn": "",
-                    "property_main_heat_source": "",
-                    "epc_rating": "Not found",
-                    "accept_suggested_epc": "Not found",
-                    "epc_date": "",
-                },
-            )
+            reset_epc_details(session_id)
             return redirect("frontdoor:page", session_id=session_id, page_name="address-select")
 
-        address = self.format_address(epc["data"]["assessment"])
-
+        address = self.format_address(epc["data"]["assessment"]["address"])
         epc_details = epc["data"]["assessment"]
 
-        if epc_details.get("uprn") is not None:
-            uprn = epc_details.get("uprn")
-        else:
-            uprn = ""
-
-        if epc_details.get("mainHeatingDescription") is not None:
-            property_main_heat_source = epc_details.get("mainHeatingDescription")
-        else:
-            property_main_heat_source = ""
+        uprn = epc_details.get("uprn")
+        heat_source = epc_details.get("mainHeatingDescription")
 
         epc_data = {
             "rrn": rrn,
             "address": address,
             "epc_details": epc_details,
-            "uprn": uprn,
-            "property_main_heat_source": property_main_heat_source,
+            "uprn": uprn if uprn is not None else "",
+            "property_main_heat_source": heat_source if heat_source is not None else "",
         }
+
         data = interface.api.session.save_answer(session_id, page_name, epc_data)
         return data
 
@@ -505,20 +490,8 @@ class AddressManualView(PageView):
         data = interface.api.session.save_answer(session_id, page_name, data)
         return data
 
-    def handle_post(self, request, session_id, page_name, data, is_change_page):
-        interface.api.session.save_answer(
-            session_id,
-            "epc-select",
-            {
-                "rrn": "",
-                "epc_details": {},
-                "uprn": "",
-                "property_main_heat_source": "",
-                "epc_rating": "Not found",
-                "accept_suggested_epc": "Not found",
-                "epc_date": "",
-            },
-        )
+    def handle_post(self, request, session_id, page_name, data, is_change_page):  # noq E501
+        reset_epc_details(session_id)
         return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
@@ -542,31 +515,26 @@ class EpcView(PageView):
         if country == "Scotland":
             uprn = session_data.get("uprn")
             address = session_data.get("address")
-            country = session_data.get("country")
-            if uprn:
-                epc = interface.api.epc.get_epc_scotland(uprn, country)
-            else:
-                epc = {}
+            epc = interface.api.epc.get_epc_scotland(uprn) if uprn else {}
+
             context = {
                 "epc_rating": epc.get("rating"),
                 "epc_date": epc.get("date"),
                 "epc_display_options": schemas.epc_display_options_map,
                 "address": address,
             }
+
             return context
         else:
             rrn = session_data.get("rrn")
             address = session_data.get("address")
             context = {}
-            if rrn:
-                epc = session_data.get("epc_details")
-            else:
-                epc = {}
+            epc = session_data.get("epc_details") if rrn else {}
+
+            epc_band = epc.get("currentEnergyEfficiencyBand")
 
             context = {
-                "epc_rating": epc.get("currentEnergyEfficiencyBand").upper()
-                if epc.get("currentEnergyEfficiencyBand")
-                else "",
+                "epc_rating": epc_band.upper() if epc_band else "",
                 "epc_date": epc.get("lodgementDate"),
                 "epc_display_options": schemas.epc_display_options_map,
                 "address": address,
@@ -579,21 +547,14 @@ class EpcView(PageView):
 
         if country == "Scotland":
             uprn = session_data.get("uprn")
-            country = session_data.get("country")
-            uprn = session_data.get("uprn")
-            if uprn:
-                epc = interface.api.epc.get_epc_scotland(uprn, country)
-            else:
-                epc = {}
+            epc = interface.api.epc.get_epc_scotland(uprn) if uprn else {}
+
             if not epc:
                 return redirect("frontdoor:page", session_id=session_id, page_name="benefits")
             return super().handle_get(response, request, session_id, page_name, context)
         else:
             rrn = session_data.get("rrn")
-            if rrn:
-                epc = session_data.get("epc_details")
-            else:
-                epc = {}
+            epc = session_data.get("epc_details") if rrn else {}
             if not epc:
                 return redirect("frontdoor:page", session_id=session_id, page_name="benefits")
             return super().handle_get(response, request, session_id, page_name, context)

@@ -294,8 +294,8 @@ def test_mural_scenario_3_1():
 
 
 def _add_epc():
-    assert interface.api.epc.get_address_and_epc_rrn("10", "SW1A 2AA")
-    assert interface.api.epc.get_epc_details("1111-1111-1111-1111-1111")
+    assert interface.api.epc.get_address_and_epc_rrn("22", "FL23 4JA")
+    assert interface.api.epc.get_epc_details("2222-2222-2222-2222-2222")
 
 
 def _make_check_page(session_id):
@@ -348,22 +348,18 @@ def _do_test(country, council_tax_band, epc_rating):
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
-    form["building_name_or_number"] = "10"
-    form["postcode"] = "SW1A 2AA"
+    form["building_name_or_number"] = "22"
+    form["postcode"] = "FL23 4JA"
     page = form.submit().follow()
 
-    data = interface.api.session.get_answer(session_id, page_name="address")
-    # assert data["building_name_or_number"] == "10"
-    # assert data["postcode"] == "SW1A 2AA"
-
     form = page.get_form()
-    form["rrn"] = "1111-1111-1111-1111-1111"
+    form["rrn"] = "2222-2222-2222-2222-2222"
 
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="epc-select")
-    # assert data["rrn"] == "1111-1111-1111-1111-1111"
-    # assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
+    assert data["rrn"] == "2222-2222-2222-2222-2222"
+    assert data["address"] == "22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA"
 
     assert page.has_one("h1:contains('What is the council tax band of your property?')")
     page = _check_page(page, "council-tax-band", "council_tax_band", council_tax_band)
