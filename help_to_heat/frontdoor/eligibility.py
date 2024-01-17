@@ -1,7 +1,3 @@
-import logging
-
-logger = logging.getLogger(__name__)
-
 gbis = "GBIS"
 eco4 = "ECO4"
 
