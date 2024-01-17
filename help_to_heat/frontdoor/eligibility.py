@@ -20,7 +20,7 @@ def calculate_eligibility(session_data):
     park_home_main_residence = session_data.get("park_home_main_residence", "No")
     household_income = session_data.get("household_income")
 
-    if country not in ["England", "Scotland", "Wales"]:
+    if country not in ("England", "Scotland", "Wales"):
         return ()
 
     if epc_rating in ("A", "B", "C"):
