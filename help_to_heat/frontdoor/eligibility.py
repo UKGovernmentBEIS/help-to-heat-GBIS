@@ -2,20 +2,12 @@ import logging
 
 logger = logging.getLogger(__name__)
 
-country_council_tax_bands = {
-    "England": {
-        "eligible": ("A", "B", "C", "D"),
-        "ineligible": ("E", "F", "G", "H"),
-    },
-    "Scotland": {
-        "eligible": ("A", "B", "C", "D", "E"),
-        "ineligible": ("F", "G", "H"),
-    },
-    "Wales": {
-        "eligible": ("A", "B", "C", "D", "E"),
-        "ineligible": ("F", "G", "H", "I"),
-    },
-}
+def _is_eligible_council_tax_band(country, council_tax_band):
+    if country == "England":
+        return council_tax_band in ("A", "B", "C", "D")
+    if country in ("Scotland", "Wales"):
+        return council_tax_band in ("A", "B", "C", "D", "E")
+    return False
 
 
 def calculate_eligibility(session_data):
@@ -30,8 +22,6 @@ def calculate_eligibility(session_data):
 
     if country not in ["England", "Scotland", "Wales"]:
         return ()
-
-    is_in_eligible_council_band = council_tax_band in country_council_tax_bands[country]["eligible"]
 
     if own_property == "No, I am a social housing tenant":
         if epc_rating in ["A", "B", "C"]:
@@ -51,7 +41,10 @@ def calculate_eligibility(session_data):
     if household_income == "Less than £31,000 a year":
         return "GBIS", "ECO4"
 
-    if property_type == "Park home" or is_in_eligible_council_band:
+    if property_type == "Park home":
+        return ("GBIS",)
+
+    if _is_eligible_council_tax_band(country, council_tax_band):
         return ("GBIS",)
 
     return ()
