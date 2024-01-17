@@ -23,16 +23,13 @@ def calculate_eligibility(session_data):
     if country not in ["England", "Scotland", "Wales"]:
         return ()
 
-    if own_property == "No, I am a social housing tenant":
-        if epc_rating in ["A", "B", "C"]:
-            return ()
+    if epc_rating in ("A", "B", "C"):
+        return ()
 
+    if own_property == "No, I am a social housing tenant":
         return "GBIS", "ECO4"
 
     if property_type == "Park home" and park_home_main_residence == "No":
-        return ()
-
-    if epc_rating in ["A", "B", "C"]:
         return ()
 
     if benefits == "Yes":
