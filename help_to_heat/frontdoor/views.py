@@ -688,6 +688,11 @@ class SummaryView(PageView):
             for question in questions
             if self.show_question(session_data, question)
         )
+        summary_lines = tuple(
+            line
+            for line in summary_lines
+            if not (line["question"] == "Energy Performance Certificate" and line["answer"] == "Not found")
+        )
         return {"summary_lines": summary_lines}
 
     def show_question(self, session_data, question):
