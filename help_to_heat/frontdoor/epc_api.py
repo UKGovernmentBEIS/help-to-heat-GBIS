@@ -25,7 +25,7 @@ class EPCApi:
 
     def get_address_and_rrn(self, building, postcode):
         base_url = settings.EPC_API_BASE_URL
-        params = params = urllib.parse.urlencode({"postcode": postcode, "buildingNameOrNumber": building})
+        params = urllib.parse.urlencode({"postcode": postcode, "buildingNameOrNumber": building})
         url = f"{base_url}/api/assessments/domestic-epcs/search?{params}"
         return self.__api_call(url)
 
