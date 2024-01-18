@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-05 09:49+0000\n"
+"POT-Creation-Date: 2024-01-18 10:17+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -329,12 +329,12 @@ msgid "No loft"
 msgstr "Dim atig"
 
 #: help_to_heat/frontdoor/schemas.py:359 help_to_heat/frontdoor/schemas.py:585
-msgid "I have more than 100 mm of loft insulation"
-msgstr "Mae gen i fwy na 100 mm o inswleiddiad atig"
+msgid "I have more than 100mm of loft insulation"
+msgstr "Mae gen i fwy na 100mm o inswleiddiad atig"
 
 #: help_to_heat/frontdoor/schemas.py:362 help_to_heat/frontdoor/schemas.py:589
-msgid "I have up to 100 mm of loft insulation"
-msgstr "Mae gen i hyd at 100 mm o inswleiddiad atig"
+msgid "I have up to 100mm of loft insulation"
+msgstr "Mae gen i hyd at 100mm o inswleiddiad atig"
 
 #: help_to_heat/frontdoor/schemas.py:374
 msgid "Sits directly below the roof with no other flat above it"
@@ -1850,10 +1850,10 @@ msgstr "Faint o inswleiddiad atig sydd gennych chi?"
 
 #: help_to_heat/templates/frontdoor/loft-insulation.html:18
 msgid ""
-"A loft is fully insulated if it has 270 mm (about 10-11 inches) of "
-"insulation covering the whole loft, usually laid on the 'floor' of the loft "
-"with one layer between the horizontal timber joists and another layer going "
-"across them to bring the insulation up to the required level."
+"A loft is fully insulated if it has 270mm (about 10-11 inches) of insulation "
+"covering the whole loft, usually laid on the 'floor' of the loft with one "
+"layer between the horizontal timber joists and another layer going across "
+"them to bring the insulation up to the required level."
 msgstr ""
 "Mae atig wedi'i inswleiddio'n llawn os oes ganddo fwy na 270mm (tua 10-11 "
 "modfedd) o inswleiddiad sy'n gorchuddio'r atig cyfan, fel arfer wedi'i osod "
@@ -1862,11 +1862,11 @@ msgstr ""
 
 #: help_to_heat/templates/frontdoor/loft-insulation.html:21
 msgid ""
-"A loft with less than 100 mm of insulation could benefit from additional "
+"A loft with less than 100mm of insulation could benefit from additional "
 "insulation."
 msgstr ""
-"Byddai atig â llai na 100 mm o inswleiddiad ar ei ennill pe bai’n cael "
-"rhagor o inswleiddiad."
+"Byddai atig â llai na 100mm o inswleiddiad ar ei ennill pe bai’n cael rhagor "
+"o inswleiddiad."
 
 #: help_to_heat/templates/frontdoor/loft-insulation.html:27
 #: help_to_heat/templates/frontdoor/wall-insulation.html:28
@@ -1885,10 +1885,10 @@ msgstr ""
 #: help_to_heat/templates/frontdoor/loft-insulation.html:35
 msgid ""
 "If you have insulation above the level of the joist it is likely to be more "
-"than 100 mm thick already."
+"than 100mm thick already."
 msgstr ""
 "Os oes gennych chi inswleiddiad uwchben lefel y distiau mae’n debygol o fod "
-"yn fwy na 100 mm o drwch yn barod."
+"yn fwy na 100mm o drwch yn barod."
 
 #: help_to_heat/templates/frontdoor/loft.html:5
 msgid ""
