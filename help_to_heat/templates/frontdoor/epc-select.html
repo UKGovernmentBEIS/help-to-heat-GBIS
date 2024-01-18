@@ -1,0 +1,27 @@
+{% extends "frontdoor/base.html" %}
+{% import "macros.html" as macros with context %}
+
+{% block title %}
+  <title>{{_("Select the property address - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
+{% endblock %}
+
+{% block content %}
+  {% call macros.form_wrapper(prev_url) -%}
+    <div class="govuk-form-group {% if errors %}govuk-form-group--error{% endif %}">
+      <fieldset class="govuk-fieldset"{% if errors %} aria-describedby="question-uprn-error" {% endif %}>
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+          <h1 class="govuk-fieldset__heading">
+            {{_("Select your address")}}
+          </h1>
+        </legend>
+
+          {{macros.radios('rrn', rrn_options, data, errors)}}
+
+        <p>
+          <a href="{{url('frontdoor:page', session_id=session_id, page_name='address-manual')}}" class="govuk-link">{{_("I can't find my address. I want to enter it manually")}}</a>
+        </p>
+
+      </fieldset>
+    </div>
+  {% endcall %}
+{% endblock %}
