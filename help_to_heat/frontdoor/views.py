@@ -58,14 +58,14 @@ missing_item_errors = {
     "rrn": _("Select your address"),
     "town_or_city": _("Enter your Town or city"),
     "council_tax_band": _("Enter the Council Tax Band of the property"),
-    "accept_suggested_epc": _("Select if your EPC rating is correct or not, or that you don’t know"),
+    "accept_suggested_epc": _("Select if your EPC rating is correct or not, or that you do not know"),
     "benefits": _("Select if anyone in your household is receiving any benefits listed below"),
     "household_income": _("Select your household income"),
     "property_type": _("Select your property type"),
     "property_subtype": _("Select your property type"),
     "number_of_bedrooms": _("Select the number of bedrooms the property has"),
     "wall_type": _("Select the type of walls the property has"),
-    "wall_insulation": _("Select if the walls of the property are insulated or not, or if you don’t know"),
+    "wall_insulation": _("Select if the walls of the property are insulated or not, or if you do not know"),
     "loft": _("Select if you have a loft that has been converted into a room or not"),
     "loft_access": _("Select whether or not you have access to the loft"),
     "loft_insulation": _("Select whether or not your loft is fully insulated"),
@@ -638,7 +638,7 @@ class LoftView(PageView):
     def save_data(self, request, session_id, page_name, *args, **kwargs):
         data = request.POST.dict()
         loft = data.get("loft")
-        if loft == "No, I don't have a loft or my loft has been converted into a room":
+        if loft == "No, I do not have a loft or my loft has been converted into a room":
             data["loft_access"] = "No loft"
             data["loft_insulation"] = "No loft"
         data = interface.api.session.save_answer(session_id, page_name, data)
@@ -647,7 +647,7 @@ class LoftView(PageView):
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         prev_page_name, next_page_name = get_prev_next_page_name(page_name)
         loft = data.get("loft")
-        if loft == "No, I don't have a loft or my loft has been converted into a room":
+        if loft == "No, I do not have a loft or my loft has been converted into a room":
             next_page_name = "summary"
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
@@ -666,7 +666,7 @@ class LoftInsulationView(PageView):
     def get_prev_next_urls(self, session_id, page_name):
         loft_data = interface.api.session.get_answer(session_id, "loft")
 
-        if loft_data.get("loft", None) == "Yes, I have a loft that hasn't been converted into a room":
+        if loft_data.get("loft", None) == "Yes, I have a loft that has not been converted into a room":
             _, next_page_url = get_prev_next_urls(session_id, page_name)
             prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="loft-access"))
             return prev_page_url, next_page_url
