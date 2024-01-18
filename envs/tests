@@ -19,6 +19,6 @@ FROM_EMAIL="test@example.com"
 OS_API_KEY=["f4k3k3y","4n0th3r0n3"]
 EPC_API_CLIENT_ID="f4k3k3y"
 EPC_API_CLIENT_SECRET="f4k3k3y"
-EPC_API_BASE_URL="https://api.epb-staging.digital.communities.gov.uk"
+EPC_API_BASE_URL="https://api.epb.digital.communities.gov.uk"
 SUPPRESS_COOKIE_BANNER=True
 SUPPRESS_LANGUAGE_TOGGLE=True

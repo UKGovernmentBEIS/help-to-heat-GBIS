@@ -15,6 +15,6 @@ FROM_EMAIL="test@example.com"
 EMAIL_BACKEND_TYPE=CONSOLE
 BASE_URL=http://localhost:8012/
 OS_API_KEY=["f4k3k3y"]
-EPC_API_BASE_URL="https://api.epb-staging.digital.communities.gov.uk"
+EPC_API_BASE_URL="https://api.epb.digital.communities.gov.uk"
 EPC_API_CLIENT_ID="client_id"
 EPC_API_CLIENT_SECRET="client_secret"
