@@ -133,6 +133,7 @@ class Referral(utils.UUIDPrimaryKeyBase, utils.TimeStampedModel):
         on_delete=models.PROTECT,
         related_name="referral_download",
     )
+    referral_id = models.IntegerField(default=0)
 
     def __str__(self):
         return f"<referral id={self.id} supplier={self.supplier}>"
