@@ -45,6 +45,7 @@ page_order_park_home = (
 extra_pages = (
     "applications-closed",
     "address-select",
+    "epc-select",
     "address-manual",
     "loft-access",
     "loft-insulation",
@@ -58,6 +59,7 @@ extra_pages = (
 
 page_prev_next_map = {
     "address-select": {"prev": "address", "next": "council-tax-band"},
+    "epc-select": {"prev": "address", "next": "council-tax-band"},
     "address-manual": {"prev": "address", "next": "council-tax-band"},
     "loft": {"prev": "wall-insulation", "next": "loft-access"},
     "loft-access": {"prev": "loft", "next": "loft-insulation"},
@@ -76,6 +78,7 @@ page_prev_next_map = {
 
 page_prev_next_map_park_home = {
     "address-select": {"prev": "address", "next": "benefits"},
+    "epc-select": {"prev": "address", "next": "benefits"},
     "address-manual": {"prev": "address", "next": "benefits"},
     "northern-ireland": {"prev": "country", "next": None},
     "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
@@ -231,8 +234,8 @@ epc_display_options_map = (
         "label": _("No"),
     },
     {
-        "value": "I don't know",
-        "label": _("I don't know"),
+        "value": "I do not know",
+        "label": _("I do not know"),
     },
 )
 epc_validation_options_map = epc_display_options_map + (
@@ -332,21 +335,21 @@ check_your_answers_options_map = {
         "Solid walls": _("Solid walls"),
         "Cavity walls": _("Cavity walls"),
         "Mix of solid and cavity walls": _("Mix of solid and cavity walls"),
-        "I don't see my option listed": _("I don't see my option listed"),
-        "I don't know": _("I don't know"),
+        "I do not see my option listed": _("I do not see my option listed"),
+        "I do not know": _("I do not know"),
     },
     "wall_insulation": {
         "Yes they are all insulated": _("Yes they are all insulated"),
         "Some are insulated, some are not": _("Some are insulated, some are not"),
         "No they are not insulated": _("No they are not insulated"),
-        "I don't know": _("I don't know"),
+        "I do not know": _("I do not know"),
     },
     "loft": {
-        "Yes, I have a loft that hasn't been converted into a room": _(
-            "Yes, I have a loft that hasn't been converted into a room"
+        "Yes, I have a loft that has not been converted into a room": _(
+            "Yes, I have a loft that has not been converted into a room"
         ),
-        "No, I don't have a loft or my loft has been converted into a room": _(
-            "No, I don't have a loft or my loft has been converted into a room"
+        "No, I do not have a loft or my loft has been converted into a room": _(
+            "No, I do not have a loft or my loft has been converted into a room"
         ),
     },
     "loft_access": {
@@ -355,13 +358,13 @@ check_your_answers_options_map = {
         "No loft": _("No loft"),
     },
     "loft_insulation": {
-        "Yes, there is at least 270mm of insulation in my loft": _(
-            "Yes, there is at least 270mm of insulation in my loft"
+        "I have more than 100mm of loft insulation": _(
+            "I have more than 100mm of loft insulation"
         ),
-        "No, there is less than 270mm of insulation in my loft": _(
-            "No, there is less than 270mm of insulation in my loft"
+        "I have up to 100mm of loft insulation": _(
+            "I have up to 100mm of loft insulation"
         ),
-        "I don't know": _("I don't know"),
+        "I do not know": _("I do not know"),
         "No loft": _("No loft"),
     },
 }
@@ -464,16 +467,16 @@ wall_type_options_map = (
         "label": _("Mix of solid and cavity walls"),
     },
     {
-        "value": "I don't see my option listed",
-        "label": _("I don't see my option listed"),
+        "value": "I do not see my option listed",
+        "label": _("I do not see my option listed"),
         "hint": _(
             "Other wall types could include cob walls, timber framed, system built, steel framed or other "
             "non-traditional build types"
         ),
     },
     {
-        "value": "I don't know",
-        "label": _("I don't know"),
+        "value": "I do not know",
+        "label": _("I do not know"),
     },
 )
 wall_insulation_options_map = (
@@ -490,18 +493,18 @@ wall_insulation_options_map = (
         "label": _("No they are not insulated"),
     },
     {
-        "value": "I don't know",
-        "label": _("I don't know"),
+        "value": "I do not know",
+        "label": _("I do not know"),
     },
 )
 loft_options_map = (
     {
-        "value": "Yes, I have a loft that hasn't been converted into a room",
-        "label": _("Yes, I have a loft that hasn't been converted into a room"),
+        "value": "Yes, I have a loft that has not been converted into a room",
+        "label": _("Yes, I have a loft that has not been converted into a room"),
     },
     {
-        "value": "No, I don't have a loft or my loft has been converted into a room",
-        "label": _("No, I don't have a loft or my loft has been converted into a room"),
+        "value": "No, I do not have a loft or my loft has been converted into a room",
+        "label": _("No, I do not have a loft or my loft has been converted into a room"),
     },
 )
 loft_access_options_map = (
@@ -581,16 +584,16 @@ supplier_options = (
 epc_rating_options = ("A", "B", "C", "D", "E", "F", "G", "H", "Not found")
 loft_insulation_options_map = (
     {
-        "value": "Yes, there is at least 270mm of insulation in my loft",
-        "label": _("Yes, there is at least 270mm of insulation in my loft"),
+        "value": "I have more than 100mm of loft insulation",
+        "label": _("I have more than 100mm of loft insulation"),
     },
     {
-        "value": "No, there is less than 270mm of insulation in my loft",
-        "label": _("No, there is less than 270mm of insulation in my loft"),
+        "value": "I have up to 100mm of loft insulation",
+        "label": _("I have up to 100mm of loft insulation"),
     },
     {
-        "value": "I don't know",
-        "label": _("I don't know"),
+        "value": "I do not know",
+        "label": _("I do not know"),
     },
 )
 loft_insulation_validation_options_map = loft_insulation_options_map + (
@@ -702,7 +705,11 @@ class SessionSchema(Schema):
     postcode = fields.String(
         validate=validate.Regexp(postcode_regex_collection, error=_("Please enter a valid UK postcode"))
     )
-    uprn = fields.Integer()
+    uprn = fields.String()
+    rrn = fields.String()
+    epc_details = fields.Dict()
+    address_and_rrn_details = fields.List(fields.Dict)
+    property_main_heat_source = fields.String()
     address = fields.String(validate=validate.Length(max=512))
     council_tax_band = fields.String(validate=validate.OneOf(welsh_council_tax_band_options))
     accept_suggested_epc = fields.String(
