@@ -10,12 +10,12 @@
     <h1 class="govuk-heading-l">{{_("Confirm and submit")}}</h1>
     {{macros.details_summary(summary_lines)}}
 
-    <div class="govuk-form-group">
+    <div class="govuk-form-group {{ 'govuk-form-group--error' if errors else '' }}">
       <fieldset class="govuk-fieldset">
         <div class="govuk-checkboxes" data-module="govuk-checkboxes">
           {% if errors.get('permission') %}
             <p id="permission-error" class="govuk-error-message">
-              <a href="#question-permission"><span class="govuk-visually-hidden">Error:</span> {{errors.get('permission')}}</a>
+              <span class="govuk-visually-hidden">Error:</span> {{errors.get('permission')}}
             </p>
           {% endif %}
           <div class="govuk-checkboxes__item">
@@ -28,7 +28,7 @@
           </div>
           {% if errors.get('acknowledge') %}
             <p id="acknowledge-error" class="govuk-error-message">
-              <a href="#question-acknowledge"><span class="govuk-visually-hidden">Error:</span> {{errors.get('acknowledge')}}</a>
+              <span class="govuk-visually-hidden">Error:</span> {{errors.get('acknowledge')}}
             </p>
           {% endif %}
           <div class="govuk-checkboxes__item">
@@ -39,9 +39,8 @@
           </div>
         </div>
       </fieldset>
-      <br>
-      <h2 class="govuk-heading-s">{{_("What is the Energy Company Obligation?")}}</h2>
-      <p class="govuk-body">{{_("The Great British Insulation Scheme is the latest of a series of schemes that have operated since 2013 requiring energy suppliers to help people to make their homes more energy efficient. This family of schemes has been called the Energy Company Obligation (ECO). Alongside the Great British Insulation Scheme, a complementary ECO4 scheme is also operating. Households on low incomes or who are vulnerable to the effects of living in a cold home may be able to get help through this scheme.")}}</p>
     </div>
+    <h2 class="govuk-heading-s">{{_("What is the Energy Company Obligation?")}}</h2>
+    <p class="govuk-body">{{_("The Great British Insulation Scheme is the latest of a series of schemes that have operated since 2013 requiring energy suppliers to help people to make their homes more energy efficient. This family of schemes has been called the Energy Company Obligation (ECO). Alongside the Great British Insulation Scheme, a complementary ECO4 scheme is also operating. Households on low incomes or who are vulnerable to the effects of living in a cold home may be able to get help through this scheme.")}}</p>
   {%- endcall %}
 {% endblock %}
