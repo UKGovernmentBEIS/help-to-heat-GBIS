@@ -1,0 +1,34 @@
+{
+  "data": {
+    "assessment": {
+      "typeOfAssessment": "SAP",
+      "address": {
+        "addressLine1": "22 Acacia Avenue",
+        "addressLine2": "Upper Wellgood",
+        "addressLine3": "",
+        "addressLine4": "",
+        "town": "Fulchester",
+        "postcode": "FL23 4JA"
+      },
+      "uprn": "001234567890",
+      "lodgementDate": "2020-02-29",
+      "currentEnergyEfficiencyRating": 62,
+      "currentEnergyEfficiencyBand": "e",
+      "potentialEnergyEfficiencyRating": 0,
+      "potentialEnergyEfficiencyBand": "a",
+      "propertyType": "Mid-floor flat",
+      "builtForm": "End-Terrace",
+      "mainHeatingDescription": "Boiler and radiators, mains gas",
+      "wallsDescription": [
+        "Solid brick, as built, no insulation",
+        "Cavity wall, as built, insulated (assumed)"
+      ],
+      "roofDescription": [
+        "Pitched, 250 mm loft insulation",
+        "Pitched, limited insulation (assumed)"
+      ],
+      "cavityWallInsulationRecommended": false,
+      "loftInsulationRecommended": true
+    }
+  }
+}

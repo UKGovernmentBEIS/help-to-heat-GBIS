@@ -212,6 +212,9 @@ else:
         raise Exception(f"Unknown EMAIL_BACKEND_TYPE of {EMAIL_BACKEND_TYPE}")
 
 OS_API_KEY = env.str("OS_API_KEY")
+EPC_API_BASE_URL = env.str("EPC_API_BASE_URL")
+EPC_API_CLIENT_ID = env.str("EPC_API_CLIENT_ID")
+EPC_API_CLIENT_SECRET = env.str("EPC_API_CLIENT_SECRET")
 
 TOTP_ISSUER = "Help to Heat Supplier Portal"
 
