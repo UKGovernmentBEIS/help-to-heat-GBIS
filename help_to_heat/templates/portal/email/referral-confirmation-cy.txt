@@ -1,5 +1,7 @@
 Shwmae,
 
+Eich rhif cyfeirnod yw {{referral_id}}
+
 Mae’ch manylion chi wedi'u cyflwyno i {{supplier_name}}.
 
 # Beth sy’n digwydd nesaf?

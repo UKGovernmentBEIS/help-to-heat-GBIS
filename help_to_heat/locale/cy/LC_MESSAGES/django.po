@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-18 13:31+0000\n"
+"POT-Creation-Date: 2024-01-22 17:11+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1603,12 +1603,12 @@ msgid "the Great British Insulation Scheme (opens in a new tab)"
 msgstr "Cynllun Inswleiddio Mawr Prydain (yn agor mewn tab newydd)"
 
 #: help_to_heat/templates/frontdoor/holding-page.html:15
-#: help_to_heat/templates/frontdoor/success.html:34
+#: help_to_heat/templates/frontdoor/success.html:35
 msgid "Access more household energy support"
 msgstr "Cael rhagor o gymorth ynni cartref"
 
 #: help_to_heat/templates/frontdoor/holding-page.html:16
-#: help_to_heat/templates/frontdoor/success.html:35
+#: help_to_heat/templates/frontdoor/success.html:36
 msgid "You can:"
 msgstr "Rydych chi'n gallu:"
 
@@ -1617,7 +1617,7 @@ msgid "get: "
 msgstr "cael: "
 
 #: help_to_heat/templates/frontdoor/holding-page.html:19
-#: help_to_heat/templates/frontdoor/success.html:37
+#: help_to_heat/templates/frontdoor/success.html:38
 msgid ""
 "help with your energy bills from the Help for Households service (opens in a "
 "new tab)"
@@ -2779,7 +2779,12 @@ msgstr ""
 msgid "Your details have been submitted to %(supplier)s"
 msgstr "Mae'ch manylion chi wedi'u cyflwyno i %(supplier)s"
 
-#: help_to_heat/templates/frontdoor/success.html:16
+#: help_to_heat/templates/frontdoor/success.html:15
+#, python-format
+msgid "Your reference number is %(referral_id)s"
+msgstr "Eich rhif cyfeirnod yw %(referral_id)s"
+
+#: help_to_heat/templates/frontdoor/success.html:17
 msgid ""
 "If you provided an email address in your referral then we have sent you a "
 "confirmation email."
@@ -2787,20 +2792,20 @@ msgstr ""
 "Os rhoesoch chi gyfeiriad ebost yn eich atgyfeiriad, yna rydyn ni wedi anfon "
 "neges gadarnhau atoch."
 
-#: help_to_heat/templates/frontdoor/success.html:17
-#: help_to_heat/templates/frontdoor/success.html:30
+#: help_to_heat/templates/frontdoor/success.html:18
+#: help_to_heat/templates/frontdoor/success.html:31
 msgid "You can "
 msgstr "Gallwch "
 
-#: help_to_heat/templates/frontdoor/success.html:17
+#: help_to_heat/templates/frontdoor/success.html:18
 msgid "save or print a copy of your referral"
 msgstr "gadw neu argraffu copi o'ch atgyfeiriad"
 
-#: help_to_heat/templates/frontdoor/success.html:18
+#: help_to_heat/templates/frontdoor/success.html:19
 msgid "What happens next?"
 msgstr "Beth sy'n digwydd nesaf?"
 
-#: help_to_heat/templates/frontdoor/success.html:20
+#: help_to_heat/templates/frontdoor/success.html:21
 msgid ""
 "We have sent your referral to the energy supplier you selected. They will "
 "contact you within 10 working days to confirm they have received this and "
@@ -2810,11 +2815,11 @@ msgstr ""
 "Byddan nhw’n cysylltu â chi o fewn 10 diwrnod gwaith i gadarnhau eu bod nhw "
 "wedi cael hyn a’r camau nesaf."
 
-#: help_to_heat/templates/frontdoor/success.html:22
+#: help_to_heat/templates/frontdoor/success.html:23
 msgid "You do not need to create another referral at any point."
 msgstr "Does dim angen ichi greu atgyfeiriad arall unrhyw bryd."
 
-#: help_to_heat/templates/frontdoor/success.html:24
+#: help_to_heat/templates/frontdoor/success.html:25
 msgid ""
 "Once the energy supplier has confirmed they have received your referral, "
 "they or their delivery partner will review this and determine whether your "
@@ -2831,7 +2836,7 @@ msgstr ""
 "gyfnod nesaf yr asesiad. Os na fydd eich atgyfeiriad yn symud ymlaen, fe "
 "gewch wybod pam."
 
-#: help_to_heat/templates/frontdoor/success.html:26
+#: help_to_heat/templates/frontdoor/success.html:27
 msgid ""
 "As part of the assessment process, properties must have a home survey "
 "completed. Your energy supplier will organise this with you."
@@ -2839,22 +2844,22 @@ msgstr ""
 "Fel rhan o’r broses asesu, rhaid i eiddo gael arolwg cartref wedi'i gwblhau. "
 "Bydd eich cyflenwr ynni yn trefnu hyn gyda chi."
 
-#: help_to_heat/templates/frontdoor/success.html:28
+#: help_to_heat/templates/frontdoor/success.html:29
 msgid ""
 "Contacting the energy supplier about your referral after 10 working days"
 msgstr ""
 "Cysylltu â'r cyflenwr ynni ynghylch eich atgyfeiriad ar ôl 10 diwrnod gwaith"
 
-#: help_to_heat/templates/frontdoor/success.html:30
+#: help_to_heat/templates/frontdoor/success.html:31
 msgid "find contact details for the energy supplier (opens in new tab)"
 msgstr ""
 "ddod o hyd i fanylion cysylltu'r cyflenwr ynni (yn agor mewn tab newydd)"
 
-#: help_to_heat/templates/frontdoor/success.html:30
+#: help_to_heat/templates/frontdoor/success.html:31
 msgid " if you need to contact them."
 msgstr "os oes angen ichi gysylltu â nhw."
 
-#: help_to_heat/templates/frontdoor/success.html:32
+#: help_to_heat/templates/frontdoor/success.html:33
 msgid ""
 "You do not need to contact the energy supplier unless it has been more than "
 "10 working days since you submitted the referral and you have not yet "
@@ -2864,16 +2869,16 @@ msgstr ""
 "diwrnod gwaith wedi mynd heibio ers ichi gyflwyno'r atgyfeiriad ac nad ydych "
 "wedi cael neges gadarnhau drwy'r ebost neu alwad ffôn ganddyn nhw eto."
 
-#: help_to_heat/templates/frontdoor/success.html:37
+#: help_to_heat/templates/frontdoor/success.html:38
 msgid "get "
 msgstr "cael "
 
-#: help_to_heat/templates/frontdoor/success.html:38
 #: help_to_heat/templates/frontdoor/success.html:39
+#: help_to_heat/templates/frontdoor/success.html:40
 msgid "visit "
 msgstr "edrych ar "
 
-#: help_to_heat/templates/frontdoor/success.html:38
+#: help_to_heat/templates/frontdoor/success.html:39
 msgid ""
 "household energy-saving tips from the Energy Savings Trust (opens in a new "
 "tab)"
@@ -2881,7 +2886,7 @@ msgstr ""
 "awgrymiadau arbed ynni gartref gan yr Ymddiriedolaeth Arbed Ynni (yn agor "
 "mewn tab newydd)"
 
-#: help_to_heat/templates/frontdoor/success.html:39
+#: help_to_heat/templates/frontdoor/success.html:40
 msgid "household'energy-saving tips from Citizen's Advice (opens in a new tab)"
 msgstr ""
 "awgrymiadau arbed ynni gartref gan Gyngor ar Bopeth (yn agor mewn tab newydd)"
