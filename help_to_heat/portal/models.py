@@ -150,6 +150,11 @@ class Referral(utils.UUIDPrimaryKeyBase, utils.TimeStampedModel):
             raw
         )
 
+    @property
+    def formatted_referral_id(self):
+        return f"GBIS{self.referral_id:07}"
+
+
 
 class EpcRating(utils.TimeStampedModel):
     uprn = models.CharField(max_length=12, primary_key=True)

@@ -18,6 +18,7 @@ from help_to_heat.portal import models as portal_models
 london_tz = tz.gettz("Europe/London")
 
 referral_column_headings = (
+    "referral_id",
     "ECO4",
     "GBIS",
     "country",
@@ -53,6 +54,7 @@ referral_column_headings = (
 )
 
 referral_column_headings_no_pii = (
+    "referral_id",
     "ECO4",
     "GBIS",
     "country",
@@ -272,6 +274,7 @@ def add_extra_row_data(referral, exclude_pii=False):
         "epc_date": epc_date and epc_date or "",
         "submission_date": created_at.date(),
         "submission_time": created_at.time().strftime("%H:%M:%S"),
+        "referral_id": referral.formatted_referral_id,
     }
     return row
 
