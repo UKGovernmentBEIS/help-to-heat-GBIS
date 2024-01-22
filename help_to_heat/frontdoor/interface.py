@@ -6,6 +6,7 @@ import marshmallow
 import osdatahub
 import requests
 from django.conf import settings
+from django.db import connection
 
 from help_to_heat import portal
 from help_to_heat.utils import Entity, Interface, register_event, with_schema
@@ -171,6 +172,12 @@ class Session(Entity):
             data=data,
         )
         return answer.data
+
+    def save_referral_id(self, session_id, page_name):
+        cursor = connection.cursor()
+        cursor.execute("SELECT nextval('portal_referral_referral_id_seq');")
+        referral_id = cursor.fetchone()[0]
+        return self.save_answer(session_id, page_name, {"referral_id": f"HUG{referral_id}"})
 
     @with_schema(load=GetAnswerSchema, dump=schemas.SessionSchema)
     def get_answer(self, session_id, page_name):

@@ -108,6 +108,7 @@ def redirect_to_homepage_view(request):
 
 def start_view(request):
     session_id = uuid.uuid4()
+    interface.api.session.save_referral_id(session_id, "start")
     next_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="country"))
     response = redirect(next_url)
     response["x-vcap-request-id"] = session_id
@@ -838,7 +839,8 @@ class ConfirmSubmitView(PageView):
 class SuccessView(PageView):
     def get_context(self, session_id, *args, **kwargs):
         supplier = SupplierConverter(session_id).get_supplier_on_success_page()
-        return {"supplier": supplier, "safe_to_cache": True}
+        session = interface.api.session.get_session(session_id)
+        return {"supplier": supplier, "safe_to_cache": True, "referral_id": session.get("referral_id")}
 
 
 class FeedbackView(utils.MethodDispatcher):
