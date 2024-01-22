@@ -830,6 +830,8 @@ class ConfirmSubmitView(PageView):
         session_data = interface.api.session.get_session(session_id)
         session_data = SupplierConverter(session_id).replace_in_session_data(session_data)
         if session_data.get("email"):
+            referral = portal.models.Referral.objects.get(session_id=session_id)
+            session_data['referral_id'] = referral.formatted_referral_id
             email_handler.send_referral_confirmation_email(session_data, request.LANGUAGE_CODE)
         return super().handle_post(request, session_id, page_name, data, is_change_page)
 
