@@ -6,7 +6,6 @@ import marshmallow
 import osdatahub
 import requests
 from django.conf import settings
-from django.db import connection
 
 from help_to_heat import portal
 from help_to_heat.utils import Entity, Interface, register_event, with_schema
@@ -173,12 +172,6 @@ class Session(Entity):
         )
         return answer.data
 
-    def save_referral_id(self, session_id, page_name):
-        cursor = connection.cursor()
-        cursor.execute("SELECT nextval('portal_referral_referral_id_seq');")
-        referral_id = cursor.fetchone()[0]
-        return self.save_answer(session_id, page_name, {"referral_id": referral_id})
-
     @with_schema(load=GetAnswerSchema, dump=schemas.SessionSchema)
     def get_answer(self, session_id, page_name):
         try:
@@ -199,13 +192,7 @@ class Session(Entity):
         session_data = api.session.get_session(session_id)
         data = SupplierConverter(session_id).replace_in_session_data(session_data)
         supplier = portal.models.Supplier.objects.get(name=data["supplier"])
-        referral = portal.models.Referral.objects.create(
-            session_id=session_id,
-            data=data,
-            supplier=supplier,
-            # dont generate a new one now, use the one stored in session data
-            referral_id=data["referral_id"]
-        )
+        referral = portal.models.Referral.objects.create(session_id=session_id, data=data, supplier=supplier)
         referral_data = {"id": referral.id, "session_id": referral.session_id, "data": referral.data}
         return referral_data
 

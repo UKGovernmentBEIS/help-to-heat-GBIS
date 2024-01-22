@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from marshmallow import ValidationError
 
-from help_to_heat import utils
+from help_to_heat import utils, portal
 
 from ..portal import email_handler
 from . import eligibility, interface, schemas
@@ -112,7 +112,6 @@ def redirect_to_homepage_view(request):
 
 def start_view(request):
     session_id = uuid.uuid4()
-    interface.api.session.save_referral_id(session_id, "start")
     next_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="country"))
     response = redirect(next_url)
     response["x-vcap-request-id"] = session_id
@@ -843,8 +842,8 @@ class ConfirmSubmitView(PageView):
 class SuccessView(PageView):
     def get_context(self, session_id, *args, **kwargs):
         supplier = SupplierConverter(session_id).get_supplier_on_success_page()
-        session = interface.api.session.get_session(session_id)
-        referral_id = format_referral_id(session.get("referral_id"))
+        referral = portal.models.Referral.objects.get(session_id=session_id)
+        referral_id = format_referral_id(referral.referral_id)
         return {"supplier": supplier, "safe_to_cache": True, "referral_id": referral_id}
 
 
