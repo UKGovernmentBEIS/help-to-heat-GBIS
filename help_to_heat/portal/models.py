@@ -138,18 +138,6 @@ class Referral(utils.UUIDPrimaryKeyBase, utils.TimeStampedModel):
     def __str__(self):
         return f"<referral id={self.id} supplier={self.supplier}>"
 
-    def _do_insert(self, manager, using, fields, returning_fields, raw):
-        # referral_id is SERIAL and so is auto generated
-        # this will remove referral_id from the insert statement & so generate a new value
-        ignore_fields = ["referral_id"]
-
-        return super(Referral, self)._do_insert(
-            manager, using,
-            [field for field in fields if field.attname not in ignore_fields],
-            returning_fields,
-            raw
-        )
-
 
 class EpcRating(utils.TimeStampedModel):
     uprn = models.CharField(max_length=12, primary_key=True)

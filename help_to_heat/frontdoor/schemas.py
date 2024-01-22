@@ -756,7 +756,7 @@ class SessionSchema(Schema):
 
     schemes = fields.List(fields.Str())
     referral_created_at = fields.String()
-    referral_id = fields.String()
+    referral_id = fields.Integer()
     _page_name = fields.String()
 
     class Meta:
