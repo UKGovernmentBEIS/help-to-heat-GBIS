@@ -10,18 +10,16 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AddField(
-            model_name='referral',
-            name='referral_id',
-            field=models.IntegerField(default=0)
-        ),
-        migrations.RunSQL(
-            sql="ALTER TABLE portal_referral DROP referral_id;",
-            reverse_sql="ALTER TABLE portal_referral ADD referral_id INT DEFAULT 0;"
-        ),
+
         migrations.RunSQL(
             sql="ALTER TABLE portal_referral ADD referral_id SERIAL;",
-            reverse_sql="ALTER TABLE portal_referral DROP referral_id;"
+            reverse_sql="ALTER TABLE portal_referral DROP referral_id;",
+            state_operations=[
+                migrations.AddField(
+                    model_name='referral',
+                    name='referral_id',
+                    field=models.IntegerField(default=0)
+                )
+            ]
         )
-
     ]
