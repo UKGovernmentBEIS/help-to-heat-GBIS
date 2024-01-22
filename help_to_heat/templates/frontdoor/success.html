@@ -12,7 +12,7 @@
         <h1 class="govuk-panel__title">
           {{_("Your details have been submitted to %(supplier)s") % { "supplier": supplier }}}
         </h1>
-        <p>{{_("Your referral ID is %(referral_id)s") % { "referral_id": referral_id }}}</p>
+        <div class="govuk-panel__body">{{_("Your reference number is %(referral_id)s") % { "referral_id": referral_id }}}</div>
       </div>
       <p class="govuk-body">{{_("If you provided an email address in your referral then we have sent you a confirmation email.")}}</p>
       <p class="govuk-body" data-show-if-can-print="true" hidden>{{_("You can ")}}<a href="#"  class="govuk-link" data-print="true">{{_("save or print a copy of your referral")}}</a>.</p>

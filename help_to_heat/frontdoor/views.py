@@ -82,6 +82,10 @@ converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
 unavailable_suppliers = []
 
 
+def format_referral_id(referral_id):
+    return f"GBIS{referral_id:07}"
+
+
 def unavailable_supplier_redirect(session_id):
     session_data = interface.api.session.get_session(session_id)
     supplier = session_data["supplier"]
@@ -840,7 +844,8 @@ class SuccessView(PageView):
     def get_context(self, session_id, *args, **kwargs):
         supplier = SupplierConverter(session_id).get_supplier_on_success_page()
         session = interface.api.session.get_session(session_id)
-        return {"supplier": supplier, "safe_to_cache": True, "referral_id": session.get("referral_id")}
+        referral_id = format_referral_id(session.get("referral_id"))
+        return {"supplier": supplier, "safe_to_cache": True, "referral_id": referral_id}
 
 
 class FeedbackView(utils.MethodDispatcher):

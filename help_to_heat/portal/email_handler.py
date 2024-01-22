@@ -8,6 +8,7 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 
+from help_to_heat.frontdoor import views
 from help_to_heat.portal import models
 
 logger = logging.getLogger(__name__)
@@ -127,7 +128,8 @@ def send_referral_confirmation_email(session_data, language_code):
     else:
         data = EMAIL_MAPPING["referral-confirmation"]
         data["subject"] = f"Referral to {session_data.get('supplier')} successful"
-    context = {"supplier_name": session_data.get("supplier")}
+    referral_id = views.format_referral_id(session_data["referral_id"])
+    context = {"supplier_name": session_data.get("supplier"), "referral_id": referral_id}
     return _send_normal_email(to_address=session_data.get("email"), context=context, **data)
 
 
