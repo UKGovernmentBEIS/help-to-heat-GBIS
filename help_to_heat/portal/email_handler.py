@@ -8,7 +8,6 @@ from django.template.loader import render_to_string
 from django.urls import reverse
 from django.utils import timezone
 
-from help_to_heat.frontdoor import views
 from help_to_heat.portal import models
 
 logger = logging.getLogger(__name__)

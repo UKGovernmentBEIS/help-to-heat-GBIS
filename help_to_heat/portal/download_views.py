@@ -105,7 +105,6 @@ def create_csv(columns, rows, full_file_name):
     writer = csv.DictWriter(response, fieldnames=columns, extrasaction="ignore", dialect=csv.unix_dialect)
     writer.writeheader()
     for row in rows:
-        print(row)
         writer.writerow(row)
     return response
 
@@ -156,7 +155,6 @@ def create_referral_xlsx(referrals, file_name, exclude_pii=False):
 
 def handle_create_spreadsheet_request(request, creator):
     referrals = models.Referral.objects.filter(referral_download=None, supplier=request.user.supplier).order_by("referral_id")
-    print(referrals)
     downloaded_at = timezone.now()
     file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
     new_referral_download = models.ReferralDownload.objects.create(
