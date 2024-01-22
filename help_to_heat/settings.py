@@ -31,8 +31,7 @@ ALLOWED_HOSTS = ["*"]
 VCAP_APPLICATION = env.json("VCAP_APPLICATION", default={})
 
 GTAG_ID = env.str("GTAG_ID", default=None)
-# BASIC_AUTH = env.str("BASIC_AUTH", default="")
-BASIC_AUTH = ""
+BASIC_AUTH = env.str("BASIC_AUTH", default="")
 
 # Application definition
 
