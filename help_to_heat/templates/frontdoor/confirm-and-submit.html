@@ -19,7 +19,7 @@
             </p>
           {% endif %}
           <div class="govuk-checkboxes__item">
-            <input class="govuk-checkboxes__input" id="question-permission" name="permission" type="checkbox"/>
+            <input class="govuk-checkboxes__input" id="question-permission" name="permission" type="checkbox" {% if data.get('permission') == 'on' %}checked{% endif %}/>
             <label class="govuk-label govuk-checkboxes__label" for="question-permission" id="question-permission-label">
               {{_("I agree for my personal details to be shared with %(supplier)s to contact me about my referral. I agree that they may share my personal details with their approved delivery partners and installers to check my eligibility, my property's suitability, and to contact me.")% { "supplier": supplier }}}
               <br>
@@ -32,7 +32,7 @@
             </p>
           {% endif %}
           <div class="govuk-checkboxes__item">
-            <input class="govuk-checkboxes__input" id="question-acknowledge" name="acknowledge" type="checkbox"/>
+            <input class="govuk-checkboxes__input" id="question-acknowledge" name="acknowledge" type="checkbox" {% if data.get('acknowledge') == 'on' %}checked{% endif %}/>
             <label class="govuk-label govuk-checkboxes__label" for="question-acknowledge" id="question-acknowledge-label">
               {{ _("I acknowledge that the information I have provided indicates I may be eligible for support. However, I understand that my referral will be subject to further checks before %(supplier)s can determine which, if any, insulation measures are appropriate.")% { "supplier": supplier }}}
             </label>
