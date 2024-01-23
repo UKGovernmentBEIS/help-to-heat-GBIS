@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-01-18 13:31+0000\n"
+"POT-Creation-Date: 2024-01-19 11:16+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -577,7 +577,7 @@ msgstr "Rhowch eich cyfeiriad ebost"
 msgid "Enter your contact number"
 msgstr "Rhowch eich rhif ffôn"
 
-#: help_to_heat/frontdoor/views.py:77
+#: help_to_heat/frontdoor/views.py:77 help_to_heat/frontdoor/views.py:78
 msgid ""
 "Please confirm that you agree to the use of your information by checking "
 "this box"
@@ -1133,28 +1133,38 @@ msgstr "Cadarnhau a chyflwyno"
 #: help_to_heat/templates/frontdoor/confirm-and-submit.html:24
 #, python-format
 msgid ""
-"I agree for my personal details to be shared with %(supplier)s to see if my "
-"property is eligible for support from the Great British Insulation Scheme "
-"and to contact me about my referral. I agree that they may share my personal "
-"details with their approved delivery partners and installers to check my "
-"eligibility, my property's suitability, and to contact me."
+"I agree for my personal details to be shared with %(supplier)s to contact me "
+"about my referral. I agree that they may share my personal details with "
+"their approved delivery partners and installers to check my eligibility, my "
+"property's suitability, and to contact me."
 msgstr ""
-"Dwi'n cytuno i'm manylion personol gael eu rhannu gyda %(supplier)s i  weld "
-"a yw fy eiddo i'n gymwys i gael cymorth gan Gynllun Inswleiddio Mawr Prydain "
-"ac i gysylltu â mi ynglŷn â'm hatgyfeiriad. Dwi'n cytuno y cân nhw rannu fy "
-"manylion personol i gyda'u partneriaid a'u gosodwyr cymeradwy i wirio fy "
-"nghymhwystra i, addasrwydd fy eiddo i, ac i gysylltu â mi."
+"Dwi'n cytuno i'm manylion personol gael eu rhannu gyda %(supplier)s i "
+"gysylltu â mi ynghylch fy atgyfeiriad i. Dwi’n cytuno y cân nhw rannu fy "
+"manylion personol i gyda’u partneriaid cyflenwi a’u gosodwyr a gymeradwywyd "
+"i wirio fy nghymhwystra i ac addasrwydd fy eiddo i ac i gysylltu â mi.  "
 
 #: help_to_heat/templates/frontdoor/confirm-and-submit.html:26
 msgid "Further information on our GDPR UK Privacy Policy"
-msgstr ""
-"Rhagor o wybodaeth am ein Polisi Preifatrwydd o dan GDPR y Deyrnas Unedig"
+msgstr "Rhagor o wybodaeth am ein Polisi Preifatrwydd o dan GDPR y DU"
 
-#: help_to_heat/templates/frontdoor/confirm-and-submit.html:27
+#: help_to_heat/templates/frontdoor/confirm-and-submit.html:37
+#, python-format
+msgid ""
+"I acknowledge that the information I have provided indicates I may be "
+"eligible for support. However, I understand that my referral will be subject "
+"to further checks before %(supplier)s can determine which, if any, "
+"insulation measures are appropriate."
+msgstr ""
+"Dwi’n cydnabod bod yr wybodaeth dw i wedi'i darparu yn dangos y gallwn i fod "
+"yn gymwys i gael cymorth. Er hynny, dwi’n deall y bydd fy atgyfeiriad yn "
+"mynd drwy ragor o wiriadau cyn y gall %(supplier)s benderfynu pa fesurau "
+"inswleiddio sy'n briodol, os oes unrhyw fesurau inswleiddio’n briodol o gwbl."
+
+#: help_to_heat/templates/frontdoor/confirm-and-submit.html:43
 msgid "What is the Energy Company Obligation?"
 msgstr "Beth yw’r Rhwymedigaeth Cwmni Ynni?"
 
-#: help_to_heat/templates/frontdoor/confirm-and-submit.html:29
+#: help_to_heat/templates/frontdoor/confirm-and-submit.html:44
 msgid ""
 "The Great British Insulation Scheme is the latest of a series of schemes "
 "that have operated since 2013 requiring energy suppliers to help people to "
