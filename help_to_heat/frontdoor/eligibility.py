@@ -15,19 +15,20 @@ def _is_eligible_council_tax_band(country, council_tax_band):
 
 
 def calculate_eligibility(session_data):
-    epc_rating = session_data.get("epc_rating", "Not found")
-    council_tax_band = session_data.get("council_tax_band")
     country = session_data.get("country")
-    benefits = session_data.get("benefits")
-    property_type = session_data.get("property_type")
     own_property = session_data.get("own_property")
+    property_type = session_data.get("property_type")
     park_home_main_residence = session_data.get("park_home_main_residence", "No")
+    council_tax_band = session_data.get("council_tax_band")
+    epc_rating = session_data.get("epc_rating", "Not found")
+    accept_suggested_epc = session_data.get("accept_suggested_epc")
+    benefits = session_data.get("benefits")
     household_income = session_data.get("household_income")
 
     if country not in ("England", "Scotland", "Wales"):
         return not_eligible
 
-    if epc_rating in ("A", "B", "C"):
+    if epc_rating in ("A", "B", "C") and accept_suggested_epc == "Yes":
         return not_eligible
 
     if own_property == "No, I am a social housing tenant":
