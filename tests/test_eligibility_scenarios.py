@@ -76,9 +76,9 @@ household_incomes = less_than_31k, more_than_31k
 
 yes = "Yes"
 no = "No"
+i_do_not_know = "I do not know"
 
 yes_no = yes, no
-
 
 def _get_country_options(scenario):
     is_england_scotland_or_wales = scenario.get("England, Scotland or Wales?")
@@ -125,14 +125,16 @@ def _get_council_tax_band_options(country, scenario):
     return council_tax_bands
 
 
-def _get_epc_rating_options(scenario):
+def _get_epc_rating_and_acceptance_options(scenario):
     is_abc = scenario.get("EPC A, B, C?")
-    if is_abc is None:
-        return epc_ratings
-    if is_abc:
-        return a, b, c
     is_fg = scenario.get("EPC F or G?")
-    return (f, g) if is_fg else (d, e, not_found)
+    if is_abc is None:
+        return tuple(itertools.product(epc_ratings, (yes, no, i_do_not_know)))
+    if is_abc:
+        return (a, yes), (b, yes), (c, yes)
+    if is_fg:
+        return (f, yes), (g, yes)
+    return ((d, yes), (e, yes)) + tuple(itertools.product(epc_ratings, (no, i_do_not_know)))
 
 
 def _get_benefits_options(scenario):
@@ -175,7 +177,7 @@ def _assert_eligibility(scenario, expected_eligibility):
         _get_own_property_options(scenario),
         _get_property_type_options(scenario),
         _get_park_home_main_residence_options(scenario),
-        _get_epc_rating_options(scenario),
+        _get_epc_rating_and_acceptance_options(scenario),
         _get_benefits_options(scenario),
         _get_household_income_options(scenario),
     )
@@ -184,7 +186,7 @@ def _assert_eligibility(scenario, expected_eligibility):
         own_property,
         property_type,
         park_home_main_residence,
-        epc_rating,
+        (epc_rating, accept_suggested_epc),
         benefits,
         household_income,
     ) in combinations:
@@ -197,6 +199,7 @@ def _assert_eligibility(scenario, expected_eligibility):
                     "park_home_main_residence": park_home_main_residence,
                     "council_tax_band": council_tax_band,
                     "epc_rating": epc_rating,
+                    "accept_suggested_epc": accept_suggested_epc,
                     "benefits": benefits,
                     "household_income": household_income,
                 }
@@ -210,6 +213,7 @@ def _assert_eligibility(scenario, expected_eligibility):
                 f"Park home main residence: {park_home_main_residence}\n"
                 f"Council tax band: {council_tax_band}\n"
                 f"EPC rating: {epc_rating}\n"
+                f"Accept suggested EPC: {accept_suggested_epc}\n"
                 f"Benefits: {benefits}\n"
                 f"Household income: {household_income}\n"
                 "\n"
