@@ -43,7 +43,7 @@ page_compulsory_field_map = {
     "loft-insulation": ("loft_insulation",),
     "supplier": ("supplier",),
     "contact-details": ("first_name", "last_name"),
-    "confirm-and-submit": ("permission",),
+    "confirm-and-submit": ("permission", "acknowledge"),
 }
 
 missing_item_errors = {
@@ -75,6 +75,7 @@ missing_item_errors = {
     "email": _("Enter your email address"),
     "contact_number": _("Enter your contact number"),
     "permission": _("Please confirm that you agree to the use of your information by checking this box"),
+    "acknowledge": _("Please confirm that you agree to the use of your information by checking this box"),
 }
 
 # to be updated when we get full list of excluded suppliers
