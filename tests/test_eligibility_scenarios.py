@@ -24,6 +24,7 @@ from help_to_heat.frontdoor.eligibility import (
 #
 # These tests are structured to closely match that format for ease of comparison and validation.
 
+no_answer = None
 
 # Country
 
@@ -31,7 +32,7 @@ england = "England"
 scotland = "Scotland"
 wales = "Wales"
 northern_ireland = "Northern Ireland"
-countries = england, scotland, wales, northern_ireland
+countries = england, scotland, wales, northern_ireland, no_answer
 
 # Owner type
 
@@ -39,7 +40,7 @@ owner_occupier = "Yes, I own my property and live in it"
 tenant = "No, I am a tenant"
 landlord = "Yes, I am the property owner but I lease the property to one or more tenants"
 social_housing = "No, I am a social housing tenant"
-owner_types = owner_occupier, tenant, landlord, social_housing
+owner_types = owner_occupier, tenant, landlord, social_housing, no_answer
 
 # Property type
 
@@ -47,7 +48,7 @@ house = "House"
 bungalow = "Bungalow"
 apartment_flat_or_maisonette = "Apartment, flat or maisonette"
 park_home = "Park home"
-property_types = house, bungalow, apartment_flat_or_maisonette, park_home
+property_types = house, bungalow, apartment_flat_or_maisonette, park_home, no_answer
 
 # Band (Council Tax and EPC)
 
@@ -62,15 +63,15 @@ h = "H"
 i = "I"
 not_found = "Not found"
 
-council_tax_bands = a, b, c, d, e, f, g, h, i
-epc_ratings = a, b, c, d, e, f, g, not_found
+council_tax_bands = a, b, c, d, e, f, g, h, i, no_answer
+epc_ratings = a, b, c, d, e, f, g, not_found, no_answer
 
 # Household income
 
 less_than_31k = "Less than £31,000 a year"
 more_than_31k = "£31,000 or more a year"
 
-household_incomes = less_than_31k, more_than_31k
+household_incomes = less_than_31k, more_than_31k, no_answer
 
 # Yes / no
 
@@ -78,7 +79,8 @@ yes = "Yes"
 no = "No"
 i_do_not_know = "I do not know"
 
-yes_no = yes, no
+yes_no = yes, no, no_answer
+
 
 def _get_country_options(scenario):
     is_england_scotland_or_wales = scenario.get("England, Scotland or Wales?")
@@ -129,12 +131,12 @@ def _get_epc_rating_and_acceptance_options(scenario):
     is_abc = scenario.get("EPC A, B, C?")
     is_fg = scenario.get("EPC F or G?")
     if is_abc is None:
-        return tuple(itertools.product(epc_ratings, (yes, no, i_do_not_know)))
+        return tuple(itertools.product(epc_ratings, (yes, no, i_do_not_know, no_answer)))
     if is_abc:
         return (a, yes), (b, yes), (c, yes)
     if is_fg:
         return (f, yes), (g, yes)
-    return ((d, yes), (e, yes)) + tuple(itertools.product(epc_ratings, (no, i_do_not_know)))
+    return ((d, yes), (e, yes)) + tuple(itertools.product(epc_ratings, (no, i_do_not_know, no_answer)))
 
 
 def _get_benefits_options(scenario):
