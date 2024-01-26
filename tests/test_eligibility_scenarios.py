@@ -105,13 +105,13 @@ def _get_own_property_options(scenario):
     return owner_types
 
 
-def _get_property_type_options(scenario):
+def _get_park_home_options(scenario):
     is_park_home = scenario.get("Park home?")
     if is_park_home is None:
-        return property_types
+        return yes_no
     if is_park_home == no_answer:
         return (no_answer,)
-    return (park_home,) if is_park_home else (house, bungalow, apartment_flat_or_maisonette)
+    return (yes,) if is_park_home else (no,)
 
 
 def _get_park_home_main_residence_options(scenario):
@@ -194,7 +194,7 @@ def _assert_eligibility(scenario, expected_eligibility):
     combinations = itertools.product(
         _get_country_options(scenario),
         _get_own_property_options(scenario),
-        _get_property_type_options(scenario),
+        _get_park_home_options(scenario),
         _get_park_home_main_residence_options(scenario),
         _get_epc_rating_and_acceptance_options(scenario),
         _get_benefits_options(scenario),
@@ -203,7 +203,7 @@ def _assert_eligibility(scenario, expected_eligibility):
     for (
         country,
         own_property,
-        property_type,
+        park_home,
         park_home_main_residence,
         (epc_rating, accept_suggested_epc),
         benefits,
@@ -214,7 +214,7 @@ def _assert_eligibility(scenario, expected_eligibility):
                 {
                     "country": country,
                     "own_property": own_property,
-                    "property_type": property_type,
+                    "park_home": park_home,
                     "park_home_main_residence": park_home_main_residence,
                     "council_tax_band": council_tax_band,
                     "epc_rating": epc_rating,
@@ -228,7 +228,7 @@ def _assert_eligibility(scenario, expected_eligibility):
                 "\n"
                 f"Country: {country}\n"
                 f"Ownership: {own_property}\n"
-                f"Property type: {property_type}\n"
+                f"Property type: {park_home}\n"
                 f"Park home main residence: {park_home_main_residence}\n"
                 f"Council tax band: {council_tax_band}\n"
                 f"EPC rating: {epc_rating}\n"

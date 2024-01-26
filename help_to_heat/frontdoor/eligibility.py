@@ -22,7 +22,7 @@ def _is_eligible_council_tax_band(country, council_tax_band):
 def calculate_eligibility(session_data):
     country = session_data.get("country")
     own_property = session_data.get("own_property")
-    property_type = session_data.get("property_type")
+    park_home = session_data.get("park_home")
     park_home_main_residence = session_data.get("park_home_main_residence")
     council_tax_band = session_data.get("council_tax_band")
     epc_rating = session_data.get("epc_rating", "Not found")
@@ -38,7 +38,7 @@ def calculate_eligibility(session_data):
             return not_eligible
         return eligible_for_gbis_and_eco4
 
-    if property_type == "Park home" and park_home_main_residence == "No":
+    if park_home == "Yes" and park_home_main_residence == "No":
         return not_eligible
 
     if epc_rating in ("A", "B", "C") and accept_suggested_epc == "Yes":
@@ -52,7 +52,7 @@ def calculate_eligibility(session_data):
 
     # if this is true, the form must be fully filled
     if household_income == "£31,000 or more a year" and _council_tax_band_is_defined(council_tax_band):
-        if property_type == "Park home":
+        if park_home == "Yes":
             return eligible_for_gbis
 
         if _is_eligible_council_tax_band(country, council_tax_band):
