@@ -114,6 +114,9 @@ def redirect_on_eligibility_decided(ineligible_page_name):
                 return func(self, request, session_id, page_name, data, is_change_page)
             if eligible_schemes == not_eligible:
                 return redirect("frontdoor:page", session_id=session_id, page_name=ineligible_page_name)
+            park_home = session_data.get("park_home")
+            if park_home == "Yes":
+                return redirect("frontdoor:page", session_id=session_id, page_name="summary")
             return redirect("frontdoor:page", session_id=session_id, page_name="property-type")
 
         return _inner2
