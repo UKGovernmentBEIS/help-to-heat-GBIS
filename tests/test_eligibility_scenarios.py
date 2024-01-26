@@ -5,6 +5,7 @@ from help_to_heat.frontdoor.eligibility import (
     eligible_for_gbis,
     eligible_for_gbis_and_eco4,
     not_eligible,
+    needs_more_information,
 )
 
 # Eligibility scenarios were provided in a document on this Jira ticket:
@@ -24,7 +25,7 @@ from help_to_heat.frontdoor.eligibility import (
 #
 # These tests are structured to closely match that format for ease of comparison and validation.
 
-no_answer = None
+no_answer = ""
 
 # Country
 
@@ -32,7 +33,7 @@ england = "England"
 scotland = "Scotland"
 wales = "Wales"
 northern_ireland = "Northern Ireland"
-countries = england, scotland, wales, northern_ireland, no_answer
+countries = england, scotland, wales, northern_ireland
 
 # Owner type
 
@@ -40,7 +41,7 @@ owner_occupier = "Yes, I own my property and live in it"
 tenant = "No, I am a tenant"
 landlord = "Yes, I am the property owner but I lease the property to one or more tenants"
 social_housing = "No, I am a social housing tenant"
-owner_types = owner_occupier, tenant, landlord, social_housing, no_answer
+owner_types = owner_occupier, tenant, landlord, social_housing
 
 # Property type
 
@@ -48,7 +49,7 @@ house = "House"
 bungalow = "Bungalow"
 apartment_flat_or_maisonette = "Apartment, flat or maisonette"
 park_home = "Park home"
-property_types = house, bungalow, apartment_flat_or_maisonette, park_home, no_answer
+property_types = house, bungalow, apartment_flat_or_maisonette, park_home
 
 # Band (Council Tax and EPC)
 
@@ -63,15 +64,15 @@ h = "H"
 i = "I"
 not_found = "Not found"
 
-council_tax_bands = a, b, c, d, e, f, g, h, i, no_answer
-epc_ratings = a, b, c, d, e, f, g, not_found, no_answer
+council_tax_bands = a, b, c, d, e, f, g, h, i
+epc_ratings = a, b, c, d, e, f, g, not_found
 
 # Household income
 
 less_than_31k = "Less than £31,000 a year"
 more_than_31k = "£31,000 or more a year"
 
-household_incomes = less_than_31k, more_than_31k, no_answer
+household_incomes = less_than_31k, more_than_31k
 
 # Yes / no
 
@@ -79,18 +80,22 @@ yes = "Yes"
 no = "No"
 i_do_not_know = "I do not know"
 
-yes_no = yes, no, no_answer
+yes_no = yes, no
 
 
 def _get_country_options(scenario):
     is_england_scotland_or_wales = scenario.get("England, Scotland or Wales?")
     if is_england_scotland_or_wales is None:
         return countries
+    if is_england_scotland_or_wales == no_answer:
+        return (no_answer,)
     return (england, scotland, wales) if is_england_scotland_or_wales else (northern_ireland,)
 
 
 def _get_own_property_options(scenario):
     property_ownership = scenario.get("Property ownership?")
+    if property_ownership == no_answer:
+        return (no_answer,)
     if property_ownership == "Owner occupier":
         return (owner_occupier,)
     if property_ownership == "Tenant or landlord":
@@ -104,6 +109,8 @@ def _get_property_type_options(scenario):
     is_park_home = scenario.get("Park home?")
     if is_park_home is None:
         return property_types
+    if is_park_home == no_answer:
+        return (no_answer,)
     return (park_home,) if is_park_home else (house, bungalow, apartment_flat_or_maisonette)
 
 
@@ -111,6 +118,8 @@ def _get_park_home_main_residence_options(scenario):
     is_main_residence = scenario.get("Main residence?")
     if is_main_residence is None:
         return yes_no
+    if is_main_residence == no_answer:
+        return (no_answer,)
     return (yes,) if is_main_residence else (no,)
 
 
@@ -118,6 +127,8 @@ def _get_council_tax_band_options(country, scenario):
     is_eligible_band = scenario.get("Eligible Council Tax band?")
     if is_eligible_band is None:
         return council_tax_bands
+    if is_eligible_band == no_answer:
+        return (no_answer,)
     if country == england:
         return (a, b, c, d) if is_eligible_band else (e, f, g, h)
     if country == scotland:
@@ -132,6 +143,8 @@ def _get_epc_rating_and_acceptance_options(scenario):
     is_fg = scenario.get("EPC F or G?")
     if is_abc is None:
         return tuple(itertools.product(epc_ratings, (yes, no, i_do_not_know, no_answer)))
+    if is_abc == no_answer:
+        return ((no_answer, no_answer),)
     if is_abc:
         return (a, yes), (b, yes), (c, yes)
     if is_fg:
@@ -143,6 +156,8 @@ def _get_benefits_options(scenario):
     receives_benefits = scenario.get("Receiving benefits?")
     if receives_benefits is None:
         return yes_no
+    if receives_benefits == no_answer:
+        return (no_answer,)
     return (yes,) if receives_benefits else (no,)
 
 
@@ -150,6 +165,8 @@ def _get_household_income_options(scenario):
     is_income_less_than_31k = scenario.get("Income <£31,000?")
     if is_income_less_than_31k is None:
         return household_incomes
+    if is_income_less_than_31k == no_answer:
+        return (no_answer,)
     return (less_than_31k,) if is_income_less_than_31k else (more_than_31k,)
 
 
@@ -655,4 +672,108 @@ def test_scenario_32():
     _assert_eligibility(
         {"England, Scotland or Wales?": True, "Property ownership?": "Social housing", "EPC A, B, C?": False},
         eligible_for_gbis_and_eco4,
+    )
+
+
+# these tests all describe parts of the route where your eligibility will be checked
+# though there is not yet enough info to make a decision
+# the eligibility function should verify this
+def test_needs_more_information_on_country():
+    _assert_eligibility(
+        {
+            "England, Scotland or Wales?": True,
+            "Property ownership?": no_answer,
+            "Park home?": no_answer,
+            "Main residence?": no_answer,
+            "Eligible Council Tax band?": no_answer,
+            "EPC A, B, C?": no_answer,
+            "Receiving benefits?": no_answer,
+            "Income <£31,000?": no_answer,
+        },
+        needs_more_information,
+    )
+
+
+# todo parametrize
+def test_needs_more_information_on_main_residence():
+    _assert_eligibility(
+        {
+            "England, Scotland or Wales?": True,
+            "Property ownership?": "Owner occupier",
+            "Park home?": True,
+            "Main residence?": True,
+            "Eligible Council Tax band?": no_answer,
+            "EPC A, B, C?": no_answer,
+            "Receiving benefits?": no_answer,
+            "Income <£31,000?": no_answer,
+        },
+        needs_more_information,
+    )
+
+    _assert_eligibility(
+        {
+            "England, Scotland or Wales?": True,
+            "Property ownership?": "Tenant or landlord",
+            "Park home?": True,
+            "Main residence?": True,
+            "Eligible Council Tax band?": no_answer,
+            "EPC A, B, C?": no_answer,
+            "Receiving benefits?": no_answer,
+            "Income <£31,000?": no_answer,
+        },
+        needs_more_information,
+    )
+
+
+def test_needs_more_information_on_epc():
+    _assert_eligibility(
+        {
+            "England, Scotland or Wales?": True,
+            "Property ownership?": "Owner occupier",
+            "Park home?": True,
+            "Main residence?": True,
+            "Eligible Council Tax band?": no_answer,
+            "EPC A, B, C?": False,
+            "Receiving benefits?": no_answer,
+            "Income <£31,000?": no_answer,
+        },
+        needs_more_information,
+    )
+
+    _assert_eligibility(
+        {
+            "England, Scotland or Wales?": True,
+            "Property ownership?": "Owner occupier",
+            "Park home?": False,
+            "EPC A, B, C?": False,
+            "Receiving benefits?": no_answer,
+            "Income <£31,000?": no_answer,
+        },
+        needs_more_information,
+    )
+
+    _assert_eligibility(
+        {
+            "England, Scotland or Wales?": True,
+            "Property ownership?": "Tenant or landlord",
+            "Park home?": True,
+            "Main residence?": True,
+            "Eligible Council Tax band?": no_answer,
+            "EPC A, B, C?": False,
+            "Receiving benefits?": no_answer,
+            "Income <£31,000?": no_answer,
+        },
+        needs_more_information,
+    )
+
+    _assert_eligibility(
+        {
+            "England, Scotland or Wales?": True,
+            "Property ownership?": "Tenant or landlord",
+            "Park home?": False,
+            "EPC A, B, C?": False,
+            "Receiving benefits?": no_answer,
+            "Income <£31,000?": no_answer,
+        },
+        needs_more_information,
     )
