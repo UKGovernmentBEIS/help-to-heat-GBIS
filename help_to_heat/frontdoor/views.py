@@ -582,12 +582,10 @@ class BenefitsView(PageView):
         return {"benefits_options": schemas.yes_no_options_map, "context": context}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        session_data = interface.api.session.get_session(session_id)
-        eligible_schemes = eligibility.calculate_eligibility(session_data)
-        if not eligible_schemes:
-            return redirect("frontdoor:page", session_id=session_id, page_name="ineligible")
-        else:
-            return super().handle_post(request, session_id, page_name, data, is_change_page)
+        benefits = data.get("benefits")
+        if benefits == "Yes":
+            return redirect("frontdoor:page", session_id=session_id, page_name="property-type")
+        return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
 @register_page("household-income")
