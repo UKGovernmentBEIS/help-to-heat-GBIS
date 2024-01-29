@@ -732,7 +732,6 @@ class SchemesView(PageView):
     def get_context(self, request, session_id, *args, **kwargs):
         session_data = interface.api.session.get_session(session_id)
         eligible_schemes = eligibility.calculate_eligibility(session_data)
-        print(eligible_schemes)
         _ = interface.api.session.save_answer(session_id, "schemes", {"schemes": eligible_schemes})
         eligible_schemes = tuple(schemas.schemes_map[scheme] for scheme in eligible_schemes if not scheme == "ECO4")
         return {"eligible_schemes": eligible_schemes}
