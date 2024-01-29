@@ -152,13 +152,18 @@ def change_page_view(request, session_id, page_name):
 
 def get_prev_next_page_name(page_name, session_id=None):
     park_home = None
+    social_housing = None
     if session_id:
         session_data = interface.api.session.get_session(session_id)
         park_home = session_data.get("park_home")
+        social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
 
     if park_home == "Yes":
         mapping = schemas.page_prev_next_map_park_home
         order = schemas.page_order_park_home
+    elif social_housing:
+        mapping = schemas.page_prev_next_map_social_housing
+        order = schemas.page_order_social_housing
     else:
         mapping = schemas.page_prev_next_map
         order = schemas.page_order
@@ -561,7 +566,7 @@ class EpcView(PageView):
             return super().handle_get(response, request, session_id, page_name, context)
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name, session_id)
         epc_rating = data.get("epc_rating").upper()
         accept_suggested_epc = data.get("accept_suggested_epc")
 
@@ -571,7 +576,6 @@ class EpcView(PageView):
         if (epc_rating in ("A", "B", "C")) and (accept_suggested_epc == "Yes"):
             return redirect("frontdoor:page", session_id=session_id, page_name="epc-ineligible")
 
-        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
 
