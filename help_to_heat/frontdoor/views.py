@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from marshmallow import ValidationError
 
 from help_to_heat import utils
+from .eligibility import is_eligible_council_tax_band
 
 from ..portal import email_handler
 from . import eligibility, interface, schemas
@@ -600,6 +601,22 @@ class BenefitsView(PageView):
 class HouseholdIncomeView(PageView):
     def get_context(self, *args, **kwargs):
         return {"household_income_options": schemas.household_income_options_map}
+
+    def handle_post(self, request, session_id, page_name, data, is_change_page):
+        print(data)
+        household_income = data.get("household_income")
+        session_data = interface.api.session.get_session(session_id)
+        print(session_data)
+        council_tax_band = session_data.get("council_tax_band")
+        country = session_data.get("country")
+
+        if (
+                household_income == "£31,000 or more a year"
+                and not eligibility.is_eligible_council_tax_band(country, council_tax_band)
+        ):
+            return redirect("frontdoor:page", session_id=session_id, page_name="ineligible")
+        else:
+            return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
 @register_page("property-type")
