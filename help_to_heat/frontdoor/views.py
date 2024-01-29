@@ -587,7 +587,11 @@ class BenefitsView(PageView):
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         benefits = data.get("benefits")
+        session_data = interface.api.session.get_session(session_id)
+        park_home = session_data.get("park_home")
         if benefits == "Yes":
+            if park_home == "Yes":
+                return redirect("frontdoor:page", session_id=session_id, page_name="summary")
             return redirect("frontdoor:page", session_id=session_id, page_name="property-type")
         return super().handle_post(request, session_id, page_name, data, is_change_page)
 
@@ -728,6 +732,7 @@ class SchemesView(PageView):
     def get_context(self, request, session_id, *args, **kwargs):
         session_data = interface.api.session.get_session(session_id)
         eligible_schemes = eligibility.calculate_eligibility(session_data)
+        print(eligible_schemes)
         _ = interface.api.session.save_answer(session_id, "schemes", {"schemes": eligible_schemes})
         eligible_schemes = tuple(schemas.schemes_map[scheme] for scheme in eligible_schemes if not scheme == "ECO4")
         return {"eligible_schemes": eligible_schemes}
