@@ -123,8 +123,9 @@ def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita
 
     page = _check_page(page, "benefits", "benefits", benefits_answer)
 
-    assert page.has_one("h1:contains('What is your annual household income?')")
-    page = _check_page(page, "household-income", "household_income", "Less than £31,000 a year")
+    if benefits_answer == "No":
+        assert page.has_one("h1:contains('What is your annual household income?')")
+        page = _check_page(page, "household-income", "household_income", "Less than £31,000 a year")
 
     assert page.has_one("h1:contains('What kind of property do you have?')")
     page = _check_page(page, "property-type", "property_type", "House")
@@ -658,6 +659,8 @@ def test_eligibility():
     page = _check_page(page, "epc", "accept_suggested_epc", "No")
 
     page = _check_page(page, "benefits", "benefits", "No")
+
+    page = _check_page(page, "household-income", "household_income", "£31,000 or more a year")
 
     assert page.has_one("h1:contains('Your property is not eligible')")
 
