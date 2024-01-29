@@ -33,7 +33,6 @@ page_order_park_home = (
     "park-home",
     "park-home-main-residence",
     "address",
-    "epc",
     "benefits",
     "household-income",
     "summary",
@@ -78,16 +77,15 @@ page_prev_next_map = {
 }
 
 page_prev_next_map_park_home = {
-    "address-select": {"prev": "address", "next": "epc"},
-    "epc-select": {"prev": "address", "next": "epc"},
-    "address-manual": {"prev": "address", "next": "epc"},
+    "address-select": {"prev": "address", "next": "benefits"},
+    "epc-select": {"prev": "address", "next": "benefits"},
+    "address-manual": {"prev": "address", "next": "benefits"},
     "northern-ireland": {"prev": "country", "next": None},
     "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
     "utility-warehouse-warning-page": {"prev": "supplier", "next": "own-property"},
     "applications-closed": {"prev": "supplier", "next": None},
     "application-closed-utility-warehouse": {"prev": "supplier", "next": None},
     "park-home-application-closed": {"prev": "park-home-main-residence", "next": None},
-    "epc-ineligible": {"prev": "epc", "next": None},
 }
 
 summary_map = {

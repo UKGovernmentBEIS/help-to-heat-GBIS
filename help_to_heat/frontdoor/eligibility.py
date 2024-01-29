@@ -4,11 +4,6 @@ eco4 = "ECO4"
 not_eligible = ()
 eligible_for_gbis = (gbis,)
 eligible_for_gbis_and_eco4 = (gbis, eco4)
-needs_more_information = None
-
-
-def _council_tax_band_is_defined(council_tax_band):
-    return council_tax_band in ("A", "B", "C", "D", "E", "F", "G", "H", "I", "Not found")
 
 
 def _is_eligible_council_tax_band(country, council_tax_band):
@@ -22,8 +17,8 @@ def _is_eligible_council_tax_band(country, council_tax_band):
 def calculate_eligibility(session_data):
     country = session_data.get("country")
     own_property = session_data.get("own_property")
-    park_home = session_data.get("park_home")
-    park_home_main_residence = session_data.get("park_home_main_residence")
+    property_type = session_data.get("property_type")
+    park_home_main_residence = session_data.get("park_home_main_residence", "No")
     council_tax_band = session_data.get("council_tax_band")
     epc_rating = session_data.get("epc_rating", "Not found")
     accept_suggested_epc = session_data.get("accept_suggested_epc")
@@ -33,15 +28,13 @@ def calculate_eligibility(session_data):
     if country not in ("England", "Scotland", "Wales"):
         return not_eligible
 
-    if own_property == "No, I am a social housing tenant":
-        if epc_rating in ("A", "B", "C") and accept_suggested_epc == "Yes":
-            return not_eligible
-        return eligible_for_gbis_and_eco4
-
-    if park_home == "Yes" and park_home_main_residence == "No":
+    if epc_rating in ("A", "B", "C") and accept_suggested_epc == "Yes":
         return not_eligible
 
-    if epc_rating in ("A", "B", "C") and accept_suggested_epc == "Yes":
+    if own_property == "No, I am a social housing tenant":
+        return eligible_for_gbis_and_eco4
+
+    if property_type == "Park home" and park_home_main_residence == "No":
         return not_eligible
 
     if benefits == "Yes":
@@ -50,14 +43,10 @@ def calculate_eligibility(session_data):
     if household_income == "Less than £31,000 a year":
         return eligible_for_gbis_and_eco4
 
-    # if this is true, the form must be fully filled
-    if household_income == "£31,000 or more a year" and _council_tax_band_is_defined(council_tax_band):
-        if park_home == "Yes":
-            return eligible_for_gbis
+    if property_type == "Park home":
+        return eligible_for_gbis
 
-        if _is_eligible_council_tax_band(country, council_tax_band):
-            return eligible_for_gbis
+    if _is_eligible_council_tax_band(country, council_tax_band):
+        return eligible_for_gbis
 
-        return not_eligible
-
-    return needs_more_information
+    return not_eligible

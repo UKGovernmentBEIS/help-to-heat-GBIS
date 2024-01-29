@@ -10,7 +10,6 @@ from django.utils.translation import gettext_lazy as _
 from marshmallow import ValidationError
 
 from help_to_heat import utils
-from .eligibility import not_eligible, needs_more_information
 
 from ..portal import email_handler
 from . import eligibility, interface, schemas
@@ -99,27 +98,6 @@ def register_page(name):
     def _inner(func):
         page_map[name] = func
         return func
-
-    return _inner
-
-
-def redirect_on_eligibility_decided(ineligible_page_name):
-    def _inner(func):
-        def _inner2(self, request, session_id, page_name, data, is_change_page):
-            session_data = interface.api.session.get_session(session_id)
-            eligible_schemes = eligibility.calculate_eligibility(session_data)
-            print(session_data)
-            print(eligible_schemes)
-            if eligible_schemes == needs_more_information:
-                return func(self, request, session_id, page_name, data, is_change_page)
-            if eligible_schemes == not_eligible:
-                return redirect("frontdoor:page", session_id=session_id, page_name=ineligible_page_name)
-            park_home = session_data.get("park_home")
-            if park_home == "Yes":
-                return redirect("frontdoor:page", session_id=session_id, page_name="summary")
-            return redirect("frontdoor:page", session_id=session_id, page_name="property-type")
-
-        return _inner2
 
     return _inner
 
@@ -325,9 +303,11 @@ class CountryView(PageView):
     def get_context(self, *args, **kwargs):
         return {"country_options": schemas.country_options_map}
 
-    @redirect_on_eligibility_decided("northern-ireland")
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        return super().handle_post(request, session_id, page_name, data, is_change_page)
+        if data["country"] == "Northern Ireland":
+            return redirect("frontdoor:page", session_id=session_id, page_name="northern-ireland")
+        else:
+            return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
 @register_page("own-property")
@@ -371,9 +351,18 @@ class ParkHomeMainResidenceView(PageView):
     def get_context(self, *args, **kwargs):
         return {"park_home_main_residence_options_map": schemas.park_home_main_residence_options_map}
 
-    @redirect_on_eligibility_decided(ineligible_page_name="park-home-application-closed")
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        return super().handle_post(request, session_id, page_name, data, is_change_page)
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name, session_id)
+        data = request.POST.dict()
+        park_home_main_residence = data.get("park_home_main_residence")
+
+        if is_change_page:
+            assert page_name in schemas.change_page_lookup
+            next_page_name = schemas.change_page_lookup[page_name]
+        if park_home_main_residence == "No":
+            next_page_name = "park-home-application-closed"
+
+        return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
     def save_data(self, request, session_id, page_name, *args, **kwargs):
         data = request.POST.dict()
@@ -517,15 +506,6 @@ class CouncilTaxBandView(PageView):
             council_tax_bands = schemas.welsh_council_tax_band_options
         return {"council_tax_band_options": council_tax_bands}
 
-    def handle_get(self, response, request, session_id, page_name, context):
-        session_data = interface.api.session.get_session(session_id)
-        own_property = session_data.get("own_property")
-        if own_property == "No, I am a social housing tenant":
-            return redirect("frontdoor:page", session_id=session_id, page_name="epc")
-
-        return super().handle_get(response, request, session_id, page_name, context)
-
-
 
 @register_page("epc")
 class EpcView(PageView):
@@ -580,9 +560,19 @@ class EpcView(PageView):
                 return redirect("frontdoor:page", session_id=session_id, page_name="benefits")
             return super().handle_get(response, request, session_id, page_name, context)
 
-    @redirect_on_eligibility_decided(ineligible_page_name="epc-ineligible")
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        return super().handle_post(request, session_id, page_name, data, is_change_page)
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
+        epc_rating = data.get("epc_rating").upper()
+        accept_suggested_epc = data.get("accept_suggested_epc")
+
+        if not epc_rating:
+            return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+
+        if (epc_rating in ("A", "B", "C")) and (accept_suggested_epc == "Yes"):
+            return redirect("frontdoor:page", session_id=session_id, page_name="epc-ineligible")
+
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
+        return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
 
 @register_page("benefits")
@@ -591,19 +581,19 @@ class BenefitsView(PageView):
         context = interface.api.session.get_session(session_id)
         return {"benefits_options": schemas.yes_no_options_map, "context": context}
 
-    @redirect_on_eligibility_decided(ineligible_page_name="ineligible")
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        return super().handle_post(request, session_id, page_name, data, is_change_page)
+        session_data = interface.api.session.get_session(session_id)
+        eligible_schemes = eligibility.calculate_eligibility(session_data)
+        if not eligible_schemes:
+            return redirect("frontdoor:page", session_id=session_id, page_name="ineligible")
+        else:
+            return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
 @register_page("household-income")
 class HouseholdIncomeView(PageView):
     def get_context(self, *args, **kwargs):
         return {"household_income_options": schemas.household_income_options_map}
-
-    @redirect_on_eligibility_decided(ineligible_page_name="ineligible")
-    def handle_post(self, request, session_id, page_name, data, is_change_page):
-        return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
 @register_page("property-type")
