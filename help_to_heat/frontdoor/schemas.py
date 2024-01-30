@@ -8,6 +8,7 @@ page_order = (
     "country",
     "supplier",
     "own-property",
+    "park-home",
     "address",
     "council-tax-band",
     "epc",
@@ -33,8 +34,28 @@ page_order_park_home = (
     "park-home",
     "park-home-main-residence",
     "address",
+    "epc",
     "benefits",
     "household-income",
+    "summary",
+    "schemes",
+    "contact-details",
+    "confirm-and-submit",
+    "success",
+)
+
+page_order_social_housing = (
+    "country",
+    "supplier",
+    "own-property",
+    "address",
+    "epc",
+    "property-type",
+    "property-subtype",
+    "number-of-bedrooms",
+    "wall-type",
+    "wall-insulation",
+    "loft",
     "summary",
     "schemes",
     "contact-details",
@@ -65,7 +86,7 @@ page_prev_next_map = {
     "loft-access": {"prev": "loft", "next": "loft-insulation"},
     "loft-insulation": {"prev": "loft-access", "next": "summary"},
     "epc-ineligible": {"prev": "epc", "next": None},
-    "ineligible": {"prev": "benefits", "next": None},
+    "ineligible": {"prev": "household-income", "next": None},
     "northern-ireland": {"prev": "country", "next": None},
     "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
     "utility-warehouse-warning-page": {"prev": "supplier", "next": "own-property"},
@@ -77,15 +98,31 @@ page_prev_next_map = {
 }
 
 page_prev_next_map_park_home = {
-    "address-select": {"prev": "address", "next": "benefits"},
-    "epc-select": {"prev": "address", "next": "benefits"},
-    "address-manual": {"prev": "address", "next": "benefits"},
+    "address-select": {"prev": "address", "next": "epc"},
+    "epc-select": {"prev": "address", "next": "epc"},
+    "address-manual": {"prev": "address", "next": "epc"},
     "northern-ireland": {"prev": "country", "next": None},
     "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
     "utility-warehouse-warning-page": {"prev": "supplier", "next": "own-property"},
     "applications-closed": {"prev": "supplier", "next": None},
     "application-closed-utility-warehouse": {"prev": "supplier", "next": None},
     "park-home-application-closed": {"prev": "park-home-main-residence", "next": None},
+    "epc-ineligible": {"prev": "epc", "next": None},
+    "ineligible": {"prev": "household-income", "next": None},
+}
+
+page_prev_next_map_social_housing = {
+    "address-select": {"prev": "address", "next": "epc"},
+    "epc-select": {"prev": "address", "next": "epc"},
+    "address-manual": {"prev": "address", "next": "epc"},
+    "loft": {"prev": "wall-insulation", "next": "loft-access"},
+    "loft-access": {"prev": "loft", "next": "loft-insulation"},
+    "loft-insulation": {"prev": "loft-access", "next": "summary"},
+    "epc-ineligible": {"prev": "epc", "next": None},
+    "northern-ireland": {"prev": "country", "next": None},
+    "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
+    "utility-warehouse-warning-page": {"prev": "supplier", "next": "own-property"},
+    "applications-closed": {"prev": "supplier", "next": None},
 }
 
 summary_map = {

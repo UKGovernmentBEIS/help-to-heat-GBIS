@@ -151,14 +151,22 @@ def change_page_view(request, session_id, page_name):
 
 
 def get_prev_next_page_name(page_name, session_id=None):
-    park_home = None
+    is_park_home = False
+    is_social_housing = False
+    receives_benefits = False
+
     if session_id:
         session_data = interface.api.session.get_session(session_id)
-        park_home = session_data.get("park_home")
+        is_park_home = session_data.get("park_home") == "Yes"
+        is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
+        receives_benefits = session_data.get("benefits") == "Yes"
 
-    if park_home == "Yes":
+    if is_park_home:
         mapping = schemas.page_prev_next_map_park_home
         order = schemas.page_order_park_home
+    elif is_social_housing:
+        mapping = schemas.page_prev_next_map_social_housing
+        order = schemas.page_order_social_housing
     else:
         mapping = schemas.page_prev_next_map
         order = schemas.page_order
@@ -177,6 +185,10 @@ def get_prev_next_page_name(page_name, session_id=None):
             next_page_name = None
         else:
             next_page_name = order[page_index + 1]
+
+    if prev_page_name == "household-income" and receives_benefits:
+        prev_page_name = "benefits"
+
     return prev_page_name, next_page_name
 
 
@@ -316,12 +328,7 @@ class OwnPropertyView(PageView):
         return {"own_property_options_map": schemas.own_property_options_map}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
-        data = request.POST.dict()
-        own_property = data.get("own_property")
-
-        if own_property == "Yes, I own my property and live in it":
-            next_page_name = "park-home"
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name, session_id)
 
         if is_change_page:
             assert page_name in schemas.change_page_lookup
@@ -561,7 +568,7 @@ class EpcView(PageView):
             return super().handle_get(response, request, session_id, page_name, context)
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name, session_id)
         epc_rating = data.get("epc_rating").upper()
         accept_suggested_epc = data.get("accept_suggested_epc")
 
@@ -571,7 +578,6 @@ class EpcView(PageView):
         if (epc_rating in ("A", "B", "C")) and (accept_suggested_epc == "Yes"):
             return redirect("frontdoor:page", session_id=session_id, page_name="epc-ineligible")
 
-        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
 
@@ -582,18 +588,30 @@ class BenefitsView(PageView):
         return {"benefits_options": schemas.yes_no_options_map, "context": context}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
+        benefits = data.get("benefits")
         session_data = interface.api.session.get_session(session_id)
-        eligible_schemes = eligibility.calculate_eligibility(session_data)
-        if not eligible_schemes:
-            return redirect("frontdoor:page", session_id=session_id, page_name="ineligible")
-        else:
-            return super().handle_post(request, session_id, page_name, data, is_change_page)
+        park_home = session_data.get("park_home")
+        if benefits == "Yes":
+            if park_home == "Yes":
+                return redirect("frontdoor:page", session_id=session_id, page_name="summary")
+            return redirect("frontdoor:page", session_id=session_id, page_name="property-type")
+        return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
 @register_page("household-income")
 class HouseholdIncomeView(PageView):
     def get_context(self, *args, **kwargs):
         return {"household_income_options": schemas.household_income_options_map}
+
+    def handle_post(self, request, session_id, page_name, data, is_change_page):
+        # This is the final question that determines eligibility,
+        # so we can check the eligible schemes to decide where to forward.
+        session_data = interface.api.session.get_session(session_id)
+        eligible_schemes = eligibility.calculate_eligibility(session_data)
+        if len(eligible_schemes) == 0:
+            return redirect("frontdoor:page", session_id=session_id, page_name="ineligible")
+        else:
+            return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
 @register_page("property-type")
@@ -689,20 +707,21 @@ class SummaryView(PageView):
             for question in questions
             if self.show_question(session_data, question)
         )
-        summary_lines = tuple(
-            line
-            for line in summary_lines
-            if not (line["question"] == "Energy Performance Certificate" and line["answer"] == "Not found")
-        )
         return {"summary_lines": summary_lines}
 
     def show_question(self, session_data, question):
-        show_property_type_lines = self.get_answer(session_data, "property_type") != "Park home"
         question_answered = question in session_data and question in schemas.summary_map
+        if not question_answered:
+            return False
         if question == "property_type" or question == "property_subtype":
-            return show_property_type_lines and question_answered
+            property_type = self.get_answer(session_data, "property_type")
+            return property_type != "Park home"
+        if question == "epc_rating":
+            epc_rating = session_data.get("epc_rating", "Not found")
+            accept_suggested_epc = session_data.get("accept_suggested_epc")
+            return epc_rating != "Not found" and accept_suggested_epc == "Yes"
         else:
-            return question_answered
+            return True
 
     def get_answer(self, session_data, question):
         answer = session_data.get(question)
