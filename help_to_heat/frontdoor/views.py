@@ -328,12 +328,7 @@ class OwnPropertyView(PageView):
         return {"own_property_options_map": schemas.own_property_options_map}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        prev_page_name, next_page_name = get_prev_next_page_name(page_name)
-        data = request.POST.dict()
-        own_property = data.get("own_property")
-
-        if own_property == "Yes, I own my property and live in it":
-            next_page_name = "park-home"
+        prev_page_name, next_page_name = get_prev_next_page_name(page_name, session_id)
 
         if is_change_page:
             assert page_name in schemas.change_page_lookup

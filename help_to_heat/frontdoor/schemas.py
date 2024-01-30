@@ -8,6 +8,7 @@ page_order = (
     "country",
     "supplier",
     "own-property",
+    "park-home",
     "address",
     "council-tax-band",
     "epc",
