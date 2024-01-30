@@ -99,4 +99,6 @@ def _do_test(country, council_tax_band, epc_rating):
 
     page = _check_page(page, "benefits", "benefits", "No")
 
+    page = _check_page(page, "household-income", "household_income", "£31,000 or more a year")
+
     assert page.has_one("h1:contains('Your property is not eligible')"), (country, council_tax_band, epc_rating)
