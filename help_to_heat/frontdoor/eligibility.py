@@ -6,7 +6,7 @@ eligible_for_gbis = (gbis,)
 eligible_for_gbis_and_eco4 = (gbis, eco4)
 
 
-def is_eligible_council_tax_band(country, council_tax_band):
+def _is_eligible_council_tax_band(country, council_tax_band):
     if country == "England":
         return council_tax_band in ("A", "B", "C", "D")
     if country in ("Scotland", "Wales"):
@@ -46,7 +46,7 @@ def calculate_eligibility(session_data):
     if property_type == "Park home":
         return eligible_for_gbis
 
-    if is_eligible_council_tax_band(country, council_tax_band):
+    if _is_eligible_council_tax_band(country, council_tax_band):
         return eligible_for_gbis
 
     return not_eligible

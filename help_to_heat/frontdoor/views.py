@@ -604,15 +604,11 @@ class HouseholdIncomeView(PageView):
         return {"household_income_options": schemas.household_income_options_map}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        household_income = data.get("household_income")
+        # This is the final question that determines eligibility,
+        # so we can check the eligible schemes to decide where to forward.
         session_data = interface.api.session.get_session(session_id)
-        council_tax_band = session_data.get("council_tax_band")
-        country = session_data.get("country")
-
-        ineligible_income = household_income == "£31,000 or more a year"
-        ineligible_council_tax_band = not eligibility.is_eligible_council_tax_band(country, council_tax_band)
-
-        if ineligible_income and ineligible_council_tax_band:
+        eligible_schemes = eligibility.calculate_eligibility(session_data)
+        if len(eligible_schemes) == 0:
             return redirect("frontdoor:page", session_id=session_id, page_name="ineligible")
         else:
             return super().handle_post(request, session_id, page_name, data, is_change_page)
