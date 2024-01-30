@@ -151,17 +151,20 @@ def change_page_view(request, session_id, page_name):
 
 
 def get_prev_next_page_name(page_name, session_id=None):
-    park_home = None
-    social_housing = None
+    is_park_home = False
+    is_social_housing = False
+    receives_benefits = False
+
     if session_id:
         session_data = interface.api.session.get_session(session_id)
-        park_home = session_data.get("park_home")
-        social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
+        is_park_home = session_data.get("park_home") == "Yes"
+        is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
+        receives_benefits = session_data.get("benefits") == "Yes"
 
-    if park_home == "Yes":
+    if is_park_home:
         mapping = schemas.page_prev_next_map_park_home
         order = schemas.page_order_park_home
-    elif social_housing:
+    elif is_social_housing:
         mapping = schemas.page_prev_next_map_social_housing
         order = schemas.page_order_social_housing
     else:
@@ -182,6 +185,10 @@ def get_prev_next_page_name(page_name, session_id=None):
             next_page_name = None
         else:
             next_page_name = order[page_index + 1]
+
+    if prev_page_name == "household-income" and receives_benefits:
+        prev_page_name = "benefits"
+
     return prev_page_name, next_page_name
 
 
