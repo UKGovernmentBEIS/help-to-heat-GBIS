@@ -18,6 +18,7 @@ from help_to_heat.portal import models as portal_models
 london_tz = tz.gettz("Europe/London")
 
 referral_column_headings = (
+    "referral_id",
     "ECO4",
     "GBIS",
     "country",
@@ -53,6 +54,7 @@ referral_column_headings = (
 )
 
 referral_column_headings_no_pii = (
+    "referral_id",
     "ECO4",
     "GBIS",
     "country",
@@ -152,7 +154,7 @@ def create_referral_xlsx(referrals, file_name, exclude_pii=False):
 
 
 def handle_create_spreadsheet_request(request, creator):
-    referrals = models.Referral.objects.filter(referral_download=None, supplier=request.user.supplier)
+    referrals = models.Referral.objects.filter(referral_download=None, supplier=request.user.supplier).order_by("referral_id")
     downloaded_at = timezone.now()
     file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
     new_referral_download = models.ReferralDownload.objects.create(
@@ -182,7 +184,7 @@ def download_feedback_view(request):
 @require_http_methods(["GET"])
 @decorators.requires_service_manager
 def download_referrals_all_view(request):
-    referrals = portal_models.Referral.objects.all()
+    referrals = portal_models.Referral.objects.all().order_by("referral_id")
     downloaded_at = timezone.now()
     file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
     response = create_referral_xlsx(referrals, file_name, exclude_pii=True)
@@ -192,7 +194,7 @@ def download_referrals_all_view(request):
 @require_http_methods(["GET"])
 @decorators.requires_service_manager
 def download_referrals_last_week_view(request):
-    referrals = portal_models.Referral.objects.filter(created_at__gte=datetime.now() - timedelta(days=7))
+    referrals = portal_models.Referral.objects.filter(created_at__gte=datetime.now() - timedelta(days=7)).order_by("referral_id")
     downloaded_at = timezone.now()
     file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
     response = create_referral_xlsx(referrals, file_name, exclude_pii=True)
@@ -215,7 +217,7 @@ def handle_create_file_request_by_id(request, download_id, csv_or_xlsx_creator):
     referral_download = models.ReferralDownload.objects.get(pk=download_id)
     if referral_download is None:
         return HttpResponse(status=404)
-    referrals = models.Referral.objects.filter(referral_download=referral_download)
+    referrals = models.Referral.objects.filter(referral_download=referral_download).order_by("referral_id")
     response = create_referral_csv(referrals, referral_download.file_name)
     referral_download.last_downloaded_by = request.user
     referral_download.save()
@@ -272,6 +274,7 @@ def add_extra_row_data(referral, exclude_pii=False):
         "epc_date": epc_date and epc_date or "",
         "submission_date": created_at.date(),
         "submission_time": created_at.time().strftime("%H:%M:%S"),
+        "referral_id": referral.formatted_referral_id,
     }
     return row
 
