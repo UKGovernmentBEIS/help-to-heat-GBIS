@@ -709,20 +709,21 @@ class SummaryView(PageView):
             for question in questions
             if self.show_question(session_data, question)
         )
-        summary_lines = tuple(
-            line
-            for line in summary_lines
-            if not (line["question"] == "Energy Performance Certificate" and line["answer"] == "Not found")
-        )
         return {"summary_lines": summary_lines}
 
     def show_question(self, session_data, question):
-        show_property_type_lines = self.get_answer(session_data, "property_type") != "Park home"
         question_answered = question in session_data and question in schemas.summary_map
+        if not question_answered:
+            return False
         if question == "property_type" or question == "property_subtype":
-            return show_property_type_lines and question_answered
+            property_type = self.get_answer(session_data, "property_type")
+            return property_type != "Park home"
+        if question == "epc_rating":
+            epc_rating = session_data.get("epc_rating", "Not found")
+            accept_suggested_epc = session_data.get("accept_suggested_epc")
+            return epc_rating != "Not found" and accept_suggested_epc == "Yes"
         else:
-            return question_answered
+            return True
 
     def get_answer(self, session_data, question):
         answer = session_data.get(question)
