@@ -609,10 +609,10 @@ class HouseholdIncomeView(PageView):
         council_tax_band = session_data.get("council_tax_band")
         country = session_data.get("country")
 
-        if (
-                household_income == "£31,000 or more a year"
-                and not eligibility.is_eligible_council_tax_band(country, council_tax_band)
-        ):
+        ineligible_income = household_income == "£31,000 or more a year"
+        ineligible_council_tax_band = not eligibility.is_eligible_council_tax_band(country, council_tax_band)
+
+        if ineligible_income and ineligible_council_tax_band:
             return redirect("frontdoor:page", session_id=session_id, page_name="ineligible")
         else:
             return super().handle_post(request, session_id, page_name, data, is_change_page)
