@@ -85,7 +85,7 @@ page_prev_next_map = {
     "loft-access": {"prev": "loft", "next": "loft-insulation"},
     "loft-insulation": {"prev": "loft-access", "next": "summary"},
     "epc-ineligible": {"prev": "epc", "next": None},
-    "ineligible": {"prev": "benefits", "next": None},
+    "ineligible": {"prev": "household-income", "next": None},
     "northern-ireland": {"prev": "country", "next": None},
     "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
     "utility-warehouse-warning-page": {"prev": "supplier", "next": "own-property"},
@@ -107,6 +107,7 @@ page_prev_next_map_park_home = {
     "application-closed-utility-warehouse": {"prev": "supplier", "next": None},
     "park-home-application-closed": {"prev": "park-home-main-residence", "next": None},
     "epc-ineligible": {"prev": "epc", "next": None},
+    "ineligible": {"prev": "household-income", "next": None},
 }
 
 page_prev_next_map_social_housing = {
