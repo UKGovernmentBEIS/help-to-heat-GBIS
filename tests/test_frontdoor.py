@@ -123,8 +123,9 @@ def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita
 
     page = _check_page(page, "benefits", "benefits", benefits_answer)
 
-    assert page.has_one("h1:contains('What is your annual household income?')")
-    page = _check_page(page, "household-income", "household_income", "Less than £31,000 a year")
+    if benefits_answer == "No":
+        assert page.has_one("h1:contains('What is your annual household income?')")
+        page = _check_page(page, "household-income", "household_income", "Less than £31,000 a year")
 
     assert page.has_one("h1:contains('What kind of property do you have?')")
     page = _check_page(page, "property-type", "property_type", "House")
@@ -225,6 +226,7 @@ def _do_happy_flow(supplier="EON"):
     assert page.has_text("Please confirm that you agree to the use of your information by checking this box")
     form = page.get_form()
     form["permission"] = True
+    form["acknowledge"] = True
 
     page = form.submit().follow()
 
@@ -658,6 +660,8 @@ def test_eligibility():
 
     page = _check_page(page, "benefits", "benefits", "No")
 
+    page = _check_page(page, "household-income", "household_income", "£31,000 or more a year")
+
     assert page.has_one("h1:contains('Your property is not eligible')")
 
 
@@ -703,6 +707,7 @@ def test_referral_email():
     assert page.has_text("Please confirm that you agree to the use of your information by checking this box")
     form = page.get_form()
     form["permission"] = True
+    form["acknowledge"] = True
 
     page = form.submit().follow()
 
@@ -859,6 +864,7 @@ def test_referral_not_providing_email():
     assert page.has_text("Please confirm that you agree to the use of your information by checking this box")
     form = page.get_form()
     form["permission"] = True
+    form["acknowledge"] = True
 
     page = form.submit().follow()
 
@@ -908,6 +914,7 @@ def test_referral_not_providing_contact_number():
     assert page.has_text("Please confirm that you agree to the use of your information by checking this box")
     form = page.get_form()
     form["permission"] = True
+    form["acknowledge"] = True
 
     page = form.submit().follow()
 

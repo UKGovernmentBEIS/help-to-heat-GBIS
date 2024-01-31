@@ -31,8 +31,15 @@ ALLOWED_HOSTS = ["*"]
 VCAP_APPLICATION = env.json("VCAP_APPLICATION", default={})
 
 GTAG_ID = env.str("GTAG_ID", default=None)
-# BASIC_AUTH = env.str("BASIC_AUTH", default="")
-BASIC_AUTH = ""
+
+BASIC_AUTH = env.str("BASIC_AUTH", default="")
+
+# The basic auth parameter cannot be omitted or empty in AWS deployed environments,
+# because it is required to be set in the Parameter Store which does not allow blank values.
+# For environments that do not use basic auth (e.g. Production),
+# we use the special value of "disabled" to indicate that it is not required.
+if BASIC_AUTH == "disabled":
+    BASIC_AUTH = ""
 
 # Application definition
 

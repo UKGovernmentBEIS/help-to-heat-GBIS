@@ -127,7 +127,7 @@ def send_referral_confirmation_email(session_data, language_code):
     else:
         data = EMAIL_MAPPING["referral-confirmation"]
         data["subject"] = f"Referral to {session_data.get('supplier')} successful"
-    context = {"supplier_name": session_data.get("supplier")}
+    context = {"supplier_name": session_data.get("supplier"), "referral_id": session_data.get("referral_id")}
     return _send_normal_email(to_address=session_data.get("email"), context=context, **data)
 
 

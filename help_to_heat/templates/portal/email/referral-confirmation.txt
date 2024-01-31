@@ -1,5 +1,7 @@
 Hi,
 
+Your reference number is {{referral_id}}
+
 Your details have been submitted to {{supplier_name}}.
 
 # What happens next?
