@@ -70,7 +70,6 @@ portal_patterns = [
     ),
     path("data-download/", download_views.download_csv_view, name="data-download"),
     path("feedback-download/", download_views.download_feedback_view, name="feedback-download"),
-    path("referrals-all-download/", download_views.download_referrals_all_view, name="referrals-all-download"),
     path(
         "referrals-last-week-download/",
         download_views.download_referrals_last_week_view,

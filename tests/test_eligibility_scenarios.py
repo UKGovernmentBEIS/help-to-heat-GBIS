@@ -80,6 +80,7 @@ i_do_not_know = "I do not know"
 
 yes_no = yes, no
 
+
 def _get_country_options(scenario):
     is_england_scotland_or_wales = scenario.get("England, Scotland or Wales?")
     if is_england_scotland_or_wales is None:

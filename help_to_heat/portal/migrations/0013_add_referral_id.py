@@ -4,22 +4,16 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('portal', '0012_scottishepcrating'),
+        ("portal", "0012_scottishepcrating"),
     ]
 
     operations = [
-
         migrations.RunSQL(
             sql="ALTER TABLE portal_referral ADD referral_id SERIAL;",
             reverse_sql="ALTER TABLE portal_referral DROP referral_id;",
             state_operations=[
-                migrations.AddField(
-                    model_name='referral',
-                    name='referral_id',
-                    field=models.IntegerField(default=0)
-                )
-            ]
+                migrations.AddField(model_name="referral", name="referral_id", field=models.IntegerField(default=0))
+            ],
         )
     ]
