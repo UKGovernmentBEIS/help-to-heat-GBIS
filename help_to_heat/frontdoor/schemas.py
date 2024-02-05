@@ -395,12 +395,8 @@ check_your_answers_options_map = {
         "No loft": _("No loft"),
     },
     "loft_insulation": {
-        "I have more than 100mm of loft insulation": _(
-            "I have more than 100mm of loft insulation"
-        ),
-        "I have up to 100mm of loft insulation": _(
-            "I have up to 100mm of loft insulation"
-        ),
+        "I have more than 100mm of loft insulation": _("I have more than 100mm of loft insulation"),
+        "I have up to 100mm of loft insulation": _("I have up to 100mm of loft insulation"),
         "I do not know": _("I do not know"),
         "No loft": _("No loft"),
     },
