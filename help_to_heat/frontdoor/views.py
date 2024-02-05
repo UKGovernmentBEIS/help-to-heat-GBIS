@@ -9,7 +9,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from marshmallow import ValidationError
 
-from help_to_heat import utils, portal
+from help_to_heat import portal, utils
 
 from ..portal import email_handler
 from . import eligibility, interface, schemas
@@ -851,7 +851,7 @@ class ConfirmSubmitView(PageView):
         session_data = SupplierConverter(session_id).replace_in_session_data(session_data)
         if session_data.get("email"):
             referral = portal.models.Referral.objects.get(session_id=session_id)
-            session_data['referral_id'] = referral.formatted_referral_id
+            session_data["referral_id"] = referral.formatted_referral_id
             email_handler.send_referral_confirmation_email(session_data, request.LANGUAGE_CODE)
         return super().handle_post(request, session_id, page_name, data, is_change_page)
 
