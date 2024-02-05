@@ -144,16 +144,12 @@ class Referral(utils.UUIDPrimaryKeyBase, utils.TimeStampedModel):
         ignore_fields = ["referral_id"]
 
         return super(Referral, self)._do_insert(
-            manager, using,
-            [field for field in fields if field.attname not in ignore_fields],
-            returning_fields,
-            raw
+            manager, using, [field for field in fields if field.attname not in ignore_fields], returning_fields, raw
         )
 
     @property
     def formatted_referral_id(self):
         return f"GBIS{self.referral_id:07}"
-
 
 
 class EpcRating(utils.TimeStampedModel):
