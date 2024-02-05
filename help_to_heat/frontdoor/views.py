@@ -753,7 +753,13 @@ class SchemesView(PageView):
 @register_page("supplier")
 class SupplierView(PageView):
     def get_context(self, *args, **kwargs):
-        return {"supplier_options": schemas.supplier_options}
+        hidden_suppliers = ["So Energy"]
+        return {"supplier_options": [
+            supplier_option
+            for supplier_option
+            in schemas.supplier_options
+            if supplier_option["value"] not in hidden_suppliers
+        ]}
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         prev_page_name, next_page_name = get_prev_next_page_name(page_name)
