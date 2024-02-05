@@ -1,7 +1,7 @@
 import codecs
 import csv
 import io
-from datetime import date, datetime, timedelta
+from datetime import date, timedelta
 
 import xlsxwriter
 from dateutil import tz
@@ -186,13 +186,15 @@ def download_feedback_view(request):
 @require_http_methods(["GET"])
 @decorators.requires_service_manager
 def download_referrals_last_week_view(request):
+    # Weekly boundaries are Mondays at midnight (00:00)
+    # Referrals submitted between Monday 00:00:00 and Sunday 23:59:59.99... are included
     today = date.today()
     end_of_last_week = today - timedelta(days=today.weekday())
-    start_of_last_week = end_of_last_week - timedelta(days=7)
+    start_of_last_week = end_of_last_week - timedelta(weeks=1)
     referrals = portal_models.Referral.objects.filter(
         created_at__gte=start_of_last_week, created_at__lt=end_of_last_week
     ).order_by("referral_id")
-    file_name = f"Weekly Referrals ({datetime.strptime(str(start_of_last_week), '%Y-%m-%d').strftime('%d-%m-%Y')})"
+    file_name = f"Weekly Referrals ({start_of_last_week.strftime('%d-%m-%Y')})"
     response = create_referral_xlsx(referrals, file_name, exclude_pii=True)
     return response
 
