@@ -556,16 +556,14 @@ class EpcView(PageView):
         if country == "Scotland":
             uprn = session_data.get("uprn")
             epc = interface.api.epc.get_epc_scotland(uprn) if uprn else {}
-
-            if not epc:
-                return redirect("frontdoor:page", session_id=session_id, page_name="benefits")
-            return super().handle_get(response, request, session_id, page_name, context)
         else:
             rrn = session_data.get("rrn")
             epc = session_data.get("epc_details") if rrn else {}
-            if not epc:
-                return redirect("frontdoor:page", session_id=session_id, page_name="benefits")
-            return super().handle_get(response, request, session_id, page_name, context)
+
+        if not epc:
+            _, next_page_name = get_prev_next_page_name(page_name, session_id)
+            return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+        return super().handle_get(response, request, session_id, page_name, context)
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
         prev_page_name, next_page_name = get_prev_next_page_name(page_name, session_id)
