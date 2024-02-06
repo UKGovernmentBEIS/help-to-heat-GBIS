@@ -602,10 +602,6 @@ supplier_options = (
         "value": "Shell",
     },
     {
-        "label": "So Energy",
-        "value": "So Energy",
-    },
-    {
         "label": "Utilita",
         "value": "Utilita",
     },
