@@ -75,6 +75,11 @@ portal_patterns = [
         download_views.download_referrals_last_week_view,
         name="referrals-last-week-download",
     ),
+    path(
+        "referrals-range-download/",
+        download_views.download_referrals_range_view,
+        name="referrals-range-download",
+    ),
     path("data-download/<uuid:download_id>/", download_views.download_csv_by_id_view, name="download-csv-by-id"),
     path("data-download-xlsx/", download_views.download_xlsx_view, name="data-download-xlsx"),
     path("data-download-xlsx/<uuid:download_id>/", download_views.download_xlsx_by_id_view, name="download-xlsx-by-id"),

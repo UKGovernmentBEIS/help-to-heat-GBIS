@@ -183,6 +183,14 @@ def download_feedback_view(request):
     return response
 
 
+def create_referral_xlsx_between(start, end, file_name):
+    referrals = portal_models.Referral.objects.filter(
+        created_at__gte=start, created_at__lt=end
+    ).order_by("referral_id")
+    response = create_referral_xlsx(referrals, file_name, exclude_pii=True)
+    return response
+
+
 @require_http_methods(["GET"])
 @decorators.requires_service_manager
 def download_referrals_last_week_view(request):
@@ -191,12 +199,20 @@ def download_referrals_last_week_view(request):
     today = date.today()
     end_of_last_week = today - timedelta(days=today.weekday())
     start_of_last_week = end_of_last_week - timedelta(weeks=1)
-    referrals = portal_models.Referral.objects.filter(
-        created_at__gte=start_of_last_week, created_at__lt=end_of_last_week
-    ).order_by("referral_id")
     file_name = f"Weekly Referrals ({start_of_last_week.strftime('%d-%m-%Y')})"
-    response = create_referral_xlsx(referrals, file_name, exclude_pii=True)
-    return response
+    return create_referral_xlsx_between(start_of_last_week, end_of_last_week, file_name)
+
+
+@require_http_methods(["GET"])
+@decorators.requires_service_manager
+def download_referrals_range_view(request):
+    # Weekly boundaries are Mondays at midnight (00:00)
+    # Referrals submitted between Monday 00:00:00 and Sunday 23:59:59.99... are included
+
+    date_from = date(int(request.GET.get("from-year")), int(request.GET.get("from-month")), int(request.GET.get("from-day")))
+    date_to = date(int(request.GET.get("to-year")), int(request.GET.get("to-month")), int(request.GET.get("to-day"))) + timedelta(days=1)
+    file_name = f"Referrals {date_from.strftime('%d-%m-%Y')} to {date_to.strftime('%d-%m-%Y')}"
+    return create_referral_xlsx_between(date_from, date_to, file_name)
 
 
 @require_http_methods(["GET"])
