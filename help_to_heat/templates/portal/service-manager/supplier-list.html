@@ -42,5 +42,85 @@
 <a href="{{url('portal:feedback-download')}}" class="govuk-button">Download</a>
 
 <h1 class="govuk-heading-l">Download referrals from the last week</h1>
-<p class="govuk-body">Download referrals from the last week in xlsx format.</p>
+<p class="govuk-body">Download referrals from the last week as an Excel spreadsheet</p>
 <a href="{{url('portal:referrals-last-week-download')}}" class="govuk-button">Download</a>
+
+<form method="GET" action="{{ url('portal:referrals-range-download') }}" novalidate rel="noopener">
+  <h1 class="govuk-heading-l">Download referrals from date range</h1>
+  <p class="govuk-body">Download referrals from a specific date range as an Excel spreadsheet.</p>
+  
+  <div class="govuk-grid-row">
+    <div class="govuk-form-group govuk-grid-column-one-half">
+      <fieldset class="govuk-fieldset" role="group" aria-describedby="from-hint">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+          <h1 class="govuk-fieldset__heading">
+            From
+          </h1>
+        </legend>
+        <div class="govuk-date-input" id="from">
+          <div class="govuk-date-input__item">
+            <div class="govuk-form-group">
+              <label class="govuk-label govuk-date-input__label" for="from-day">
+                Day
+              </label>
+              <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="from-day" name="from-day" type="text" inputmode="numeric">
+            </div>
+          </div>
+          <div class="govuk-date-input__item">
+            <div class="govuk-form-group">
+              <label class="govuk-label govuk-date-input__label" for="from-month">
+                Month
+              </label>
+              <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="from-month" name="from-month" type="text" inputmode="numeric">
+            </div>
+          </div>
+          <div class="govuk-date-input__item">
+            <div class="govuk-form-group">
+              <label class="govuk-label govuk-date-input__label" for="from-year">
+                Year
+              </label>
+              <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="from-year" name="from-year" type="text" inputmode="numeric">
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+    <div class="govuk-form-group govuk-grid-column-one-half">
+      <fieldset class="govuk-fieldset" role="group" aria-describedby="to-hint">
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+          <h1 class="govuk-fieldset__heading">
+            To
+          </h1>
+        </legend>
+        <div class="govuk-date-input" id="to">
+          <div class="govuk-date-input__item">
+            <div class="govuk-form-group">
+              <label class="govuk-label govuk-date-input__label" for="to-day">
+                Day
+              </label>
+              <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="to-day" name="to-day" type="text" inputmode="numeric">
+            </div>
+          </div>
+          <div class="govuk-date-input__item">
+            <div class="govuk-form-group">
+              <label class="govuk-label govuk-date-input__label" for="to-month">
+                Month
+              </label>
+              <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="to-month" name="to-month" type="text" inputmode="numeric">
+            </div>
+          </div>
+          <div class="govuk-date-input__item">
+            <div class="govuk-form-group">
+              <label class="govuk-label govuk-date-input__label" for="to-year">
+                Year
+              </label>
+              <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="to-year" name="to-year" type="text" inputmode="numeric">
+            </div>
+          </div>
+        </div>
+      </fieldset>
+    </div>
+  </div>
+  
+  <button class="govuk-button" data-module="govuk-button" type="submit">Download</button>
+</form>
