@@ -45,7 +45,8 @@
 <p class="govuk-body">Download referrals from the last week as an Excel spreadsheet</p>
 <a href="{{url('portal:referrals-last-week-download')}}" class="govuk-button">Download</a>
 
-<form method="GET" action="{{ url('portal:referrals-range-download') }}" novalidate rel="noopener">
+<form method="POST" novalidate>
+  {{csrf_input}}
   <h1 class="govuk-heading-l">Download referrals from date range</h1>
   <p class="govuk-body">Download referrals from a specific date range as an Excel spreadsheet.</p>
   
@@ -63,7 +64,7 @@
               <label class="govuk-label govuk-date-input__label" for="from-day">
                 Day
               </label>
-              <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="from-day" name="from-day" type="text" inputmode="numeric">
+              <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="from-day" name="from-day" type="text" inputmode="numeric" value="{{ previous.get("from-day", "") }}">
             </div>
           </div>
           <div class="govuk-date-input__item">
@@ -71,7 +72,7 @@
               <label class="govuk-label govuk-date-input__label" for="from-month">
                 Month
               </label>
-              <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="from-month" name="from-month" type="text" inputmode="numeric">
+              <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="from-month" name="from-month" type="text" inputmode="numeric" value="{{ previous.get("from-month", "") }}">
             </div>
           </div>
           <div class="govuk-date-input__item">
@@ -79,26 +80,31 @@
               <label class="govuk-label govuk-date-input__label" for="from-year">
                 Year
               </label>
-              <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="from-year" name="from-year" type="text" inputmode="numeric">
+              <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="from-year" name="from-year" type="text" inputmode="numeric" value="{{ previous.get("from-year", "") }}">
             </div>
           </div>
         </div>
       </fieldset>
     </div>
-    <div class="govuk-form-group govuk-grid-column-one-half">
+    <div class="govuk-form-group govuk-grid-column-one-half {{ "govuk-form-group--error" if errors["to"] else "" }}">
       <fieldset class="govuk-fieldset" role="group" aria-describedby="to-hint">
         <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
           <h1 class="govuk-fieldset__heading">
             To
           </h1>
         </legend>
+        {% if errors["to"] %}
+          <p id="passport-issued-error" class="govuk-error-message">
+            <span class="govuk-visually-hidden">Error:</span> {{ errors["to"] }}
+          </p>
+        {% endif %} 
         <div class="govuk-date-input" id="to">
           <div class="govuk-date-input__item">
             <div class="govuk-form-group">
               <label class="govuk-label govuk-date-input__label" for="to-day">
                 Day
               </label>
-              <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="to-day" name="to-day" type="text" inputmode="numeric">
+              <input class="govuk-input govuk-date-input__input govuk-input--width-2 {{ "govuk-input--error" if errors["to-day"] else "" }}" id="to-day" name="to-day" type="text" inputmode="numeric" value="{{ previous.get("to-day", "") }}">
             </div>
           </div>
           <div class="govuk-date-input__item">
@@ -106,7 +112,7 @@
               <label class="govuk-label govuk-date-input__label" for="to-month">
                 Month
               </label>
-              <input class="govuk-input govuk-date-input__input govuk-input--width-2" id="to-month" name="to-month" type="text" inputmode="numeric">
+              <input class="govuk-input govuk-date-input__input govuk-input--width-2 {{ "govuk-input--error" if errors["to-month"] else "" }}" id="to-month" name="to-month" type="text" inputmode="numeric" value="{{ previous.get("to-month", "") }}">
             </div>
           </div>
           <div class="govuk-date-input__item">
@@ -114,7 +120,7 @@
               <label class="govuk-label govuk-date-input__label" for="to-year">
                 Year
               </label>
-              <input class="govuk-input govuk-date-input__input govuk-input--width-4" id="to-year" name="to-year" type="text" inputmode="numeric">
+              <input class="govuk-input govuk-date-input__input govuk-input--width-4 {{ "govuk-input--error" if errors["to-year"] else "" }}" id="to-year" name="to-year" type="text" inputmode="numeric" value="{{ previous.get("to-year", "") }}">
             </div>
           </div>
         </div>
