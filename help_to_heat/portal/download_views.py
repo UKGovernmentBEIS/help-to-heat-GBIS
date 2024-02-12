@@ -206,9 +206,6 @@ def download_referrals_last_week_view(request):
 @require_http_methods(["GET"])
 @decorators.requires_service_manager
 def download_referrals_range_view(request):
-    # Weekly boundaries are Mondays at midnight (00:00)
-    # Referrals submitted between Monday 00:00:00 and Sunday 23:59:59.99... are included
-
     date_from = date(int(request.GET.get("from-year")), int(request.GET.get("from-month")), int(request.GET.get("from-day")))
     date_to = date(int(request.GET.get("to-year")), int(request.GET.get("to-month")), int(request.GET.get("to-day"))) + timedelta(days=1)
     file_name = f"Referrals {date_from.strftime('%d-%m-%Y')} to {date_to.strftime('%d-%m-%Y')}"

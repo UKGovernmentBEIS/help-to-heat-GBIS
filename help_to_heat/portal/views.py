@@ -1,7 +1,6 @@
 import datetime
 import logging
 import subprocess
-from datetime import date
 
 from django.contrib.auth.decorators import login_required
 from django.db import connection
@@ -97,7 +96,7 @@ def parse_date(year: str, month: str, day: str):
 
     def try_parse_date(year, month, day):
         try:
-            return date(year, month, day)
+            return datetime.date(year, month, day)
         except ValueError:
             return None
 
@@ -106,7 +105,7 @@ def parse_date(year: str, month: str, day: str):
     if check_date is None:
         return generate_error("%s must be a real date"), None
 
-    today = date.today()
+    today = datetime.date.today()
 
     if check_date > today:
         return generate_error("%s must be today or in the past"), None
@@ -170,7 +169,7 @@ def service_manager_homepage_view(request):
     suppliers = [supplier for supplier in models.Supplier.objects.all() if supplier.name not in suppliers_to_hide]
     suppliers.sort(key=lambda supplier: supplier.name)
     data = {
-        "suppliers": suppliers
+        "suppliers": suppliers,
     }
     return render(
         request,
