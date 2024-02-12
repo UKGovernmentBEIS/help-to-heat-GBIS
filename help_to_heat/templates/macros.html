@@ -129,3 +129,48 @@
   </div>
 </div>
 {%- endmacro%}
+
+{% macro date_input(field, label, errors) %}
+<div class="govuk-form-group govuk-grid-column-one-half {{ "govuk-form-group--error" if errors[field] else "" }}">
+  <fieldset class="govuk-fieldset" role="group">
+    <legend class="govuk-fieldset__legend govuk-fieldset__legend--m">
+      <h1 class="govuk-fieldset__heading">
+        {{ label }}
+      </h1>
+    </legend>
+    {% if errors[field] %}
+      {% for error_message in errors[field]["error_messages"] %}
+        <p id="passport-issued-error" class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error:</span> {{ error_message % label }}
+        </p>
+      {% endfor %}
+    {% endif %}
+    <div class="govuk-date-input" id={{ field }}>
+      <div class="govuk-date-input__item">
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-date-input__label" for="{{ field }}-day">
+            Day
+          </label>
+          <input class="govuk-input govuk-date-input__input govuk-input--width-2 {{ "govuk-input--error" if errors.get(field, {})["day"] else "" }}" id="{{ field }}-day" name="{{ field }}-day" type="text" inputmode="numeric" value="{{ previous.get(field + "-day", "") }}">
+        </div>
+      </div>
+      <div class="govuk-date-input__item">
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-date-input__label" for="{{ field }}-month">
+            Month
+          </label>
+          <input class="govuk-input govuk-date-input__input govuk-input--width-2 {{ "govuk-input--error" if errors.get(field, {})["month"] else "" }}" id="{{ field }}-month" name="{{ field }}-month" type="text" inputmode="numeric" value="{{ previous.get(field + "-month", "") }}">
+        </div>
+      </div>
+      <div class="govuk-date-input__item">
+        <div class="govuk-form-group">
+          <label class="govuk-label govuk-date-input__label" for="{{ field }}-year">
+            Year
+          </label>
+          <input class="govuk-input govuk-date-input__input govuk-input--width-4 {{ "govuk-input--error" if errors.get(field, {})["year"] else "" }}" id="{{ field }}-year" name="{{ field }}-year" type="text" inputmode="numeric" value="{{ previous.get(field + "-year", "") }}">
+        </div>
+      </div>
+    </div>
+  </fieldset>
+</div>
+{%- endmacro %}

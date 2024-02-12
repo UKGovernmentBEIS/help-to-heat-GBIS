@@ -132,7 +132,7 @@ def parse_date_range(from_year, from_month, from_day, to_year, to_month, to_day)
         return errors, None, None
 
     if date_from > date_to:
-        errors["to"] = generate_error("%s must be the same as or after Date from")
+        errors["to"] = generate_error("%s must be the same as or after From")
         return errors, None, None
 
     return None, date_from, date_to
