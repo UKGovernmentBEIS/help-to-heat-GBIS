@@ -54,47 +54,45 @@ def homepage_view(request):
 
 def parse_date_input(date_input: str, min, max):
     if date_input == "":
-        return "required", None
+        return True, None
     if not date_input.isdecimal():
-        return "integer", None
+        return True, None
     date_input = int(date_input)
     if date_input < min or date_input > max:
-        return "range", None
-    return None, date_input
+        return True, None
+    return False, date_input
+
+
+def generate_error(error):
+    return {
+        "error_messages": [error],
+        "year": True,
+        "month": True,
+        "day": True
+    }
 
 
 def parse_date(year: str, month: str, day: str):
     error_messages = []
-    year_error = False
-    month_error = False
-    day_error = False
 
     year_error, year = parse_date_input(year, datetime.MINYEAR, datetime.MAXYEAR)
-    if year_error is not None:
-        error_messages.append(f"year-{year_error}")
+    if year_error:
+        error_messages.append(f"%s must include a valid year")
         year_error = True
 
     month_error, month = parse_date_input(month, 1, 12)
-    if month_error is not None:
-        error_messages.append(f"month-{month_error}")
+    if month_error:
+        error_messages.append(f"%s must include a valid month")
         month_error = True
 
     day_error, day = parse_date_input(day, 1, 31)
-    if day_error is not None:
-        error_messages.append(f"day-{day_error}")
+    if day_error:
+        error_messages.append(f"%s must include a valid day")
         day_error = True
 
     if error_messages:
         return {
             "error_messages": error_messages, "year": year_error, "month": month_error, "day": day_error
-        }, None
-
-    def generate_error(error):
-        return {
-            "error_messages": [error],
-            "year": True,
-            "month": True,
-            "day": True
         }, None
 
     def try_parse_date(year, month, day):
@@ -106,36 +104,55 @@ def parse_date(year: str, month: str, day: str):
     check_date = try_parse_date(year, month, day)
 
     if check_date is None:
-        return generate_error("invalid-date")
+        return generate_error("%s must be a real date"), None
 
     today = date.today()
 
     if check_date > today:
-        return generate_error("future")
+        return generate_error("%s must be today or in the past"), None
 
     return None, check_date
+
+
+def parse_date_range(from_year, from_month, from_day, to_year, to_month, to_day):
+    errors = {}
+    date_from_error, date_from = parse_date(
+        from_year,
+        from_month,
+        from_day,
+    )
+    date_to_error, date_to = parse_date(
+        to_year,
+        to_month,
+        to_day
+    )
+    errors["from"] = date_from_error
+    errors["to"] = date_to_error
+    if date_from_error is not None or date_to_error is not None:
+        return errors, None, None
+
+    if date_from > date_to:
+        errors["to"] = generate_error("%s must be the same as or after Date from")
+        return errors, None, None
+
+    return None, date_from, date_to
 
 
 @require_http_methods(["GET", "POST"])
 @decorators.requires_service_manager
 def service_manager_homepage_view(request):
-    errors = {
-        "from": None,
-        "to": None,
-    }
+    errors = {}
     if request.method == "POST":
-        date_from_error, date_from = parse_date(
+        date_range_error, date_from, date_to = parse_date_range(
             request.POST.get("from-year", None),
             request.POST.get("from-month", None),
-            request.POST.get("from-day", None)
-        )
-        date_to_error, date_to = parse_date(
+            request.POST.get("from-day", None),
             request.POST.get("to-year", None),
             request.POST.get("to-month", None),
             request.POST.get("to-day", None)
         )
 
-        if date_from_error is None and date_to_error is None:
+        if date_range_error is None:
             # ensure no extra data is sent as query params
             expected_keys = ["from-year", "from-month", "from-day", "to-year", "to-month", "to-day"]
 
@@ -145,8 +162,7 @@ def service_manager_homepage_view(request):
 
             return redirect(f"{reverse('portal:referrals-range-download')}?{query_params}")
 
-        errors["from"] = date_from_error
-        errors["to"] = date_to_error
+        errors = {**date_range_error}
 
 
     template = "portal/service-manager/homepage.html"
