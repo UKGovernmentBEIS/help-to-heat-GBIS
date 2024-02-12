@@ -1,3 +1,4 @@
+import datetime
 import logging
 import subprocess
 from datetime import date
@@ -6,6 +7,7 @@ from django.contrib.auth.decorators import login_required
 from django.db import connection
 from django.http import JsonResponse
 from django.shortcuts import redirect, render
+from django.urls import reverse
 from django.utils import timezone
 from django.views.decorators.http import require_http_methods
 
@@ -50,24 +52,50 @@ def homepage_view(request):
     return redirect("portal:unauthorised")
 
 
+def parse_date_input(date_input: str, min, max):
+    if date_input == "":
+        return "required", None
+    if not date_input.isdecimal():
+        return "integer", None
+    date_input = int(date_input)
+    if date_input < min or date_input > max:
+        return "range", None
+    return None, date_input
+
+
 def parse_date(year: str, month: str, day: str):
-    if year == "":
-        return "year-required", "year", None
-    if month == "":
-        return "month-required", "month", None
-    if day == "":
-        return "day-required", "day", None
+    error_messages = []
+    year_error = False
+    month_error = False
+    day_error = False
 
-    if not year.isdecimal():
-        return "year-integer", "year", None
-    if not month.isdecimal():
-        return "month-integer", "month", None
-    if not day.isdecimal():
-        return "day-integer", "day", None
+    year_error, year = parse_date_input(year, datetime.MINYEAR, datetime.MAXYEAR)
+    if year_error is not None:
+        error_messages.append(f"year-{year_error}")
+        year_error = True
 
-    year = int(year)
-    month = int(month)
-    day = int(day)
+    month_error, month = parse_date_input(month, 1, 12)
+    if month_error is not None:
+        error_messages.append(f"month-{month_error}")
+        month_error = True
+
+    day_error, day = parse_date_input(day, 1, 31)
+    if day_error is not None:
+        error_messages.append(f"day-{day_error}")
+        day_error = True
+
+    if error_messages:
+        return {
+            "error_messages": error_messages, "year": year_error, "month": month_error, "day": day_error
+        }, None
+
+    def generate_error(error):
+        return {
+            "error_messages": [error],
+            "year": True,
+            "month": True,
+            "day": True
+        }, None
 
     def try_parse_date(year, month, day):
         try:
@@ -78,12 +106,12 @@ def parse_date(year: str, month: str, day: str):
     check_date = try_parse_date(year, month, day)
 
     if check_date is None:
-        return "invalid", "all", None
+        return generate_error("invalid-date")
 
     today = date.today()
 
     if check_date > today:
-        return "future", "all", None
+        return generate_error("future")
 
     return None, check_date
 
@@ -91,35 +119,35 @@ def parse_date(year: str, month: str, day: str):
 @require_http_methods(["GET", "POST"])
 @decorators.requires_service_manager
 def service_manager_homepage_view(request):
-    errors = {}
+    errors = {
+        "from": None,
+        "to": None,
+    }
     if request.method == "POST":
-        date_from_error, date_from_error_location, date_from = parse_date(
+        date_from_error, date_from = parse_date(
             request.POST.get("from-year", None),
             request.POST.get("from-month", None),
             request.POST.get("from-day", None)
         )
-        date_to_error, date_to_error_location, date_to = parse_date(
+        date_to_error, date_to = parse_date(
             request.POST.get("to-year", None),
             request.POST.get("to-month", None),
             request.POST.get("to-day", None)
         )
 
-        if date_from_error:
-            errors["from"] = date_from_error
-            if date_from_error_location in ["all", "year"]:
-                errors["from-year"] = True
-            if date_from_error_location in ["all", "month"]:
-                errors["from-month"] = True
-            if date_from_error_location in ["all", "day"]:
-                errors["from-day"] = True
-        if date_to_error:
-            errors["to"] = date_to_error
-            if date_to_error_location in ["all", "year"]:
-                errors["to-year"] = True
-            if date_to_error_location in ["all", "month"]:
-                errors["to-month"] = True
-            if date_to_error_location in ["all", "day"]:
-                errors["to-day"] = True
+        if date_from_error is None and date_to_error is None:
+            # ensure no extra data is sent as query params
+            expected_keys = ["from-year", "from-month", "from-day", "to-year", "to-month", "to-day"]
+
+            query_params = "&".join(
+                [f"{key}={value}" for (key, value) in request.POST.items() if key in expected_keys]
+            )
+
+            return redirect(f"{reverse('portal:referrals-range-download')}?{query_params}")
+
+        errors["from"] = date_from_error
+        errors["to"] = date_to_error
+
 
     template = "portal/service-manager/homepage.html"
     suppliers_to_hide = ["Bulb, now part of Octopus Energy", "ESB"]
