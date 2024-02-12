@@ -1,7 +1,7 @@
 import codecs
 import csv
 import io
-from datetime import date, timedelta
+from datetime import date, datetime, timedelta
 
 import xlsxwriter
 from dateutil import tz
@@ -187,29 +187,41 @@ def create_referral_xlsx_between(start, end, file_name):
     referrals = portal_models.Referral.objects.filter(
         created_at__gte=start, created_at__lt=end
     ).order_by("referral_id")
-    response = create_referral_xlsx(referrals, file_name, exclude_pii=True)
-    return response
+    return create_referral_xlsx(referrals, file_name, exclude_pii=True)
 
 
 @require_http_methods(["GET"])
 @decorators.requires_service_manager
 def download_referrals_last_week_view(request):
     # Weekly boundaries are Mondays at midnight (00:00)
-    # Referrals submitted between Monday 00:00:00 and Sunday 23:59:59.99... are included
+    # Referrals submitted between Monday 00:00:00 and Sunday 23:59:59 are included
     today = date.today()
     end_of_last_week = today - timedelta(days=today.weekday())
     start_of_last_week = end_of_last_week - timedelta(weeks=1)
+
     file_name = f"Weekly Referrals ({start_of_last_week.strftime('%d-%m-%Y')})"
+
     return create_referral_xlsx_between(start_of_last_week, end_of_last_week, file_name)
 
 
 @require_http_methods(["GET"])
 @decorators.requires_service_manager
 def download_referrals_range_view(request):
-    date_from = date(int(request.GET.get("from-year")), int(request.GET.get("from-month")), int(request.GET.get("from-day")))
-    date_to = date(int(request.GET.get("to-year")), int(request.GET.get("to-month")), int(request.GET.get("to-day"))) + timedelta(days=1)
-    file_name = f"Referrals {date_from.strftime('%d-%m-%Y')} to {date_to.strftime('%d-%m-%Y')}"
-    return create_referral_xlsx_between(date_from, date_to, file_name)
+    from_date = datetime.strptime(request.GET.get("from"), "%Y-%m-%d")
+    to_date = datetime.strptime(request.GET.get("to"), "%Y-%m-%d")
+
+    formatted_from_date = from_date.strftime("%d-%m-%Y")
+    formatted_to_date = to_date.strftime("%d-%m-%Y")
+    formatted_date_range = formatted_from_date if from_date == to_date else f"{formatted_from_date} to {formatted_to_date}"
+    file_name = f"Referrals ({formatted_date_range})"
+
+    # Date range is inclusive of all referrals made on the end date.
+    # e.g. From: 01 02 2024, To: 06 02 2024 -> All referrals from 01/02/2024 00:00:00 to 06/02/2024 23:59:59
+    #      From: 06 02 2024, To: 06 02 2024 -> All referrals from anytime on that single day (06/02/2024)
+    start_of_range = from_date
+    end_of_range = to_date + timedelta(days=1)
+
+    return create_referral_xlsx_between(start_of_range, end_of_range, file_name)
 
 
 @require_http_methods(["GET"])

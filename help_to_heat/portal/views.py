@@ -1,6 +1,7 @@
 import datetime
 import logging
 import subprocess
+import urllib.parse
 
 from django.contrib.auth.decorators import login_required
 from django.db import connection
@@ -142,7 +143,7 @@ def parse_date_range(from_year, from_month, from_day, to_year, to_month, to_day)
 def service_manager_homepage_view(request):
     errors = {}
     if request.method == "POST":
-        date_range_error, date_from, date_to = parse_date_range(
+        date_range_error, from_date, to_date = parse_date_range(
             request.POST.get("from-year", None),
             request.POST.get("from-month", None),
             request.POST.get("from-day", None),
@@ -152,14 +153,9 @@ def service_manager_homepage_view(request):
         )
 
         if date_range_error is None:
-            # ensure no extra data is sent as query params
-            expected_keys = ["from-year", "from-month", "from-day", "to-year", "to-month", "to-day"]
-
-            query_params = "&".join(
-                [f"{key}={value}" for (key, value) in request.POST.items() if key in expected_keys]
-            )
-
-            return redirect(f"{reverse('portal:referrals-range-download')}?{query_params}")
+            params = {"from": from_date.strftime("%Y-%m-%d"), "to": to_date.strftime("%Y-%m-%d")}
+            query = urllib.parse.urlencode(params)
+            return redirect(f"{reverse('portal:referrals-range-download')}?{query}")
 
         errors = {**date_range_error}
 
