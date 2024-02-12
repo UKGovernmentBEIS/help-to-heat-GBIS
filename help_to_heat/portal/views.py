@@ -72,8 +72,12 @@ def generate_error(error):
     }
 
 
-def parse_date(year: str, month: str, day: str):
+def parse_date(request, date_prefix):
     error_messages = []
+
+    year = request.POST.get(date_prefix + "-year", None)
+    month = request.POST.get(date_prefix + "-month", None)
+    day = request.POST.get(date_prefix + "-day", None)
 
     year_error, year = parse_date_input(year, datetime.MINYEAR, datetime.MAXYEAR)
     if year_error:
@@ -114,63 +118,53 @@ def parse_date(year: str, month: str, day: str):
     return None, check_date
 
 
-def parse_date_range(from_year, from_month, from_day, to_year, to_month, to_day):
-    errors = {}
-    date_from_error, date_from = parse_date(
-        from_year,
-        from_month,
-        from_day,
-    )
-    date_to_error, date_to = parse_date(
-        to_year,
-        to_month,
-        to_day
-    )
-    errors["from"] = date_from_error
-    errors["to"] = date_to_error
-    if date_from_error is not None or date_to_error is not None:
+def parse_date_range(request):
+    from_date_errors, from_date = parse_date(request, "from")
+    to_date_errors, to_date = parse_date(request, "to")
+
+    if from_date_errors is not None or to_date_errors is not None:
+        errors = {"from": from_date_errors, "to": to_date_errors}
         return errors, None, None
 
-    if date_from > date_to:
-        errors["to"] = generate_error("%s must be the same as or after From")
+    if from_date > to_date:
+        errors = {"to": generate_error("%s must be the same as or before From")}
         return errors, None, None
 
-    return None, date_from, date_to
+    return None, from_date, to_date
 
 
 @require_http_methods(["GET", "POST"])
 @decorators.requires_service_manager
 def service_manager_homepage_view(request):
-    errors = {}
+    data = {}
+
     if request.method == "POST":
-        date_range_error, from_date, to_date = parse_date_range(
-            request.POST.get("from-year", None),
-            request.POST.get("from-month", None),
-            request.POST.get("from-day", None),
-            request.POST.get("to-year", None),
-            request.POST.get("to-month", None),
-            request.POST.get("to-day", None)
-        )
+        date_range_error, from_date, to_date = parse_date_range(request)
 
         if date_range_error is None:
             params = {"from": from_date.strftime("%Y-%m-%d"), "to": to_date.strftime("%Y-%m-%d")}
             query = urllib.parse.urlencode(params)
             return redirect(f"{reverse('portal:referrals-range-download')}?{query}")
 
-        errors = {**date_range_error}
+        data_keys = ["from-day", "from-month", "from-year", "to-day", "to-month", "to-year"]
+        for data_key in data_keys:
+            data[data_key] = request.POST.get(data_key, None)
 
+        errors = {**date_range_error}
+    else:
+        errors = {}
 
     template = "portal/service-manager/homepage.html"
+
     suppliers_to_hide = ["Bulb, now part of Octopus Energy", "ESB"]
     suppliers = [supplier for supplier in models.Supplier.objects.all() if supplier.name not in suppliers_to_hide]
     suppliers.sort(key=lambda supplier: supplier.name)
-    data = {
-        "suppliers": suppliers,
-    }
+    data["suppliers"] = suppliers
+
     return render(
         request,
         template_name=template,
-        context={"request": request, "data": data, "errors": errors, "previous": request.POST},
+        context={"request": request, "data": data, "errors": errors}
     )
 
 

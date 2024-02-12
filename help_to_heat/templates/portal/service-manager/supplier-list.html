@@ -51,11 +51,11 @@
   {{csrf_input}}
   <h1 class="govuk-heading-l">Download referrals from date range</h1>
   <p class="govuk-body">Download referrals from a specific date range as an Excel spreadsheet.</p>
-  
   <div class="govuk-grid-row">
-    {{macros.date_input("from", "From", errors)}}
-    {{macros.date_input("to", "To", errors)}}
+    <div class="govuk-grid-column-full">
+      {{macros.date_input("from", "From", errors)}}
+      {{macros.date_input("to", "To", errors)}}
+    </div>
   </div>
-  
   <button class="govuk-button" data-module="govuk-button" type="submit">Download</button>
 </form>
