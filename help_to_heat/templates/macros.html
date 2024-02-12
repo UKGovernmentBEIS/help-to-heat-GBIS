@@ -130,35 +130,36 @@
 </div>
 {%- endmacro%}
 
-{% macro date_input(namePrefix, label, errors) -%}
-<div class="govuk-form-group {{"govuk-form-group--error" if errors[namePrefix]}}">
+{% macro date_input(name_prefix, label, errors) -%}
+<div class="govuk-form-group {{"govuk-form-group--error" if date_errors[name_prefix]}}">
   <fieldset class="govuk-fieldset" role="group">
     <legend class="govuk-fieldset__legend govuk-fieldset__legend--s">
       {{label}}
     </legend>
-    {% if errors[namePrefix] %}
-      {% for error_message in errors[namePrefix]["error_messages"] %}
-        <p id="passport-issued-error" class="govuk-error-message">
-          <span class="govuk-visually-hidden">Error:</span> {{error_message % label}}
-        </p>
-      {% endfor %}
+    {% if date_errors[name_prefix] %}
+      <p id="passport-issued-error" class="govuk-error-message">
+        <span class="govuk-visually-hidden">Error:</span> {{date_errors[name_prefix].message}}
+      </p>
     {% endif %}
-    <div class="govuk-date-input" id={{namePrefix}}>
-      {{date_input_item(namePrefix, "day", 2)}}
-      {{date_input_item(namePrefix, "month", 2)}}
-      {{date_input_item(namePrefix, "year", 4)}}
+    <div class="govuk-date-input" id={{ name_prefix }}>
+      {{date_input_item(name_prefix, "day", 2)}}
+      {{date_input_item(name_prefix, "month", 2)}}
+      {{date_input_item(name_prefix, "year", 4)}}
     </div>
   </fieldset>
 </div>
 {%- endmacro %}
 
 {% macro date_input_item(name_prefix, part, width) -%}
-{% set id = name_prefix + "-" + part %}
+{% set name = name_prefix + "-" + part %}
+{% set id = "question-" + name %}
+{% set error_parts = date_errors[name_prefix].error_parts if date_errors[name_prefix] else ()  %}
+{% set is_error = part in error_parts  %}
 <div class="govuk-date-input__item">
   <div class="govuk-form-group">
     <label class="govuk-label govuk-date-input__label" for="{{id}}">{{part | capitalize}}</label>
-    <input id="{{id}}" name="{{id}}" type="text" inputmode="numeric" value="{{data.get(id, "")}}"
-           class="govuk-input govuk-date-input__input govuk-input--width-{{width}} {{"govuk-input--error" if errors.get(name_prefix, {})[part]}}">
+    <input id="{{id}}" name="{{name}}" type="text" inputmode="numeric" value="{{data.get(name, "")}}"
+           class="govuk-input govuk-date-input__input govuk-input--width-{{width}} {{"govuk-input--error" if is_error}}">
   </div>
 </div>
 {%- endmacro %}

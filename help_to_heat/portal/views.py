@@ -52,82 +52,80 @@ def homepage_view(request):
     return redirect("portal:unauthorised")
 
 
-def parse_date_input(date_input: str, min, max):
-    if date_input == "":
-        return True, None
-    if not date_input.isdecimal():
-        return True, None
-    date_input = int(date_input)
-    if date_input < min or date_input > max:
-        return True, None
-    return False, date_input
+class ParseDateError:
+    def __init__(self, message, error_parts = ("day", "month", "year")):
+        self.message = message
+        self.error_parts = error_parts
 
 
-def generate_error(error):
-    return {
-        "error_messages": [error],
-        "year": True,
-        "month": True,
-        "day": True
-    }
+def parse_date(request, date_name):
+    day_input = request.POST.get(date_name + "-day", "")
+    month_input = request.POST.get(date_name + "-month", "")
+    year_input = request.POST.get(date_name + "-year", "")
+    date_parts = [("day", day_input), ("month", month_input), ("year", year_input)]
 
+    empty_parts = []
+    for name, value in date_parts:
+        if value.strip() == "":
+            empty_parts.append(name)
 
-def parse_date(request, date_prefix):
-    error_messages = []
+    if len(empty_parts) == 3:
+        return ParseDateError(f"Enter the {date_name} date", empty_parts), None
 
-    year = request.POST.get(date_prefix + "-year", "")
-    month = request.POST.get(date_prefix + "-month", "")
-    day = request.POST.get(date_prefix + "-day", "")
+    if len(empty_parts) > 0:
+        list_of_parts = " and ".join(empty_parts)
+        return ParseDateError(f"The {date_name} date must include a {list_of_parts}", empty_parts), None
 
-    year_error, year = parse_date_input(year, datetime.MINYEAR, datetime.MAXYEAR)
-    if year_error:
-        error_messages.append("%s must include a valid year")
-        year_error = True
+    non_numeric_parts = []
+    for name, value in date_parts:
+        if not value.isdigit():
+            non_numeric_parts.append(name)
 
-    month_error, month = parse_date_input(month, 1, 12)
-    if month_error:
-        error_messages.append("%s must include a valid month")
-        month_error = True
+    if len(non_numeric_parts) > 0:
+        last_part = non_numeric_parts[-1]
+        other_parts = non_numeric_parts[:-1]
+        list_of_parts = last_part if not other_parts else f"{', '.join(other_parts)} and {last_part}"
+        number_or_numbers = "numbers" if other_parts else "a number"
+        return ParseDateError(f"The {date_name} date’s {list_of_parts} must be {number_or_numbers}", non_numeric_parts), None
 
-    day_error, day = parse_date_input(day, 1, 31)
-    if day_error:
-        error_messages.append("%s must include a valid day")
-        day_error = True
+    if len(year_input) != 4:
+        return ParseDateError(f"The {date_name} date’s year must include 4 numbers", ["year"]), None
 
-    if error_messages:
-        return {
-            "error_messages": error_messages, "year": year_error, "month": month_error, "day": day_error
-        }, None
+    day = int(day_input)
+    month = int(month_input)
+    year = int(year_input)
 
-    def try_parse_date(year, month, day):
-        try:
-            return datetime.date(year, month, day)
-        except ValueError:
-            return None
+    impossible_parts = []
+    if day < 1 or day > 31:
+        impossible_parts.append("day")
+    if month < 1 or month > 12:
+        impossible_parts.append("month")
 
-    check_date = try_parse_date(year, month, day)
+    if len(impossible_parts) > 0:
+        return ParseDateError(f"The {date_name} date must be a real date", impossible_parts), None
 
-    if check_date is None:
-        return generate_error("%s must be a real date"), None
+    try:
+        date = datetime.date(year, month, day)
+    except ValueError:
+        return ParseDateError(f"The {date_name} date must be a real date"), None
 
-    today = datetime.date.today()
+    if date > datetime.date.today():
+        return ParseDateError(f"The {date_name} date must be today or in the past"), None
 
-    if check_date > today:
-        return generate_error("%s must be today or in the past"), None
-
-    return None, check_date
+    return None, date
 
 
 def parse_date_range(request):
-    start_date_errors, start_date = parse_date(request, "start")
-    end_date_errors, end_date = parse_date(request, "end")
+    start_date_error, start_date = parse_date(request, "start")
+    end_date_error, end_date = parse_date(request, "end")
 
-    if start_date_errors is not None or end_date_errors is not None:
-        errors = {"start": start_date_errors, "end": end_date_errors}
+    if start_date_error is not None or end_date_error is not None:
+        errors = {"start": start_date_error, "end": end_date_error}
         return errors, None, None
 
     if start_date > end_date:
-        errors = {"end": generate_error("The end date must be the same as or after the start date")}
+        end_date_error = ParseDateError("The end date must be the same as or after the start date")
+        errors = {"end": end_date_error}
         return errors, None, None
 
     return None, start_date, end_date
@@ -137,11 +135,12 @@ def parse_date_range(request):
 @decorators.requires_service_manager
 def service_manager_homepage_view(request):
     data = {}
+    errors = {}
 
     if request.method == "POST":
-        date_range_error, start_date, end_date = parse_date_range(request)
+        date_errors, start_date, end_date = parse_date_range(request)
 
-        if date_range_error is None:
+        if date_errors is None:
             params = {"start": start_date.strftime("%Y-%m-%d"), "end": end_date.strftime("%Y-%m-%d")}
             query = urllib.parse.urlencode(params)
             return redirect(f"{reverse('portal:referrals-range-download')}?{query}")
@@ -150,9 +149,14 @@ def service_manager_homepage_view(request):
         for data_key in data_keys:
             data[data_key] = request.POST.get(data_key, None)
 
-        errors = {**date_range_error}
+        for name, error in date_errors.items():
+            if error is None:
+                continue
+            first_error_part = error.error_parts[0]
+            error_key = f"{name}-{first_error_part}"
+            errors[error_key] = error.message
     else:
-        errors = {}
+        date_errors = {}
 
     template = "portal/service-manager/homepage.html"
 
@@ -164,7 +168,7 @@ def service_manager_homepage_view(request):
     return render(
         request,
         template_name=template,
-        context={"request": request, "data": data, "errors": errors}
+        context={"request": request, "data": data, "errors": errors, "date_errors": date_errors}
     )
 
 

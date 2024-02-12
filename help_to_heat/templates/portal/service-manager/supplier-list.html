@@ -1,5 +1,9 @@
 {% import "macros.html" as macros with context %}
 
+{% if errors %}
+  {{macros.error_summary(errors)}}
+{% endif %}
+
 <h1 class="govuk-heading-l">Add, view and manage energy suppliers</h1>
 <p class="govuk-body">Add, view and manage energy suppliers who can access and download customer leads.</p>
 <a class="govuk-button" href="{{url('portal:add-supplier')}}">Add a new energy supplier</a>
