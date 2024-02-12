@@ -76,17 +76,17 @@ def parse_date(year: str, month: str, day: str):
 
     year_error, year = parse_date_input(year, datetime.MINYEAR, datetime.MAXYEAR)
     if year_error:
-        error_messages.append(f"%s must include a valid year")
+        error_messages.append("%s must include a valid year")
         year_error = True
 
     month_error, month = parse_date_input(month, 1, 12)
     if month_error:
-        error_messages.append(f"%s must include a valid month")
+        error_messages.append("%s must include a valid month")
         month_error = True
 
     day_error, day = parse_date_input(day, 1, 31)
     if day_error:
-        error_messages.append(f"%s must include a valid day")
+        error_messages.append("%s must include a valid day")
         day_error = True
 
     if error_messages:
