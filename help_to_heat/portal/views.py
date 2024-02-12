@@ -75,9 +75,9 @@ def generate_error(error):
 def parse_date(request, date_prefix):
     error_messages = []
 
-    year = request.POST.get(date_prefix + "-year", None)
-    month = request.POST.get(date_prefix + "-month", None)
-    day = request.POST.get(date_prefix + "-day", None)
+    year = request.POST.get(date_prefix + "-year", "")
+    month = request.POST.get(date_prefix + "-month", "")
+    day = request.POST.get(date_prefix + "-day", "")
 
     year_error, year = parse_date_input(year, datetime.MINYEAR, datetime.MAXYEAR)
     if year_error:
@@ -119,18 +119,18 @@ def parse_date(request, date_prefix):
 
 
 def parse_date_range(request):
-    from_date_errors, from_date = parse_date(request, "from")
-    to_date_errors, to_date = parse_date(request, "to")
+    start_date_errors, start_date = parse_date(request, "start")
+    end_date_errors, end_date = parse_date(request, "end")
 
-    if from_date_errors is not None or to_date_errors is not None:
-        errors = {"from": from_date_errors, "to": to_date_errors}
+    if start_date_errors is not None or end_date_errors is not None:
+        errors = {"start": start_date_errors, "end": end_date_errors}
         return errors, None, None
 
-    if from_date > to_date:
-        errors = {"to": generate_error("%s must be the same as or before From")}
+    if start_date > end_date:
+        errors = {"end": generate_error("The end date must be the same as or after the start date")}
         return errors, None, None
 
-    return None, from_date, to_date
+    return None, start_date, end_date
 
 
 @require_http_methods(["GET", "POST"])
@@ -139,14 +139,14 @@ def service_manager_homepage_view(request):
     data = {}
 
     if request.method == "POST":
-        date_range_error, from_date, to_date = parse_date_range(request)
+        date_range_error, start_date, end_date = parse_date_range(request)
 
         if date_range_error is None:
-            params = {"from": from_date.strftime("%Y-%m-%d"), "to": to_date.strftime("%Y-%m-%d")}
+            params = {"start": start_date.strftime("%Y-%m-%d"), "end": end_date.strftime("%Y-%m-%d")}
             query = urllib.parse.urlencode(params)
             return redirect(f"{reverse('portal:referrals-range-download')}?{query}")
 
-        data_keys = ["from-day", "from-month", "from-year", "to-day", "to-month", "to-year"]
+        data_keys = ["start-day", "start-month", "start-year", "end-day", "end-month", "end-year"]
         for data_key in data_keys:
             data[data_key] = request.POST.get(data_key, None)
 

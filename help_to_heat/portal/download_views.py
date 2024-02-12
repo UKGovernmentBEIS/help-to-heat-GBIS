@@ -207,19 +207,19 @@ def download_referrals_last_week_view(request):
 @require_http_methods(["GET"])
 @decorators.requires_service_manager
 def download_referrals_range_view(request):
-    from_date = datetime.strptime(request.GET.get("from"), "%Y-%m-%d")
-    to_date = datetime.strptime(request.GET.get("to"), "%Y-%m-%d")
+    start_date = datetime.strptime(request.GET.get("start"), "%Y-%m-%d")
+    end_date = datetime.strptime(request.GET.get("end"), "%Y-%m-%d")
 
-    formatted_from_date = from_date.strftime("%d-%m-%Y")
-    formatted_to_date = to_date.strftime("%d-%m-%Y")
-    formatted_date_range = formatted_from_date if from_date == to_date else f"{formatted_from_date} to {formatted_to_date}"
+    formatted_start_date = start_date.strftime("%d-%m-%Y")
+    formatted_end_date = end_date.strftime("%d-%m-%Y")
+    formatted_date_range = formatted_start_date if start_date == end_date else f"{formatted_start_date} to {formatted_end_date}"
     file_name = f"Referrals ({formatted_date_range})"
 
     # Date range is inclusive of all referrals made on the end date.
-    # e.g. From: 01 02 2024, To: 06 02 2024 -> All referrals from 01/02/2024 00:00:00 to 06/02/2024 23:59:59
-    #      From: 06 02 2024, To: 06 02 2024 -> All referrals from anytime on that single day (06/02/2024)
-    start_of_range = from_date
-    end_of_range = to_date + timedelta(days=1)
+    # e.g. Start: 01 02 2024, End: 06 02 2024 -> All referrals from 01/02/2024 00:00:00 to 06/02/2024 23:59:59
+    #      Start: 06 02 2024, End: 06 02 2024 -> All referrals from anytime on that single day (06/02/2024)
+    start_of_range = start_date
+    end_of_range = end_date + timedelta(days=1)
 
     return create_referral_xlsx_between(start_of_range, end_of_range, file_name)
 
