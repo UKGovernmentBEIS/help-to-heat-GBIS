@@ -51,7 +51,7 @@
 <p class="govuk-body">Download referrals from the last week as an Excel spreadsheet.</p>
 <a href="{{url('portal:referrals-last-week-download')}}" class="govuk-button">Download</a>
 
-<form method="POST" novalidate>
+<form id="download-referrals-from-date-range" method="POST" novalidate>
   {{csrf_input}}
   <h1 class="govuk-heading-l">Download referrals from date range</h1>
   <p class="govuk-body">Download referrals from a specific date range as an Excel spreadsheet.</p>
