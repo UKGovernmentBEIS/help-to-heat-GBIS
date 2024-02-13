@@ -1,3 +1,9 @@
+{% import "macros.html" as macros with context %}
+
+{% if errors %}
+  {{macros.error_summary(errors)}}
+{% endif %}
+
 <h1 class="govuk-heading-l">Add, view and manage energy suppliers</h1>
 <p class="govuk-body">Add, view and manage energy suppliers who can access and download customer leads.</p>
 <a class="govuk-button" href="{{url('portal:add-supplier')}}">Add a new energy supplier</a>
@@ -42,5 +48,18 @@
 <a href="{{url('portal:feedback-download')}}" class="govuk-button">Download</a>
 
 <h1 class="govuk-heading-l">Download referrals from the last week</h1>
-<p class="govuk-body">Download referrals from the last week in xlsx format.</p>
+<p class="govuk-body">Download referrals from the last week as an Excel spreadsheet.</p>
 <a href="{{url('portal:referrals-last-week-download')}}" class="govuk-button">Download</a>
+
+<form id="download-referrals-from-date-range" method="POST" novalidate>
+  {{csrf_input}}
+  <h1 class="govuk-heading-l">Download referrals from date range</h1>
+  <p class="govuk-body">Download referrals from a specific date range as an Excel spreadsheet.</p>
+  <div class="govuk-grid-row">
+    <div class="govuk-grid-column-full">
+      {{macros.date_input("start", "Start", errors)}}
+      {{macros.date_input("end", "End", errors)}}
+    </div>
+  </div>
+  <button class="govuk-button" data-module="govuk-button" type="submit">Download</button>
+</form>
