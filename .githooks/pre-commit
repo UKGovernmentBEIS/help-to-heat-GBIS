@@ -1,0 +1,11 @@
+#!/bin/sh
+
+git stash -kqu
+
+if ! cmp -s "./envs/web" "./envs/web.template"; then
+    printf 'envs/web must match envs/web.template - check you are not trying to commit any API keys!\n'
+    git stash pop -q
+    exit 1
+fi
+
+git stash pop -q
