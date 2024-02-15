@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-02-15 16:00+0000\n"
+"POT-Creation-Date: 2024-02-15 16:14+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1962,6 +1962,23 @@ msgstr ""
 #: help_to_heat/templates/frontdoor/northern-ireland.html:12
 msgid "NI Direct government services website"
 msgstr "wefan gwasanaethau llywodraeth NI Direct"
+
+#: help_to_heat/templates/frontdoor/not-found.html:4
+msgid ""
+"Page not found - Check eligibility for Great British Insulation Scheme - GOV."
+"UK"
+msgstr ""
+"Heb ganfod y dudalen - Gwirio’ch cymhwystra ar gyfer Cynllun Inswleiddio "
+"Mawr Prydain - GOV.UK"
+
+#: help_to_heat/templates/frontdoor/not-found.html:10
+msgid "Page not found"
+msgstr "Heb ganfod y dudalen"
+
+#: help_to_heat/templates/frontdoor/not-found.html:14
+msgid "If you typed the web address, check it is correct."
+msgstr ""
+"Os oeddech chi wedi teipio’r cyfeiriad gwe, gwnewch yn siŵr ei fod yn gywir."
 
 #: help_to_heat/templates/frontdoor/number-of-bedrooms.html:5
 msgid ""
