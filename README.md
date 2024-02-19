@@ -9,7 +9,7 @@ Formerly known as "Help to Heat".
     git config --local core.hooksPath .githooks
     cp envs/web.template envs/web
     ```
-3. Populate the OS API key into the OS_API_KEY variable. The key can be found in Keeper. Please only use a single value (i.e. `["my_key_here"]`), rather than all of the keys that are stored in Keeper, in order to avoid needing to rotate all of the keys if your local environment is accidentally leaked.
+2. Populate the OS API key into the OS_API_KEY variable. The key can be found in Keeper. Please only use a single value (i.e. `["my_key_here"]`), rather than all of the keys that are stored in Keeper, in order to avoid needing to rotate all of the keys if your local environment is accidentally leaked.
 
 ## Using Docker
 
