@@ -3,7 +3,7 @@ botocore==1.29.86
 debugpy==1.6.7
 django-debug-toolbar==4.1.0
 django-csp==3.7
-eventlet==0.33.3
+eventlet==0.35.2
 gunicorn==21.2.0
 jmespath==1.0.1
 localstack-client==1.39
