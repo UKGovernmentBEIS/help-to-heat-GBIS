@@ -53,7 +53,7 @@ def homepage_view(request):
 
 
 class ParseDateError:
-    def __init__(self, message, error_parts = ("day", "month", "year")):
+    def __init__(self, message, error_parts=("day", "month", "year")):
         self.message = message
         self.error_parts = error_parts
 
@@ -86,7 +86,10 @@ def parse_date(request, date_name):
         other_parts = non_numeric_parts[:-1]
         list_of_parts = last_part if not other_parts else f"{', '.join(other_parts)} and {last_part}"
         number_or_numbers = "numbers" if other_parts else "a number"
-        return ParseDateError(f"The {date_name} date’s {list_of_parts} must be {number_or_numbers}", non_numeric_parts), None
+        return (
+            ParseDateError(f"The {date_name} date’s {list_of_parts} must be {number_or_numbers}", non_numeric_parts),
+            None,
+        )
 
     if len(year_input) != 4:
         return ParseDateError(f"The {date_name} date’s year must include 4 numbers", ["year"]), None
@@ -168,7 +171,7 @@ def service_manager_homepage_view(request):
     return render(
         request,
         template_name=template,
-        context={"request": request, "data": data, "errors": errors, "date_errors": date_errors}
+        context={"request": request, "data": data, "errors": errors, "date_errors": date_errors},
     )
 
 
