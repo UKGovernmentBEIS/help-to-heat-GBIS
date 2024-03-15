@@ -984,7 +984,6 @@ def test_utility_warehouse_to_eon():
     referral.delete()
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_shell_redirects_to_warning():
     client = utils.get_client()
     page = client.get("/start")
