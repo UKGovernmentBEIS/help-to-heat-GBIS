@@ -800,7 +800,7 @@ class UtilityWarehousePageView(PageView):
 
 
 @register_page("shell-warning-page")
-class UtilityWarehousePageView(PageView):
+class ShellWarehousePageView(PageView):
     pass
 
 
