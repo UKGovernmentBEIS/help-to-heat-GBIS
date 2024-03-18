@@ -233,6 +233,8 @@ def _do_happy_flow(supplier="EON"):
         supplier_shown = "Octopus Energy"
     if supplier == "Utility Warehouse":
         supplier_shown = "E.ON Next"
+    if supplier == "Shell":
+        supplier_shown = "Octopus Energy"
 
     assert page.has_one(f"h1:contains('Your details have been submitted to {supplier_shown}')")
 
@@ -981,4 +983,18 @@ def test_utility_warehouse_to_eon():
 
     referral = models.Referral.objects.get(session_id=session_id)
     assert referral.supplier.name == "E.ON Next"
+    referral.delete()
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_shell_to_octopus():
+    supplier = "Shell"
+
+    session_id = _do_happy_flow(supplier=supplier)
+
+    referral_email_text = utils.get_latest_email_text("freddy.flibble@example.com")
+    assert "Your details have been submitted to Octopus Energy." in referral_email_text
+
+    referral = models.Referral.objects.get(session_id=session_id)
+    assert referral.supplier.name == "Octopus Energy"
     referral.delete()
