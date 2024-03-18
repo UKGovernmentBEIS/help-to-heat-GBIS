@@ -987,7 +987,7 @@ def test_utility_warehouse_to_eon():
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
-def test_shell_to_octopus():
+def test_should_send_referral_to_octopus_when_shell_is_selected():
     supplier = "Shell"
 
     session_id = _do_happy_flow(supplier=supplier)
