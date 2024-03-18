@@ -139,6 +139,9 @@ class SupplierConverter:
     def _is_utility_warehouse(self):
         return self._get_supplier() == "Utility Warehouse"
 
+    def _is_shell(self):
+        return self._get_supplier() == "Shell"
+
     def get_supplier_on_general_pages(self):
         supplier = self._get_supplier()
         if self._is_bulb():
@@ -147,14 +150,14 @@ class SupplierConverter:
 
     def get_supplier_on_success_page(self):
         supplier = self._get_supplier()
-        if self._is_bulb():
+        if self._is_bulb() or self._is_shell():
             return "Octopus Energy"
         if self._is_utility_warehouse():
             return "E.ON Next"
         return supplier
 
     def replace_in_session_data(self, session_data):
-        if self._is_bulb():
+        if self._is_bulb() or self._is_shell():
             session_data["supplier"] = "Octopus Energy"
         if self._is_utility_warehouse():
             session_data["supplier"] = "E.ON Next"
