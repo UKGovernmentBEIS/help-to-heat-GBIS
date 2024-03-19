@@ -75,6 +75,7 @@ extra_pages = (
     "ineligible",
     "bulb-warning-page",
     "utility-warehouse-warning-page",
+    "shell-warning-page",
     "park-home-application-closed",
 )
 
@@ -90,6 +91,7 @@ page_prev_next_map = {
     "northern-ireland": {"prev": "country", "next": None},
     "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
     "utility-warehouse-warning-page": {"prev": "supplier", "next": "own-property"},
+    "shell-warning-page": {"prev": "supplier", "next": "own-property"},
     "applications-closed": {"prev": "supplier", "next": None},
     "benefits": {"prev": "council-tax-band", "next": "household-income"},
     "park-home": {"prev": "own-property", "next": "address"},
@@ -104,6 +106,7 @@ page_prev_next_map_park_home = {
     "northern-ireland": {"prev": "country", "next": None},
     "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
     "utility-warehouse-warning-page": {"prev": "supplier", "next": "own-property"},
+    "shell-warning-page": {"prev": "supplier", "next": "own-property"},
     "applications-closed": {"prev": "supplier", "next": None},
     "application-closed-utility-warehouse": {"prev": "supplier", "next": None},
     "park-home-application-closed": {"prev": "park-home-main-residence", "next": None},
@@ -122,6 +125,7 @@ page_prev_next_map_social_housing = {
     "northern-ireland": {"prev": "country", "next": None},
     "bulb-warning-page": {"prev": "supplier", "next": "own-property"},
     "utility-warehouse-warning-page": {"prev": "supplier", "next": "own-property"},
+    "shell-warning-page": {"prev": "supplier", "next": "own-property"},
     "applications-closed": {"prev": "supplier", "next": None},
 }
 
@@ -159,6 +163,7 @@ household_pages = {
     "supplier": ("supplier",),
     "bulb-warning-page": ("bulb-warning-page",),
     "utility-warehouse-warning-page": ("utility-warehouse-warning-page",),
+    "shell-warning-page": ("shell-warning-page",),
     "applications-closed": ("applications-closed",),
     "own-property": ("own_property",),
     "park-home": ("park_home",),
