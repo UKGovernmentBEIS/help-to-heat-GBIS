@@ -95,6 +95,10 @@ def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita
         form = page.get_form()
         assert page.has_text("Your referral will be sent to E.ON Next")
         page = form.submit().follow()
+    if supplier == "Shell":
+        form = page.get_form()
+        assert page.has_text("Your referral will be sent to Octopus Energy")
+        page = form.submit().follow()
 
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
@@ -479,6 +483,10 @@ def test_epc_lookup_failure():
     if supplier == "Utility Warehouse":
         form = page.get_form()
         assert page.has_text("Your referral will be sent to E.ON Next")
+        page = form.submit().follow()
+    if supplier == "Shell":
+        form = page.get_form()
+        assert page.has_text("Your referral will be sent to Octopus Energy")
         page = form.submit().follow()
 
     assert page.has_text("Do you own the property?")
