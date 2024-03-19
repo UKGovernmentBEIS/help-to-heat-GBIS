@@ -998,3 +998,25 @@ def test_should_send_referral_to_octopus_when_shell_is_selected():
     referral = models.Referral.objects.get(session_id=session_id)
     assert referral.supplier.name == "Octopus Energy"
     referral.delete()
+
+
+def test_shell_redirects_to_warning():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
+    page = _check_page(page, "supplier", "supplier", "Shell")
+
+    assert page.has_one("h1:contains('Your referral will be sent to Octopus Energy')")
