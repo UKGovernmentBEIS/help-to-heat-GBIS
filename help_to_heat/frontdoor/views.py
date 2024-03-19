@@ -787,16 +787,12 @@ class SupplierView(PageView):
 
 @register_page("bulb-warning-page")
 class BulbWarningPageView(PageView):
-    def get_context(self, session_id, *args, **kwargs):
-        supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
-        return {"supplier": supplier}
+    pass
 
 
 @register_page("utility-warehouse-warning-page")
 class UtilityWarehousePageView(PageView):
-    def get_context(self, session_id, *args, **kwargs):
-        supplier = interface.api.session.get_answer(session_id, "supplier")["supplier"]
-        return {"supplier": supplier}
+    pass
 
 
 @register_page("shell-warning-page")
