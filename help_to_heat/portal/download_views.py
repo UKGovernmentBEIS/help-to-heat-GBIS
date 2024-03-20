@@ -329,7 +329,8 @@ def create_feedback_csv(feedbacks, file_name):
 
 
 @require_http_methods(["GET"])
-def download_all_referrals(request):
+@decorators.requires_service_manager
+def download_all_referrals(_request):
     referrals = models.Referral.objects.all()
     downloaded_at = timezone.now()
     file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
