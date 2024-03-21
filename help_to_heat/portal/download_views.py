@@ -279,9 +279,9 @@ def add_extra_row_data(referral, exclude_pii=False):
     created_at = referral.created_at.astimezone(london_tz)
 
     if not exclude_pii:
-        contact_number = row.get("contact_number")
+        contact_number = row.get("contact_number", "")
         contact_number = '="' + contact_number + '"'
-        uprn = row.get("uprn")
+        uprn = row.get("uprn", "")
         uprn = '="' + str(uprn) + '"' if uprn else ""
         row = {
             **row,
