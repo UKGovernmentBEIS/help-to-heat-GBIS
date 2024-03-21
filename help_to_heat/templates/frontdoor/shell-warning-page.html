@@ -1,0 +1,13 @@
+{% extends "frontdoor/base.html" %}
+{% import "macros.html" as macros with context %}
+
+{% block title %}
+<title>{{_("Your referral will be sent to Octopus Energy")}}</title>
+{% endblock %}
+
+{% block content %}
+  {% call macros.form_wrapper(prev_url) -%}
+    <h1 class="govuk-heading-l">{{_("Your referral will be sent to Octopus Energy")}}</h1>
+    <p class="govuk-body">{{_("Shell is now owned by Octopus Energy. Your referral will be sent to Octopus Energy to help with your application.")}}</p>
+  {%- endcall %}
+{% endblock %}
