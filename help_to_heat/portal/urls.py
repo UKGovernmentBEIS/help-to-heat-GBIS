@@ -101,6 +101,7 @@ portal_patterns = [
     path("user/<uuid:user_id>/verify-otp/<str:token>/", authentication_views.VerifyOTPView, name="verify-otp"),
     path("accounts/login/", authentication_views.CustomLoginView, name="account_login"),
     path("accounts/", include("allauth.urls")),
+    path("download-all-referrals/", download_views.download_all_referrals, name="download_all_referrals"),
 ]
 
 if SHOW_EPC_UPLOADS_PAGE:
