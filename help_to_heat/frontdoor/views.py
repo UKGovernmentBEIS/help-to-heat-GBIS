@@ -758,12 +758,14 @@ class SupplierView(PageView):
         request_data = dict(request.POST.dict())
         request_supplier = request_data.get("supplier")
         # to be updated when we get full list of excluded suppliers
-        converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
+        converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse", "Shell"]
         unavailable_suppliers = []
         if request_supplier == "Bulb, now part of Octopus Energy":
             next_page_name = "bulb-warning-page"
         if request_supplier == "Utility Warehouse":
             next_page_name = "utility-warehouse-warning-page"
+        if request_supplier == "Shell":
+            next_page_name = "shell-warning-page"
         if request_supplier in unavailable_suppliers:
             next_page_name = "applications-closed"
 
@@ -785,16 +787,17 @@ class SupplierView(PageView):
 
 @register_page("bulb-warning-page")
 class BulbWarningPageView(PageView):
-    def get_context(self, session_id, *args, **kwargs):
-        supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
-        return {"supplier": supplier}
+    pass
 
 
 @register_page("utility-warehouse-warning-page")
 class UtilityWarehousePageView(PageView):
-    def get_context(self, session_id, *args, **kwargs):
-        supplier = interface.api.session.get_answer(session_id, "supplier")["supplier"]
-        return {"supplier": supplier}
+    pass
+
+
+@register_page("shell-warning-page")
+class ShellWarningPageView(PageView):
+    pass
 
 
 @register_page("applications-closed")

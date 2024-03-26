@@ -95,6 +95,10 @@ def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita
         form = page.get_form()
         assert page.has_text("Your referral will be sent to E.ON Next")
         page = form.submit().follow()
+    if supplier == "Shell":
+        form = page.get_form()
+        assert page.has_text("Your referral will be sent to Octopus Energy")
+        page = form.submit().follow()
 
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
@@ -233,6 +237,8 @@ def _do_happy_flow(supplier="EON"):
         supplier_shown = "Octopus Energy"
     if supplier == "Utility Warehouse":
         supplier_shown = "E.ON Next"
+    if supplier == "Shell":
+        supplier_shown = "Octopus Energy"
 
     assert page.has_one(f"h1:contains('Your details have been submitted to {supplier_shown}')")
 
@@ -477,6 +483,10 @@ def test_epc_lookup_failure():
     if supplier == "Utility Warehouse":
         form = page.get_form()
         assert page.has_text("Your referral will be sent to E.ON Next")
+        page = form.submit().follow()
+    if supplier == "Shell":
+        form = page.get_form()
+        assert page.has_text("Your referral will be sent to Octopus Energy")
         page = form.submit().follow()
 
     assert page.has_text("Do you own the property?")
@@ -982,3 +992,39 @@ def test_utility_warehouse_to_eon():
     referral = models.Referral.objects.get(session_id=session_id)
     assert referral.supplier.name == "E.ON Next"
     referral.delete()
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_should_send_referral_to_octopus_when_shell_is_selected():
+    supplier = "Shell"
+
+    session_id = _do_happy_flow(supplier=supplier)
+
+    referral_email_text = utils.get_latest_email_text("freddy.flibble@example.com")
+    assert "Your details have been submitted to Octopus Energy." in referral_email_text
+
+    referral = models.Referral.objects.get(session_id=session_id)
+    assert referral.supplier.name == "Octopus Energy"
+    referral.delete()
+
+
+def test_shell_redirects_to_warning():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
+    page = _check_page(page, "supplier", "supplier", "Shell")
+
+    assert page.has_one("h1:contains('Your referral will be sent to Octopus Energy')")

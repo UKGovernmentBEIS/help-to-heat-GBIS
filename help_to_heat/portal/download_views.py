@@ -184,9 +184,7 @@ def download_feedback_view(request):
 
 
 def create_referral_xlsx_between(start, end, file_name):
-    referrals = portal_models.Referral.objects.filter(
-        created_at__gte=start, created_at__lt=end
-    ).order_by("referral_id")
+    referrals = portal_models.Referral.objects.filter(created_at__gte=start, created_at__lt=end).order_by("referral_id")
     return create_referral_xlsx(referrals, file_name, exclude_pii=True)
 
 
@@ -212,7 +210,9 @@ def download_referrals_range_view(request):
 
     formatted_start_date = start_date.strftime("%d-%m-%Y")
     formatted_end_date = end_date.strftime("%d-%m-%Y")
-    formatted_date_range = formatted_start_date if start_date == end_date else f"{formatted_start_date} to {formatted_end_date}"
+    formatted_date_range = (
+        formatted_start_date if start_date == end_date else f"{formatted_start_date} to {formatted_end_date}"
+    )
     file_name = f"Referrals ({formatted_date_range})"
 
     # Date range is inclusive of all referrals made on the end date.
@@ -279,10 +279,8 @@ def add_extra_row_data(referral, exclude_pii=False):
     created_at = referral.created_at.astimezone(london_tz)
 
     if not exclude_pii:
-        contact_number = row.get("contact_number")
-        contact_number = '="' + contact_number + '"'
-        uprn = row.get("uprn")
-        uprn = '="' + str(uprn) + '"' if uprn else ""
+        contact_number = '="' + str(row.get("contact_number", "")) + '"'
+        uprn = '="' + str(row.get("uprn", "")) + '"'
         row = {
             **row,
             "contact_number": contact_number,
@@ -325,4 +323,14 @@ def create_feedback_csv(feedbacks, file_name):
     rows = [match_rows_for_feedback(feedback) for feedback in feedbacks]
     full_file_name = f"feedback-data-{file_name}"
     response = create_csv(feedback_column_headings, rows, full_file_name)
+    return response
+
+
+@require_http_methods(["GET"])
+@decorators.requires_service_manager
+def download_all_referrals(_request):
+    referrals = models.Referral.objects.all()
+    downloaded_at = timezone.now()
+    file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
+    response = create_referral_csv(referrals, file_name)
     return response
