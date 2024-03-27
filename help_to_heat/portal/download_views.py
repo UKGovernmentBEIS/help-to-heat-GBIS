@@ -324,13 +324,3 @@ def create_feedback_csv(feedbacks, file_name):
     full_file_name = f"feedback-data-{file_name}"
     response = create_csv(feedback_column_headings, rows, full_file_name)
     return response
-
-
-@require_http_methods(["GET"])
-@decorators.requires_service_manager
-def download_all_referrals(_request):
-    referrals = models.Referral.objects.all()
-    downloaded_at = timezone.now()
-    file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")
-    response = create_referral_csv(referrals, file_name)
-    return response
