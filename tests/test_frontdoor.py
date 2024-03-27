@@ -512,59 +512,82 @@ def test_epc_lookup_failure():
     assert data["uprn"] == "100023336956"
     assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
 
-    try:
-        assert page.has_one("h1:contains('What is the council tax band of your property?')")
-        page = _check_page(page, "council-tax-band", "council_tax_band", "B")
-    except NotFoundRequestException:
-        page = _check_page(page, "benefits", "benefits", "Yes")
+    assert page.has_one("h1:contains('What is the council tax band of your property?')")
+    page = _check_page(page, "council-tax-band", "council_tax_band", "B")
 
-        assert page.has_one("h1:contains('What is your annual household income?')")
-        page = _check_page(page, "household-income", "household_income", "Less than £31,000 a year")
+    assert page.status_code == 302
+    page = page.follow()
 
-        assert page.has_one("h1:contains('What kind of property do you have?')")
-        page = _check_page(page, "property-type", "property_type", "House")
+    assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
+    page = _check_page(page, "benefits", "benefits", "Yes")
 
-        assert page.has_one("h1:contains('What kind of house do you have?')")
-        page = _check_page(page, "property-subtype", "property_subtype", "Detached")
+    assert page.has_one("h1:contains('What kind of property do you have?')")
+    page = _check_page(page, "property-type", "property_type", "House")
 
-        assert page.has_one("h1:contains('How many bedrooms does the property have?')")
-        page = _check_page(page, "number-of-bedrooms", "number_of_bedrooms", "Two bedrooms")
+    assert page.has_one("h1:contains('What kind of house do you have?')")
+    page = _check_page(page, "property-subtype", "property_subtype", "Detached")
 
-        assert page.has_one("h1:contains('What kind of walls does your property have?')")
-        page = _check_page(page, "wall-type", "wall_type", "Cavity walls")
+    assert page.has_one("h1:contains('How many bedrooms does the property have?')")
+    page = _check_page(page, "number-of-bedrooms", "number_of_bedrooms", "Two bedrooms")
 
-        assert page.has_one("h1:contains('Are your walls insulated?')")
-        page = _check_page(page, "wall-insulation", "wall_insulation", "No they are not insulated")
+    assert page.has_one("h1:contains('What kind of walls does your property have?')")
+    page = _check_page(page, "wall-type", "wall_type", "Cavity walls")
 
-        assert page.has_one("""h1:contains("Do you have a loft that has not been converted into a room?")""")
-        page = _check_page(page, "loft", "loft", "Yes, I have a loft that has not been converted into a room")
+    assert page.has_one("h1:contains('Are your walls insulated?')")
+    page = _check_page(page, "wall-insulation", "wall_insulation", "No they are not insulated")
 
-        assert page.has_one("h1:contains('Is there access to your loft?')")
-        page = _check_page(page, "loft-access", "loft_access", "Yes, there is access to my loft")
+    assert page.has_one("""h1:contains("Do you have a loft that has not been converted into a room?")""")
+    page = _check_page(page, "loft", "loft", "Yes, I have a loft that has not been converted into a room")
 
-        assert page.has_one("h1:contains('Is your loft fully insulated?')")
-        page = _check_page(
-            page, "loft-insulation", "loft_insulation", "No, there is less than 270mm of insulation in my loft"
-        )
+    assert page.has_one("h1:contains('Is there access to your loft?')")
+    page = _check_page(page, "loft-access", "loft_access", "Yes, there is access to my loft")
 
-        assert page.has_one("h1:contains('Check your answers')")
-        form = page.get_form()
-        page = form.submit().follow()
+    assert page.has_one("h1:contains('How much loft insulation do you have?')")
+    page = _check_page(
+        page, "loft-insulation", "loft_insulation", "I have up to 100mm of loft insulation"
+    )
 
-        data = interface.api.session.get_answer(session_id, page_name="contact-details")
-        expected = {
-            "first_name": "Freddy",
-            "last_name": "Flibble",
-            "contact_number": "07777777777",
-            "email": "freddy.flibble@example.com",
-        }
-        assert data == expected, (data, expected)
+    assert page.has_one("h1:contains('Check your answers')")
+    form = page.get_form()
+    page = form.submit().follow()
 
-        referral = models.Referral.objects.get(session_id=session_id)
-        assert referral.supplier.name == supplier
-        assert referral.data["first_name"] == "Freddy"
-        assert referral.data["benefits"] == "Yes"
-        referral.delete()
+    assert page.has_one("h1:contains('Information based on your answers')")
+    assert page.has_text("Great British Insulation Scheme")
+    assert not page.has_text("Energy Company Obligation 4")
+    form = page.get_form()
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Add your personal and contact details')")
+    form = page.get_form()
+
+    form["first_name"] = "Freddy"
+    form["last_name"] = "Flibble"
+    form["contact_number"] = "07777777777"
+    form["email"] = "freddy.flibble@example.com"
+    page = form.submit().follow()
+
+
+    data = interface.api.session.get_answer(session_id, page_name="contact-details")
+    expected = {
+        "first_name": "Freddy",
+        "last_name": "Flibble",
+        "contact_number": "07777777777",
+        "email": "freddy.flibble@example.com",
+    }
+    assert data == expected, (data, expected)
+
+    assert page.has_one("h1:contains('Confirm and submit')")
+    form = page.get_form()
+    form["permission"] = True
+    form["acknowledge"] = True
+
+    page = form.submit().follow()
+
+    referral = models.Referral.objects.get(session_id=session_id)
+    assert referral.supplier.name == supplier
+    assert referral.data["first_name"] == "Freddy"
+    assert referral.data["benefits"] == "Yes"
+    referral.delete()
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)
