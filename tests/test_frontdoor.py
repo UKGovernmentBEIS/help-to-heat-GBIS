@@ -6,7 +6,6 @@ from help_to_heat.frontdoor.mock_epc_api import (
     MockEPCApi,
     MockEPCApiWithEPCC,
     MockNotFoundEPCApi,
-    NotFoundRequestException,
 )
 from help_to_heat.frontdoor.mock_os_api import EmptyOSApi, MockOSApi
 from help_to_heat.portal import models
@@ -543,9 +542,7 @@ def test_epc_lookup_failure():
     page = _check_page(page, "loft-access", "loft_access", "Yes, there is access to my loft")
 
     assert page.has_one("h1:contains('How much loft insulation do you have?')")
-    page = _check_page(
-        page, "loft-insulation", "loft_insulation", "I have up to 100mm of loft insulation"
-    )
+    page = _check_page(page, "loft-insulation", "loft_insulation", "I have up to 100mm of loft insulation")
 
     assert page.has_one("h1:contains('Check your answers')")
     form = page.get_form()
@@ -565,7 +562,6 @@ def test_epc_lookup_failure():
     form["contact_number"] = "07777777777"
     form["email"] = "freddy.flibble@example.com"
     page = form.submit().follow()
-
 
     data = interface.api.session.get_answer(session_id, page_name="contact-details")
     expected = {
