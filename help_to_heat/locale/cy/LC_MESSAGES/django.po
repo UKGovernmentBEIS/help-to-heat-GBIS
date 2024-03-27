@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-15 12:19+0000\n"
+"POT-Creation-Date: 2024-03-27 11:40+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -91,8 +91,8 @@ msgid "Is there access to your loft?"
 msgstr "Oes modd mynd i'ch atig?"
 
 #: help_to_heat/frontdoor/schemas.py:150
-msgid "Is there 270mm of insulation in your loft?"
-msgstr "Oes 270mm o inswleiddiad yn eich atig?"
+msgid "Is there 100mm of insulation in your loft?"
+msgstr "Oes 100mm o inswleiddiad yn eich atig?"
 
 #: help_to_heat/frontdoor/schemas.py:155
 #: help_to_heat/templates/frontdoor/contact-details.html:23
