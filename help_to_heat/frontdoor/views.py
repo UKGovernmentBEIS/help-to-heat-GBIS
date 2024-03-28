@@ -644,7 +644,6 @@ class PropertyTypeView(PageView):
             return super().get_prev_next_urls(session_id, page_name)
 
 
-
 @register_page("property-subtype")
 class PropertySubtypeView(PageView):
     def get_context(self, request, session_id, *args, **kwargs):
