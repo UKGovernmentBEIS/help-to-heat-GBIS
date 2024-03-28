@@ -634,7 +634,6 @@ class PropertyTypeView(PageView):
         session_data = interface.api.session.get_session(session_id)
         own_property = session_data.get("own_property")
         country = session_data.get("country")
-        epc = session_data.get("epc")
         epc_rating = session_data.get("epc_rating", "Not found")
 
         if own_property == "No, I am a social housing tenant" and (country == "Scotland" or epc_rating == "Not found"):
