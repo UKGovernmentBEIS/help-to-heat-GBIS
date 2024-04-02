@@ -737,6 +737,18 @@ class SummaryView(PageView):
             return supplier_redirect
         return super().handle_post(request, session_id, page_name, data, is_change_page)
 
+    def get_prev_next_urls(self, session_id, page_name):
+        session_data = interface.api.session.get_session(session_id)
+        loft = session_data.get("loft")
+
+        # if the user answered this, they went down the loft insulation route
+        if loft == "Yes, I have a loft that has not been converted into a room":
+            _, next_page_url = get_prev_next_urls(session_id, page_name)
+            prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="loft-insulation"))
+            return prev_page_url, next_page_url
+        else:
+            return super().get_prev_next_urls(session_id, page_name)
+
 
 @register_page("schemes")
 class SchemesView(PageView):
