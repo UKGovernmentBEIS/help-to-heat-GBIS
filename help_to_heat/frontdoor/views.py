@@ -598,10 +598,9 @@ class BenefitsView(PageView):
     def get_prev_next_urls(self, session_id, page_name):
         session_data = interface.api.session.get_session(session_id)
         park_home = session_data.get("park_home")
-        country = session_data.get("country")
         epc_rating = session_data.get("epc_rating", "Not found")
 
-        if park_home == "Yes" and (country == "Scotland" or epc_rating == "Not found"):
+        if park_home == "Yes" and epc_rating == "Not found":
             _, next_page_url = get_prev_next_urls(session_id, page_name)
             prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="address"))
             return prev_page_url, next_page_url
@@ -633,10 +632,9 @@ class PropertyTypeView(PageView):
     def get_prev_next_urls(self, session_id, page_name):
         session_data = interface.api.session.get_session(session_id)
         own_property = session_data.get("own_property")
-        country = session_data.get("country")
         epc_rating = session_data.get("epc_rating", "Not found")
 
-        if own_property == "No, I am a social housing tenant" and (country == "Scotland" or epc_rating == "Not found"):
+        if own_property == "No, I am a social housing tenant" and epc_rating == "Not found":
             _, next_page_url = get_prev_next_urls(session_id, page_name)
             prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="address"))
             return prev_page_url, next_page_url
