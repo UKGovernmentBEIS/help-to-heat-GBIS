@@ -147,7 +147,7 @@ summary_map = {
     "wall_insulation": pgettext_lazy("summary page", "Are your walls insulated?"),
     "loft": _("Does this property have a loft?"),
     "loft_access": _("Is there access to your loft?"),
-    "loft_insulation": _("Is there 270mm of insulation in your loft?"),
+    "loft_insulation": _("Is there 100mm of insulation in your loft?"),
 }
 
 confirm_sumbit_map = {
