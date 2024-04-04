@@ -305,7 +305,7 @@ def test_back_button():
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 @utils.mock_os_api
-def test_benefits_back_button_with_park_home_and_no_epc():
+def test_benefits_back_button_with_park_home_and_no_epc_should_return_to_address_page():
     client = utils.get_client()
     page = client.get("/start")
     assert page.status_code == 302
@@ -362,7 +362,7 @@ def test_benefits_back_button_with_park_home_and_no_epc():
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 @utils.mock_os_api
-def test_benefits_back_button_with_park_home_and_scotland():
+def test_benefits_back_button_with_park_home_and_scotland_should_return_to_address_page():
     client = utils.get_client()
     page = client.get("/start")
     assert page.status_code == 302
@@ -420,7 +420,7 @@ def test_benefits_back_button_with_park_home_and_scotland():
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 @utils.mock_os_api
-def test_property_type_back_button_with_social_housing_and_no_epc():
+def test_property_type_back_button_with_social_housing_and_no_epc_should_return_to_address_page():
     client = utils.get_client()
     page = client.get("/start")
     assert page.status_code == 302
@@ -471,7 +471,7 @@ def test_property_type_back_button_with_social_housing_and_no_epc():
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 @utils.mock_os_api
-def test_property_type_back_button_with_social_housing_and_scotland():
+def test_property_type_back_button_with_social_housing_and_scotland_should_return_to_address_page():
     client = utils.get_client()
     page = client.get("/start")
     assert page.status_code == 302
