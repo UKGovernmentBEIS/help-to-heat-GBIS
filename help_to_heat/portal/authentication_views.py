@@ -35,12 +35,12 @@ class CustomLoginView(MethodDispatcher):
     credentials_error_message = (
         "Login failed - please check your credentials. If you believe they are correct, "
         "contact your team leader or our support team at "
-        "eligibilitycheckersupport-cai@energysecurity.gov.uk"
+        "eligibilitycheckersupport-cai@energysecurity.gov.uk."
     )
     invite_link_error_message = (
         "Login failed - please accept the invitation you were sent via email. If you have "
         "not received this, contact your team leader or our support team at "
-        "eligibilitycheckersupport-cai@energysecurity.gov.uk"
+        "eligibilitycheckersupport-cai@energysecurity.gov.uk."
     )
 
     def error(self, request, message):
