@@ -160,6 +160,20 @@ def test_password_reset():
     assert page.has_text("Manage members")
 
 
+def test_login_invalid_details():
+    email = "fake@example.com"
+    password = "fake"
+
+    client = utils.get_client()
+
+    page = client.get("/portal/accounts/login/")
+    form = page.get_form()
+    form["login"] = email
+    form["password"] = password
+    page = form.submit()
+    assert page.has_text("Login failed - please check your credentials.")
+
+
 def test_login_without_invite():
     email = f"admin-user{utils.make_code()}@example.com"
     password = "Fl1bbl3Fl1bbl3"
@@ -172,7 +186,7 @@ def test_login_without_invite():
     form["login"] = email
     form["password"] = password
     page = form.submit()
-    assert page.has_text("Something has gone wrong.  Please contact your team leader.")
+    assert page.has_text("Login failed - please accept the invitation you were sent via email.")
 
 
 def test_logout():

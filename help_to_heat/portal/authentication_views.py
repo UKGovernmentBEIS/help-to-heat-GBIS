@@ -32,10 +32,19 @@ class LoginTokenGenerator(PasswordResetTokenGenerator):
 @require_http_methods(["GET", "POST"])
 class CustomLoginView(MethodDispatcher):
     template_name = "account/login.html"
-    error_message = "Something has gone wrong.  Please contact your team leader."
+    credentials_error_message = (
+        "Login failed - please check your credentials. If you believe they are correct, "
+        "contact your team leader or our support team at "
+        "eligibilitycheckersupport-cai@energysecurity.gov.uk."
+    )
+    invite_link_error_message = (
+        "Login failed - please accept the invitation you were sent via email. If you have "
+        "not received this, contact your team leader or our support team at "
+        "eligibilitycheckersupport-cai@energysecurity.gov.uk."
+    )
 
-    def error(self, request):
-        messages.error(request, self.error_message)
+    def error(self, request, message):
+        messages.error(request, message)
         return render(request, self.template_name)
 
     def get(self, request):
@@ -45,18 +54,17 @@ class CustomLoginView(MethodDispatcher):
         password = request.POST.get("password", None)
         email = request.POST.get("login", None)
         if not password or not email:
-            messages.error(request, "Please enter an email and password.")
-            return render(request, self.template_name, {})
+            return self.error(request, "Please enter an email and password.")
         else:
             email = email.lower()
             user = authenticate(request, email=email, password=password)
             if user is not None:
                 if not user.invite_accepted_at:
-                    return self.error(request)
+                    return self.error(request, self.invite_link_error_message)
                 token = LoginTokenGenerator().make_token(user)
                 return redirect("portal:verify-otp", user_id=user.id, token=token)
             else:
-                return self.error(request)
+                return self.error(request, self.credentials_error_message)
 
 
 @require_http_methods(["GET", "POST"])
