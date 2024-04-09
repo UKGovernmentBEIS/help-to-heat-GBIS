@@ -1,6 +1,8 @@
 import unittest
 import uuid
 
+import pytest
+
 from help_to_heat.frontdoor import interface
 from help_to_heat.frontdoor.mock_epc_api import (
     MockEPCApi,
@@ -300,6 +302,224 @@ def test_back_button():
 
     form = page.get_form()
     assert form["country"] == "England"
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
+@utils.mock_os_api
+def test_benefits_back_button_with_park_home_and_no_epc_should_return_to_address_page():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Utilita"
+    page = form.submit().follow()
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    assert page.has_text("Do you live in a park home?")
+    page = _check_page(page, "park-home", "park_home", "Yes")
+
+    assert page.has_text("Is the park home your main residence?")
+    page = _check_page(page, "park-home-main-residence", "park_home_main_residence", "Yes")
+
+    form = page.get_form()
+    form["building_name_or_number"] = "10"
+    form["postcode"] = "SW1A 2AA"
+    page = form.submit().follow()
+
+    data = interface.api.session.get_answer(session_id, page_name="address")
+    assert data["building_name_or_number"] == "10"
+    assert data["postcode"] == "SW1A 2AA"
+
+    form = page.get_form()
+    form["uprn"] = "100023336956"
+    page = form.submit().follow()
+
+    data = interface.api.session.get_answer(session_id, page_name="address-select")
+    assert data["uprn"] == "100023336956"
+    assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
+
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
+
+    page = page.click(contains="Back")
+
+    assert page.has_one('h1:contains("What is the property\'s address?")')
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
+@utils.mock_os_api
+def test_benefits_back_button_with_park_home_and_scotland_should_return_to_address_page():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "Scotland"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Utilita"
+    page = form.submit().follow()
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    assert page.has_text("Do you live in a park home?")
+    page = _check_page(page, "park-home", "park_home", "Yes")
+
+    assert page.has_text("Is the park home your main residence?")
+    page = _check_page(page, "park-home-main-residence", "park_home_main_residence", "Yes")
+
+    form = page.get_form()
+    form["building_name_or_number"] = "10"
+    form["postcode"] = "SW1A 2AA"
+    page = form.submit().follow()
+
+    data = interface.api.session.get_answer(session_id, page_name="address")
+    assert data["building_name_or_number"] == "10"
+    assert data["postcode"] == "SW1A 2AA"
+
+    form = page.get_form()
+    form["uprn"] = "100023336956"
+    page = form.submit().follow()
+
+    data = interface.api.session.get_answer(session_id, page_name="address-select")
+    assert data["uprn"] == "100023336956"
+    assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
+
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
+
+    page = page.click(contains="Back")
+
+    assert page.has_one('h1:contains("What is the property\'s address?")')
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
+@utils.mock_os_api
+def test_property_type_back_button_with_social_housing_and_no_epc_should_return_to_address_page():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Utilita"
+    page = form.submit().follow()
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "No, I am a social housing tenant")
+
+    form = page.get_form()
+    form["building_name_or_number"] = "10"
+    form["postcode"] = "SW1A 2AA"
+    page = form.submit().follow()
+
+    data = interface.api.session.get_answer(session_id, page_name="address")
+    assert data["building_name_or_number"] == "10"
+    assert data["postcode"] == "SW1A 2AA"
+
+    form = page.get_form()
+    form["uprn"] = "100023336956"
+    page = form.submit().follow()
+
+    data = interface.api.session.get_answer(session_id, page_name="address-select")
+    assert data["uprn"] == "100023336956"
+    assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
+
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.has_one("h1:contains('What kind of property do you have?')")
+
+    page = page.click(contains="Back")
+
+    assert page.has_one('h1:contains("What is the property\'s address?")')
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
+@utils.mock_os_api
+def test_property_type_back_button_with_social_housing_and_scotland_should_return_to_address_page():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "Scotland"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Utilita"
+    page = form.submit().follow()
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "No, I am a social housing tenant")
+
+    form = page.get_form()
+    form["building_name_or_number"] = "10"
+    form["postcode"] = "SW1A 2AA"
+    page = form.submit().follow()
+
+    data = interface.api.session.get_answer(session_id, page_name="address")
+    assert data["building_name_or_number"] == "10"
+    assert data["postcode"] == "SW1A 2AA"
+
+    form = page.get_form()
+    form["uprn"] = "100023336956"
+    page = form.submit().follow()
+
+    data = interface.api.session.get_answer(session_id, page_name="address-select")
+    assert data["uprn"] == "100023336956"
+    assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
+
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.has_one("h1:contains('What kind of property do you have?')")
+
+    page = page.click(contains="Back")
+
+    assert page.has_one('h1:contains("What is the property\'s address?")')
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApiWithEPCC)
@@ -1047,3 +1267,88 @@ def test_shell_redirects_to_warning():
     page = _check_page(page, "supplier", "supplier", "Shell")
 
     assert page.has_one("h1:contains('Your referral will be sent to Octopus Energy')")
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+@pytest.mark.parametrize("has_loft_insulation", [True, False])
+def test_on_check_page_back_button_goes_to_correct_location(has_loft_insulation):
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Utilita"
+    page = form.submit().follow()
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    assert page.has_text("Do you live in a park home")
+    page = _check_page(page, "park-home", "park_home", "No")
+
+    form = page.get_form()
+    form["building_name_or_number"] = "22"
+    form["postcode"] = "FL23 4JA"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["rrn"] = "2222-2222-2222-2222-2222"
+    page = form.submit().follow()
+
+    data = interface.api.session.get_answer(session_id, page_name="epc-select")
+    assert data["rrn"] == "2222-2222-2222-2222-2222"
+    assert data["address"] == "22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA"
+
+    assert page.has_one("h1:contains('What is the council tax band of your property?')")
+    page = _check_page(page, "council-tax-band", "council_tax_band", "B")
+
+    assert page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
+    page = _check_page(page, "epc", "accept_suggested_epc", "Yes")
+
+    page = _check_page(page, "benefits", "benefits", "Yes")
+
+    assert page.has_one("h1:contains('What kind of property do you have?')")
+    page = _check_page(page, "property-type", "property_type", "House")
+
+    assert page.has_one("h1:contains('What kind of house do you have?')")
+    page = _check_page(page, "property-subtype", "property_subtype", "Detached")
+
+    assert page.has_one("h1:contains('How many bedrooms does the property have?')")
+    page = _check_page(page, "number-of-bedrooms", "number_of_bedrooms", "Two bedrooms")
+
+    assert page.has_one("h1:contains('What kind of walls does your property have?')")
+    page = _check_page(page, "wall-type", "wall_type", "Cavity walls")
+
+    assert page.has_one("h1:contains('Are your walls insulated?')")
+    page = _check_page(page, "wall-insulation", "wall_insulation", "No they are not insulated")
+
+    assert page.has_one("h1:contains('Do you have a loft that has not been converted into a room?')")
+    if has_loft_insulation:
+        page = _check_page(page, "loft", "loft", "Yes, I have a loft that has not been converted into a room")
+
+        assert page.has_one("h1:contains('Is there access to your loft?')")
+        page = _check_page(page, "loft-access", "loft_access", "Yes, there is access to my loft")
+
+        assert page.has_one("h1:contains('How much loft insulation do you have?')")
+        page = _check_page(page, "loft-insulation", "loft_insulation", "I have up to 100mm of loft insulation")
+    else:
+        page = _check_page(page, "loft", "loft", "No, I do not have a loft or my loft has been converted into a room")
+
+    assert page.has_one("h1:contains('Check your answers')")
+
+    page = page.click(contains="Back")
+
+    if has_loft_insulation:
+        assert page.has_one("h1:contains('How much loft insulation do you have?')")
+    else:
+        assert page.has_one("h1:contains('Do you have a loft that has not been converted into a room?')")
