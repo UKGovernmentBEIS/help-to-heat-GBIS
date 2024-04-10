@@ -345,11 +345,15 @@ class OwnPropertyView(PageView):
             return prev_page_url, next_page_url
         elif request_supplier == "Utility Warehouse":
             _, next_page_url = get_prev_next_urls(session_id, page_name)
-            prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="utility-warehouse-warning-page"))
+            prev_page_url = reverse(
+                "frontdoor:page", kwargs=dict(session_id=session_id, page_name="utility-warehouse-warning-page")
+            )
             return prev_page_url, next_page_url
         elif request_supplier == "Shell":
             _, next_page_url = get_prev_next_urls(session_id, page_name)
-            prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="shell-warning-page"))
+            prev_page_url = reverse(
+                "frontdoor:page", kwargs=dict(session_id=session_id, page_name="shell-warning-page")
+            )
             return prev_page_url, next_page_url
         else:
             return super().get_prev_next_urls(session_id, page_name)

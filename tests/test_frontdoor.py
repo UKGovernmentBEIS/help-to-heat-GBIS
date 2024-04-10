@@ -303,6 +303,7 @@ def test_back_button():
     form = page.get_form()
     assert form["country"] == "England"
 
+
 def test_own_property_back_button_with_shell_should_return_to_shell_warning_page():
     client = utils.get_client()
     page = client.get("/start")
@@ -312,7 +313,6 @@ def test_own_property_back_button_with_shell_should_return_to_shell_warning_page
     assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
-    _check_page = _make_check_page(session_id)
 
     form = page.get_form()
     form["country"] = "England"
@@ -332,6 +332,7 @@ def test_own_property_back_button_with_shell_should_return_to_shell_warning_page
 
     assert page.has_text("Shell is now owned by Octopus Energy.")
 
+
 def test_own_property_back_button_with_bulb_should_return_to_bulb_warning_page():
     client = utils.get_client()
     page = client.get("/start")
@@ -341,7 +342,6 @@ def test_own_property_back_button_with_bulb_should_return_to_bulb_warning_page()
     assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
-    _check_page = _make_check_page(session_id)
 
     form = page.get_form()
     form["country"] = "England"
@@ -361,6 +361,7 @@ def test_own_property_back_button_with_bulb_should_return_to_bulb_warning_page()
 
     assert page.has_text("Bulb is now owned by Octopus Energy.")
 
+
 def test_own_property_back_button_with_utility_warehouse_should_return_to_utility_warehouse_warning_page():
     client = utils.get_client()
     page = client.get("/start")
@@ -370,7 +371,6 @@ def test_own_property_back_button_with_utility_warehouse_should_return_to_utilit
     assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
-    _check_page = _make_check_page(session_id)
 
     form = page.get_form()
     form["country"] = "England"
@@ -389,6 +389,7 @@ def test_own_property_back_button_with_utility_warehouse_should_return_to_utilit
     page = page.click(contains="Back")
 
     assert page.has_text("Referral requests from UW customers will be managed by E.ON Next")
+
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
@@ -606,6 +607,7 @@ def test_property_type_back_button_with_social_housing_and_scotland_should_retur
     page = page.click(contains="Back")
 
     assert page.has_one('h1:contains("What is the property\'s address?")')
+
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApiWithEPCC)
 def test_no_benefits_flow():
