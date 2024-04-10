@@ -304,7 +304,15 @@ def test_back_button():
     assert form["country"] == "England"
 
 
-def test_own_property_back_button_with_shell_should_return_to_shell_warning_page():
+@pytest.mark.parametrize(
+    ("supplier_name", "expected_text"),
+    [
+        ("Shell", "Shell is now owned by Octopus Energy."),
+        ("Bulb, now part of Octopus Energy", "Bulb is now owned by Octopus Energy."),
+        ("Utility Warehouse", "Referral requests from UW customers will be managed by E.ON Next"),
+    ],
+)
+def test_own_property_back_button_with_supplier_should_return_to_supplier_warning_page(supplier_name, expected_text):
     client = utils.get_client()
     page = client.get("/start")
     assert page.status_code == 302
@@ -319,76 +327,18 @@ def test_own_property_back_button_with_shell_should_return_to_shell_warning_page
     page = form.submit().follow()
 
     form = page.get_form()
-    form["supplier"] = "Shell"
+    form["supplier"] = supplier_name
     page = form.submit().follow()
 
     form = page.get_form()
-    assert page.has_text("Shell is now owned by Octopus Energy.")
+    assert page.has_text(expected_text)
     page = form.submit().follow()
 
     assert page.has_text("Do you own the property?")
 
     page = page.click(contains="Back")
 
-    assert page.has_text("Shell is now owned by Octopus Energy.")
-
-
-def test_own_property_back_button_with_bulb_should_return_to_bulb_warning_page():
-    client = utils.get_client()
-    page = client.get("/start")
-    assert page.status_code == 302
-    page = page.follow()
-
-    assert page.status_code == 200
-    session_id = page.path.split("/")[1]
-    assert uuid.UUID(session_id)
-
-    form = page.get_form()
-    form["country"] = "England"
-    page = form.submit().follow()
-
-    form = page.get_form()
-    form["supplier"] = "Bulb, now part of Octopus Energy"
-    page = form.submit().follow()
-
-    form = page.get_form()
-    assert page.has_text("Bulb is now owned by Octopus Energy.")
-    page = form.submit().follow()
-
-    assert page.has_text("Do you own the property?")
-
-    page = page.click(contains="Back")
-
-    assert page.has_text("Bulb is now owned by Octopus Energy.")
-
-
-def test_own_property_back_button_with_utility_warehouse_should_return_to_utility_warehouse_warning_page():
-    client = utils.get_client()
-    page = client.get("/start")
-    assert page.status_code == 302
-    page = page.follow()
-
-    assert page.status_code == 200
-    session_id = page.path.split("/")[1]
-    assert uuid.UUID(session_id)
-
-    form = page.get_form()
-    form["country"] = "England"
-    page = form.submit().follow()
-
-    form = page.get_form()
-    form["supplier"] = "Utility Warehouse"
-    page = form.submit().follow()
-
-    form = page.get_form()
-    assert page.has_text("Referral requests from UW customers will be managed by E.ON Next")
-    page = form.submit().follow()
-
-    assert page.has_text("Do you own the property?")
-
-    page = page.click(contains="Back")
-
-    assert page.has_text("Referral requests from UW customers will be managed by E.ON Next")
+    assert page.has_text(expected_text)
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)
