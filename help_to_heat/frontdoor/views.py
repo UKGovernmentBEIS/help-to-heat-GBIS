@@ -339,24 +339,18 @@ class OwnPropertyView(PageView):
     def get_prev_next_urls(self, session_id, page_name):
         session_data = interface.api.session.get_session(session_id)
         request_supplier = session_data.get("supplier")
+        prev_page_url, next_page_url = super().get_prev_next_urls(session_id, page_name)
         if request_supplier == "Bulb, now part of Octopus Energy":
-            _, next_page_url = get_prev_next_urls(session_id, page_name)
             prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="bulb-warning-page"))
-            return prev_page_url, next_page_url
         elif request_supplier == "Utility Warehouse":
-            _, next_page_url = get_prev_next_urls(session_id, page_name)
             prev_page_url = reverse(
                 "frontdoor:page", kwargs=dict(session_id=session_id, page_name="utility-warehouse-warning-page")
             )
-            return prev_page_url, next_page_url
         elif request_supplier == "Shell":
-            _, next_page_url = get_prev_next_urls(session_id, page_name)
             prev_page_url = reverse(
                 "frontdoor:page", kwargs=dict(session_id=session_id, page_name="shell-warning-page")
             )
-            return prev_page_url, next_page_url
-        else:
-            return super().get_prev_next_urls(session_id, page_name)
+        return prev_page_url, next_page_url
 
 
 @register_page("park-home")

@@ -318,17 +318,15 @@ def test_own_property_back_button_with_supplier_should_return_to_supplier_warnin
     assert page.status_code == 302
     page = page.follow()
 
+
     assert page.status_code == 200
     session_id = page.path.split("/")[1]
     assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
 
-    form = page.get_form()
-    form["country"] = "England"
-    page = form.submit().follow()
+    page = _check_page(page, "country", "country", "England")
 
-    form = page.get_form()
-    form["supplier"] = supplier_name
-    page = form.submit().follow()
+    page = _check_page(page, "supplier", "supplier", supplier_name)
 
     form = page.get_form()
     assert page.has_text(expected_text)
