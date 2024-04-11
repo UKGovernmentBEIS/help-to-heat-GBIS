@@ -735,9 +735,12 @@ class SummaryView(PageView):
         question_answered = question in session_data and question in schemas.summary_map
         if not question_answered:
             return False
-        if question == "property_type" or question == "property_subtype":
+        if question in ["property_type", "property_subtype"]:
             property_type = self.get_answer(session_data, "property_type")
             return property_type != "Park home"
+        if question in ["park_home", "park_home_main_residence"]:
+            own_property = self.get_answer(session_data, "own_property")
+            return own_property != "No, I am a social housing tenant"
         if question == "epc_rating":
             epc_rating = session_data.get("epc_rating", "Not found")
             accept_suggested_epc = session_data.get("accept_suggested_epc")
