@@ -1374,6 +1374,40 @@ def test_on_check_page_back_button_goes_to_correct_location(has_loft_insulation)
     else:
         assert page.has_one("h1:contains('Do you have a loft that has not been converted into a room?')")
 
+def test_switching_path_to_social_housing_does_not_ask_park_home_questions_again():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
+
+    assert page.has_text("Where is the property located?")
+    page = _check_page(page, "country", "country", "England")
+
+    assert page.has_text("Select your home energy supplier from the list below")
+    page = _check_page(page, "supplier", "supplier", "Utilita")
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    assert page.has_text("Do you live in a park home")
+    page = _check_page(page, "park-home", "park_home", "Yes")
+
+    assert page.has_text("Is the park home your main residence?")
+    page = page.click(contains="Back")
+
+    assert page.has_text("Do you live in a park home")
+    page = page.click(contains="Back")
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "No, I am a social housing tenant")
+
+    assert page.has_text("What is the property's address?")
+
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 @pytest.mark.parametrize("park_home", [True, False])
