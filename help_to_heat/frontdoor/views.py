@@ -340,15 +340,15 @@ class OwnPropertyView(PageView):
         session_data = interface.api.session.get_session(session_id)
         request_supplier = session_data.get("supplier")
         prev_page_url, next_page_url = super().get_prev_next_urls(session_id, page_name)
-        if request_supplier == "Bulb, now part of Octopus Energy":
-            prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="bulb-warning-page"))
-        elif request_supplier == "Utility Warehouse":
+        acquired_supplier_warning_pages = {
+            "Bulb, now part of Octopus Energy": "bulb-warning-page",
+            "Utility Warehouse": "utility-warehouse-warning-page",
+            "Shell": "shell-warning-page",
+        }
+        if request_supplier in acquired_supplier_warning_pages:
             prev_page_url = reverse(
-                "frontdoor:page", kwargs=dict(session_id=session_id, page_name="utility-warehouse-warning-page")
-            )
-        elif request_supplier == "Shell":
-            prev_page_url = reverse(
-                "frontdoor:page", kwargs=dict(session_id=session_id, page_name="shell-warning-page")
+                "frontdoor:page",
+                kwargs=dict(session_id=session_id, page_name=acquired_supplier_warning_pages[request_supplier]),
             )
         return prev_page_url, next_page_url
 
