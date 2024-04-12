@@ -304,6 +304,41 @@ def test_back_button():
     assert form["country"] == "England"
 
 
+@pytest.mark.parametrize(
+    ("supplier_name", "expected_text"),
+    [
+        ("Shell", "Shell is now owned by Octopus Energy."),
+        ("Bulb, now part of Octopus Energy", "Bulb is now owned by Octopus Energy."),
+        ("Utility Warehouse", "Referral requests from UW customers will be managed by E.ON Next"),
+    ],
+)
+def test_own_property_back_button_with_supplier_should_return_to_supplier_warning_page(supplier_name, expected_text):
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
+
+    page = _check_page(page, "country", "country", "England")
+
+    page = _check_page(page, "supplier", "supplier", supplier_name)
+
+    form = page.get_form()
+    assert page.has_text(expected_text)
+    page = form.submit().follow()
+
+    assert page.has_text("Do you own the property?")
+
+    page = page.click(contains="Back")
+
+    assert page.has_text(expected_text)
+
+
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 @utils.mock_os_api

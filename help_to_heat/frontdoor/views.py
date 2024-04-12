@@ -336,6 +336,22 @@ class OwnPropertyView(PageView):
 
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
+    def get_prev_next_urls(self, session_id, page_name):
+        session_data = interface.api.session.get_session(session_id)
+        request_supplier = session_data.get("supplier")
+        prev_page_url, next_page_url = super().get_prev_next_urls(session_id, page_name)
+        acquired_supplier_warning_pages = {
+            "Bulb, now part of Octopus Energy": "bulb-warning-page",
+            "Utility Warehouse": "utility-warehouse-warning-page",
+            "Shell": "shell-warning-page",
+        }
+        if request_supplier in acquired_supplier_warning_pages:
+            prev_page_url = reverse(
+                "frontdoor:page",
+                kwargs=dict(session_id=session_id, page_name=acquired_supplier_warning_pages[request_supplier]),
+            )
+        return prev_page_url, next_page_url
+
 
 @register_page("park-home")
 class ParkHomeView(PageView):
