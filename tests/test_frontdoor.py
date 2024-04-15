@@ -267,16 +267,16 @@ def _make_check_page(session_id):
 
 def _click_change_button(page, page_name):
     client = utils.get_client()
-    els = page.all("a:contains('Change')")
-    change = next(filter(lambda el: f"/{page_name}/change/" in el.attrib["href"], els), None)
+    elements = page.all("a:contains('Change')")
+    change = next(filter(lambda el: f"/{page_name}/change/" in el.attrib["href"], elements), None)
     assert change is not None
     url = change.attrib["href"]
     return client.get(url)
 
 
 def _assert_change_button_is_hidden(page, page_name):
-    els = page.all("a:contains('Change')")
-    change = next(filter(lambda el: f"/{page_name}/change/" in el.attrib["href"], els), None)
+    elements = page.all("a:contains('Change')")
+    change = next(filter(lambda el: f"/{page_name}/change/" in el.attrib["href"], elements), None)
     assert change is None
 
 
@@ -1374,6 +1374,7 @@ def test_on_check_page_back_button_goes_to_correct_location(has_loft_insulation)
     else:
         assert page.has_one("h1:contains('Do you have a loft that has not been converted into a room?')")
 
+
 def test_switching_path_to_social_housing_does_not_ask_park_home_questions_again():
     client = utils.get_client()
     page = client.get("/start")
@@ -1432,7 +1433,7 @@ def test_on_check_answers_page_changing_to_social_housing_hides_park_home_questi
     page = _click_change_button(page, "own-property")
     assert page.has_text("Do you own the property?")
 
-    page = _check_page(page, "own-property", "own_property","No, I am a social housing tenant")
+    page = _check_page(page, "own-property", "own_property", "No, I am a social housing tenant")
     assert page.has_one("h1:contains('Check your answers')")
 
     _assert_change_button_is_hidden(page, "park-home")

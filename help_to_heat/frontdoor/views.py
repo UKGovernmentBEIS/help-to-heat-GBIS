@@ -161,7 +161,7 @@ def get_prev_next_page_name(page_name, session_id=None):
         is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
         receives_benefits = session_data.get("benefits") == "Yes"
 
-    if is_social_housing:
+    if is_social_housing:  # This question is asked first, so this path should be checked first to take precedence
         mapping = schemas.page_prev_next_map_social_housing
         order = schemas.page_order_social_housing
     elif is_park_home:
