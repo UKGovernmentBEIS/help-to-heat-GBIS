@@ -75,7 +75,7 @@ def test_flow_errors():
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
-def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita"):
+def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita", park_home=False):
     """Answer main flow with set answers"""
 
     _check_page = _make_check_page(session_id)
@@ -105,7 +105,11 @@ def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
     assert page.has_text("Do you live in a park home")
-    page = _check_page(page, "park-home", "park_home", "No")
+    page = _check_page(page, "park-home", "park_home", "No" if not park_home else "Yes")
+
+    if park_home:
+        assert page.has_text("Is the park home your main residence?")
+        page = _check_page(page, "park-home-main-residence", "park_home_main_residence", "Yes")
 
     form = page.get_form()
     form["building_name_or_number"] = "22"
@@ -120,8 +124,9 @@ def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita
     assert data["rrn"] == "2222-2222-2222-2222-2222"
     assert data["address"] == "22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA"
 
-    assert page.has_one("h1:contains('What is the council tax band of your property?')")
-    page = _check_page(page, "council-tax-band", "council_tax_band", "B")
+    if not park_home:
+        assert page.has_one("h1:contains('What is the council tax band of your property?')")
+        page = _check_page(page, "council-tax-band", "council_tax_band", "B")
 
     assert page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
     page = _check_page(page, "epc", "accept_suggested_epc", "Yes")
@@ -132,29 +137,30 @@ def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita
         assert page.has_one("h1:contains('What is your annual household income?')")
         page = _check_page(page, "household-income", "household_income", "Less than £31,000 a year")
 
-    assert page.has_one("h1:contains('What kind of property do you have?')")
-    page = _check_page(page, "property-type", "property_type", "House")
+    if not park_home:
+        assert page.has_one("h1:contains('What kind of property do you have?')")
+        page = _check_page(page, "property-type", "property_type", "House")
 
-    assert page.has_one("h1:contains('What kind of house do you have?')")
-    page = _check_page(page, "property-subtype", "property_subtype", "Detached")
+        assert page.has_one("h1:contains('What kind of house do you have?')")
+        page = _check_page(page, "property-subtype", "property_subtype", "Detached")
 
-    assert page.has_one("h1:contains('How many bedrooms does the property have?')")
-    page = _check_page(page, "number-of-bedrooms", "number_of_bedrooms", "Two bedrooms")
+        assert page.has_one("h1:contains('How many bedrooms does the property have?')")
+        page = _check_page(page, "number-of-bedrooms", "number_of_bedrooms", "Two bedrooms")
 
-    assert page.has_one("h1:contains('What kind of walls does your property have?')")
-    page = _check_page(page, "wall-type", "wall_type", "Cavity walls")
+        assert page.has_one("h1:contains('What kind of walls does your property have?')")
+        page = _check_page(page, "wall-type", "wall_type", "Cavity walls")
 
-    assert page.has_one("h1:contains('Are your walls insulated?')")
-    page = _check_page(page, "wall-insulation", "wall_insulation", "No they are not insulated")
+        assert page.has_one("h1:contains('Are your walls insulated?')")
+        page = _check_page(page, "wall-insulation", "wall_insulation", "No they are not insulated")
 
-    assert page.has_one("""h1:contains("Do you have a loft that has not been converted into a room?")""")
-    page = _check_page(page, "loft", "loft", "Yes, I have a loft that has not been converted into a room")
+        assert page.has_one("""h1:contains("Do you have a loft that has not been converted into a room?")""")
+        page = _check_page(page, "loft", "loft", "Yes, I have a loft that has not been converted into a room")
 
-    assert page.has_one("h1:contains('Is there access to your loft?')")
-    page = _check_page(page, "loft-access", "loft_access", "Yes, there is access to my loft")
+        assert page.has_one("h1:contains('Is there access to your loft?')")
+        page = _check_page(page, "loft-access", "loft_access", "Yes, there is access to my loft")
 
-    assert page.has_one("h1:contains('How much loft insulation do you have?')")
-    page = _check_page(page, "loft-insulation", "loft_insulation", "I have up to 100mm of loft insulation")
+        assert page.has_one("h1:contains('How much loft insulation do you have?')")
+        page = _check_page(page, "loft-insulation", "loft_insulation", "I have up to 100mm of loft insulation")
 
     assert page.has_one("h1:contains('Check your answers')")
     form = page.get_form()
@@ -259,6 +265,21 @@ def _make_check_page(session_id):
     return _check_page
 
 
+def _click_change_button(page, page_name):
+    client = utils.get_client()
+    elements = page.all("a:contains('Change')")
+    change = next(filter(lambda el: f"/{page_name}/change/" in el.attrib["href"], elements), None)
+    assert change is not None
+    url = change.attrib["href"]
+    return client.get(url)
+
+
+def _assert_change_button_is_hidden(page, page_name):
+    elements = page.all("a:contains('Change')")
+    change = next(filter(lambda el: f"/{page_name}/change/" in el.attrib["href"], elements), None)
+    assert change is None
+
+
 def test_back_button():
     client = utils.get_client()
     page = client.get("/start")
@@ -302,6 +323,41 @@ def test_back_button():
 
     form = page.get_form()
     assert form["country"] == "England"
+
+
+@pytest.mark.parametrize(
+    ("supplier_name", "expected_text"),
+    [
+        ("Shell", "Shell is now owned by Octopus Energy."),
+        ("Bulb, now part of Octopus Energy", "Bulb is now owned by Octopus Energy."),
+        ("Utility Warehouse", "Referral requests from UW customers will be managed by E.ON Next"),
+    ],
+)
+def test_own_property_back_button_with_supplier_should_return_to_supplier_warning_page(supplier_name, expected_text):
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
+
+    page = _check_page(page, "country", "country", "England")
+
+    page = _check_page(page, "supplier", "supplier", supplier_name)
+
+    form = page.get_form()
+    assert page.has_text(expected_text)
+    page = form.submit().follow()
+
+    assert page.has_text("Do you own the property?")
+
+    page = page.click(contains="Back")
+
+    assert page.has_text(expected_text)
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)
@@ -1352,3 +1408,68 @@ def test_on_check_page_back_button_goes_to_correct_location(has_loft_insulation)
         assert page.has_one("h1:contains('How much loft insulation do you have?')")
     else:
         assert page.has_one("h1:contains('Do you have a loft that has not been converted into a room?')")
+
+
+def test_switching_path_to_social_housing_does_not_ask_park_home_questions_again():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
+
+    assert page.has_text("Where is the property located?")
+    page = _check_page(page, "country", "country", "England")
+
+    assert page.has_text("Select your home energy supplier from the list below")
+    page = _check_page(page, "supplier", "supplier", "Utilita")
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    assert page.has_text("Do you live in a park home")
+    page = _check_page(page, "park-home", "park_home", "Yes")
+
+    assert page.has_text("Is the park home your main residence?")
+    page = page.click(contains="Back")
+
+    assert page.has_text("Do you live in a park home")
+    page = page.click(contains="Back")
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "No, I am a social housing tenant")
+
+    assert page.has_text("What is the property's address?")
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+@pytest.mark.parametrize("park_home", [True, False])
+def test_on_check_answers_page_changing_to_social_housing_hides_park_home_question(park_home):
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
+
+    # Answer main flow
+    page = _answer_house_questions(page, session_id, benefits_answer="Yes", park_home=park_home)
+
+    # press back to get to summary page
+    page = page.click(contains="Back")
+    assert page.has_one("h1:contains('Check your answers')")
+
+    page = _click_change_button(page, "own-property")
+    assert page.has_text("Do you own the property?")
+
+    page = _check_page(page, "own-property", "own_property", "No, I am a social housing tenant")
+    assert page.has_one("h1:contains('Check your answers')")
+
+    _assert_change_button_is_hidden(page, "park-home")
+    _assert_change_button_is_hidden(page, "park-home-main-residence")
