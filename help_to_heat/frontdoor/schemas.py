@@ -575,10 +575,6 @@ supplier_options = (
         "value": "E (Gas & Electricity) Ltd",
     },
     {
-        "label": "Ecotricity",
-        "value": "Ecotricity",
-    },
-    {
         "label": "EDF",
         "value": "EDF",
     },
