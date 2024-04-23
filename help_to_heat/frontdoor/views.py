@@ -161,12 +161,14 @@ def get_prev_next_page_name(page_name, session_id=None):
         is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
         receives_benefits = session_data.get("benefits") == "Yes"
 
-    if is_park_home:
-        mapping = schemas.page_prev_next_map_park_home
-        order = schemas.page_order_park_home
-    elif is_social_housing:
+    # This question is asked first, so this path should take precedence in case users have
+    # gone back and changed their answers
+    if is_social_housing:
         mapping = schemas.page_prev_next_map_social_housing
         order = schemas.page_order_social_housing
+    elif is_park_home:
+        mapping = schemas.page_prev_next_map_park_home
+        order = schemas.page_order_park_home
     else:
         mapping = schemas.page_prev_next_map
         order = schemas.page_order
@@ -335,6 +337,22 @@ class OwnPropertyView(PageView):
             next_page_name = schemas.change_page_lookup[page_name]
 
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+
+    def get_prev_next_urls(self, session_id, page_name):
+        session_data = interface.api.session.get_session(session_id)
+        request_supplier = session_data.get("supplier")
+        prev_page_url, next_page_url = super().get_prev_next_urls(session_id, page_name)
+        acquired_supplier_warning_pages = {
+            "Bulb, now part of Octopus Energy": "bulb-warning-page",
+            "Utility Warehouse": "utility-warehouse-warning-page",
+            "Shell": "shell-warning-page",
+        }
+        if request_supplier in acquired_supplier_warning_pages:
+            prev_page_url = reverse(
+                "frontdoor:page",
+                kwargs=dict(session_id=session_id, page_name=acquired_supplier_warning_pages[request_supplier]),
+            )
+        return prev_page_url, next_page_url
 
 
 @register_page("park-home")
@@ -735,9 +753,12 @@ class SummaryView(PageView):
         question_answered = question in session_data and question in schemas.summary_map
         if not question_answered:
             return False
-        if question == "property_type" or question == "property_subtype":
+        if question in ["property_type", "property_subtype"]:
             property_type = self.get_answer(session_data, "property_type")
             return property_type != "Park home"
+        if question in ["park_home", "park_home_main_residence"]:
+            own_property = self.get_answer(session_data, "own_property")
+            return own_property != "No, I am a social housing tenant"
         if question == "epc_rating":
             epc_rating = session_data.get("epc_rating", "Not found")
             accept_suggested_epc = session_data.get("accept_suggested_epc")
