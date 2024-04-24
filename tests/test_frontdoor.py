@@ -75,7 +75,7 @@ def test_flow_errors():
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
-def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita", park_home=False):
+def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita", park_home=False, has_loft = True):
     """Answer main flow with set answers"""
 
     _check_page = _make_check_page(session_id)
@@ -154,13 +154,17 @@ def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita
         page = _check_page(page, "wall-insulation", "wall_insulation", "No they are not insulated")
 
         assert page.has_one("""h1:contains("Do you have a loft that has not been converted into a room?")""")
-        page = _check_page(page, "loft", "loft", "Yes, I have a loft that has not been converted into a room")
+        if has_loft:
+            page = _check_page(page, "loft", "loft", "Yes, I have a loft that has not been converted into a room")
 
-        assert page.has_one("h1:contains('Is there access to your loft?')")
-        page = _check_page(page, "loft-access", "loft_access", "Yes, there is access to my loft")
+            assert page.has_one("h1:contains('Is there access to your loft?')")
+            page = _check_page(page, "loft-access", "loft_access", "Yes, there is access to my loft")
 
-        assert page.has_one("h1:contains('How much loft insulation do you have?')")
-        page = _check_page(page, "loft-insulation", "loft_insulation", "I have up to 100mm of loft insulation")
+            assert page.has_one("h1:contains('How much loft insulation do you have?')")
+            page = _check_page(page, "loft-insulation", "loft_insulation", "I have up to 100mm of loft insulation")
+        else:
+            page = _check_page(page, "loft", "loft",
+                               "No, I do not have a loft or my loft has been converted into a room")
 
     assert page.has_one("h1:contains('Check your answers')")
     form = page.get_form()
@@ -279,6 +283,11 @@ def _assert_change_button_is_hidden(page, page_name):
     change = next(filter(lambda el: f"/{page_name}/change/" in el.attrib["href"], elements), None)
     assert change is None
 
+
+def _assert_change_button_is_not_hidden(page, page_name):
+    elements = page.all("a:contains('Change')")
+    change = next(filter(lambda el: f"/{page_name}/change/" in el.attrib["href"], elements), None)
+    assert change is not None
 
 def test_back_button():
     client = utils.get_client()
@@ -1473,3 +1482,34 @@ def test_on_check_answers_page_changing_to_social_housing_hides_park_home_questi
 
     _assert_change_button_is_hidden(page, "park-home")
     _assert_change_button_is_hidden(page, "park-home-main-residence")
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_on_check_answers_page_changing_to_no_loft_hides_loft_follow_up_questions():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
+
+    # Answer main flow
+    page = _answer_house_questions(page, session_id, benefits_answer="Yes", has_loft=True)
+
+    # press back to get to summary page
+    page = page.click(contains="Back")
+    assert page.has_one("h1:contains('Check your answers')")
+
+    _assert_change_button_is_not_hidden(page, "loft-access")
+    _assert_change_button_is_not_hidden(page, "loft-insulation")
+
+    page = _click_change_button(page, "loft")
+    assert page.has_text("Do you have a loft that has not been converted into a room?")
+
+    page = _check_page(page, "loft", "loft", "No, I do not have a loft or my loft has been converted into a room")
+    assert page.has_one("h1:contains('Check your answers')")
+
+    _assert_change_button_is_hidden(page, "loft-access")
+    _assert_change_button_is_hidden(page, "loft-insulation")
