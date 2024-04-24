@@ -75,7 +75,7 @@ def test_flow_errors():
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
-def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita", park_home=False, has_loft = True):
+def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita", park_home=False, has_loft=True):
     """Answer main flow with set answers"""
 
     _check_page = _make_check_page(session_id)
@@ -163,8 +163,9 @@ def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita
             assert page.has_one("h1:contains('How much loft insulation do you have?')")
             page = _check_page(page, "loft-insulation", "loft_insulation", "I have up to 100mm of loft insulation")
         else:
-            page = _check_page(page, "loft", "loft",
-                               "No, I do not have a loft or my loft has been converted into a room")
+            page = _check_page(
+                page, "loft", "loft", "No, I do not have a loft or my loft has been converted into a room"
+            )
 
     assert page.has_one("h1:contains('Check your answers')")
     form = page.get_form()
@@ -289,6 +290,7 @@ def _assert_change_button_is_not_hidden(page, page_name):
     change = next(filter(lambda el: f"/{page_name}/change/" in el.attrib["href"], elements), None)
     assert change is not None
 
+
 def test_back_button():
     client = utils.get_client()
     page = client.get("/start")
@@ -347,7 +349,6 @@ def test_own_property_back_button_with_supplier_should_return_to_supplier_warnin
     page = client.get("/start")
     assert page.status_code == 302
     page = page.follow()
-
 
     assert page.status_code == 200
     session_id = page.path.split("/")[1]
@@ -1482,6 +1483,7 @@ def test_on_check_answers_page_changing_to_social_housing_hides_park_home_questi
 
     _assert_change_button_is_hidden(page, "park-home")
     _assert_change_button_is_hidden(page, "park-home-main-residence")
+
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_on_check_answers_page_changing_to_no_loft_hides_loft_follow_up_questions():
