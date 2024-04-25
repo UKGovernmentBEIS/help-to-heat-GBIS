@@ -270,24 +270,30 @@ def _make_check_page(session_id):
     return _check_page
 
 
+def _get_change_button_for_chosen_page(page, page_name):
+    # park home change link is an exception which is not followed by /change/
+    filter_link = f"/{page_name}" if page_name == "park-home" else f"/{page_name}/change/"
+
+    elements = page.all("a:contains('Change')")
+    change = next(filter(lambda el: filter_link in el.attrib["href"], elements), None)
+    return change
+
+
 def _click_change_button(page, page_name):
     client = utils.get_client()
-    elements = page.all("a:contains('Change')")
-    change = next(filter(lambda el: f"/{page_name}/change/" in el.attrib["href"], elements), None)
+    change = _get_change_button_for_chosen_page(page, page_name)
     assert change is not None
     url = change.attrib["href"]
     return client.get(url)
 
 
 def _assert_change_button_is_hidden(page, page_name):
-    elements = page.all("a:contains('Change')")
-    change = next(filter(lambda el: f"/{page_name}/change/" in el.attrib["href"], elements), None)
+    change = _get_change_button_for_chosen_page(page, page_name)
     assert change is None
 
 
 def _assert_change_button_is_not_hidden(page, page_name):
-    elements = page.all("a:contains('Change')")
-    change = next(filter(lambda el: f"/{page_name}/change/" in el.attrib["href"], elements), None)
+    change = _get_change_button_for_chosen_page(page, page_name)
     assert change is not None
 
 
@@ -1474,6 +1480,13 @@ def test_on_check_answers_page_changing_to_social_housing_hides_park_home_questi
     # press back to get to summary page
     page = page.click(contains="Back")
     assert page.has_one("h1:contains('Check your answers')")
+
+    if park_home:
+        _assert_change_button_is_not_hidden(page, "park-home")
+        _assert_change_button_is_not_hidden(page, "park-home-main-residence")
+    else:
+        _assert_change_button_is_not_hidden(page, "park-home")
+        _assert_change_button_is_hidden(page, "park-home-main-residence")
 
     page = _click_change_button(page, "own-property")
     assert page.has_text("Do you own the property?")
