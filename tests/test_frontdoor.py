@@ -1463,7 +1463,7 @@ def test_switching_path_to_social_housing_does_not_ask_park_home_questions_again
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_on_check_answers_page_changing_to_social_housing_hides_park_home_question():
-    _check_page, page, session_id = setup_client_and_page()
+    _check_page, page, session_id = _setup_client_and_page()
 
     # Answer main flow
     page = _answer_house_questions(page, session_id, benefits_answer="Yes")
@@ -1487,7 +1487,7 @@ def test_on_check_answers_page_changing_to_social_housing_hides_park_home_questi
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 @pytest.mark.parametrize("park_home", [True, False])
 def test_on_check_answers_page_if_park_home_main_residence_is_hidden_depending_on_park_home_answer(park_home):
-    _check_page, page, session_id = setup_client_and_page()
+    _check_page, page, session_id = _setup_client_and_page()
 
     # Answer main flow
     page = _answer_house_questions(page, session_id, benefits_answer="Yes", park_home=park_home)
@@ -1504,7 +1504,7 @@ def test_on_check_answers_page_if_park_home_main_residence_is_hidden_depending_o
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_on_check_answers_page_changing_to_no_loft_hides_loft_follow_up_questions():
-    _check_page, page, session_id = setup_client_and_page()
+    _check_page, page, session_id = _setup_client_and_page()
 
     # Answer main flow
     page = _answer_house_questions(page, session_id, benefits_answer="Yes", has_loft=True)
@@ -1526,7 +1526,7 @@ def test_on_check_answers_page_changing_to_no_loft_hides_loft_follow_up_question
     _assert_change_button_is_hidden(page, "loft-insulation")
 
 
-def setup_client_and_page():
+def _setup_client_and_page():
     client = utils.get_client()
     page = client.get("/start")
     assert page.status_code == 302
