@@ -1462,31 +1462,17 @@ def test_switching_path_to_social_housing_does_not_ask_park_home_questions_again
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
-@pytest.mark.parametrize("park_home", [True, False])
-def test_on_check_answers_page_changing_to_social_housing_hides_park_home_question(park_home):
-    client = utils.get_client()
-    page = client.get("/start")
-    assert page.status_code == 302
-    page = page.follow()
-
-    assert page.status_code == 200
-    session_id = page.path.split("/")[1]
-    assert uuid.UUID(session_id)
-    _check_page = _make_check_page(session_id)
+def test_on_check_answers_page_changing_to_social_housing_hides_park_home_question():
+    _check_page, page, session_id = setup_client_and_page()
 
     # Answer main flow
-    page = _answer_house_questions(page, session_id, benefits_answer="Yes", park_home=park_home)
+    page = _answer_house_questions(page, session_id, benefits_answer="Yes")
 
     # press back to get to summary page
     page = page.click(contains="Back")
     assert page.has_one("h1:contains('Check your answers')")
 
-    if park_home:
-        _assert_change_button_is_not_hidden(page, "park-home")
-        _assert_change_button_is_not_hidden(page, "park-home-main-residence")
-    else:
-        _assert_change_button_is_not_hidden(page, "park-home")
-        _assert_change_button_is_hidden(page, "park-home-main-residence")
+    _assert_change_button_is_not_hidden(page, "park-home")
 
     page = _click_change_button(page, "own-property")
     assert page.has_text("Do you own the property?")
@@ -1499,16 +1485,26 @@ def test_on_check_answers_page_changing_to_social_housing_hides_park_home_questi
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
-def test_on_check_answers_page_changing_to_no_loft_hides_loft_follow_up_questions():
-    client = utils.get_client()
-    page = client.get("/start")
-    assert page.status_code == 302
-    page = page.follow()
+@pytest.mark.parametrize("park_home", [True, False])
+def test_on_check_answers_page_if_park_home_main_residence_is_hidden_depending_on_park_home_answer(park_home):
+    _check_page, page, session_id = setup_client_and_page()
 
-    assert page.status_code == 200
-    session_id = page.path.split("/")[1]
-    assert uuid.UUID(session_id)
-    _check_page = _make_check_page(session_id)
+    # Answer main flow
+    page = _answer_house_questions(page, session_id, benefits_answer="Yes", park_home=park_home)
+
+    # press back to get to summary page
+    page = page.click(contains="Back")
+    assert page.has_one("h1:contains('Check your answers')")
+
+    if park_home:
+        _assert_change_button_is_not_hidden(page, "park-home-main-residence")
+    else:
+        _assert_change_button_is_hidden(page, "park-home-main-residence")
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_on_check_answers_page_changing_to_no_loft_hides_loft_follow_up_questions():
+    _check_page, page, session_id = setup_client_and_page()
 
     # Answer main flow
     page = _answer_house_questions(page, session_id, benefits_answer="Yes", has_loft=True)
@@ -1528,3 +1524,15 @@ def test_on_check_answers_page_changing_to_no_loft_hides_loft_follow_up_question
 
     _assert_change_button_is_hidden(page, "loft-access")
     _assert_change_button_is_hidden(page, "loft-insulation")
+
+
+def setup_client_and_page():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
+    return _check_page, page, session_id
