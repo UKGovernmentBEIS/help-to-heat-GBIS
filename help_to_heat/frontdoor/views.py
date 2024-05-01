@@ -763,6 +763,9 @@ class SummaryView(PageView):
             epc_rating = session_data.get("epc_rating", "Not found")
             accept_suggested_epc = session_data.get("accept_suggested_epc")
             return epc_rating != "Not found" and accept_suggested_epc == "Yes"
+        if question in ["loft_access", "loft_insulation"]:
+            loft_answer = self.get_answer(session_data, "loft")
+            return loft_answer == "Yes, I have a loft that has not been converted into a room"
         else:
             return True
 
