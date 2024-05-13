@@ -154,7 +154,7 @@ confirm_sumbit_map = {
     "supplier": _("Energy supplier"),
     "first_name": _("First name"),
     "last_name": _("Last name"),
-    "contact_number": _("Mobile number"),
+    "contact_number": _("Contact number"),
     "email": _("Email"),
 }
 

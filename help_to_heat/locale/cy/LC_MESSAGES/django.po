@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-05-13 10:20+0000\n"
+"POT-Creation-Date: 2024-05-13 10:22+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -105,8 +105,9 @@ msgid "Last name"
 msgstr "Enw olaf"
 
 #: help_to_heat/frontdoor/schemas.py:157
-msgid "Mobile number"
-msgstr "Rhif symudol"
+#: help_to_heat/templates/frontdoor/contact-details.html:39
+msgid "Contact number"
+msgstr "Rhif ffôn"
 
 #: help_to_heat/frontdoor/schemas.py:158
 msgid "Email"
@@ -1229,10 +1230,6 @@ msgstr ""
 #: help_to_heat/templates/frontdoor/contact-details.html:36
 msgid "Email address"
 msgstr "Cyfeiriad ebost"
-
-#: help_to_heat/templates/frontdoor/contact-details.html:39
-msgid "Contact number"
-msgstr "Rhif ffôn"
 
 #: help_to_heat/templates/frontdoor/cookies.html:4
 msgid ""
