@@ -23,6 +23,10 @@ Migrations are run automatically at startup, and suppliers are added automatical
 
     make check-python-code
 
+## Deployment
+
+We have three branches linked to environments: develop, staging, and main. Committing to any of these will trigger a release to the relevant environment. To merge to main, the `production release` label must be applied to your pull request.
+
 ## Migration
 
 All migrations are created by Django.
