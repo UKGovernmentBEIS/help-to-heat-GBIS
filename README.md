@@ -3,9 +3,11 @@
 Formerly known as "Help to Heat".
 
 ## Initial Setup
-
-1. From the project root, run `cp envs/web.template envs/web`
-2. Populate the OS API key into the OS_API_KEY variable in `envs/web`. The key can be found in Keeper. Please only use a single value (i.e. `["my_key_here"]`), rather than all of the keys that are stored in Keeper, in order to avoid needing to rotate all of the keys if your local environment is accidentally leaked.
+1. [Install Poetry](https://python-poetry.org/docs/) on your machine
+2. [Install Python 3.9.13](https://www.python.org/downloads/release/python-3913/)
+3. Set up a virtual environment within the project for Poetry to manage your dependencies. A guide for Pycharm can be found [here](https://www.jetbrains.com/help/pycharm/poetry.html).
+4. From the project root, run `cp envs/web.template envs/web`
+5. Populate the OS API key into the OS_API_KEY variable in `envs/web`. The key can be found in Keeper. Please only use a single value (i.e. `["my_key_here"]`), rather than all of the keys that are stored in Keeper, in order to avoid needing to rotate all of the keys if your local environment is accidentally leaked.
 
 ## Using Docker
 
@@ -99,6 +101,7 @@ the string is used (rather than once on server load).
 
 ### Context
 
+In some cases the English string alone is not enough to identify the translation (e.g. "Close" as in quit and "Close" as
 In some cases the English string alone is not enough to identify the translation (e.g. "Close" as in quit and "Close" as
 in nearby, or entire sentences that are the same in English but have different translations in Welsh depending on the
 context they are used in). In these cases, you will need to use `pgettext` instead of `gettext`. This takes an extra
