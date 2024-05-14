@@ -33,7 +33,7 @@ RUN pip install poetry && \
   poetry config virtualenvs.create false && \
   poetry install --with deployment
 
-COPY ./ /app
+COPY ./ /app/
 
 RUN \
     DJANGO_SETTINGS_MODULE=help_to_heat.settings_base \

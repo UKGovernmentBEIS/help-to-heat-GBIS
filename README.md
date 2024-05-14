@@ -104,7 +104,6 @@ the string is used (rather than once on server load).
 ### Context
 
 In some cases the English string alone is not enough to identify the translation (e.g. "Close" as in quit and "Close" as
-In some cases the English string alone is not enough to identify the translation (e.g. "Close" as in quit and "Close" as
 in nearby, or entire sentences that are the same in English but have different translations in Welsh depending on the
 context they are used in). In these cases, you will need to use `pgettext` instead of `gettext`. This takes an extra
 first argument, the "context" of the translation. Instead of just using the English string as a key, this will use
