@@ -28,7 +28,7 @@ WORKDIR /app/
 
 RUN pip install poetry && \
   poetry config virtualenvs.create false && \
-  poetry install
+  poetry install --with dev
 
 COPY ./ /app
 
