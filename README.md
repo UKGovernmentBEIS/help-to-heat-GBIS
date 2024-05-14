@@ -1,11 +1,13 @@
 # Check eligibility for Great British Insulation Scheme
 
 Formerly known as "Help to Heat".
-
 ## Initial Setup
+### Poetry Setup
+To enable autocomplete, perform these steps first:
 1. [Install Poetry](https://python-poetry.org/docs/) on your machine
 2. [Install Python 3.9.13](https://www.python.org/downloads/release/python-3913/)
 3. Set up a virtual environment within the project for Poetry to manage your dependencies. A guide for Pycharm can be found [here](https://www.jetbrains.com/help/pycharm/poetry.html).
+### Main steps
 4. From the project root, run `cp envs/web.template envs/web`
 5. Populate the OS API key into the OS_API_KEY variable in `envs/web`. The key can be found in Keeper. Please only use a single value (i.e. `["my_key_here"]`), rather than all of the keys that are stored in Keeper, in order to avoid needing to rotate all of the keys if your local environment is accidentally leaked.
 
