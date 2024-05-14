@@ -26,9 +26,7 @@ COPY poetry.lock pyproject.toml /app/
 
 WORKDIR /app/
 
-# not recommended in docs to install poetry globally but as this is a VM this is fine
 RUN pip install poetry && \
-  # no need for venv in dev container
   poetry config virtualenvs.create false && \
   poetry install
 
