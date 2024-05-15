@@ -2,7 +2,7 @@
 
 Formerly known as "Help to Heat".
 ## Initial Setup
-### Poetry Setup
+### (Optional) Poetry Setup 
 To enable autocomplete, perform these steps first:
 1. [Install Poetry](https://python-poetry.org/docs/) on your machine
 2. [Install Python 3.9.13](https://www.python.org/downloads/release/python-3913/)
