@@ -1,5 +1,3 @@
-# Link to Ticket
-
 <!--
 Add the ticket number below and uncomment
 [Link to Jira ticket](https://beisdigital.atlassian.net/browse/PC-####)
