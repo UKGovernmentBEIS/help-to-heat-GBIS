@@ -14,7 +14,7 @@ Add the ticket number below and uncomment
 - [ ] I have checked there are no unintentional line ending changes
 - [ ] I have added tests where applicable
 - [ ] If I have made any changes to the code, I have used the IDE auto-formatter on it
-- [ ] If I have made any changes to python files, I have run `make extract-translations`. 
+- [ ] If I have made any changes to python files, I have run `make extract-translations`
 - [ ] If I have made any changes to website flow, I have updated the [Flow Miro Board](https://miro.com/app/board/uXjVNyomz0g=/)
 - [ ] If I have made any changes to website flow, I have checked forward and back behaviour is still consistent
 
