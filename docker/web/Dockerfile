@@ -17,13 +17,6 @@ RUN chmod +x /bin/wait-for-db
 RUN apt-get update
 RUN apt-get install -y gettext
 
-RUN python3 -m pip install -U pip setuptools wheel
-
-RUN python3 -m pip install debugpy
-
-COPY ./requirements.lock /app/requirements.lock
-RUN python3 -m pip install -r /app/requirements.lock --no-cache-dir
-
 COPY ./docker/web/start.sh /start.sh
 RUN chmod +x /start.sh
 
@@ -32,9 +25,15 @@ RUN chmod +x /entrypoint.sh
 
 COPY ./envs/web.template ./envs/web
 
-COPY . /app
+COPY poetry.lock pyproject.toml /app/
 
 WORKDIR /app/
+
+RUN pip install poetry && \
+  poetry config virtualenvs.create false && \
+  poetry install --with deployment
+
+COPY ./ /app/
 
 RUN \
     DJANGO_SETTINGS_MODULE=help_to_heat.settings_base \

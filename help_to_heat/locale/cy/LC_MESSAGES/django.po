@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-03-27 11:40+0000\n"
+"POT-Creation-Date: 2024-05-13 10:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -105,8 +105,9 @@ msgid "Last name"
 msgstr "Enw olaf"
 
 #: help_to_heat/frontdoor/schemas.py:157
-msgid "Mobile number"
-msgstr "Rhif symudol"
+#: help_to_heat/templates/frontdoor/contact-details.html:39
+msgid "Contact number"
+msgstr "Rhif ffôn"
 
 #: help_to_heat/frontdoor/schemas.py:158
 msgid "Email"
@@ -178,7 +179,7 @@ msgstr "Nage"
 #: help_to_heat/frontdoor/schemas.py:280 help_to_heat/frontdoor/schemas.py:381
 #: help_to_heat/frontdoor/schemas.py:387 help_to_heat/frontdoor/schemas.py:405
 #: help_to_heat/frontdoor/schemas.py:517 help_to_heat/frontdoor/schemas.py:535
-#: help_to_heat/frontdoor/schemas.py:630
+#: help_to_heat/frontdoor/schemas.py:626
 msgid "I do not know"
 msgstr "Wn i ddim"
 
@@ -328,11 +329,11 @@ msgstr "Nac oes, does dim modd mynd i'r atig"
 msgid "No loft"
 msgstr "Dim atig"
 
-#: help_to_heat/frontdoor/schemas.py:403 help_to_heat/frontdoor/schemas.py:622
+#: help_to_heat/frontdoor/schemas.py:403 help_to_heat/frontdoor/schemas.py:618
 msgid "I have more than 100mm of loft insulation"
 msgstr "Mae gen i fwy na 100mm o inswleiddiad atig"
 
-#: help_to_heat/frontdoor/schemas.py:404 help_to_heat/frontdoor/schemas.py:626
+#: help_to_heat/frontdoor/schemas.py:404 help_to_heat/frontdoor/schemas.py:622
 msgid "I have up to 100mm of loft insulation"
 msgstr "Mae gen i hyd at 100mm o inswleiddiad atig"
 
@@ -381,87 +382,87 @@ msgstr ""
 msgid "Bulb, now part of Octopus Energy"
 msgstr "Bulb, sydd bellach yn rhan o Octopus"
 
-#: help_to_heat/frontdoor/schemas.py:641
+#: help_to_heat/frontdoor/schemas.py:637
 msgid "Completely agree"
 msgstr "Cytuno'n llwyr"
 
-#: help_to_heat/frontdoor/schemas.py:645
+#: help_to_heat/frontdoor/schemas.py:641
 msgid "Agree"
 msgstr "Cytuno"
 
-#: help_to_heat/frontdoor/schemas.py:649
+#: help_to_heat/frontdoor/schemas.py:645
 msgid "Neutral"
 msgstr "Niwtral"
 
-#: help_to_heat/frontdoor/schemas.py:653
+#: help_to_heat/frontdoor/schemas.py:649
 msgid "Disagree"
 msgstr "Anghytuno"
 
-#: help_to_heat/frontdoor/schemas.py:657
+#: help_to_heat/frontdoor/schemas.py:653
 msgid "Completely disagree"
 msgstr "Anghytuno'n llwyr"
 
-#: help_to_heat/frontdoor/schemas.py:664
+#: help_to_heat/frontdoor/schemas.py:660
 msgid "Very satisfied"
 msgstr "Bodlon iawn"
 
-#: help_to_heat/frontdoor/schemas.py:668
+#: help_to_heat/frontdoor/schemas.py:664
 msgid "Somewhat satisfied"
 msgstr "Eithaf bodlon"
 
-#: help_to_heat/frontdoor/schemas.py:672
+#: help_to_heat/frontdoor/schemas.py:668
 msgid "Neither satisfied nor dissatisfied"
 msgstr "Ddim yn fodlon nac yn anfodlon"
 
-#: help_to_heat/frontdoor/schemas.py:676
+#: help_to_heat/frontdoor/schemas.py:672
 msgid "Somewhat dissatisfied"
 msgstr "Eithaf anfodlon"
 
-#: help_to_heat/frontdoor/schemas.py:680
+#: help_to_heat/frontdoor/schemas.py:676
 msgid "Very dissatisfied"
 msgstr "Anfodlon iawn"
 
-#: help_to_heat/frontdoor/schemas.py:687
+#: help_to_heat/frontdoor/schemas.py:683
 msgid "To find ways to reduce my energy bills"
 msgstr "Dod o hyd i ffyrdd i leihau fy miliau ynni"
 
-#: help_to_heat/frontdoor/schemas.py:691
+#: help_to_heat/frontdoor/schemas.py:687
 msgid "To find ways to reduce my carbon emissions"
 msgstr "Dod o hyd i ffyrdd i leihau fy allyriadau carbon"
 
-#: help_to_heat/frontdoor/schemas.py:695
+#: help_to_heat/frontdoor/schemas.py:691
 msgid "To find ways to install a specific measure in my home"
 msgstr "Dod o hyd i ffyrdd o osod mesur penodol yn fy nghartref"
 
-#: help_to_heat/frontdoor/schemas.py:699
+#: help_to_heat/frontdoor/schemas.py:695
 msgid "To find ways to improve my EPC rating"
 msgstr "Dod o hyd i ffyrdd i wella fy sgôr EPC"
 
-#: help_to_heat/frontdoor/schemas.py:703
+#: help_to_heat/frontdoor/schemas.py:699
 msgid "To find ways to make my home more comfortable"
 msgstr "Dod o hyd i ffyrdd i wneud fy nghartref yn fwy cyffyrddus"
 
-#: help_to_heat/frontdoor/schemas.py:707
+#: help_to_heat/frontdoor/schemas.py:703
 msgid "Other"
 msgstr "Arall"
 
-#: help_to_heat/frontdoor/schemas.py:740
+#: help_to_heat/frontdoor/schemas.py:736
 msgid "Please enter a valid UK postcode"
 msgstr "Rhowch god post dilys yn y Deyrnas Unedig"
 
-#: help_to_heat/frontdoor/schemas.py:780
+#: help_to_heat/frontdoor/schemas.py:776
 msgid "Invalid contact number"
 msgstr "Rhif ffôn annilys"
 
-#: help_to_heat/frontdoor/schemas.py:788
+#: help_to_heat/frontdoor/schemas.py:784
 msgid "Invalid email format"
 msgstr "Fformat ebost annilys"
 
-#: help_to_heat/frontdoor/schemas.py:799
+#: help_to_heat/frontdoor/schemas.py:795
 msgid "Energy Company Obligation 4"
 msgstr "Rhwymedigaeth Cwmni Ynni 4"
 
-#: help_to_heat/frontdoor/schemas.py:800
+#: help_to_heat/frontdoor/schemas.py:796
 msgid "Great British Insulation Scheme"
 msgstr "Cynllun Inswleiddio Mawr Prydain"
 
@@ -1162,28 +1163,6 @@ msgstr ""
 "mynd drwy ragor o wiriadau cyn y gall %(supplier)s benderfynu pa fesurau "
 "inswleiddio sy'n briodol, os oes unrhyw fesurau inswleiddio’n briodol o gwbl."
 
-#: help_to_heat/templates/frontdoor/confirm-and-submit.html:43
-msgid "What is the Energy Company Obligation?"
-msgstr "Beth yw’r Rhwymedigaeth Cwmni Ynni?"
-
-#: help_to_heat/templates/frontdoor/confirm-and-submit.html:44
-msgid ""
-"The Great British Insulation Scheme is the latest of a series of schemes "
-"that have operated since 2013 requiring energy suppliers to help people to "
-"make their homes more energy efficient. This family of schemes has been "
-"called the Energy Company Obligation (ECO). Alongside the Great British "
-"Insulation Scheme, a complementary ECO4 scheme is also operating. Households "
-"on low incomes or who are vulnerable to the effects of living in a cold home "
-"may be able to get help through this scheme."
-msgstr ""
-"Cynllun Inswleiddio Mawr Prydain yw'r diweddaraf mewn cyfres o gynlluniau "
-"sydd ar waith ers 2013 sy'n ei gwneud yn ofynnol i gyflenwyr ynni helpu pobl "
-"i wneud eu aelwydydd yn fwy effeithlon o ran ynni. Mae'r teulu hwn o "
-"gynlluniau wedi cael eu galw'n Rhwymedigaeth Cwmni Ynni (ECO). Ochr yn ochr "
-"â Chynllun Inswleiddio Mawr Prydain, mae cynllun ECO4 cydategol hefyd yn "
-"gweithredu. Efallai y bydd aelwydydd ar incwm isel neu aelwydydd sy'n agored "
-"i effeithiau byw mewn aelwyd oer yn gallu cael help drwy'r cynllun yma."
-
 #: help_to_heat/templates/frontdoor/contact-details.html:5
 msgid ""
 "What are your contact details? - Check eligibility for Great British "
@@ -1229,10 +1208,6 @@ msgstr ""
 #: help_to_heat/templates/frontdoor/contact-details.html:36
 msgid "Email address"
 msgstr "Cyfeiriad ebost"
-
-#: help_to_heat/templates/frontdoor/contact-details.html:39
-msgid "Contact number"
-msgstr "Rhif ffôn"
 
 #: help_to_heat/templates/frontdoor/cookies.html:4
 msgid ""
