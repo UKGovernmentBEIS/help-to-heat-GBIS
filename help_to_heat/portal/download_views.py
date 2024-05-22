@@ -279,10 +279,8 @@ def add_extra_row_data(referral, exclude_pii=False):
     created_at = referral.created_at.astimezone(london_tz)
 
     if not exclude_pii:
-        contact_number = row.get("contact_number")
-        contact_number = '="' + contact_number + '"'
-        uprn = row.get("uprn")
-        uprn = '="' + str(uprn) + '"' if uprn else ""
+        contact_number = '="' + str(row.get("contact_number", "")) + '"'
+        uprn = '="' + str(row.get("uprn", "")) + '"'
         row = {
             **row,
             "contact_number": contact_number,
@@ -329,7 +327,8 @@ def create_feedback_csv(feedbacks, file_name):
 
 
 @require_http_methods(["GET"])
-def download_all_referrals(request):
+@decorators.requires_service_manager
+def download_all_referrals(_request):
     referrals = models.Referral.objects.all()
     downloaded_at = timezone.now()
     file_name = downloaded_at.strftime("%d-%m-%Y %H_%M")

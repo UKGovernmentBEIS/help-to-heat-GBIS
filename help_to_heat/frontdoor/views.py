@@ -161,12 +161,14 @@ def get_prev_next_page_name(page_name, session_id=None):
         is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
         receives_benefits = session_data.get("benefits") == "Yes"
 
-    if is_park_home:
-        mapping = schemas.page_prev_next_map_park_home
-        order = schemas.page_order_park_home
-    elif is_social_housing:
+    # This question is asked first, so this path should take precedence in case users have
+    # gone back and changed their answers
+    if is_social_housing:
         mapping = schemas.page_prev_next_map_social_housing
         order = schemas.page_order_social_housing
+    elif is_park_home:
+        mapping = schemas.page_prev_next_map_park_home
+        order = schemas.page_order_park_home
     else:
         mapping = schemas.page_prev_next_map
         order = schemas.page_order
@@ -335,6 +337,22 @@ class OwnPropertyView(PageView):
             next_page_name = schemas.change_page_lookup[page_name]
 
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+
+    def get_prev_next_urls(self, session_id, page_name):
+        session_data = interface.api.session.get_session(session_id)
+        request_supplier = session_data.get("supplier")
+        prev_page_url, next_page_url = super().get_prev_next_urls(session_id, page_name)
+        acquired_supplier_warning_pages = {
+            "Bulb, now part of Octopus Energy": "bulb-warning-page",
+            "Utility Warehouse": "utility-warehouse-warning-page",
+            "Shell": "shell-warning-page",
+        }
+        if request_supplier in acquired_supplier_warning_pages:
+            prev_page_url = reverse(
+                "frontdoor:page",
+                kwargs=dict(session_id=session_id, page_name=acquired_supplier_warning_pages[request_supplier]),
+            )
+        return prev_page_url, next_page_url
 
 
 @register_page("park-home")
@@ -595,6 +613,18 @@ class BenefitsView(PageView):
             return redirect("frontdoor:page", session_id=session_id, page_name="property-type")
         return super().handle_post(request, session_id, page_name, data, is_change_page)
 
+    def get_prev_next_urls(self, session_id, page_name):
+        session_data = interface.api.session.get_session(session_id)
+        park_home = session_data.get("park_home")
+        epc_rating = session_data.get("epc_rating", "Not found")
+
+        if park_home == "Yes" and epc_rating == "Not found":
+            _, next_page_url = get_prev_next_urls(session_id, page_name)
+            prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="address"))
+            return prev_page_url, next_page_url
+        else:
+            return super().get_prev_next_urls(session_id, page_name)
+
 
 @register_page("household-income")
 class HouseholdIncomeView(PageView):
@@ -616,6 +646,18 @@ class HouseholdIncomeView(PageView):
 class PropertyTypeView(PageView):
     def get_context(self, *args, **kwargs):
         return {"property_type_options": schemas.property_type_options_map}
+
+    def get_prev_next_urls(self, session_id, page_name):
+        session_data = interface.api.session.get_session(session_id)
+        own_property = session_data.get("own_property")
+        epc_rating = session_data.get("epc_rating", "Not found")
+
+        if own_property == "No, I am a social housing tenant" and epc_rating == "Not found":
+            _, next_page_url = get_prev_next_urls(session_id, page_name)
+            prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="address"))
+            return prev_page_url, next_page_url
+        else:
+            return super().get_prev_next_urls(session_id, page_name)
 
 
 @register_page("property-subtype")
@@ -711,13 +753,19 @@ class SummaryView(PageView):
         question_answered = question in session_data and question in schemas.summary_map
         if not question_answered:
             return False
-        if question == "property_type" or question == "property_subtype":
+        if question in ["property_type", "property_subtype"]:
             property_type = self.get_answer(session_data, "property_type")
             return property_type != "Park home"
+        if question in ["park_home", "park_home_main_residence"]:
+            own_property = self.get_answer(session_data, "own_property")
+            return own_property != "No, I am a social housing tenant"
         if question == "epc_rating":
             epc_rating = session_data.get("epc_rating", "Not found")
             accept_suggested_epc = session_data.get("accept_suggested_epc")
             return epc_rating != "Not found" and accept_suggested_epc == "Yes"
+        if question in ["loft_access", "loft_insulation"]:
+            loft_answer = self.get_answer(session_data, "loft")
+            return loft_answer == "Yes, I have a loft that has not been converted into a room"
         else:
             return True
 
@@ -736,6 +784,18 @@ class SummaryView(PageView):
         if supplier_redirect is not None:
             return supplier_redirect
         return super().handle_post(request, session_id, page_name, data, is_change_page)
+
+    def get_prev_next_urls(self, session_id, page_name):
+        session_data = interface.api.session.get_session(session_id)
+        loft = session_data.get("loft")
+
+        # if the user answered this, they went down the loft insulation route
+        if loft == "Yes, I have a loft that has not been converted into a room":
+            _, next_page_url = get_prev_next_urls(session_id, page_name)
+            prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="loft-insulation"))
+            return prev_page_url, next_page_url
+        else:
+            return super().get_prev_next_urls(session_id, page_name)
 
 
 @register_page("schemes")
@@ -758,12 +818,14 @@ class SupplierView(PageView):
         request_data = dict(request.POST.dict())
         request_supplier = request_data.get("supplier")
         # to be updated when we get full list of excluded suppliers
-        converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
+        converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse", "Shell"]
         unavailable_suppliers = []
         if request_supplier == "Bulb, now part of Octopus Energy":
             next_page_name = "bulb-warning-page"
         if request_supplier == "Utility Warehouse":
             next_page_name = "utility-warehouse-warning-page"
+        if request_supplier == "Shell":
+            next_page_name = "shell-warning-page"
         if request_supplier in unavailable_suppliers:
             next_page_name = "applications-closed"
 
@@ -785,16 +847,17 @@ class SupplierView(PageView):
 
 @register_page("bulb-warning-page")
 class BulbWarningPageView(PageView):
-    def get_context(self, session_id, *args, **kwargs):
-        supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
-        return {"supplier": supplier}
+    pass
 
 
 @register_page("utility-warehouse-warning-page")
 class UtilityWarehousePageView(PageView):
-    def get_context(self, session_id, *args, **kwargs):
-        supplier = interface.api.session.get_answer(session_id, "supplier")["supplier"]
-        return {"supplier": supplier}
+    pass
+
+
+@register_page("shell-warning-page")
+class ShellWarningPageView(PageView):
+    pass
 
 
 @register_page("applications-closed")

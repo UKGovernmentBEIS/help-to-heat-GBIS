@@ -11,11 +11,6 @@ RUN apt update -y && apt install -y postgresql-client
 RUN curl -o /bin/wait-for-db https://github.com/palfrey/wait-for-db/releases/download/v1.2.0/wait-for-db-linux-x86
 RUN chmod +x /bin/wait-for-db
 
-RUN python3 -m pip install -U pip setuptools wheel
-
-COPY ./requirements-dev.lock /app/requirements-dev.lock
-RUN python3 -m pip install -r /app/requirements-dev.lock --no-cache-dir
-
 COPY ./docker/tests/entrypoint.sh /entrypoint.sh
 RUN chmod +x /entrypoint.sh
 
@@ -25,11 +20,17 @@ RUN chmod +x /start.sh
 COPY ./docker/tests/check-code.sh /check-code.sh
 RUN chmod +x /check-code.sh
 
-COPY ./ /app
-
 COPY ./envs/web.template ./envs/web
 
+COPY poetry.lock pyproject.toml /app/
+
 WORKDIR /app/
+
+RUN pip install poetry && \
+  poetry config virtualenvs.create false && \
+  poetry install --with dev
+
+COPY ./ /app/
 
 RUN \
     DJANGO_SETTINGS_MODULE=help_to_heat.settings_base \
