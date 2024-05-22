@@ -21,6 +21,7 @@ class Command(BaseCommand):
             reader = csv.DictReader(csv_file)
             for row in reader:
                 row["supplier_id"] = "30bf85d2-27d3-454b-8f46-1146a5429902"
+                row["referral_download_id"] = None
                 print(row["data"])
                 json_data = decoder.decode(row["data"])
                 row["data"] = json_data
