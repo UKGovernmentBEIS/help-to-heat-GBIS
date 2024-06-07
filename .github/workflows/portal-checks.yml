@@ -4,18 +4,14 @@ env:
   DOCKER_BUILDKIT: 1
 
 on:
+  pull_request:
+    branches:
+      - '**'
   push:
     branches:
-      - 'main'
-      - 'PC-*'
-      - 'pc-*'
-      - 'feature/**'
-      - 'bugfix/**'
-      - 'hotfix/**'
-      - 'develop'
-      - 'suppliers'
-      - 'sandbox'
-      - 'staging'
+      - develop
+      - staging
+      - main
 
 jobs:
   check_web:
