@@ -1,8 +1,10 @@
 import itertools
 
+import phonenumbers
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
-from marshmallow import Schema, fields, validate, validates
+from marshmallow import Schema, ValidationError, fields, validate, validates
+from phonenumbers import NumberParseException
 
 page_order = (
     "country",
@@ -771,17 +773,24 @@ class SessionSchema(Schema):
     user_selected_supplier = fields.String(validate=validate.OneOf(tuple(item["value"] for item in supplier_options)))
     first_name = fields.String(validate=validate.Length(max=128))
     last_name = fields.String(validate=validate.Length(max=128))
-    contact_number = fields.String(
-        validate=validate.And(
-            validate.Length(max=128), validate.Regexp(phone_number_regex, error=_("Invalid contact number"))
-        )
-    )
+    contact_number = fields.String(validate=validate.Length(max=128))
     email = fields.String(required=False)
 
     @validates("email")
     def validate_email(self, value):
         if value:
             validate.Email(error=_("Invalid email format"))(value)
+
+    @validates("contact_number")
+    def validate_contact_number(self, value):
+        if value:
+            try:
+                phone_number = phonenumbers.parse(value, "GB")
+
+                if not phonenumbers.is_possible_number(phone_number):
+                    raise ValidationError([_("Invalid contact number")])
+            except NumberParseException:
+                raise ValidationError([_("Invalid contact number")])
 
     schemes = fields.List(fields.Str())
     referral_created_at = fields.String()
