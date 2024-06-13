@@ -712,9 +712,6 @@ postcode_regex_collection = (
     r"^\s*[a-zA-Z]{1,2}\d[\da-zA-Z]?(\s*\d[a-zA-Z]{2})*\s*$"
 )
 
-# allow only numbers, spaces and +.
-phone_number_regex = r"^[\d\s\+]*$"
-
 
 all_property_types = tuple(item["value"] for item in property_type_options_map) + ("Park home",)
 all_property_subtypes = tuple(item["value"] for value in property_subtype_options_map.values() for item in value) + (
