@@ -1526,6 +1526,46 @@ def test_on_check_answers_page_changing_to_no_loft_hides_loft_follow_up_question
     _assert_change_button_is_hidden(page, "loft-insulation")
 
 
+@pytest.mark.parametrize(
+    ("contact_number", "expect_to_accept"),
+    [
+        ("01632 960 001", True),
+        ("07700 900 982", True),
+        ("+44 808 157 0192", True),
+        ("+33 06 12 34 56 78", True),
+        ("1", False),
+        ("not a number", False),
+    ],
+)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_on_contact_details_page_correct_phone_numbers_are_accepted(contact_number, expect_to_accept):
+    _check_page, page, session_id = _setup_client_and_page()
+
+    # Answer main flow
+    page = _answer_house_questions(page, session_id, benefits_answer="Yes", has_loft=True)
+
+    assert page.has_one("h1:contains('Information based on your answers')")
+    assert page.has_text("Great British Insulation Scheme")
+    form = page.get_form()
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Add your personal and contact details')")
+    form = page.get_form()
+
+    form["first_name"] = "Freddy"
+    form["last_name"] = "Flibble"
+    form["contact_number"] = contact_number
+    form["email"] = "freddy.flibble@example.com"
+
+    if expect_to_accept:
+        page = form.submit().follow()
+        assert page.has_one("h1:contains('Confirm and submit')")
+    else:
+        page = form.submit()
+        assert page.has_text("Invalid contact number")
+        assert page.has_one("p#question-contact_number-error.govuk-error-message:contains('Invalid contact number')")
+
+
 def _setup_client_and_page():
     client = utils.get_client()
     page = client.get("/start")
