@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-13 12:41+0000\n"
+"POT-Creation-Date: 2024-06-14 10:42+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -454,15 +454,17 @@ msgstr "Rhowch god post dilys yn y Deyrnas Unedig"
 msgid "Invalid email format"
 msgstr "Fformat ebost annilys"
 
-#: help_to_heat/frontdoor/schemas.py:788 help_to_heat/frontdoor/schemas.py:790
-msgid "Invalid contact number"
-msgstr "Rhif ffôn annilys"
+#: help_to_heat/frontdoor/schemas.py:789 help_to_heat/frontdoor/schemas.py:793
+msgid ""
+"Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 "
+"0192"
+msgstr "Rhowch rif ffôn, fel 01632 960 001, 07700 900 982 neu +44 808 157 0192"
 
-#: help_to_heat/frontdoor/schemas.py:801
+#: help_to_heat/frontdoor/schemas.py:805
 msgid "Energy Company Obligation 4"
 msgstr "Rhwymedigaeth Cwmni Ynni 4"
 
-#: help_to_heat/frontdoor/schemas.py:802
+#: help_to_heat/frontdoor/schemas.py:806
 msgid "Great British Insulation Scheme"
 msgstr "Cynllun Inswleiddio Mawr Prydain"
 

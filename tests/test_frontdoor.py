@@ -1526,6 +1526,8 @@ def test_on_check_answers_page_changing_to_no_loft_hides_loft_follow_up_question
     _assert_change_button_is_hidden(page, "loft-insulation")
 
 
+# lots of cases sourced from
+# https://gist.github.com/edwardhorsford/a9df6b16a561cd54336fbba51572db25
 @pytest.mark.parametrize(
     ("contact_number", "expect_to_accept"),
     [
@@ -1594,8 +1596,11 @@ def test_on_contact_details_page_correct_phone_numbers_are_accepted(contact_numb
         assert page.has_one("h1:contains('Confirm and submit')")
     else:
         page = form.submit()
-        assert page.has_text("Invalid contact number")
-        assert page.has_one("p#question-contact_number-error.govuk-error-message:contains('Invalid contact number')")
+        assert page.has_text("Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192")
+        assert page.has_one(
+            "p#question-contact_number-error.govuk-error-message:contains('Enter a telephone number, like "
+            "01632 960 001, 07700 900 982 or +44 808 157 0192')"
+        )
 
 
 def _setup_client_and_page():

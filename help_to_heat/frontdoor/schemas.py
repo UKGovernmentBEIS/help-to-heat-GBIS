@@ -785,9 +785,13 @@ class SessionSchema(Schema):
                 phone_number = phonenumbers.parse(value, "GB")
 
                 if not phonenumbers.is_possible_number(phone_number):
-                    raise ValidationError([_("Invalid contact number")])
+                    raise ValidationError(
+                        [_("Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192")]
+                    )
             except NumberParseException:
-                raise ValidationError([_("Invalid contact number")])
+                raise ValidationError(
+                    [_("Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192")]
+                )
 
     schemes = fields.List(fields.Str())
     referral_created_at = fields.String()
