@@ -1526,6 +1526,83 @@ def test_on_check_answers_page_changing_to_no_loft_hides_loft_follow_up_question
     _assert_change_button_is_hidden(page, "loft-insulation")
 
 
+# lots of cases sourced from
+# https://gist.github.com/edwardhorsford/a9df6b16a561cd54336fbba51572db25
+@pytest.mark.parametrize(
+    ("contact_number", "expect_to_accept"),
+    [
+        ("1234", True),
+        ("01632 960 001", True),
+        ("07700 900 982", True),
+        ("+44 808 157 0192", True),
+        ("+33 06 12 34 56 78", True),
+        ("07700900456", True),
+        ("+447700900456", True),
+        ("(+44) 07700900456", True),
+        ("07700 900 456", True),
+        ("07700 900456", True),
+        ("+447700 900456", True),
+        ("01144960573", True),
+        ("+441144960573", True),
+        ("+44114 4960573", True),
+        ("0114 4960573", True),
+        ("0114 496 0573", True),
+        ("(0114) 496 0573", True),
+        ("(0114) 4960573", True),
+        ("02079460000", True),
+        ("+442079460000", True),
+        ("020 79460000", True),
+        ("020 7946 0000", True),
+        ("01632960123", True),
+        ("+441632960123", True),
+        ("+441632 960123", True),
+        ("01632 960123", True),
+        ("01632 960 123", True),
+        ("(01632) 960123", True),
+        ("(01632) 960 123", True),
+        ("0169772551", True),
+        ("0169 772551", True),
+        ("0169 772 551", True),
+        ("(0169) 772551", True),
+        ("(0169) 772 551", True),
+        ("1", False),
+        ("12", False),
+        ("123", False),
+        ("not a number", False),
+    ],
+)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_on_contact_details_page_correct_phone_numbers_are_accepted(contact_number, expect_to_accept):
+    _check_page, page, session_id = _setup_client_and_page()
+
+    # Answer main flow
+    page = _answer_house_questions(page, session_id, benefits_answer="Yes", has_loft=True)
+
+    assert page.has_one("h1:contains('Information based on your answers')")
+    assert page.has_text("Great British Insulation Scheme")
+    form = page.get_form()
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Add your personal and contact details')")
+    form = page.get_form()
+
+    form["first_name"] = "Freddy"
+    form["last_name"] = "Flibble"
+    form["contact_number"] = contact_number
+    form["email"] = "freddy.flibble@example.com"
+
+    if expect_to_accept:
+        page = form.submit().follow()
+        assert page.has_one("h1:contains('Confirm and submit')")
+    else:
+        page = form.submit()
+        assert page.has_text("Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 0192")
+        assert page.has_one(
+            "p#question-contact_number-error.govuk-error-message:contains('Enter a telephone number, like "
+            "01632 960 001, 07700 900 982 or +44 808 157 0192')"
+        )
+
+
 def _setup_client_and_page():
     client = utils.get_client()
     page = client.get("/start")
