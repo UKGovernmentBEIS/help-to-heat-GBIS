@@ -65,6 +65,7 @@ CORS_APPS = [
 ]
 
 MIDDLEWARE = [
+    "help_to_heat.middleware.ExceptionMiddleware",
     "django.middleware.security.SecurityMiddleware",
     "csp.middleware.CSPMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -234,7 +235,7 @@ if not DEBUG:
     SESSION_COOKIE_SAMESITE = "Strict"
     CSRF_COOKIE_SECURE = True
 
-    logging.getLogger("waitress.queue").setLevel(logging.ERROR)
+    # logging.getLogger("waitress.queue").setLevel(logging.ERROR)
 else:
     import debugpy
 
