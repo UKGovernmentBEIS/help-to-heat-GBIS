@@ -2,7 +2,8 @@ import logging
 
 from django.core.handlers.wsgi import WSGIRequest
 
-logger = logging.getLogger("django.server")
+middleware_logger = logging.getLogger(__name__)
+requests_logger = logging.getLogger("requests")
 
 
 class ExceptionMiddleware:
@@ -15,7 +16,7 @@ class ExceptionMiddleware:
 
     def process_exception(self, _request, exception):
         # print out to AWS logs
-        logger.exception(exception)
+        middleware_logger.exception(exception)
         return None
 
 
@@ -24,5 +25,5 @@ class RequestLoggingMiddleware:
         self.get_response = get_response
 
     def __call__(self, request: WSGIRequest):
-        logger.info(f"{request.method}: {request.path}")
+        requests_logger.info(f"{request.method}: {request.path}")
         return self.get_response(request)

@@ -221,6 +221,31 @@ else:
     if EMAIL_BACKEND_TYPE not in ("FILE", "CONSOLE", "GOVUKNOTIFY"):
         raise Exception(f"Unknown EMAIL_BACKEND_TYPE of {EMAIL_BACKEND_TYPE}")
 
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "formatters": {
+        "requests": {
+            "()": "django.utils.log.ServerFormatter",
+            "format": "[{server_time}] {message}",
+            "style": "{",
+        }
+    },
+    "handlers": {
+        "requests": {
+            "level": "INFO",
+            "class": "logging.StreamHandler",
+            "formatter": "requests",
+        },
+    },
+    "loggers": {
+        "requests": {
+            "handlers": ["requests"],
+            "level": "INFO",
+        },
+    },
+}
+
 OS_API_KEY = env.str("OS_API_KEY")
 EPC_API_BASE_URL = env.str("EPC_API_BASE_URL")
 EPC_API_CLIENT_ID = env.str("EPC_API_CLIENT_ID")
