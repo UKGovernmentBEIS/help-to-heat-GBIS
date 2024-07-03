@@ -235,7 +235,7 @@ if not DEBUG:
     SESSION_COOKIE_SAMESITE = "Strict"
     CSRF_COOKIE_SECURE = True
 
-    # logging.getLogger("waitress.queue").setLevel(logging.ERROR)
+    logging.getLogger("waitress.queue").setLevel(logging.ERROR)
 else:
     import debugpy
 
