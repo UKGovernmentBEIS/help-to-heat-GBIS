@@ -224,24 +224,38 @@ else:
 LOGGING = {
     "version": 1,
     "disable_existing_loggers": False,
-    "formatters": {
-        "requests": {
-            "()": "django.utils.log.ServerFormatter",
-            "format": "[{server_time}] {message}",
-            "style": "{",
-        }
-    },
-    "handlers": {
-        "requests": {
+    "loggers": {
+        "help_to_heat": {
+            "handlers": ["console_verbose"],
             "level": "INFO",
-            "class": "logging.StreamHandler",
-            "formatter": "requests",
+            "propagate": False,
+        },
+        "help_to_heat.requests": {
+            "handlers": ["console_simple"],
+            "level": "INFO",
+            "propagate": False,
         },
     },
-    "loggers": {
-        "requests": {
-            "handlers": ["requests"],
-            "level": "INFO",
+    "handlers": {
+        "console_simple": {
+            "class": "logging.StreamHandler",
+            "formatter": "simple",
+        },
+        "console_verbose": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "formatters": {
+        "simple": {
+            "()": "django.utils.log.ServerFormatter",
+            "format": "[{server_time}] [{levelname}] {message}",
+            "style": "{",
+        },
+        "verbose": {
+            "()": "django.utils.log.ServerFormatter",
+            "format": "[{server_time}] [{levelname}] {pathname}:{funcName}:{lineno} {message}",
+            "style": "{",
         },
     },
 }
