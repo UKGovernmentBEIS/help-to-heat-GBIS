@@ -28,4 +28,5 @@ frontdoor_patterns = [
     path("<uuid:session_id>/<str:page_name>/change/", views.change_page_view, name="change-page"),
     path("<uuid:session_id>/<str:page_name>/", views.page_view, name="page"),
     path("i18n/", include("django.conf.urls.i18n")),
+    path("error/", views.error_page_view)
 ]

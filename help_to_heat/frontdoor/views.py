@@ -1009,3 +1009,7 @@ def accessibility_statement_view(request, session_id=None, page_name=None):
         "prev_url": prev_page_url,
     }
     return render(request, template_name="frontdoor/accessibility-statement.html", context=context)
+
+
+def error_page_view(request):
+    raise Exception("could not serve page")
