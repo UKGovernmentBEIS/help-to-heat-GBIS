@@ -65,7 +65,7 @@ CORS_APPS = [
 ]
 
 MIDDLEWARE = [
-    "help_to_heat.middleware.ExceptionMiddleware",
+    "help_to_heat.middleware.ExceptionMiddleware",  # at the top to catch all errors that bubble up
     "django.middleware.security.SecurityMiddleware",
     "csp.middleware.CSPMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -76,7 +76,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "help_to_heat.middleware.RequestLoggingMiddleware",
+    "help_to_heat.middleware.RequestLoggingMiddleware",  # at the bottom to only log requests that aren't blocked
 ]
 
 
