@@ -2,52 +2,186 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>{{_("Schemes you are eligible for - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
+  <title>{{ _("Schemes you are eligible for - Check eligibility for Great British Insulation Scheme - GOV.UK") }}</title>
 {% endblock %}
 
 {% block content %}
 
   {% if eligible_schemes %}
-    <a href="{{prev_url}}" class="govuk-back-link">{{_("Back")}}</a>
-    <div class="govuk-grid-row">
-      <div class="govuk-grid-column-two-thirds">
+    {% call macros.form_wrapper(prev_url, button_label=_("Continue to create a referral")) -%}
+    {{ csrf_input }}
 
-        <form method="POST" novalidate>
-          {{csrf_input}}
-          <div class="govuk-form-group">
-            <h1 class="govuk-heading-l">{{_("Information based on your answers")}}</h1>
-            <p class="govuk-body">{{_("Based on your answers you are eligible to be considered for the Great British Insulation Scheme. Although you are eligible, you are not guaranteed to be assisted by this scheme.")}}</p>
-          </div>
-
-          <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title" data-module="govuk-notification-banner">
-            <div class="govuk-notification-banner__header"></div>
-            <div class="govuk-notification-banner__content">
-              <p class="govuk-notification-banner__heading">
-
-                <h2 class="govuk-heading-m">{{eligible_schemes|join(", ")}}</h2>
-                <p class="govuk-body">{{_("The Great British Insulation Scheme is delivered by energy suppliers. They will assess your home, either through a desktop assessment or by arranging a visit to your home. What the energy supplier can offer will depend on this assessment.")}}</p>
-                <p class="govuk-body">{{_("If you need to pay anything, you’ll find out after the assessment. You can decide not to go ahead if you do not agree with the assessment or costs.")}}</p>
-                <p class="govuk-body">{{_("The most common measures installed under this scheme are loft insulation or cavity wall insulation. These may require a financial contribution. Other insulation measures such as solid wall insulation may be available, but the energy supplier is only likely to offer them to you with a substantial financial contribution.")}}</p>
-                <p class="govuk-body">{{_("If you are comfortable with this then in the next step you can create a referral that will be sent to your chosen energy supplier.")}}</p>
-                <p class="govuk-body">{{_("By submitting a referral through this service your energy supplier will also check if you are eligible for additional help through the government’s ECO4 scheme. ECO4 is available for households on low incomes, receiving qualifying benefits, or who are vulnerable to the effects of living in a cold home.")}}</p>
-              </p>
+    <h1 class="govuk-heading-l">{{ _("We think you might be eligible") }}</h1>
+    <p
+      class="govuk-body">{{ _("Based on your answers, the Great British Insulation Scheme might be suitable for you.") }}</p>
+    <div class="govuk-warning-text">
+      <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+      <strong class="govuk-warning-text__text">
+        <span class="govuk-visually-hidden">Warning</span>
+        {{ _("Please read the following details carefully") }}
+      </strong>
+    </div>
+    <p
+      class="govuk-body">{{ _("The Great British Insulation Scheme is delivered by energy suppliers and their installation partners. They will assess your home, either by a desktop assessment or by arranging a visit to your home. They will determine if they can offer you insulation. ") }}</p>
+    <h2 class="govuk-heading-m">{{ _("What you could be eligible for") }}</h2>
+    {% if text_flags["park_home_text"] %}
+      <p class="govuk-body">{{ _("Based on your answers, you may be able to get the following:") }}</p>
+      <ul class="govuk-list govuk-list--bullet">
+        <li>{{ _("park home insulation") }}</li>
+      </ul>
+      <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title"
+         data-module="govuk-notification-banner">
+        <div class="govuk-notification-banner__header"></div>
+        <div class="govuk-notification-banner__content">
+          <p class="govuk-notification-banner__heading"></p>
+          <p class="govuk-heading-m">{{ _("Your contribution") }}</p>
+          <p class="govuk-body">
+            <p class="govuk-body">
+              {{ _("Park home insulation may not be available from %(supplier)s or their installation partner. If it is available, you would likely have to pay towards the cost of installing it. You might be asked to contribute between £1,000 - £10,000.") % { "supplier": supplier_name }}}
+            </p>
             </div>
-          </div>
+    </div>
+    {% else %}
+    <p class="govuk-body">{{ _("Based on your answers, you may be able to get one of the following:") }}</p>
+    <ul class="govuk-list govuk-list--bullet">
+      {% if text_flags["cavity_wall_text"] %}
+        <li>{{ _("cavity wall insulation") }}</li>
+      {% endif %}
+      {% if text_flags["loft_insulation_text"] %}
+        <li>{{ _("loft insulation") }}</li>
+      {% endif %}
+    </ul>
+    {%  if text_flags["loft_insulation_text"] or  text_flags["cavity_wall_text"] %}
+      <p class="govuk-body">{{ _("The following measures are less likely to be viable, but depending on the assessment of your home, you may otherwise be able to get one of:") }}</p>
+    {%  endif %}
+    <ul class="govuk-list govuk-list--bullet">
+      {% if text_flags["solid_wall_text"] %}
+        <li>{{ _("solid wall insulation (internal or external)") }}</li>
+      {% endif %}
+        <li>{{ _("flat or pitched roof insulation") }}</li>
+        <li>{{ _("solid or under floor insulation") }}</li>
+      {% if text_flags["room_in_roof_text"] %}
+        <li>{{ _("room-in-roof insulation") }}</li>
+      {% endif %}
+    </ul>
 
-          <button class="govuk-button" data-module="govuk-button">
-            {{_("Create a referral")}}
-          </button>
-        </form>
+    {% if text_flags["contribution_text"] %}
+    <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title"
+         data-module="govuk-notification-banner">
+      <div class="govuk-notification-banner__header"></div>
+      <div class="govuk-notification-banner__content">
+        <p class="govuk-notification-banner__heading"></p>
+        <p class="govuk-heading-m">{{ _("Your contribution") }}</p>
+        <p class="govuk-body">
+          {{ _("You may have to pay towards the cost of installation. Costs and the viability of an install going ahead depend on your home's location, property type and tenure, accessibility, ventilation requirements, and the installation company available.") }}
+        </p>
+        <p class="govuk-body">
+          {{ _("For an average 3-bedroom semi-detached house, typical contributions could be:") }}
+        </p>
+        {% if text_flags["cavity_wall_text"] or text_flags["loft_insulation_low_contribution_text"] %}
+        <p class="govuk-body">
+          {{ _("Less than £1,000") }}
+        </p>
+        <ul class="govuk-list govuk-list--bullet">
+          {% if text_flags["cavity_wall_text"] %}
+            <li>{{ _("cavity wall insulation") }}</li>
+          {% endif %}
+          {% if text_flags["loft_insulation_low_contribution_text"] %}
+            <li>{{ _("loft insulation") }}</li>
+          {% endif %}
+        </ul>
+        {% endif %}
+        <p class="govuk-body">
+          {{ _("£1,000 - £5,000") }}
+        </p>
+        <ul class="govuk-list govuk-list--bullet">
+          {% if text_flags["loft_insulation_medium_contribution_text"] %}
+            <li>{{ _("loft insulation") }}</li>
+          {% endif %}
+          <li>{{ _("flat or pitched roof insulation") }}</li>
+          <li>{{ _("under floor insulation") }}</li>
+          <li>{{ _("solid floor insulation") }}</li>
+          {% if text_flags["room_in_roof_text"] %}
+            <li>{{ _("room-in-roof insulation") }}</li>
+          {% endif %}
+        </ul>
+        <p class="govuk-body">
+          {{ _("More than £5,000") }}
+        </p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>{{ _("solid wall insulation") }}</li>
+        </ul>
       </div>
     </div>
-
+    {%  else %}
+      <p class="govuk-body">{{ _("The viability of an install going ahead depends on your home's location, property type and tenure, accessibility, ventilation requirements, and the installation company available.") }}</p>
+    {% endif %}  
+    {%  endif %}
+    <p class="govuk-body">
+      {{ _("%(supplier)s can reject your referral if they assess your property as not viable for any insulation. They are not obligated to install insulation if you are eligible.") % { "supplier": supplier_name }}}</p>
+    <p
+      class="govuk-body govuk-!-font-weight-bold">{{ _("It could take several weeks to be informed of the outcome of your referral.") }}</p>
+    <p
+      class="govuk-body">{{ _("If insulation is installed, adequate ventilation must be ensured and added if existing ventilation is insufficient.") }}</p>
+    <details class="govuk-details">
+      <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+              {{ _("Find out more about ventilation") }}
+            </span>
+      </summary>
+      <div class="govuk-details__text">
+        <p
+          class="govuk-body">{{ _("A well-ventilated property must have methods of extracting water vapour and pollutants, supplying a minimum level of outdoor air for occupant’s health, quickly diluting indoor air pollutants and water vapour, and minimising the entry of external air pollutants. To achieve this you may need:") }}</p>
+        <ul class="govuk-list govuk-list--bullet">
+          <li>{{ _("Background ventilation (such as trickle vents in window frames)") }}</li>
+          <li>{{ _("Mechanical ventilation (such as extractor fans)") }}</li>
+          <li>{{ _("Crossflow ventilation (such as gaps or vents in doors)") }}</li>
+        </ul>
+      </div>
+    </details>
+    <p class="govuk-body">
+      {{ _("If you are comfortable with this then in the next step you can create a referral to %(supplier)s. You can decide not to go ahead if you do not agree with their assessment or the contribution required.")% { "supplier": supplier_name } }}</p>
+    <div class="govuk-form-group {{ 'govuk-form-group--error' if errors else '' }}">
+      {% if errors.get('ventilation_acknowledgement') %}
+        <p id="ventilation_acknowledgement-error" class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error:</span> {{ errors.get('ventilation_acknowledgement')}}
+        </p>
+      {% endif %}
+      <div class="govuk-checkboxes__item">
+        <input class="govuk-checkboxes__input" id="question-ventilation_acknowledgement"
+               name="ventilation_acknowledgement" type="checkbox"
+               {% if data.get('ventilation_acknowledgement') == 'on' %}checked{% endif %}/>
+        <label class="govuk-label govuk-checkboxes__label" for="question-ventilation_acknowledgement"
+               id="question-ventilation_acknowledgement-label">
+          {{ _("I understand my home must be sufficiently ventilated before any insulation is installed") }}
+        </label>
+      </div>
+      {% if errors.get('contribution_acknowledgement') %}
+        <p id="contribution_acknowledgement-error" class="govuk-error-message">
+          <span class="govuk-visually-hidden">Error:</span> {{ errors.get('contribution_acknowledgement')}}
+        </p>
+      {% endif %}
+      {% if text_flags["contribution_text"] %}
+        <div class="govuk-checkboxes__item">
+          <input class="govuk-checkboxes__input" id="question-contribution_acknowledgement"
+                 name="contribution_acknowledgement" type="checkbox"
+                 {% if data.get('contribution_acknowledgement') == 'on' %}checked{% endif %}/>
+          <label class="govuk-label govuk-checkboxes__label" for="question-contribution_acknowledgement"
+                 id="question-contribution_acknowledgement-label">
+            {{ _("I understand that I may be required to pay towards installing insulation if it is offered") }}
+          </label>
+        </div>
+      {% endif %}  
+    </div>
+    {%- endcall %}
   {% else %}
 
     {% call macros.further_help() -%}
 
-      <h1 class="govuk-heading-l">{{_("Your property is not eligible")}}</h1>
+    <h1 class="govuk-heading-l">{{ _("Your property is not eligible") }}</h1>
 
-      <p class="govuk-body">{{_("This is likely because your property's council tax band is too high. This service is for properties in an eligible council tax band (A to D in England and A to E in Scotland and Wales).")}}</p>
+    <p
+      class="govuk-body">{{ _("This is likely because your property's council tax band is too high. This service is for properties in an eligible council tax band (A to D in England and A to E in Scotland and Wales).") }}</p>
 
     {%- endcall %}
 
