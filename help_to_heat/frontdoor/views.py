@@ -926,7 +926,12 @@ class SuccessView(PageView):
         household_income = session_data.get("household_income")
         is_eco4_eligible = benefits == "Yes" or household_income == "Less than £31,000 a year"
         referral = portal.models.Referral.objects.get(session_id=session_id)
-        return {"supplier": supplier, "safe_to_cache": True, "referral_id": referral.formatted_referral_id, "is_eco4_eligible": is_eco4_eligible}
+        return {
+            "supplier": supplier,
+            "safe_to_cache": True,
+            "referral_id": referral.formatted_referral_id,
+            "is_eco4_eligible": is_eco4_eligible,
+        }
 
 
 class FeedbackView(utils.MethodDispatcher):
