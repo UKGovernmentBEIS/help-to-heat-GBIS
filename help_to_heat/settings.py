@@ -226,37 +226,28 @@ LOGGING = {
     "disable_existing_loggers": False,
     "loggers": {
         "help_to_heat": {
-            "handlers": ["console_verbose"],
+            "handlers": ["help_to_heat"],
             "level": "INFO",
             "propagate": False,
         },
         "help_to_heat.requests": {
-            "handlers": ["console_simple"],
+            "handlers": ["help_to_heat"],
             "level": "INFO",
             "propagate": False,
         },
     },
     "handlers": {
-        "console_simple": {
+        "help_to_heat": {
             "class": "logging.StreamHandler",
-            "formatter": "simple",
-        },
-        "console_verbose": {
-            "class": "logging.StreamHandler",
-            "formatter": "verbose",
-        },
+            "formatter": "help_to_heat",
+        }
     },
     "formatters": {
-        "simple": {
+        "help_to_heat": {
             "()": "django.utils.log.ServerFormatter",
             "format": "[{server_time}] [{levelname}] {message}",
             "style": "{",
-        },
-        "verbose": {
-            "()": "django.utils.log.ServerFormatter",
-            "format": "[{server_time}] [{levelname}] {pathname}:{funcName}:{lineno} {message}",
-            "style": "{",
-        },
+        }
     },
 }
 
