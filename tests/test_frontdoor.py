@@ -1035,7 +1035,7 @@ def test_referral_email():
     referral_email_text = utils.get_latest_email_text("freddy.flibble@example.com")
 
     assert "Your details have been submitted to Utilita." in referral_email_text
-    assert "You do not need to create another referral at any point." in referral_email_text
+    assert "You do not need to create another referral." in referral_email_text
 
     referral = models.Referral.objects.get(session_id=session_id)
     referral.delete()
