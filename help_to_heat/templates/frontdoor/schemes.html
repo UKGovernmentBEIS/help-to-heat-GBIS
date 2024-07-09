@@ -161,7 +161,7 @@
           <span class="govuk-visually-hidden">Error:</span> {{ errors.get('contribution_acknowledgement')}}
         </p>
       {% endif %}
-      {% if text_flags["contribution_text"] %}
+      {% if text_flags["park_home_text"] or text_flags["contribution_text"] %}
         <div class="govuk-checkboxes__item">
           <input class="govuk-checkboxes__input" id="question-contribution_acknowledgement"
                  name="contribution_acknowledgement" type="checkbox"

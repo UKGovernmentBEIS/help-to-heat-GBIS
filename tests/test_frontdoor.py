@@ -75,7 +75,15 @@ def test_flow_errors():
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
-def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita", park_home=False, has_loft=True):
+def _answer_house_questions(
+    page,
+    session_id,
+    benefits_answer,
+    supplier="Utilita",
+    park_home=False,
+    has_loft=True,
+    income_answer="Less than £31,000 a year",
+):
     """Answer main flow with set answers"""
 
     _check_page = _make_check_page(session_id)
@@ -135,7 +143,7 @@ def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita
 
     if benefits_answer == "No":
         assert page.has_one("h1:contains('What is your annual household income?')")
-        page = _check_page(page, "household-income", "household_income", "Less than £31,000 a year")
+        page = _check_page(page, "household-income", "household_income", income_answer)
 
     if not park_home:
         assert page.has_one("h1:contains('What kind of property do you have?')")
@@ -209,10 +217,11 @@ def _do_happy_flow(supplier="EON"):
     # Answer main flow
     page = _answer_house_questions(page, session_id, benefits_answer="Yes", supplier=supplier)
 
-    assert page.has_one("h1:contains('Information based on your answers')")
+    assert page.has_one("h1:contains('We think you might be eligible')")
     assert page.has_text("Great British Insulation Scheme")
     assert not page.has_text("Energy Company Obligation 4")
     form = page.get_form()
+    form["ventilation_acknowledgement"] = True
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('Add your personal and contact details')")
@@ -840,10 +849,11 @@ def test_epc_lookup_failure():
     form = page.get_form()
     page = form.submit().follow()
 
-    assert page.has_one("h1:contains('Information based on your answers')")
+    assert page.has_one("h1:contains('We think you might be eligible')")
     assert page.has_text("Great British Insulation Scheme")
     assert not page.has_text("Energy Company Obligation 4")
     form = page.get_form()
+    form["ventilation_acknowledgement"] = True
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('Add your personal and contact details')")
@@ -985,6 +995,138 @@ def test_eligibility():
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_schemes_page_logic_when_user_is_eligible_for_park_home_insulation_displays_park_home_insulation():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    # Answer main flow
+    page = _answer_house_questions(page, session_id, benefits_answer="Yes", park_home=True)
+
+    assert page.has_one("h1:contains('We think you might be eligible')")
+    assert page.has_text("Great British Insulation Scheme")
+    assert page.has_text("park home insulation")
+    assert not page.has_text("Energy Company Obligation 4")
+    form = page.get_form()
+    form["ventilation_acknowledgement"] = True
+    form["contribution_acknowledgement"] = True
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Add your personal and contact details')")
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_schemes_page_logic_when_user_may_contribute_checkbox_appears_and_is_required():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    # Answer main flow
+    page = _answer_house_questions(page, session_id, benefits_answer="No", income_answer="£31,000 or more a year")
+
+    assert page.has_one("h1:contains('We think you might be eligible')")
+    assert page.has_text("Great British Insulation Scheme")
+    assert not page.has_text("Energy Company Obligation 4")
+    form = page.get_form()
+    form["ventilation_acknowledgement"] = True
+    page = form.submit()
+
+    assert page.has_one("h1:contains('We think you might be eligible')")
+    assert page.has_text("There is a problem")
+    form = page.get_form()
+    form["ventilation_acknowledgement"] = True
+    form["contribution_acknowledgement"] = True
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Add your personal and contact details')")
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_schemes_page_logic_if_user_has_park_home_checkboxes_required():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    # Answer main flow
+    page = _answer_house_questions(page, session_id, benefits_answer="No", park_home=True)
+
+    assert page.has_one("h1:contains('We think you might be eligible')")
+    assert page.has_text("Great British Insulation Scheme")
+    assert page.has_text("park home insulation")
+    assert not page.has_text("Energy Company Obligation 4")
+    form = page.get_form()
+    page = form.submit()
+
+    assert page.has_one("h1:contains('We think you might be eligible')")
+    assert page.has_text("There is a problem")
+    assert page.has_text(
+        "Please confirm that you understand your home must be sufficiently ventilated before any insulation is "
+        "installed"
+    )
+    assert page.has_text(
+        "Please confirm that you understand you may be required to contribute towards the cost of installing insulation"
+    )
+    form = page.get_form()
+    form["ventilation_acknowledgement"] = True
+    form["contribution_acknowledgement"] = True
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Add your personal and contact details')")
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_schemes_page_logic_if_user_may_have_to_contribute_checkboxes_required():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    # Answer main flow
+    page = _answer_house_questions(page, session_id, benefits_answer="No", income_answer="£31,000 or more a year")
+
+    assert page.has_one("h1:contains('We think you might be eligible')")
+    assert page.has_text("Great British Insulation Scheme")
+    assert not page.has_text("Energy Company Obligation 4")
+    form = page.get_form()
+    page = form.submit()
+
+    assert page.has_one("h1:contains('We think you might be eligible')")
+    assert page.has_text("There is a problem")
+    assert page.has_text(
+        "Please confirm that you understand your home must be sufficiently ventilated before any insulation is "
+        "installed"
+    )
+    assert page.has_text(
+        "Please confirm that you understand you may be required to contribute towards the cost of installing insulation"
+    )
+    form = page.get_form()
+    form["ventilation_acknowledgement"] = True
+    form["contribution_acknowledgement"] = True
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Add your personal and contact details')")
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_referral_email():
     client = utils.get_client()
     page = client.get("/start")
@@ -998,10 +1140,11 @@ def test_referral_email():
     # Answer main flow
     page = _answer_house_questions(page, session_id, benefits_answer="Yes")
 
-    assert page.has_one("h1:contains('Information based on your answers')")
+    assert page.has_one("h1:contains('We think you might be eligible')")
     assert page.has_text("Great British Insulation Scheme")
     assert not page.has_text("Energy Company Obligation 4")
     form = page.get_form()
+    form["ventilation_acknowledgement"] = True
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('Add your personal and contact details')")
@@ -1121,10 +1264,11 @@ def test_incorrect_referral_email():
     # Answer main flow
     page = _answer_house_questions(page, session_id, benefits_answer="Yes")
 
-    assert page.has_one("h1:contains('Information based on your answers')")
+    assert page.has_one("h1:contains('We think you might be eligible')")
     assert page.has_text("Great British Insulation Scheme")
     assert not page.has_text("Energy Company Obligation 4")
     form = page.get_form()
+    form["ventilation_acknowledgement"] = True
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('Add your personal and contact details')")
@@ -1157,10 +1301,11 @@ def test_referral_not_providing_email():
     # Answer main flow
     page = _answer_house_questions(page, session_id, benefits_answer="Yes")
 
-    assert page.has_one("h1:contains('Information based on your answers')")
+    assert page.has_one("h1:contains('We think you might be eligible')")
     assert page.has_text("Great British Insulation Scheme")
     assert not page.has_text("Energy Company Obligation 4")
     form = page.get_form()
+    form["ventilation_acknowledgement"] = True
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('Add your personal and contact details')")
@@ -1207,10 +1352,11 @@ def test_referral_not_providing_contact_number():
     # Answer main flow
     page = _answer_house_questions(page, session_id, benefits_answer="Yes")
 
-    assert page.has_one("h1:contains('Information based on your answers')")
+    assert page.has_one("h1:contains('We think you might be eligible')")
     assert page.has_text("Great British Insulation Scheme")
     assert not page.has_text("Energy Company Obligation 4")
     form = page.get_form()
+    form["ventilation_acknowledgement"] = True
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('Add your personal and contact details')")
@@ -1578,9 +1724,10 @@ def test_on_contact_details_page_correct_phone_numbers_are_accepted(contact_numb
     # Answer main flow
     page = _answer_house_questions(page, session_id, benefits_answer="Yes", has_loft=True)
 
-    assert page.has_one("h1:contains('Information based on your answers')")
+    assert page.has_one("h1:contains('We think you might be eligible')")
     assert page.has_text("Great British Insulation Scheme")
     form = page.get_form()
+    form["ventilation_acknowledgement"] = True
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('Add your personal and contact details')")
