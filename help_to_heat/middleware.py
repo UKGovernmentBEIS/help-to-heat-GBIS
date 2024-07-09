@@ -25,6 +25,5 @@ class RequestLoggingMiddleware:
         self.get_response = get_response
 
     def __call__(self, request: WSGIRequest):
-        # when required uncomment for request logging
-        # requests_logger.info(f"{request.method}: {request.path}")
+        requests_logger.info(f"{request.method}: {request.path}")
         return self.get_response(request)
