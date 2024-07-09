@@ -75,7 +75,15 @@ def test_flow_errors():
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
-def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita", park_home=False, has_loft=True):
+def _answer_house_questions(
+    page,
+    session_id,
+    benefits_answer,
+    supplier="Utilita",
+    park_home=False,
+    has_loft=True,
+    household_income="Less than £31,000 a year",
+):
     """Answer main flow with set answers"""
 
     _check_page = _make_check_page(session_id)
@@ -135,7 +143,7 @@ def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita
 
     if benefits_answer == "No":
         assert page.has_one("h1:contains('What is your annual household income?')")
-        page = _check_page(page, "household-income", "household_income", "Less than £31,000 a year")
+        page = _check_page(page, "household-income", "household_income", household_income)
 
     if not park_home:
         assert page.has_one("h1:contains('What kind of property do you have?')")
@@ -177,7 +185,7 @@ def _answer_house_questions(page, session_id, benefits_answer, supplier="Utilita
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_happy_flow():
     supplier = "Utilita"
-    session_id = _do_happy_flow(supplier=supplier)
+    session_id, _ = _do_happy_flow(supplier=supplier)
 
     data = interface.api.session.get_answer(session_id, page_name="contact-details")
     expected = {
@@ -196,7 +204,7 @@ def test_happy_flow():
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
-def _do_happy_flow(supplier="EON"):
+def _do_happy_flow(supplier="EON", benefits_answer="Yes", park_home=False, household_income="Less than £31,000 a year"):
     client = utils.get_client()
     page = client.get("/start")
     assert page.status_code == 302
@@ -207,7 +215,14 @@ def _do_happy_flow(supplier="EON"):
     assert uuid.UUID(session_id)
 
     # Answer main flow
-    page = _answer_house_questions(page, session_id, benefits_answer="Yes", supplier=supplier)
+    page = _answer_house_questions(
+        page,
+        session_id,
+        benefits_answer=benefits_answer,
+        supplier=supplier,
+        park_home=park_home,
+        household_income=household_income,
+    )
 
     assert page.has_one("h1:contains('Information based on your answers')")
     assert page.has_text("Great British Insulation Scheme")
@@ -254,7 +269,7 @@ def _do_happy_flow(supplier="EON"):
 
     assert page.has_one(f"h1:contains('Your details have been submitted to {supplier_shown}')")
 
-    return session_id
+    return session_id, page
 
 
 def _make_check_page(session_id):
@@ -1281,7 +1296,7 @@ def test_address_validation():
 def test_bulb_to_octopus():
     supplier = "Bulb, now part of Octopus Energy"
 
-    session_id = _do_happy_flow(supplier=supplier)
+    session_id, _ = _do_happy_flow(supplier=supplier)
 
     referral_email_text = utils.get_latest_email_text("freddy.flibble@example.com")
     assert "Your details have been submitted to Octopus Energy." in referral_email_text
@@ -1295,7 +1310,7 @@ def test_bulb_to_octopus():
 def test_utility_warehouse_to_eon():
     supplier = "Utility Warehouse"
 
-    session_id = _do_happy_flow(supplier=supplier)
+    session_id, _ = _do_happy_flow(supplier=supplier)
 
     referral_email_text = utils.get_latest_email_text("freddy.flibble@example.com")
     assert "Your details have been submitted to E.ON Next." in referral_email_text
@@ -1309,7 +1324,7 @@ def test_utility_warehouse_to_eon():
 def test_should_send_referral_to_octopus_when_shell_is_selected():
     supplier = "Shell"
 
-    session_id = _do_happy_flow(supplier=supplier)
+    session_id, _ = _do_happy_flow(supplier=supplier)
 
     referral_email_text = utils.get_latest_email_text("freddy.flibble@example.com")
     assert "Your details have been submitted to Octopus Energy." in referral_email_text
@@ -1601,6 +1616,45 @@ def test_on_contact_details_page_correct_phone_numbers_are_accepted(contact_numb
             "p#question-contact_number-error.govuk-error-message:contains('Enter a telephone number, like "
             "01632 960 001, 07700 900 982 or +44 808 157 0192')"
         )
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_on_success_page_on_yes_to_benefits_eco4_is_shown():
+    supplier = "British Gas"
+
+    _, page = _do_happy_flow(supplier=supplier, benefits_answer="Yes")
+
+    assert page.has_text(
+        f"{supplier} or their installation partner may also check if your home is suitable for more "
+        "help with energy efficiency improvements through the ECO4 scheme"
+    )
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_on_success_page_on_no_to_benefits_income_less_than_31k_eco4_is_shown():
+    supplier = "British Gas"
+
+    _, page = _do_happy_flow(supplier=supplier, benefits_answer="No")
+
+    assert page.has_text(
+        f"{supplier} or their installation partner may also check if your home is suitable for more "
+        "help with energy efficiency improvements through the ECO4 scheme"
+    )
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_on_success_page_on_no_to_benefits_income_more_than_31k_eco4_is_not_shown():
+    supplier = "British Gas"
+
+    # to fulfill neither requirement but still be eligible, be in a park home
+    _, page = _do_happy_flow(
+        supplier=supplier, park_home=True, benefits_answer="No", household_income="£31,000 or more a year"
+    )
+
+    assert not page.has_text(
+        f"{supplier} or their installation partner may also check if your home is suitable for "
+        "more help with energy efficiency improvements through the ECO4 scheme"
+    )
 
 
 def _setup_client_and_page():
