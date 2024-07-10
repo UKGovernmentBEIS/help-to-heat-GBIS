@@ -1009,17 +1009,3 @@ def accessibility_statement_view(request, session_id=None, page_name=None):
         "prev_url": prev_page_url,
     }
     return render(request, template_name="frontdoor/accessibility-statement.html", context=context)
-
-
-def simple_error_page_view(request):
-    raise Exception("could not serve page")
-
-
-def get_referral_count():
-    return None  # simulating fail of request
-
-
-def complex_error_page_view(request):
-    referral_count = get_referral_count()
-
-    return render(request, template_name="frontdoor/error.html", context={"referral_count": referral_count})
