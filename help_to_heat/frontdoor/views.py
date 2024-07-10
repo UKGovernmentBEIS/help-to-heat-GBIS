@@ -815,16 +815,34 @@ class SchemesView(PageView):
         supplier_name = SupplierConverter(session_id).get_supplier_on_general_pages()
 
         is_in_park_home = session_data.get("park_home", "No") == "Yes"
-        is_solid_walls = session_data.get("wall_type") in ["Solid walls", "Mix of solid and cavity walls", "I do not know"]
-        is_cavity_walls = session_data.get("wall_type") in ["Cavity walls", "Mix of solid and cavity walls", "I do not know"]
+        is_solid_walls = session_data.get("wall_type") in [
+            "Solid walls",
+            "Mix of solid and cavity walls",
+            "I do not know",
+        ]
+        is_cavity_walls = session_data.get("wall_type") in [
+            "Cavity walls",
+            "Mix of solid and cavity walls",
+            "I do not know",
+        ]
         is_not_on_benefits = session_data.get("benefits") == "No"
-        is_wall_insulation_present = not session_data.get("wall_insulation") in ["Some are insulated, some are not", "No they are not insulated", "I do not know"]
+        is_wall_insulation_present = not session_data.get("wall_insulation") in [
+            "Some are insulated, some are not",
+            "No they are not insulated",
+            "I do not know",
+        ]
         is_income_above_threshold = session_data.get("household_income") == "£31,000 or more a year"
         is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
         is_loft_present = session_data.get("loft") == "Yes, I have a loft that has not been converted into a room"
         is_there_access_to_loft = session_data.get("loft_access") == "Yes, there is access to my loft"
-        is_loft_insulation_over_threshold = session_data["loft_insulation"] in ["I have more than 100mm of loft insulation", "I do not know"]
-        is_loft_insulation_under_threshold = session_data["loft_insulation"] in ["I have up to 100mm of loft insulation", "I do not know"]
+        is_loft_insulation_over_threshold = session_data["loft_insulation"] in [
+            "I have more than 100mm of loft insulation",
+            "I do not know",
+        ]
+        is_loft_insulation_under_threshold = session_data["loft_insulation"] in [
+            "I have up to 100mm of loft insulation",
+            "I do not know",
+        ]
 
         text_flags = {
             "park_home_text": is_in_park_home and not is_social_housing,
@@ -837,14 +855,14 @@ class SchemesView(PageView):
                 "solid_wall_text": text_flags.get("park_home_text") is False
                 and is_solid_walls
                 and not is_wall_insulation_present,
-                "room_in_roof_text": text_flags.get("park_home_text") is False
-                and not is_loft_present,
+                "room_in_roof_text": text_flags.get("park_home_text") is False and not is_loft_present,
                 "loft_insulation_text": text_flags.get("park_home_text") is False
                 and is_loft_present
                 and is_there_access_to_loft,
                 "contribution_text": text_flags.get("park_home_text") is False
                 and (not is_social_housing)
-                and is_not_on_benefits and is_income_above_threshold,
+                and is_not_on_benefits
+                and is_income_above_threshold,
             }
         )
         text_flags.update(
@@ -870,7 +888,8 @@ class SchemesView(PageView):
         is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
         if (
             is_gbis_eligible
-            and is_not_park_home and (is_social_housing or (is_on_benefits or is_below_income_threshold))
+            and is_not_park_home
+            and (is_social_housing or (is_on_benefits or is_below_income_threshold))
         ):
             if not data.get("ventilation_acknowledgement"):
                 errors = {
