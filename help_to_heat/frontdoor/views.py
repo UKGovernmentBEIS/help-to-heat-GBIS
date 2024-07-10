@@ -928,7 +928,6 @@ class SuccessView(PageView):
         referral = portal.models.Referral.objects.get(session_id=session_id)
         return {
             "supplier": supplier,
-            "safe_to_cache": True,
             "referral_id": referral.formatted_referral_id,
             "is_eco4_eligible": is_eco4_eligible,
         }
