@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-06-14 10:42+0000\n"
+"POT-Creation-Date: 2024-07-10 14:18+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -468,78 +468,78 @@ msgstr "Rhwymedigaeth Cwmni Ynni 4"
 msgid "Great British Insulation Scheme"
 msgstr "Cynllun Inswleiddio Mawr Prydain"
 
-#: help_to_heat/frontdoor/views.py:50
+#: help_to_heat/frontdoor/views.py:51
 msgid "Select where the property is located"
 msgstr "Dewiswch beth yw lleoliad yr eiddo"
 
-#: help_to_heat/frontdoor/views.py:51
+#: help_to_heat/frontdoor/views.py:52
 msgid "Select if you own the property"
 msgstr "Dewiswch os yw'r eiddo'n perthyn i chi"
 
-#: help_to_heat/frontdoor/views.py:52
+#: help_to_heat/frontdoor/views.py:53
 msgid "Select if you live in a park home"
 msgstr "Dewiswch os ydych chi’n byw mewn aelwyd mewn parc "
 
-#: help_to_heat/frontdoor/views.py:53
+#: help_to_heat/frontdoor/views.py:54
 msgid "Select if the park home is your main residence"
 msgstr "Dewiswch os eich aelwyd mewn parc yw’ch prif breswylfa "
 
-#: help_to_heat/frontdoor/views.py:54
+#: help_to_heat/frontdoor/views.py:55
 msgid "Enter building name or number"
 msgstr "Rhowch enw neu rif yr adeilad"
 
-#: help_to_heat/frontdoor/views.py:55
+#: help_to_heat/frontdoor/views.py:56
 msgid "Enter Address line 1"
 msgstr "Rhowch linell 1 y cyfeiriad"
 
-#: help_to_heat/frontdoor/views.py:56
+#: help_to_heat/frontdoor/views.py:57
 msgid "Enter a postcode"
 msgstr "Rhowch god post"
 
-#: help_to_heat/frontdoor/views.py:57 help_to_heat/frontdoor/views.py:58
+#: help_to_heat/frontdoor/views.py:58 help_to_heat/frontdoor/views.py:59
 #: help_to_heat/templates/frontdoor/address-select.html:14
 #: help_to_heat/templates/frontdoor/epc-select.html:14
 msgid "Select your address"
 msgstr "Dewiswch eich cyfeiriad"
 
-#: help_to_heat/frontdoor/views.py:59
+#: help_to_heat/frontdoor/views.py:60
 msgid "Enter your Town or city"
 msgstr "Rhowch eich tref neu'ch dinas"
 
-#: help_to_heat/frontdoor/views.py:60
+#: help_to_heat/frontdoor/views.py:61
 msgid "Enter the Council Tax Band of the property"
 msgstr "Rhowch Fand Treth Gyngor yr eiddo"
 
-#: help_to_heat/frontdoor/views.py:61
+#: help_to_heat/frontdoor/views.py:62
 msgid "Select if your EPC rating is correct or not, or that you do not know"
 msgstr ""
 "Dewiswch a yw eich cyfraddiad EPC yn gywir neu beidio, neu nad ydych chi'n "
 "gwybod"
 
-#: help_to_heat/frontdoor/views.py:62
+#: help_to_heat/frontdoor/views.py:63
 msgid ""
 "Select if anyone in your household is receiving any benefits listed below"
 msgstr ""
 "Dewiswch a oes unrhyw un yn eich aelwyd chi'n cael unrhyw un neu ragor o'r "
 "budd-daliadau isod"
 
-#: help_to_heat/frontdoor/views.py:63
+#: help_to_heat/frontdoor/views.py:64
 msgid "Select your household income"
 msgstr "Dewiswch incwm eich aelwyd"
 
-#: help_to_heat/frontdoor/views.py:64 help_to_heat/frontdoor/views.py:65
+#: help_to_heat/frontdoor/views.py:65 help_to_heat/frontdoor/views.py:66
 msgid "Select your property type"
 msgstr "Dewiswch eich math o eiddo"
 
-#: help_to_heat/frontdoor/views.py:66
+#: help_to_heat/frontdoor/views.py:67
 msgid "Select the number of bedrooms the property has"
 msgstr "Dewiswch nifer yr ystafelloedd gwely sydd gan yr eiddo"
 
-#: help_to_heat/frontdoor/views.py:67
+#: help_to_heat/frontdoor/views.py:68
 msgid "Select the type of walls the property has"
 msgstr "Dewiswch y math o waliau sydd gan yr eiddo"
 
-#: help_to_heat/frontdoor/views.py:68
+#: help_to_heat/frontdoor/views.py:69
 msgid ""
 "Select if the walls of the property are insulated or not, or if you do not "
 "know"
@@ -547,40 +547,40 @@ msgstr ""
 "Dewiswch a ydy waliau'r eiddo wedi'u hinswleiddio neu beidio, neu nad ydych "
 "chi'n gwybod"
 
-#: help_to_heat/frontdoor/views.py:69
+#: help_to_heat/frontdoor/views.py:70
 msgid "Select if you have a loft that has been converted into a room or not"
 msgstr "Dewiswch a oes gennych chi atig sydd wedi'i droi'n ystafell neu beidio"
 
-#: help_to_heat/frontdoor/views.py:70
+#: help_to_heat/frontdoor/views.py:71
 msgid "Select whether or not you have access to the loft"
 msgstr "Dewiswch a oes modd mynd i'r atig neu beidio"
 
-#: help_to_heat/frontdoor/views.py:71
+#: help_to_heat/frontdoor/views.py:72
 msgid "Select whether or not your loft is fully insulated"
 msgstr "Dewiswch a ydy'ch atig wedi'i inswleiddio'n llawn neu beidio"
 
-#: help_to_heat/frontdoor/views.py:72
+#: help_to_heat/frontdoor/views.py:73
 #: help_to_heat/templates/frontdoor/supplier.html:14
 msgid "Select your home energy supplier from the list below"
 msgstr "Dewiswch eich cyflenwr ynni cartref chi o blith y rhestr isod"
 
-#: help_to_heat/frontdoor/views.py:73
+#: help_to_heat/frontdoor/views.py:74
 msgid "Enter your first name"
 msgstr "Rhowch eich enw cyntaf"
 
-#: help_to_heat/frontdoor/views.py:74
+#: help_to_heat/frontdoor/views.py:75
 msgid "Enter your last name"
 msgstr "Rhowch eich enw olaf"
 
-#: help_to_heat/frontdoor/views.py:75
+#: help_to_heat/frontdoor/views.py:76
 msgid "Enter your email address"
 msgstr "Rhowch eich cyfeiriad ebost"
 
-#: help_to_heat/frontdoor/views.py:76
+#: help_to_heat/frontdoor/views.py:77
 msgid "Enter your contact number"
 msgstr "Rhowch eich rhif ffôn"
 
-#: help_to_heat/frontdoor/views.py:77 help_to_heat/frontdoor/views.py:78
+#: help_to_heat/frontdoor/views.py:78 help_to_heat/frontdoor/views.py:79
 msgid ""
 "Please confirm that you agree to the use of your information by checking "
 "this box"
@@ -1592,12 +1592,12 @@ msgid "the Great British Insulation Scheme (opens in a new tab)"
 msgstr "Cynllun Inswleiddio Mawr Prydain (yn agor mewn tab newydd)"
 
 #: help_to_heat/templates/frontdoor/holding-page.html:15
-#: help_to_heat/templates/frontdoor/success.html:35
+#: help_to_heat/templates/frontdoor/success.html:41
 msgid "Access more household energy support"
 msgstr "Cael rhagor o gymorth ynni cartref"
 
 #: help_to_heat/templates/frontdoor/holding-page.html:16
-#: help_to_heat/templates/frontdoor/success.html:36
+#: help_to_heat/templates/frontdoor/success.html:42
 msgid "You can:"
 msgstr "Rydych chi'n gallu:"
 
@@ -1606,7 +1606,7 @@ msgid "get: "
 msgstr "cael: "
 
 #: help_to_heat/templates/frontdoor/holding-page.html:19
-#: help_to_heat/templates/frontdoor/success.html:38
+#: help_to_heat/templates/frontdoor/success.html:44
 msgid ""
 "help with your energy bills from the Help for Households service (opens in a "
 "new tab)"
@@ -2807,7 +2807,7 @@ msgstr ""
 "neges gadarnhau atoch."
 
 #: help_to_heat/templates/frontdoor/success.html:18
-#: help_to_heat/templates/frontdoor/success.html:31
+#: help_to_heat/templates/frontdoor/success.html:37
 msgid "You can "
 msgstr "Gallwch "
 
@@ -2820,79 +2820,97 @@ msgid "What happens next?"
 msgstr "Beth sy'n digwydd nesaf?"
 
 #: help_to_heat/templates/frontdoor/success.html:21
+#, python-format
 msgid ""
-"We have sent your referral to the energy supplier you selected. They will "
-"contact you within 10 working days to confirm they have received this and "
-"about next steps."
+"%(supplier)s will contact you within 10 working days to confirm they have "
+"received your referral or to ask you for more information."
 msgstr ""
-"Rydyn ni wedi anfon eich cyfeiriad at y cyflenwr ynni a ddewiswyd gennych. "
-"Byddan nhw’n cysylltu â chi o fewn 10 diwrnod gwaith i gadarnhau eu bod nhw "
-"wedi cael hyn a’r camau nesaf."
+"Bydd %(supplier)s yn cysylltu â chi o fewn 10 diwrnod gwaith i gadarnhau eu "
+"bod nhw wedi cael eich atgyfeiriad neu i ofyn ichi roi rhagor o wybodaeth."
 
 #: help_to_heat/templates/frontdoor/success.html:23
-msgid "You do not need to create another referral at any point."
-msgstr "Does dim angen ichi greu atgyfeiriad arall unrhyw bryd."
+msgid "You do not need to create another referral."
+msgstr "Does dim angen ichi greu atgyfeiriad arall."
 
 #: help_to_heat/templates/frontdoor/success.html:25
+#, python-format
 msgid ""
-"Once the energy supplier has confirmed they have received your referral, "
-"they or their delivery partner will review this and determine whether your "
-"property could be suitable for energy efficiency improvements. They may ask "
-"you for more information. You will then be notified to tell you whether your "
-"referral will proceed to the next stage of assessment. If your referral is "
-"not progressed, they will let you know why. "
+"%(supplier)s or their installation partner will review your referral and "
+"determine whether your home is suitable for insulation. They will notify you "
+"of the outcome of their review."
 msgstr ""
-"Unwaith y bydd y cyflenwr ynni wedi cadarnhau eu bod wedi cael eich "
-"atgyfeiriad, fe fyddan nhw neu eu partner cyflenwi yn adolygu'ch atgyfeiriad "
-"ac yn penderfynu a allai eich eiddo fod yn addas i gael gwelliannau "
-"effeithlonrwydd ynni. Efallai y byddan nhw'n gofyn ichi rhoi rhagor o "
-"wybodaeth. Wedyn cewch wybod a fydd eich atgyfeiriad yn symud ymlaen i "
-"gyfnod nesaf yr asesiad. Os na fydd eich atgyfeiriad yn symud ymlaen, fe "
-"gewch wybod pam."
+"Bydd %(supplier)s neu eu partner gosod yn adolygu’ch atgyfeiriad ac yn "
+"penderfynu a yw'ch cartref yn addas ar gyfer inswleiddio. Byddan nhw’n rhoi "
+"gwybod ichi am ganlyniad eu hadolygiad. "
 
 #: help_to_heat/templates/frontdoor/success.html:27
+#, python-format
 msgid ""
-"As part of the assessment process, properties must have a home survey "
-"completed. Your energy supplier will organise this with you."
+"Due to sustained high volumes of referrals, it could take several weeks for "
+"%(supplier)s to review your referral and tell you the outcome."
 msgstr ""
-"Fel rhan o’r broses asesu, rhaid i eiddo gael arolwg cartref wedi'i gwblhau. "
-"Bydd eich cyflenwr ynni yn trefnu hyn gyda chi."
+"Oherwydd y nifer fawr o atgyfeiriadau drwy’r amser, fe allai hi gymryd sawl "
+"wythnos i %(supplier)s adolygu’ch atgyfeiriad a rhoi gwybod ichi am y "
+"canlyniad."
 
-#: help_to_heat/templates/frontdoor/success.html:29
+#: help_to_heat/templates/frontdoor/success.html:30
+#, python-format
+msgid ""
+"%(supplier)s or their installation partner may also check if your home is "
+"suitable for more help with energy efficiency improvements through the "
+msgstr ""
+"Efallai y bydd %(supplier)s neu eu partner gosod hefyd yn gwirio a yw'ch "
+"cartref yn addas ar gyfer mwy o help gyda gwelliannau effeithlonrwydd ynni "
+"drwy'r "
+
+#: help_to_heat/templates/frontdoor/success.html:30
+msgid "ECO4 scheme (opens in new tab)"
+msgstr "cynllun ECO4 (yn agor mewn tab newydd)"
+
+#: help_to_heat/templates/frontdoor/success.html:33
+msgid ""
+"If your home is suitable it must be surveyed. Your energy supplier or their "
+"installation partner will organise this with you."
+msgstr ""
+"Os yw'ch cartref yn addas, mae'n rhaid iddo gael ei arolygu. Bydd eich "
+"cyflenwr ynni neu eu partner gosod yn trefnu hyn gyda chi."
+
+#: help_to_heat/templates/frontdoor/success.html:35
 msgid ""
 "Contacting the energy supplier about your referral after 10 working days"
 msgstr ""
 "Cysylltu â'r cyflenwr ynni ynghylch eich atgyfeiriad ar ôl 10 diwrnod gwaith"
 
-#: help_to_heat/templates/frontdoor/success.html:31
-msgid "find contact details for the energy supplier (opens in new tab)"
-msgstr ""
-"ddod o hyd i fanylion cysylltu'r cyflenwr ynni (yn agor mewn tab newydd)"
+#: help_to_heat/templates/frontdoor/success.html:37
+#, python-format
+msgid "find contact details for %(supplier)s (opens in new tab)"
+msgstr "ddod o hyd i fanylion cysylltu %(supplier)s (yn agor mewn tab newydd)"
 
-#: help_to_heat/templates/frontdoor/success.html:31
+#: help_to_heat/templates/frontdoor/success.html:37
 msgid " if you need to contact them."
-msgstr "os oes angen ichi gysylltu â nhw."
+msgstr " os oes angen ichi gysylltu â nhw."
 
-#: help_to_heat/templates/frontdoor/success.html:33
+#: help_to_heat/templates/frontdoor/success.html:39
+#, python-format
 msgid ""
-"You do not need to contact the energy supplier unless it has been more than "
-"10 working days since you submitted the referral and you have not yet "
-"received a confirmation email or a phone call from them."
+"You do not need to contact %(supplier)s unless it has been more than 10 "
+"working days since you submitted the referral and you have not yet received "
+"confirmation from them."
 msgstr ""
-"Does dim angen ichi gysylltu â'r cyflenwr ynni oni bai wedi mwy na 10 "
-"diwrnod gwaith wedi mynd heibio ers ichi gyflwyno'r atgyfeiriad ac nad ydych "
-"wedi cael neges gadarnhau drwy'r ebost neu alwad ffôn ganddyn nhw eto."
+"Does dim angen ichi gysylltu â %(supplier)s oni bai ei bod yn fwy na 10 "
+"diwrnod gwaith ers ichi gyflwyno'r atgyfeiriad a’ch bod chi heb gael neges "
+"ebost gadarnhau ganddyn nhw eto."
 
-#: help_to_heat/templates/frontdoor/success.html:38
+#: help_to_heat/templates/frontdoor/success.html:44
 msgid "get "
 msgstr "cael "
 
-#: help_to_heat/templates/frontdoor/success.html:39
-#: help_to_heat/templates/frontdoor/success.html:40
+#: help_to_heat/templates/frontdoor/success.html:45
+#: help_to_heat/templates/frontdoor/success.html:46
 msgid "visit "
 msgstr "edrych ar "
 
-#: help_to_heat/templates/frontdoor/success.html:39
+#: help_to_heat/templates/frontdoor/success.html:45
 msgid ""
 "household energy-saving tips from the Energy Savings Trust (opens in a new "
 "tab)"
@@ -2900,22 +2918,22 @@ msgstr ""
 "awgrymiadau arbed ynni gartref gan yr Ymddiriedolaeth Arbed Ynni (yn agor "
 "mewn tab newydd)"
 
-#: help_to_heat/templates/frontdoor/success.html:40
+#: help_to_heat/templates/frontdoor/success.html:46
 msgid "household'energy-saving tips from Citizen's Advice (opens in a new tab)"
 msgstr ""
 "awgrymiadau arbed ynni gartref gan Gyngor ar Bopeth (yn agor mewn tab newydd)"
 
-#: help_to_heat/templates/frontdoor/success.html:43
+#: help_to_heat/templates/frontdoor/success.html:49
 msgid "Give feedback"
 msgstr "Rhoi adborth"
 
-#: help_to_heat/templates/frontdoor/success.html:45
+#: help_to_heat/templates/frontdoor/success.html:51
 msgid "This service is still in its early stages and under active development."
 msgstr ""
 "Mae’n ddyddiau cynnar o hyd ar y gwasanaeth hwn ac mae’n dal i gael ei "
 "ddatblygu."
 
-#: help_to_heat/templates/frontdoor/success.html:47
+#: help_to_heat/templates/frontdoor/success.html:53
 msgid ""
 "Your feedback can help us to shape how the service develops so that it can "
 "best serve the needs of the public."
@@ -2923,7 +2941,7 @@ msgstr ""
 "Gall eich adborth ein helpu i ddatblygu’r gwasanaeth er mwyn diwallu "
 "anghenion y cyhoedd yn y ffordd orau."
 
-#: help_to_heat/templates/frontdoor/success.html:49
+#: help_to_heat/templates/frontdoor/success.html:55
 msgid "Leave some feedback for this service"
 msgstr "Gadael adborth ar gyfer y gwasanaeth hwn"
 
@@ -3154,6 +3172,22 @@ msgstr "Darganfyddwch a allwch chi gael cymorth gan eich cyngor lleol drwy'r "
 #: help_to_heat/templates/macros.html:127
 msgid "Household Support Fund"
 msgstr "Gronfa Cymorth i Aelwydydd"
+
+#~ msgid ""
+#~ "Once the energy supplier has confirmed they have received your referral, "
+#~ "they or their delivery partner will review this and determine whether "
+#~ "your property could be suitable for energy efficiency improvements. They "
+#~ "may ask you for more information. You will then be notified to tell you "
+#~ "whether your referral will proceed to the next stage of assessment. If "
+#~ "your referral is not progressed, they will let you know why. "
+#~ msgstr ""
+#~ "Unwaith y bydd y cyflenwr ynni wedi cadarnhau eu bod wedi cael eich "
+#~ "atgyfeiriad, fe fyddan nhw neu eu partner cyflenwi yn adolygu'ch "
+#~ "atgyfeiriad ac yn penderfynu a allai eich eiddo fod yn addas i gael "
+#~ "gwelliannau effeithlonrwydd ynni. Efallai y byddan nhw'n gofyn ichi rhoi "
+#~ "rhagor o wybodaeth. Wedyn cewch wybod a fydd eich atgyfeiriad yn symud "
+#~ "ymlaen i gyfnod nesaf yr asesiad. Os na fydd eich atgyfeiriad yn symud "
+#~ "ymlaen, fe gewch wybod pam."
 
 #~ msgid "Based on your answers you can register for help through:"
 #~ msgstr "Ar sail eich atebion, gallwch gofrestru i gael help drwy gyfrwng:"
