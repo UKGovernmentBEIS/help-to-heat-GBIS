@@ -814,47 +814,35 @@ class SchemesView(PageView):
         eligible_schemes = tuple(schemas.schemes_map[scheme] for scheme in eligible_schemes if not scheme == "ECO4")
         supplier_name = SupplierConverter(session_id).get_supplier_on_general_pages()
         text_flags = {
-            "park_home_text": True if session_data["park_home"] == "Yes" else False,
+            "park_home_text": session_data["own_property"] != "No, I am a social housing tenant"
+            and session_data["park_home"] == "Yes",
         }
         text_flags.update(
             {
-                "cavity_wall_text": True
-                if text_flags["park_home_text"] is False
+                "cavity_wall_text": text_flags["park_home_text"] is False
                 and session_data["wall_type"] in ["Cavity walls", "Mix of solid and cavity walls", "I do not know"]
                 and session_data["wall_insulation"]
-                in ["Some are insulated, some are not", "No they are not insulated", "I do not know"]
-                else False,
-                "solid_wall_text": True
-                if text_flags["park_home_text"] is False
+                in ["Some are insulated, some are not", "No they are not insulated", "I do not know"],
+                "solid_wall_text": text_flags["park_home_text"] is False
                 and session_data["wall_type"] in ["Solid walls", "Mix of solid and cavity walls", "I do not know"]
                 and session_data["wall_insulation"]
-                in ["Some are insulated, some are not", "No they are not insulated", "I do not know"]
-                else False,
-                "room_in_roof_text": True
-                if text_flags["park_home_text"] is False
-                and session_data["loft"] == "No, I do not have a loft or my loft has been converted into a room"
-                else False,
-                "loft_insulation_text": True
-                if text_flags["park_home_text"] is False
+                in ["Some are insulated, some are not", "No they are not insulated", "I do not know"],
+                "room_in_roof_text": text_flags["park_home_text"] is False
+                and session_data["loft"] == "No, I do not have a loft or my loft has been converted into a room",
+                "loft_insulation_text": text_flags["park_home_text"] is False
                 and session_data["loft"] == "Yes, I have a loft that has not been converted into a room"
-                and session_data["loft_access"] == "Yes, there is access to my loft"
-                else False,
-                "contribution_text": True
-                if text_flags["park_home_text"] is False
-                and (session_data["benefits"] == "No" and session_data["household_income"] == "£31,000 or more a year")
-                else False,
+                and session_data["loft_access"] == "Yes, there is access to my loft",
+                "contribution_text": text_flags["park_home_text"] is False
+                and session_data["own_property"] != "No, I am a social housing tenant"
+                and (session_data["benefits"] == "No" and session_data["household_income"] == "£31,000 or more a year"),
             }
         )
         text_flags.update(
             {
-                "loft_insulation_low_contribution_text": True
-                if text_flags["loft_insulation_text"] is True
-                and session_data["loft_insulation"] in ["I have up to 100mm of loft insulation", "I do not know"]
-                else False,
-                "loft_insulation_medium_contribution_text": True
-                if text_flags["loft_insulation_text"] is True
-                and session_data["loft_insulation"] in ["I have more than 100mm of loft insulation", "I do not know"]
-                else False,
+                "loft_insulation_low_contribution_text": text_flags["loft_insulation_text"] is True
+                and session_data["loft_insulation"] in ["I have up to 100mm of loft insulation", "I do not know"],
+                "loft_insulation_medium_contribution_text": text_flags["loft_insulation_text"] is True
+                and session_data["loft_insulation"] in ["I have more than 100mm of loft insulation", "I do not know"],
             }
         )
 
@@ -865,9 +853,7 @@ class SchemesView(PageView):
         fields = page_compulsory_field_map.get(page_name, ())
         missing_fields = tuple(field for field in fields if not data.get(field))
         errors = {field: missing_item_errors[field] for field in missing_fields}
-        eligible_schemes = tuple(
-            schemas.schemes_map[scheme] for scheme in session_data["schemes"] if not scheme == "ECO4"
-        )
+        eligible_schemes = "GBIS" in session_data["schemes"]
         if (
             eligible_schemes
             and session_data["park_home"] == "No"
