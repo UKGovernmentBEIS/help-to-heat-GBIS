@@ -24,7 +24,7 @@
     <p
       class="govuk-body">{{ _("The Great British Insulation Scheme is delivered by energy suppliers and their installation partners. They will assess your home, either by a desktop assessment or by arranging a visit to your home. They will determine if they can offer you insulation. ") }}</p>
     <h2 class="govuk-heading-m">{{ _("What you could be eligible for") }}</h2>
-    {% if text_flags["park_home_text"] %}
+    {% if text_flags["show_park_home_text"] %}
       <p class="govuk-body">{{ _("Based on your answers, you may be able to get the following:") }}</p>
       <ul class="govuk-list govuk-list--bullet">
         <li>{{ _("park home insulation") }}</li>
@@ -36,83 +36,82 @@
         <div class="govuk-notification-banner__content">
           <p class="govuk-heading-m">{{ _("Your contribution") }}</p>
           <p class="govuk-body">
-            <p class="govuk-body">
               {{ _("Park home insulation may not be available from %(supplier)s or their installation partner. If it is available, you would likely have to pay towards the cost of installing it. You might be asked to contribute between £1,000 - £10,000.") % { "supplier": supplier_name }}}
-            </p>
-            </div>
+          </p>
+      </div>
     </div>
     {% else %}
       <p class="govuk-body">{{ _("Based on your answers, you may be able to get one of the following:") }}</p>
       <ul class="govuk-list govuk-list--bullet">
-        {% if text_flags["cavity_wall_text"] %}
+        {% if text_flags["show_cavity_wall_text"] %}
           <li>{{ _("cavity wall insulation") }}</li>
         {% endif %}
-        {% if text_flags["loft_insulation_text"] %}
+        {% if text_flags["show_loft_insulation_text"] %}
           <li>{{ _("loft insulation") }}</li>
         {% endif %}
       </ul>
-      {% if text_flags["loft_insulation_text"] or  text_flags["cavity_wall_text"] %}
+      {% if text_flags["show_loft_insulation_text"] or text_flags["show_cavity_wall_text"] %}
         <p class="govuk-body">{{ _("The following measures are less likely to be viable, but depending on the assessment of your home, you may otherwise be able to get one of:") }}</p>
       {% endif %}
       <ul class="govuk-list govuk-list--bullet">
-        {% if text_flags["solid_wall_text"] %}
+        {% if text_flags["show_solid_wall_text"] %}
           <li>{{ _("solid wall insulation (internal or external)") }}</li>
         {% endif %}
-          <li>{{ _("flat or pitched roof insulation") }}</li>
-          <li>{{ _("solid or under floor insulation") }}</li>
-        {% if text_flags["room_in_roof_text"] %}
+        <li>{{ _("flat or pitched roof insulation") }}</li>
+        <li>{{ _("solid or under floor insulation") }}</li>
+        {% if text_flags["show_room_in_roof_text"] %}
           <li>{{ _("room-in-roof insulation") }}</li>
         {% endif %}
       </ul>
   
-      {% if text_flags["contribution_text"] %}
-      <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title"
-           data-module="govuk-notification-banner">
-        <div class="govuk-notification-banner__header"></div>
-        <div class="govuk-notification-banner__content">
-          <p class="govuk-notification-banner__heading"></p>
-          <p class="govuk-heading-m">{{ _("Your contribution") }}</p>
-          <p class="govuk-body">
-            {{ _("You may have to pay towards the cost of installation. Costs and the viability of an install going ahead depend on your home's location, property type and tenure, accessibility, ventilation requirements, and the installation company available.") }}
-          </p>
-          <p class="govuk-body">
-            {{ _("For an average 3-bedroom semi-detached house, typical contributions could be:") }}
-          </p>
-          {% if text_flags["cavity_wall_text"] or text_flags["loft_insulation_low_contribution_text"] %}
-          <p class="govuk-body">
-            {{ _("Less than £1,000") }}
-          </p>
-          <ul class="govuk-list govuk-list--bullet">
-            {% if text_flags["cavity_wall_text"] %}
-              <li>{{ _("cavity wall insulation") }}</li>
+      {% if text_flags["show_contribution_text"] %}
+        <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title"
+             data-module="govuk-notification-banner">
+          <div class="govuk-notification-banner__header"></div>
+          <div class="govuk-notification-banner__content">
+            <p class="govuk-notification-banner__heading"></p>
+            <p class="govuk-heading-m">{{ _("Your contribution") }}</p>
+            <p class="govuk-body">
+              {{ _("You may have to pay towards the cost of installation. Costs and the viability of an install going ahead depend on your home's location, property type and tenure, accessibility, ventilation requirements, and the installation company available.") }}
+            </p>
+            <p class="govuk-body">
+              {{ _("For an average 3-bedroom semi-detached house, typical contributions could be:") }}
+            </p>
+            {% if text_flags["show_cavity_wall_text"] or text_flags["show_loft_insulation_low_contribution_text"] %}
+              <p class="govuk-body">
+                {{ _("Less than £1,000") }}
+              </p>
+              <ul class="govuk-list govuk-list--bullet">
+                {% if text_flags["show_cavity_wall_text"] %}
+                  <li>{{ _("cavity wall insulation") }}</li>
+                {% endif %}
+                {% if text_flags["show_loft_insulation_low_contribution_text"] %}
+                  <li>{{ _("loft insulation") }}</li>
+                {% endif %}
+              </ul>
             {% endif %}
-            {% if text_flags["loft_insulation_low_contribution_text"] %}
-              <li>{{ _("loft insulation") }}</li>
-            {% endif %}
-          </ul>
-          {% endif %}
-          <p class="govuk-body">
-            {{ _("£1,000 - £5,000") }}
-          </p>
-          <ul class="govuk-list govuk-list--bullet">
-            {% if text_flags["loft_insulation_medium_contribution_text"] %}
-              <li>{{ _("loft insulation") }}</li>
-            {% endif %}
-            <li>{{ _("flat or pitched roof insulation") }}</li>
-            <li>{{ _("under floor insulation") }}</li>
-            <li>{{ _("solid floor insulation") }}</li>
-            {% if text_flags["room_in_roof_text"] %}
-              <li>{{ _("room-in-roof insulation") }}</li>
-            {% endif %}
-          </ul>
-          <p class="govuk-body">
-            {{ _("More than £5,000") }}
-          </p>
-          <ul class="govuk-list govuk-list--bullet">
-            <li>{{ _("solid wall insulation") }}</li>
-          </ul>
+            <p class="govuk-body">
+              {{ _("£1,000 - £5,000") }}
+            </p>
+            <ul class="govuk-list govuk-list--bullet">
+              {% if text_flags["show_loft_insulation_medium_contribution_text"] %}
+                <li>{{ _("loft insulation") }}</li>
+              {% endif %}
+              <li>{{ _("flat or pitched roof insulation") }}</li>
+              <li>{{ _("under floor insulation") }}</li>
+              <li>{{ _("solid floor insulation") }}</li>
+              {% if text_flags["show_room_in_roof_text"] %}
+                <li>{{ _("room-in-roof insulation") }}</li>
+              {% endif %}
+            </ul>
+            <p class="govuk-body">
+              {{ _("More than £5,000") }}
+            </p>
+            <ul class="govuk-list govuk-list--bullet">
+              <li>{{ _("solid wall insulation") }}</li>
+            </ul>
+          </div>
         </div>
-      </div>
       {% else %}
         <p class="govuk-body">{{ _("The viability of an install going ahead depends on your home's location, property type and tenure, accessibility, ventilation requirements, and the installation company available.") }}</p>
       {% endif %}  
@@ -125,9 +124,9 @@
       class="govuk-body">{{ _("If insulation is installed, adequate ventilation must be ensured and added if existing ventilation is insufficient.") }}</p>
     <details class="govuk-details">
       <summary class="govuk-details__summary">
-            <span class="govuk-details__summary-text">
-              {{ _("Find out more about ventilation") }}
-            </span>
+        <span class="govuk-details__summary-text">
+          {{ _("Find out more about ventilation") }}
+        </span>
       </summary>
       <div class="govuk-details__text">
         <p
@@ -161,7 +160,7 @@
           <span class="govuk-visually-hidden">Error:</span> {{ errors.get('contribution_acknowledgement')}}
         </p>
       {% endif %}
-      {% if text_flags["park_home_text"] or text_flags["contribution_text"] %}
+      {% if text_flags["show_contribution_text"] %}
         <div class="govuk-checkboxes__item">
           <input class="govuk-checkboxes__input" id="question-contribution_acknowledgement"
                  name="contribution_acknowledgement" type="checkbox"

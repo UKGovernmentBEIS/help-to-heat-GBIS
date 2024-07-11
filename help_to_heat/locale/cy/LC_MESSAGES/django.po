@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-10 13:31+0000\n"
+"POT-Creation-Date: 2024-07-11 13:25+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,7 +55,9 @@ msgid "Energy Performance Certificate"
 msgstr "Dystysgrif Perfformiad Ynni"
 
 #: help_to_heat/frontdoor/schemas.py:143
-#: help_to_heat/templates/frontdoor/benefits.html:14
+#, fuzzy
+#| msgid "Is anyone in your household receiving any of the following benefits?"
+msgctxt "summary page"
 msgid "Is anyone in your household receiving any of the following benefits?"
 msgstr ""
 "Oes unrhyw un yn eich aelwyd chi'n cael unrhyw un o'r budd-daliadau canlynol?"
@@ -1055,6 +1057,11 @@ msgstr ""
 "Ydych chi'n cael budd-daliadau? - Gwirio’ch cymhwystra ar gyfer Cynllun "
 "Inswleiddio Mawr Prydain - GOV.UK"
 
+#: help_to_heat/templates/frontdoor/benefits.html:14
+msgid "Is anyone in your household receiving any of the following benefits?"
+msgstr ""
+"Oes unrhyw un yn eich aelwyd chi'n cael unrhyw un o'r budd-daliadau canlynol?"
+
 #: help_to_heat/templates/frontdoor/benefits.html:18
 msgid ""
 "This information is used to determine the level of support you can get. "
@@ -1667,26 +1674,26 @@ msgid "Insulation measures you can get referred for"
 msgstr ""
 
 #: help_to_heat/templates/frontdoor/homepage.html:36
-#: help_to_heat/templates/frontdoor/schemes.html:48
-#: help_to_heat/templates/frontdoor/schemes.html:87
+#: help_to_heat/templates/frontdoor/schemes.html:47
+#: help_to_heat/templates/frontdoor/schemes.html:86
 msgid "cavity wall insulation"
 msgstr "inswleiddiad waliau ceudod"
 
 #: help_to_heat/templates/frontdoor/homepage.html:37
-#: help_to_heat/templates/frontdoor/schemes.html:59
+#: help_to_heat/templates/frontdoor/schemes.html:58
 msgid "solid wall insulation (internal or external)"
 msgstr "inswleiddiad waliau solet (mewnol neu allanol)"
 
 #: help_to_heat/templates/frontdoor/homepage.html:38
-#: help_to_heat/templates/frontdoor/schemes.html:51
-#: help_to_heat/templates/frontdoor/schemes.html:90
-#: help_to_heat/templates/frontdoor/schemes.html:99
+#: help_to_heat/templates/frontdoor/schemes.html:50
+#: help_to_heat/templates/frontdoor/schemes.html:89
+#: help_to_heat/templates/frontdoor/schemes.html:98
 msgid "loft insulation"
 msgstr "inswleiddiad atig"
 
 #: help_to_heat/templates/frontdoor/homepage.html:39
-#: help_to_heat/templates/frontdoor/schemes.html:61
-#: help_to_heat/templates/frontdoor/schemes.html:101
+#: help_to_heat/templates/frontdoor/schemes.html:60
+#: help_to_heat/templates/frontdoor/schemes.html:100
 msgid "flat or pitched roof insulation"
 msgstr "inswleiddiad to fflat neu do ar oleddf"
 
@@ -1695,7 +1702,7 @@ msgid "underfloor insulation"
 msgstr "inswleiddiad dan y llawr"
 
 #: help_to_heat/templates/frontdoor/homepage.html:41
-#: help_to_heat/templates/frontdoor/schemes.html:103
+#: help_to_heat/templates/frontdoor/schemes.html:102
 msgid "solid floor insulation"
 msgstr "inswleiddiad llawr solet"
 
@@ -1705,8 +1712,8 @@ msgid "park home insulation"
 msgstr "inswleiddiad cartref mewn parc"
 
 #: help_to_heat/templates/frontdoor/homepage.html:43
-#: help_to_heat/templates/frontdoor/schemes.html:64
-#: help_to_heat/templates/frontdoor/schemes.html:105
+#: help_to_heat/templates/frontdoor/schemes.html:63
+#: help_to_heat/templates/frontdoor/schemes.html:104
 msgid "room-in-roof insulation"
 msgstr "wleiddiad ystafell yn y to"
 
@@ -1808,7 +1815,7 @@ msgstr ""
 
 #: help_to_heat/templates/frontdoor/ineligible.html:10
 #: help_to_heat/templates/frontdoor/park-home-application-closed.html:10
-#: help_to_heat/templates/frontdoor/schemes.html:181
+#: help_to_heat/templates/frontdoor/schemes.html:180
 msgid "Your property is not eligible"
 msgstr "Dyw eich eiddo chi ddim yn gymwys"
 
@@ -2708,11 +2715,11 @@ msgstr ""
 "Ar sail eich atebion, mae’n bosibl y byddwch chi’n gallu cael y canlynol:"
 
 #: help_to_heat/templates/frontdoor/schemes.html:37
-#: help_to_heat/templates/frontdoor/schemes.html:74
+#: help_to_heat/templates/frontdoor/schemes.html:73
 msgid "Your contribution"
 msgstr "Eich cyfraniad chi"
 
-#: help_to_heat/templates/frontdoor/schemes.html:40
+#: help_to_heat/templates/frontdoor/schemes.html:39
 #, python-format
 msgid ""
 "Park home insulation may not be available from %(supplier)s or their "
@@ -2725,13 +2732,13 @@ msgstr ""
 "debygol y byddai'n rhaid ichi dalu tuag at gost y gwaith gosod. Efallai y "
 "gofynnir ichi gyfrannu rhwng £1,000 a £10,000."
 
-#: help_to_heat/templates/frontdoor/schemes.html:45
+#: help_to_heat/templates/frontdoor/schemes.html:44
 msgid "Based on your answers, you may be able to get one of the following:"
 msgstr ""
 "Ar sail eich atebion, mae’n bosibl y byddwch chi’n gallu cael un o'r "
 "canlynol:"
 
-#: help_to_heat/templates/frontdoor/schemes.html:55
+#: help_to_heat/templates/frontdoor/schemes.html:54
 msgid ""
 "The following measures are less likely to be viable, but depending on the "
 "assessment of your home, you may otherwise be able to get one of:"
@@ -2740,11 +2747,11 @@ msgstr ""
 "ar yr asesiad o’ch cartref, mae’n bosibl y byddwch chi fel arall yn gallu "
 "cael un o'r canlynol:"
 
-#: help_to_heat/templates/frontdoor/schemes.html:62
+#: help_to_heat/templates/frontdoor/schemes.html:61
 msgid "solid or under floor insulation"
 msgstr "inswleiddiad llawr solet neu inswleiddiad dan y llawr"
 
-#: help_to_heat/templates/frontdoor/schemes.html:76
+#: help_to_heat/templates/frontdoor/schemes.html:75
 msgid ""
 "You may have to pay towards the cost of installation. Costs and the "
 "viability of an install going ahead depend on your home's location, property "
@@ -2756,34 +2763,34 @@ msgstr ""
 "eich cartref, y math o eiddo a’r ddeiliadaeth, hygyrchedd, gofynion awyru, "
 "a'r cwmni gosod sydd ar gael."
 
-#: help_to_heat/templates/frontdoor/schemes.html:79
+#: help_to_heat/templates/frontdoor/schemes.html:78
 msgid ""
 "For an average 3-bedroom semi-detached house, typical contributions could be:"
 msgstr ""
 "Ar gyfer tŷ pâr cyffredin â 3 ystafell wely, gallai'r cyfraniadau "
 "nodweddiadol fod fel hyn:"
 
-#: help_to_heat/templates/frontdoor/schemes.html:83
+#: help_to_heat/templates/frontdoor/schemes.html:82
 msgid "Less than £1,000"
 msgstr "Llai na £1,000"
 
-#: help_to_heat/templates/frontdoor/schemes.html:95
+#: help_to_heat/templates/frontdoor/schemes.html:94
 msgid "£1,000 - £5,000"
 msgstr "£1,000 - £5,000"
 
-#: help_to_heat/templates/frontdoor/schemes.html:102
+#: help_to_heat/templates/frontdoor/schemes.html:101
 msgid "under floor insulation"
 msgstr "inswleiddiad dan y llawr"
 
-#: help_to_heat/templates/frontdoor/schemes.html:109
+#: help_to_heat/templates/frontdoor/schemes.html:108
 msgid "More than £5,000"
 msgstr "Mwy na £5,000"
 
-#: help_to_heat/templates/frontdoor/schemes.html:112
+#: help_to_heat/templates/frontdoor/schemes.html:111
 msgid "solid wall insulation"
 msgstr "inswleiddiad llawr solet"
 
-#: help_to_heat/templates/frontdoor/schemes.html:117
+#: help_to_heat/templates/frontdoor/schemes.html:116
 msgid ""
 "The viability of an install going ahead depends on your home's location, "
 "property type and tenure, accessibility, ventilation requirements, and the "
@@ -2793,7 +2800,7 @@ msgstr ""
 "leoliad eich cartref, y math o eiddo a’r ddeiliadaeth, hygyrchedd, gofynion "
 "awyru, a'r cwmni gosod sydd ar gael."
 
-#: help_to_heat/templates/frontdoor/schemes.html:121
+#: help_to_heat/templates/frontdoor/schemes.html:120
 #, python-format
 msgid ""
 "%(supplier)s can reject your referral if they assess your property as not "
@@ -2804,13 +2811,13 @@ msgstr ""
 "un nad yw'n ymarferol gosod unrhyw inswleiddiad ynddo. Does dim rheidrwydd "
 "arnyn nhw i osod inswleiddiad os ydych chi’n gymwys."
 
-#: help_to_heat/templates/frontdoor/schemes.html:123
+#: help_to_heat/templates/frontdoor/schemes.html:122
 msgid ""
 "It could take several weeks to be informed of the outcome of your referral."
 msgstr ""
 "Gallai gymryd sawl wythnos ichi gael gwybod am ganlyniad eich atgyfeiriad."
 
-#: help_to_heat/templates/frontdoor/schemes.html:125
+#: help_to_heat/templates/frontdoor/schemes.html:124
 msgid ""
 "If insulation is installed, adequate ventilation must be ensured and added "
 "if existing ventilation is insufficient."
@@ -2819,11 +2826,11 @@ msgstr ""
 "a rhaid ychwanegu trefniant awyru digonol os nad yw'r awyru presennol yn "
 "ddigonol."
 
-#: help_to_heat/templates/frontdoor/schemes.html:129
+#: help_to_heat/templates/frontdoor/schemes.html:128
 msgid "Find out more about ventilation"
 msgstr "Rhagor o wybodaeth am awyru"
 
-#: help_to_heat/templates/frontdoor/schemes.html:134
+#: help_to_heat/templates/frontdoor/schemes.html:133
 msgid ""
 "A well-ventilated property must have methods of extracting water vapour and "
 "pollutants, supplying a minimum level of outdoor air for occupant’s health, "
@@ -2836,20 +2843,20 @@ msgstr ""
 "lleihau mynediad llygryddion aer allanol. Er mwyn cyflawni hyn, efallai y "
 "bydd arnoch chi angen: "
 
-#: help_to_heat/templates/frontdoor/schemes.html:136
+#: help_to_heat/templates/frontdoor/schemes.html:135
 msgid "Background ventilation (such as trickle vents in window frames)"
 msgstr ""
 "Trefniant awyru cefndir (fel fentiau diferynnu yn fframiau’r ffenestri)"
 
-#: help_to_heat/templates/frontdoor/schemes.html:137
+#: help_to_heat/templates/frontdoor/schemes.html:136
 msgid "Mechanical ventilation (such as extractor fans)"
 msgstr "Trefniant awyru mecanyddol (fel gwyntyll tynnu aer)"
 
-#: help_to_heat/templates/frontdoor/schemes.html:138
+#: help_to_heat/templates/frontdoor/schemes.html:137
 msgid "Crossflow ventilation (such as gaps or vents in doors)"
 msgstr "Trefniant awyru trawslif (fel bylchau neu fentiau mewn drysau)"
 
-#: help_to_heat/templates/frontdoor/schemes.html:143
+#: help_to_heat/templates/frontdoor/schemes.html:142
 #, python-format
 msgid ""
 "If you are comfortable with this then in the next step you can create a "
@@ -2860,7 +2867,7 @@ msgstr ""
 "atgyfeiriad at %(supplier)s. Gallwch benderfynu peidio â bwrw ymlaen os na "
 "fyddwch chi’n cytuno â'u hasesiad nhw neu â'r cyfraniad angenrheidiol"
 
-#: help_to_heat/templates/frontdoor/schemes.html:156
+#: help_to_heat/templates/frontdoor/schemes.html:155
 msgid ""
 "I understand my home must be sufficiently ventilated before any insulation "
 "is installed"
@@ -2868,14 +2875,14 @@ msgstr ""
 "Dwi'n deall bod rhaid i’m cartref fod wedi’i awyru’n ddigonol cyn i unrhyw "
 "inswleiddiad gael ei osod"
 
-#: help_to_heat/templates/frontdoor/schemes.html:171
+#: help_to_heat/templates/frontdoor/schemes.html:170
 msgid ""
 "I understand that I may be required to pay towards installing insulation if "
 "it is offered"
 msgstr ""
 "Dwi'n deall y gall fod yn ofynnol imi gyfrannu at gost gosod inswleiddiad."
 
-#: help_to_heat/templates/frontdoor/schemes.html:184
+#: help_to_heat/templates/frontdoor/schemes.html:183
 msgid ""
 "This is likely because your property's council tax band is too high. This "
 "service is for properties in an eligible council tax band (A to D in England "

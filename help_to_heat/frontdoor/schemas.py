@@ -140,7 +140,7 @@ summary_map = {
     "address": _("Property address"),
     "council_tax_band": _("Council tax band"),
     "epc_rating": _("Energy Performance Certificate"),
-    "benefits": _("Is anyone in your household receiving any of the following benefits?"),
+    "benefits": pgettext_lazy("summary page", "Is anyone in your household receiving any of the following benefits?"),
     "household_income": _("Annual household income"),
     "property_type": _("Property type"),
     "property_subtype": _("Property type"),

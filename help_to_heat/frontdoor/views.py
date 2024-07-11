@@ -825,51 +825,49 @@ class SchemesView(PageView):
             "Mix of solid and cavity walls",
             "I do not know",
         ]
-        is_not_on_benefits = session_data.get("benefits") == "No"
         is_wall_insulation_present = not session_data.get("wall_insulation") in [
             "Some are insulated, some are not",
             "No they are not insulated",
             "I do not know",
         ]
+        is_not_on_benefits = session_data.get("benefits") == "No"
         is_income_above_threshold = session_data.get("household_income") == "£31,000 or more a year"
         is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
         is_loft_present = session_data.get("loft") == "Yes, I have a loft that has not been converted into a room"
         is_there_access_to_loft = session_data.get("loft_access") == "Yes, there is access to my loft"
-        is_loft_insulation_over_threshold = session_data["loft_insulation"] in [
+        is_loft_insulation_over_threshold = session_data.get("loft_insulation") in [
             "I have more than 100mm of loft insulation",
             "I do not know",
         ]
-        is_loft_insulation_under_threshold = session_data["loft_insulation"] in [
+        is_loft_insulation_under_threshold = session_data.get("loft_insulation") in [
             "I have up to 100mm of loft insulation",
             "I do not know",
         ]
 
         text_flags = {
-            "park_home_text": is_in_park_home and not is_social_housing,
+            "show_park_home_text": is_in_park_home and not is_social_housing,
         }
         text_flags.update(
             {
-                "cavity_wall_text": text_flags.get("park_home_text") is False
+                "show_cavity_wall_text": (not text_flags.get("show_park_home_text"))
                 and is_cavity_walls
                 and not is_wall_insulation_present,
-                "solid_wall_text": text_flags.get("park_home_text") is False
+                "show_solid_wall_text": (not text_flags.get("show_park_home_text"))
                 and is_solid_walls
                 and not is_wall_insulation_present,
-                "room_in_roof_text": text_flags.get("park_home_text") is False and not is_loft_present,
-                "loft_insulation_text": text_flags.get("park_home_text") is False
+                "show_room_in_roof_text": (not text_flags.get("show_park_home_text")) and not is_loft_present,
+                "show_loft_insulation_text": (not text_flags.get("show_park_home_text"))
                 and is_loft_present
                 and is_there_access_to_loft,
-                "contribution_text": text_flags.get("park_home_text") is False
-                and (not is_social_housing)
-                and is_not_on_benefits
-                and is_income_above_threshold,
+                "show_contribution_text": text_flags.get("show_park_home_text")
+                or ((not is_social_housing) and is_not_on_benefits and is_income_above_threshold),
             }
         )
         text_flags.update(
             {
-                "loft_insulation_low_contribution_text": text_flags["loft_insulation_text"] is True
+                "show_loft_insulation_low_contribution_text": text_flags.get("show_loft_insulation_text")
                 and is_loft_insulation_under_threshold,
-                "loft_insulation_medium_contribution_text": text_flags["loft_insulation_text"] is True
+                "show_loft_insulation_medium_contribution_text": text_flags.get("show_loft_insulation_text")
                 and is_loft_insulation_over_threshold,
             }
         )
@@ -881,32 +879,24 @@ class SchemesView(PageView):
         fields = page_compulsory_field_map.get(page_name, ())
         missing_fields = tuple(field for field in fields if not data.get(field))
         errors = {field: missing_item_errors[field] for field in missing_fields}
-        is_gbis_eligible = "GBIS" in session_data["schemes"]
-        is_not_park_home = session_data.get("park_home", "No") == "No"
-        is_below_income_threshold = session_data.get("household_income") == "Less than £31,000 a year"
-        is_on_benefits = session_data.get("benefits") == "Yes"
+        is_park_home = session_data.get("park_home", "No") == "Yes"
+        is_not_on_benefits = session_data.get("benefits") == "No"
+        is_income_above_threshold = session_data.get("household_income") == "£31,000 or more a year"
         is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
-        if (
-            is_gbis_eligible
-            and is_not_park_home
-            and (is_social_housing or (is_on_benefits or is_below_income_threshold))
-        ):
-            if not data.get("ventilation_acknowledgement"):
-                errors = {
-                    **errors,
-                    "ventilation_acknowledgement": missing_item_errors["ventilation_acknowledgement"],
-                }
-        elif is_gbis_eligible:
-            if not data.get("ventilation_acknowledgement"):
-                errors = {
-                    **errors,
-                    "ventilation_acknowledgement": missing_item_errors["ventilation_acknowledgement"],
-                }
+        should_verify_contribution_checkbox = (is_park_home and not is_social_housing) or (
+            (not is_social_housing) and is_not_on_benefits and is_income_above_threshold
+        )
+        if should_verify_contribution_checkbox:
             if not data.get("contribution_acknowledgement"):
                 errors = {
                     **errors,
                     "contribution_acknowledgement": missing_item_errors["contribution_acknowledgement"],
                 }
+        if not data.get("ventilation_acknowledgement"):
+            errors = {
+                **errors,
+                "ventilation_acknowledgement": missing_item_errors["ventilation_acknowledgement"],
+            }
         return errors
 
 
