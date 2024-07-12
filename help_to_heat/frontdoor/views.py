@@ -815,6 +815,18 @@ class SchemesView(PageView):
         supplier_name = SupplierConverter(session_id).get_supplier_on_general_pages()
 
         is_in_park_home = session_data.get("park_home", "No") == "Yes"
+        is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
+
+        # Edge case discussed as part of PC-1118
+        if (
+            (not is_in_park_home)
+            and (not is_social_housing)
+            and session_data.get("council_tax_band") is None
+            and session_data.get("household_income") is None
+            and session_data.get("benefits") is None
+        ):
+            eligible_schemes = ("GBIS",)
+
         is_solid_walls = session_data.get("wall_type") in [
             "Solid walls",
             "Mix of solid and cavity walls",
@@ -834,7 +846,6 @@ class SchemesView(PageView):
         is_income_above_threshold = (
             session_data.get("household_income", "£31,000 or more a year") == "£31,000 or more a year"
         )
-        is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
         is_loft_present = session_data.get("loft") == "Yes, I have a loft that has not been converted into a room"
         is_there_access_to_loft = session_data.get("loft_access") == "Yes, there is access to my loft"
         is_loft_insulation_over_threshold = session_data.get("loft_insulation") in [
@@ -882,8 +893,10 @@ class SchemesView(PageView):
         missing_fields = tuple(field for field in fields if not data.get(field))
         errors = {field: missing_item_errors[field] for field in missing_fields}
         is_park_home = session_data.get("park_home", "No") == "Yes"
-        is_not_on_benefits = session_data.get("benefits") == "No"
-        is_income_above_threshold = session_data.get("household_income") == "£31,000 or more a year"
+        is_not_on_benefits = session_data.get("benefits", "No") == "No"
+        is_income_above_threshold = (
+            session_data.get("household_income", "£31,000 or more a year") == "£31,000 or more a year"
+        )
         is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
         should_verify_contribution_checkbox = (is_park_home and not is_social_housing) or (
             (not is_social_housing) and is_not_on_benefits and is_income_above_threshold
