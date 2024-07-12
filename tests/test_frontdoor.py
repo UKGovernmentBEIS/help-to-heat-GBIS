@@ -229,6 +229,8 @@ def _do_happy_flow(supplier="EON", benefits_answer="Yes", park_home=False, house
     assert not page.has_text("Energy Company Obligation 4")
     form = page.get_form()
     form["ventilation_acknowledgement"] = True
+    if park_home or (benefits_answer == "No" and household_income == "£31,000 or more a year"):
+        form["contribution_acknowledgement"] = True
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('Add your personal and contact details')")
@@ -1039,7 +1041,7 @@ def test_schemes_page_logic_when_user_may_contribute_checkbox_appears_and_is_req
     assert uuid.UUID(session_id)
 
     # Answer main flow
-    page = _answer_house_questions(page, session_id, benefits_answer="No", income_answer="£31,000 or more a year")
+    page = _answer_house_questions(page, session_id, benefits_answer="No", household_income="£31,000 or more a year")
 
     assert page.has_one("h1:contains('We think you might be eligible')")
     assert page.has_text("Great British Insulation Scheme")
@@ -1108,7 +1110,7 @@ def test_schemes_page_logic_if_user_may_have_to_contribute_checkboxes_required()
     assert uuid.UUID(session_id)
 
     # Answer main flow
-    page = _answer_house_questions(page, session_id, benefits_answer="No", income_answer="£31,000 or more a year")
+    page = _answer_house_questions(page, session_id, benefits_answer="No", household_income="£31,000 or more a year")
 
     assert page.has_one("h1:contains('We think you might be eligible')")
     assert page.has_text("Great British Insulation Scheme")
