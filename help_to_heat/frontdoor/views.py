@@ -13,6 +13,7 @@ from help_to_heat import portal, utils
 
 from ..portal import email_handler
 from . import eligibility, interface, schemas
+from .eligibility import calculate_eligibility, eco4
 
 SupplierConverter = interface.SupplierConverter
 
@@ -1028,8 +1029,14 @@ class ConfirmSubmitView(PageView):
 class SuccessView(PageView):
     def get_context(self, session_id, *args, **kwargs):
         supplier = SupplierConverter(session_id).get_supplier_on_success_page()
+        session_data = interface.api.session.get_session(session_id)
+        is_eco4_eligible = eco4 in calculate_eligibility(session_data)
         referral = portal.models.Referral.objects.get(session_id=session_id)
-        return {"supplier": supplier, "safe_to_cache": True, "referral_id": referral.formatted_referral_id}
+        return {
+            "supplier": supplier,
+            "referral_id": referral.formatted_referral_id,
+            "is_eco4_eligible": is_eco4_eligible,
+        }
 
 
 class FeedbackView(utils.MethodDispatcher):
