@@ -830,8 +830,10 @@ class SchemesView(PageView):
             "No they are not insulated",
             "I do not know",
         ]
-        is_not_on_benefits = session_data.get("benefits") == "No"
-        is_income_above_threshold = session_data.get("household_income") == "£31,000 or more a year"
+        is_not_on_benefits = session_data.get("benefits", "No") == "No"
+        is_income_above_threshold = (
+            session_data.get("household_income", "£31,000 or more a year") == "£31,000 or more a year"
+        )
         is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
         is_loft_present = session_data.get("loft") == "Yes, I have a loft that has not been converted into a room"
         is_there_access_to_loft = session_data.get("loft_access") == "Yes, there is access to my loft"
