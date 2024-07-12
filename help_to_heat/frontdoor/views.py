@@ -818,7 +818,9 @@ class SchemesView(PageView):
         is_in_park_home = session_data.get("park_home", "No") == "Yes"
         is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
 
-        # Edge case discussed as part of PC-1118
+        # TODO PC-1191: Edge case whereby user on social housing route goes back on "Check your answers" page and
+        #  changes answer to "Yes I own my own home". Overriding eligibility for "GBIS" ensures user sees the
+        #  eligibility page. Default answers for logic below will further ensure user sees contribution information.
         if (
             (not is_in_park_home)
             and (not is_social_housing)
@@ -857,34 +859,22 @@ class SchemesView(PageView):
             "I have up to 100mm of loft insulation",
             "I do not know",
         ]
+        show_park_home_text = is_in_park_home and not is_social_housing
+        show_loft_insulation_text = (not show_park_home_text) and is_loft_present and is_there_access_to_loft
 
         text_flags = {
-            "show_park_home_text": is_in_park_home and not is_social_housing,
+            "show_park_home_text": show_park_home_text,
+            "show_cavity_wall_text": (not show_park_home_text) and is_cavity_walls and not is_wall_insulation_present,
+            "show_solid_wall_text": (not show_park_home_text) and is_solid_walls and not is_wall_insulation_present,
+            "show_room_in_roof_text": (not show_park_home_text) and not is_loft_present,
+            "show_loft_insulation_text": show_loft_insulation_text,
+            "show_contribution_text": show_park_home_text
+            or ((not is_social_housing) and is_not_on_benefits and is_income_above_threshold),
+            "show_loft_insulation_low_contribution_text": show_loft_insulation_text
+            and is_loft_insulation_under_threshold,
+            "show_loft_insulation_medium_contribution_text": show_loft_insulation_text
+            and is_loft_insulation_over_threshold,
         }
-        text_flags.update(
-            {
-                "show_cavity_wall_text": (not text_flags.get("show_park_home_text"))
-                and is_cavity_walls
-                and not is_wall_insulation_present,
-                "show_solid_wall_text": (not text_flags.get("show_park_home_text"))
-                and is_solid_walls
-                and not is_wall_insulation_present,
-                "show_room_in_roof_text": (not text_flags.get("show_park_home_text")) and not is_loft_present,
-                "show_loft_insulation_text": (not text_flags.get("show_park_home_text"))
-                and is_loft_present
-                and is_there_access_to_loft,
-                "show_contribution_text": text_flags.get("show_park_home_text")
-                or ((not is_social_housing) and is_not_on_benefits and is_income_above_threshold),
-            }
-        )
-        text_flags.update(
-            {
-                "show_loft_insulation_low_contribution_text": text_flags.get("show_loft_insulation_text")
-                and is_loft_insulation_under_threshold,
-                "show_loft_insulation_medium_contribution_text": text_flags.get("show_loft_insulation_text")
-                and is_loft_insulation_over_threshold,
-            }
-        )
 
         return {"eligible_schemes": eligible_schemes, "supplier_name": supplier_name, "text_flags": text_flags}
 
