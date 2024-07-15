@@ -18,19 +18,25 @@
       <p class="govuk-body" data-show-if-can-print="true" hidden>{{_("You can ")}}<a href="#"  class="govuk-link" data-print="true">{{_("save or print a copy of your referral")}}</a>.</p>
       <h2 class="govuk-heading-m">{{_("What happens next?")}}</h2>
 
-      <p class="govuk-body">{{_("We have sent your referral to the energy supplier you selected. They will contact you within 10 working days to confirm they have received this and about next steps.")}}</p>
+      <p class="govuk-body">{{_("%(supplier)s will contact you within 10 working days to confirm they have received your referral or to ask you for more information.") % { "supplier": supplier }}}</p>
 
-      <p class="govuk-body">{{_("You do not need to create another referral at any point.")}}</p>
+      <p class="govuk-body">{{_("You do not need to create another referral.")}}</p>
 
-      <p class="govuk-body">{{_("Once the energy supplier has confirmed they have received your referral, they or their delivery partner will review this and determine whether your property could be suitable for energy efficiency improvements. They may ask you for more information. You will then be notified to tell you whether your referral will proceed to the next stage of assessment. If your referral is not progressed, they will let you know why. ")}}</p>
-
-      <p class="govuk-body">{{_("As part of the assessment process, properties must have a home survey completed. Your energy supplier will organise this with you.")}}</p>
+      <p class="govuk-body">{{_("%(supplier)s or their installation partner will review your referral and determine whether your home is suitable for insulation. They will notify you of the outcome of their review.") % { "supplier": supplier }}}</p>
+      
+      <p class="govuk-body">{{_("Due to sustained high volumes of referrals, it could take several weeks for %(supplier)s to review your referral and tell you the outcome.") % { "supplier": supplier }}}</p>
+    
+      {% if is_eco4_eligible %}
+        <p class="govuk-body">{{_("%(supplier)s or their installation partner may also check if your home is suitable for more help with energy efficiency improvements through the ") % { "supplier": supplier }}}<a href="https://www.gov.uk/energy-company-obligation" target="_blank" rel="noopener noreferrer" class="govuk-link">{{_("ECO4 scheme (opens in new tab)")}}</a>.</p>
+      {% endif %} 
+    
+      <p class="govuk-body">{{_("If your home is suitable it must be surveyed. Your energy supplier or their installation partner will organise this with you.")}}</p>
 
       <h2 class="govuk-heading-m">{{_("Contacting the energy supplier about your referral after 10 working days")}}</h2>
 
-      <p class="govuk-body">{{_("You can ")}}<a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/energy-company-obligation-eco/contacts-guidance-and-resources/eco-supplier-contact-details" target="_blank" rel="noopener noreferrer" class="govuk-link">{{_("find contact details for the energy supplier (opens in new tab)")}}</a>{{_(" if you need to contact them.")}}</p>
+      <p class="govuk-body">{{_("You can ")}}<a href="https://www.ofgem.gov.uk/environmental-and-social-schemes/energy-company-obligation-eco/contacts-guidance-and-resources/eco-supplier-contact-details" target="_blank" rel="noopener noreferrer" class="govuk-link">{{_("find contact details for %(supplier)s (opens in new tab)") % { "supplier": supplier }}}</a>{{_(" if you need to contact them.")}}</p>
 
-      <p class="govuk-body">{{_("You do not need to contact the energy supplier unless it has been more than 10 working days since you submitted the referral and you have not yet received a confirmation email or a phone call from them.")}}</p>
+      <p class="govuk-body">{{_("You do not need to contact %(supplier)s unless it has been more than 10 working days since you submitted the referral and you have not yet received confirmation from them.") % { "supplier": supplier }}}</p>
 
       <h2 class="govuk-heading-m">{{_("Access more household energy support")}}</h2>
       <p class="govuk-body">{{_("You can:")}}</p>
@@ -47,7 +53,6 @@
       <p class="govuk-body">{{ _("Your feedback can help us to shape how the service develops so that it can best serve the needs of the public.") }}</p>
 
       <p class="govuk-body"><a href="https://forms.office.com/Pages/ResponsePage.aspx?id=BXCsy8EC60O0l-ZJLRst2JbIaLaL_oJOivXjaXYvCetUMFRBRVcyWkk4TzhYU0E4NjQzWlZMWThRMC4u" class="govuk-link"> {{ _("Leave some feedback for this service") }}</a></p>
-
     </div>
   </div>
 

@@ -50,7 +50,7 @@ def test_csv():
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_referral_created_at():
     before_referral_created = datetime.now()
-    session_id = _do_happy_flow(supplier="Utilita")
+    session_id, _ = _do_happy_flow(supplier="Utilita")
     after_referral_created = datetime.now()
 
     data = interface.api.session.get_session(session_id)

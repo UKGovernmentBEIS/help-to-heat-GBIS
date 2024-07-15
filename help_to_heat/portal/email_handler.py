@@ -127,7 +127,14 @@ def send_referral_confirmation_email(session_data, language_code):
     else:
         data = EMAIL_MAPPING["referral-confirmation"]
         data["subject"] = f"Referral to {session_data.get('supplier')} successful"
-    context = {"supplier_name": session_data.get("supplier"), "referral_id": session_data.get("referral_id")}
+    benefits = session_data.get("benefits")
+    household_income = session_data.get("household_income")
+    is_eco4_eligible = benefits == "Yes" or household_income == "Less than £31,000 a year"
+    context = {
+        "supplier_name": session_data.get("supplier"),
+        "referral_id": session_data.get("referral_id"),
+        "is_eco4_eligible": is_eco4_eligible,
+    }
     return _send_normal_email(to_address=session_data.get("email"), context=context, **data)
 
 
