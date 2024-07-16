@@ -6,19 +6,25 @@ Your details have been submitted to {{supplier_name}}.
 
 # What happens next?
 
-We have sent your referral to the energy supplier you selected. They will contact you within 10 working days to confirm they have received your referral or to ask you for more information.
+{{supplier_name}} will contact you within 10 working days to confirm they have received your referral or to ask you for more information.
 
-You do not need to create another referral at any point.
+You do not need to create another referral.
 
-Once the energy supplier has confirmed they have received your referral, they will review your referral and determine whether your property is applicable for home improvements. They may ask you for more information. You will be notified of the outcome of the review process.
+{{supplier_name}} or their installation partner will review your referral and determine whether your home is suitable for insulation. They will notify you of the outcome of their review.
 
-Properties that are applicable for home improvements must have a home survey completed. Your energy supplier will organise this with you.
+Due to sustained high volume of referrals, it could take several weeks for {{supplier_name}} to review your referral and tell you the outcome.
+
+{% if is_eco4_eligible %}
+{{supplier_name}} or their installation partner may also check if your home is suitable for more help with energy efficiency improvements through the [ECO4 scheme](https://www.gov.uk/energy-company-obligation).
+
+{% endif %}
+If your home is suitable it must be surveyed. Your energy supplier or their installation partner will organise this with you.
 
 # Contacting the energy supplier about your referral after 10 working days
 
-You can [find contact details for the energy supplier](https://www.ofgem.gov.uk/environmental-and-social-schemes/energy-company-obligation-eco/contacts-guidance-and-resources/eco-supplier-contact-details) if you need to contact them.
+You can [find contact details for {{supplier_name}}](https://www.ofgem.gov.uk/environmental-and-social-schemes/energy-company-obligation-eco/contacts-guidance-and-resources/eco-supplier-contact-details) if you need to contact them.
 
-You do not need to contact the energy supplier unless it has been more than 10 working days since you submitted the referral and you have not yet received a confirmation email from them.
+You do not need to contact {{supplier_name}} unless it has been more than 10 working days since you submitted the referral and you have not yet received a confirmation email from them.
 
 # Access more household energy support
 

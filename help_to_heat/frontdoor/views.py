@@ -13,6 +13,7 @@ from help_to_heat import portal, utils
 
 from ..portal import email_handler
 from . import eligibility, interface, schemas
+from .eligibility import calculate_eligibility, eco4
 
 SupplierConverter = interface.SupplierConverter
 
@@ -76,6 +77,13 @@ missing_item_errors = {
     "contact_number": _("Enter your contact number"),
     "permission": _("Please confirm that you agree to the use of your information by checking this box"),
     "acknowledge": _("Please confirm that you agree to the use of your information by checking this box"),
+    "ventilation_acknowledgement": _(
+        "Please confirm that you understand your home must be sufficiently ventilated before any insulation is "
+        "installed"
+    ),
+    "contribution_acknowledgement": _(
+        "Please confirm that you understand you may be required to contribute towards the cost of installing insulation"
+    ),
 }
 
 # to be updated when we get full list of excluded suppliers
@@ -805,7 +813,97 @@ class SchemesView(PageView):
         eligible_schemes = eligibility.calculate_eligibility(session_data)
         _ = interface.api.session.save_answer(session_id, "schemes", {"schemes": eligible_schemes})
         eligible_schemes = tuple(schemas.schemes_map[scheme] for scheme in eligible_schemes if not scheme == "ECO4")
-        return {"eligible_schemes": eligible_schemes}
+        supplier_name = SupplierConverter(session_id).get_supplier_on_general_pages()
+
+        is_in_park_home = session_data.get("park_home", "No") == "Yes"
+        is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
+
+        # TODO PC-1191: Edge case whereby user on social housing route goes back on "Check your answers" page and
+        #  changes answer to "Yes I own my own home". Overriding eligibility for "GBIS" ensures user sees the
+        #  eligibility page. Default answers for logic below will further ensure user sees contribution information.
+        if (
+            (not is_in_park_home)
+            and (not is_social_housing)
+            and session_data.get("council_tax_band") is None
+            and session_data.get("household_income") is None
+            and session_data.get("benefits") is None
+        ):
+            eligible_schemes = ("GBIS",)
+
+        is_solid_walls = session_data.get("wall_type") in [
+            "Solid walls",
+            "Mix of solid and cavity walls",
+            "I do not know",
+        ]
+        is_cavity_walls = session_data.get("wall_type") in [
+            "Cavity walls",
+            "Mix of solid and cavity walls",
+            "I do not know",
+        ]
+        is_wall_insulation_present = not session_data.get("wall_insulation") in [
+            "Some are insulated, some are not",
+            "No they are not insulated",
+            "I do not know",
+        ]
+        is_not_on_benefits = session_data.get("benefits", "No") == "No"
+        is_income_above_threshold = (
+            session_data.get("household_income", "£31,000 or more a year") == "£31,000 or more a year"
+        )
+        is_loft_present = session_data.get("loft") == "Yes, I have a loft that has not been converted into a room"
+        is_there_access_to_loft = session_data.get("loft_access") == "Yes, there is access to my loft"
+        is_loft_insulation_over_threshold = session_data.get("loft_insulation") in [
+            "I have more than 100mm of loft insulation",
+            "I do not know",
+        ]
+        is_loft_insulation_under_threshold = session_data.get("loft_insulation") in [
+            "I have up to 100mm of loft insulation",
+            "I do not know",
+        ]
+        show_park_home_text = is_in_park_home and not is_social_housing
+        show_loft_insulation_text = (not show_park_home_text) and is_loft_present and is_there_access_to_loft
+
+        text_flags = {
+            "show_park_home_text": show_park_home_text,
+            "show_cavity_wall_text": (not show_park_home_text) and is_cavity_walls and not is_wall_insulation_present,
+            "show_solid_wall_text": (not show_park_home_text) and is_solid_walls and not is_wall_insulation_present,
+            "show_room_in_roof_text": (not show_park_home_text) and not is_loft_present,
+            "show_loft_insulation_text": show_loft_insulation_text,
+            "show_contribution_text": show_park_home_text
+            or ((not is_social_housing) and is_not_on_benefits and is_income_above_threshold),
+            "show_loft_insulation_low_contribution_text": show_loft_insulation_text
+            and is_loft_insulation_under_threshold,
+            "show_loft_insulation_medium_contribution_text": show_loft_insulation_text
+            and is_loft_insulation_over_threshold,
+        }
+
+        return {"eligible_schemes": eligible_schemes, "supplier_name": supplier_name, "text_flags": text_flags}
+
+    def validate(self, request, session_id, page_name, data, is_change_page):
+        session_data = interface.api.session.get_session(session_id)
+        fields = page_compulsory_field_map.get(page_name, ())
+        missing_fields = tuple(field for field in fields if not data.get(field))
+        errors = {field: missing_item_errors[field] for field in missing_fields}
+        is_park_home = session_data.get("park_home", "No") == "Yes"
+        is_not_on_benefits = session_data.get("benefits", "No") == "No"
+        is_income_above_threshold = (
+            session_data.get("household_income", "£31,000 or more a year") == "£31,000 or more a year"
+        )
+        is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
+        should_verify_contribution_checkbox = (is_park_home and not is_social_housing) or (
+            (not is_social_housing) and is_not_on_benefits and is_income_above_threshold
+        )
+        if should_verify_contribution_checkbox:
+            if not data.get("contribution_acknowledgement"):
+                errors = {
+                    **errors,
+                    "contribution_acknowledgement": missing_item_errors["contribution_acknowledgement"],
+                }
+        if not data.get("ventilation_acknowledgement"):
+            errors = {
+                **errors,
+                "ventilation_acknowledgement": missing_item_errors["ventilation_acknowledgement"],
+            }
+        return errors
 
 
 @register_page("supplier")
@@ -921,8 +1019,14 @@ class ConfirmSubmitView(PageView):
 class SuccessView(PageView):
     def get_context(self, session_id, *args, **kwargs):
         supplier = SupplierConverter(session_id).get_supplier_on_success_page()
+        session_data = interface.api.session.get_session(session_id)
+        is_eco4_eligible = eco4 in calculate_eligibility(session_data)
         referral = portal.models.Referral.objects.get(session_id=session_id)
-        return {"supplier": supplier, "safe_to_cache": True, "referral_id": referral.formatted_referral_id}
+        return {
+            "supplier": supplier,
+            "referral_id": referral.formatted_referral_id,
+            "is_eco4_eligible": is_eco4_eligible,
+        }
 
 
 class FeedbackView(utils.MethodDispatcher):

@@ -65,6 +65,7 @@ CORS_APPS = [
 ]
 
 MIDDLEWARE = [
+    "help_to_heat.middleware.ExceptionMiddleware",  # at the top to catch all errors that bubble up
     "django.middleware.security.SecurityMiddleware",
     "csp.middleware.CSPMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
@@ -75,6 +76,8 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    # PC-1135: uncomment the below line when request logging is required
+    # "help_to_heat.middleware.RequestLoggingMiddleware",  # at the bottom to only log requests that aren't blocked
 ]
 
 
@@ -218,6 +221,36 @@ elif EMAIL_BACKEND_TYPE == "GOVUKNOTIFY":
 else:
     if EMAIL_BACKEND_TYPE not in ("FILE", "CONSOLE", "GOVUKNOTIFY"):
         raise Exception(f"Unknown EMAIL_BACKEND_TYPE of {EMAIL_BACKEND_TYPE}")
+
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "loggers": {
+        "help_to_heat": {
+            "handlers": ["help_to_heat"],
+            "level": "INFO",
+            "propagate": False,
+        },
+        "help_to_heat.requests": {
+            "handlers": ["help_to_heat"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+    "handlers": {
+        "help_to_heat": {
+            "class": "logging.StreamHandler",
+            "formatter": "help_to_heat",
+        }
+    },
+    "formatters": {
+        "help_to_heat": {
+            "()": "django.utils.log.ServerFormatter",
+            "format": "[{server_time}] [{levelname}] {message}",
+            "style": "{",
+        }
+    },
+}
 
 OS_API_KEY = env.str("OS_API_KEY")
 EPC_API_BASE_URL = env.str("EPC_API_BASE_URL")
