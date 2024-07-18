@@ -10,6 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from marshmallow import ValidationError
 
 from help_to_heat import portal, utils
+from .interface import is_uprn_a_duplicate
 
 from ..portal import email_handler
 from . import eligibility, interface, schemas
@@ -481,6 +482,15 @@ class EpcSelectView(PageView):
         data = interface.api.session.save_answer(session_id, page_name, epc_data)
         return data
 
+    def handle_post(self, request, session_id, page_name, data, is_change_page):
+        session_data = interface.api.session.get_session(session_id)
+        uprn = session_data.get("uprn")
+
+        if uprn and is_uprn_a_duplicate(uprn):
+            return redirect("frontdoor:page", session_id=session_id, page_name="referral-already-submitted")
+
+        return super().handle_post(request, session_id, page_name, data, is_change_page)
+
 
 @register_page("address-select")
 class AddressSelectView(PageView):
@@ -505,6 +515,15 @@ class AddressSelectView(PageView):
         data = interface.api.address.get_address(uprn)
         data = interface.api.session.save_answer(session_id, page_name, data)
         return data
+
+    def handle_post(self, request, session_id, page_name, data, is_change_page):
+        session_data = interface.api.session.get_session(session_id)
+        uprn = session_data.get("uprn")
+
+        if uprn and is_uprn_a_duplicate(uprn):
+            return redirect("frontdoor:page", session_id=session_id, page_name="referral-already-submitted")
+
+        return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
 @register_page("address-manual")
