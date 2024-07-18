@@ -7,6 +7,7 @@ import osdatahub
 import requests
 from django.conf import settings
 
+import help_to_heat.portal.models
 from help_to_heat import portal
 from help_to_heat.utils import Entity, Interface, register_event, with_schema
 
@@ -524,6 +525,10 @@ class Feedback(Entity):
     def save_feedback(self, session_id, page_name, data):
         models.Feedback.objects.create(session_id=session_id, page_name=page_name, data=data)
         return {"success": True}
+
+
+def is_uprn_a_duplicate(uprn):
+    return portal.models.Referral.objects.filter(data__uprn=uprn).exists()
 
 
 api = Interface(session=Session(), address=Address(), epc=EPC(), feedback=Feedback())
