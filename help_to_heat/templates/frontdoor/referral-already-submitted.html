@@ -1,0 +1,13 @@
+{% extends "frontdoor/base.html" %}
+{% import "macros.html" as macros with context %}
+
+{% block title %}
+  <title>{{_("You are ineligible for support - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
+{% endblock %}
+
+{% block content %}
+  {% call macros.further_help() -%}
+    <h1 class="govuk-heading-l">{{_("Already submitted")}}</h1>
+
+  {%- endcall %}
+{% endblock %}

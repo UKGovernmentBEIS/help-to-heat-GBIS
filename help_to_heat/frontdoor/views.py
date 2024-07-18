@@ -526,6 +526,11 @@ class AddressSelectView(PageView):
         return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
+@register_page("referral-already-submitted")
+class ReferralAlreadySubmitted(PageView):
+    pass
+
+
 @register_page("address-manual")
 class AddressManualView(PageView):
     def get_context(self, request, session_id, page_name, data, *args, **kwargs):
