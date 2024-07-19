@@ -6,8 +6,28 @@
 {% endblock %}
 
 {% block content %}
-  {% call macros.further_help() -%}
-    <h1 class="govuk-heading-l">{{_("Already submitted")}}</h1>
+  {% call macros.form_wrapper(prev_url, button_label=_("Continue"), button_extra_classes="govuk-button--secondary") -%}
+    <h1 class="govuk-heading-l">{{_("A referral has already been submitted")}}</h1>
+    <p class="govuk-body">{{_("The information you have submitted matches a referral made to another energy supplier on date for address.")}}</p>
+    <p class="govuk-body">{{_("You may submit a referral to energy supplier but you may not receive a different outcome.")}}</p>
 
+    <div class="govuk-form-group {{ 'govuk-form-group--error' if errors else '' }}">
+      <fieldset class="govuk-fieldset">
+        <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+          {% if errors.get('permission') %}
+            <p id="permission-error" class="govuk-error-message">
+              <span class="govuk-visually-hidden">Error:</span> {{errors.get('permission')}}
+            </p>
+          {% endif %}
+          <div class="govuk-checkboxes__item">
+            <input class="govuk-checkboxes__input" id="question-submit-another" name="submit-another" type="checkbox" {% if data.get('submit-another') == 'on' %}checked{% endif %}/>
+            <label class="govuk-label govuk-checkboxes__label" for="question-submit-another" id="question-submit-another-label">
+              {{_("I want to submit another referral")}}
+            </label>
+          </div>
+        </div>
+      </fieldset>
+    </div>
   {%- endcall %}
+  <a href="https://www.gov.uk/apply-great-british-insulation-scheme" role="button" draggable="false" class="govuk-button" data-module="govuk-button">Exit service</a>
 {% endblock %}

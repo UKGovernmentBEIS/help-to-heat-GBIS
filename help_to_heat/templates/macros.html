@@ -1,4 +1,4 @@
-{% macro form_wrapper(prev_url, button_label=_("Continue")) -%}
+{% macro form_wrapper(prev_url, button_label=_("Continue"), button_extra_classes="") -%}
 {% if prev_url %}
 <a href="{{prev_url}}" class="govuk-back-link">{{_("Back")}}</a>
 {% endif %}
@@ -12,7 +12,7 @@
 
       {{caller()}}
 
-      <button class="govuk-button" data-module="govuk-button">
+      <button class="govuk-button {{ button_extra_classes }}" data-module="govuk-button">
         {{button_label}}
       </button>
     </form>
