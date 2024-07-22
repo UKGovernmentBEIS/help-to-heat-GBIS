@@ -79,7 +79,7 @@ extra_pages = (
     "utility-warehouse-warning-page",
     "shell-warning-page",
     "park-home-application-closed",
-    "referral-already-submitted"
+    "referral-already-submitted",
 )
 
 page_prev_next_map = {

@@ -10,11 +10,11 @@ from django.utils.translation import gettext_lazy as _
 from marshmallow import ValidationError
 
 from help_to_heat import portal, utils
-from .interface import DuplicateReferralChecker
 
 from ..portal import email_handler
 from . import eligibility, interface, schemas
 from .eligibility import calculate_eligibility, eco4
+from .interface import DuplicateReferralChecker
 
 SupplierConverter = interface.SupplierConverter
 
@@ -535,7 +535,7 @@ class ReferralAlreadySubmitted(PageView):
             "to_same_energy_supplier": to_same_energy_supplier,
             "date_created": date_created,
             "address": address,
-            "supplier": supplier
+            "supplier": supplier,
         }
 
 
