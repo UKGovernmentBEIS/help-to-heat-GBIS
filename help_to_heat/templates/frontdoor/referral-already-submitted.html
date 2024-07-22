@@ -2,11 +2,11 @@
 {% import "macros.html" as macros with context %}
 
 {% block title %}
-  <title>{{_("You are ineligible for support - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
+  <title>{{_("A referral has already been submitted - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 
 {% block content %}
-  {% call macros.form_wrapper(prev_url, button_label=_("Continue"), button_extra_classes="govuk-button--secondary") -%}
+  {% call macros.form_wrapper(prev_url, button_extra_classes="govuk-button--secondary") -%}
     <h1 class="govuk-heading-l">{{_("A referral has already been submitted")}}</h1>
     {% if to_same_energy_supplier %}
       <p class="govuk-body">{{_("The information you have submitted matches a referral made on %(date_created)s for %(address)s.") % {"date_created": date_created, "address": address}}}</p>
