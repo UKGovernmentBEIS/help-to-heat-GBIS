@@ -100,7 +100,7 @@ page_prev_next_map = {
     "park-home": {"prev": "own-property", "next": "address"},
     "park-home-main-residence": {"prev": "park-home", "next": "address"},
     "park-home-application-closed": {"prev": "park-home-main-residence", "next": None},
-    "referral-already-submitted": {"prev": "address", "next": None},
+    "referral-already-submitted": {"prev": "address", "next": "council-tax-band"},
 }
 
 page_prev_next_map_park_home = {
@@ -116,7 +116,7 @@ page_prev_next_map_park_home = {
     "park-home-application-closed": {"prev": "park-home-main-residence", "next": None},
     "epc-ineligible": {"prev": "epc", "next": None},
     "ineligible": {"prev": "household-income", "next": None},
-    "referral-already-submitted": {"prev": "address", "next": None},
+    "referral-already-submitted": {"prev": "address", "next": "epc"},
 }
 
 page_prev_next_map_social_housing = {
@@ -132,7 +132,7 @@ page_prev_next_map_social_housing = {
     "utility-warehouse-warning-page": {"prev": "supplier", "next": "own-property"},
     "shell-warning-page": {"prev": "supplier", "next": "own-property"},
     "applications-closed": {"prev": "supplier", "next": None},
-    "referral-already-submitted": {"prev": "address", "next": None},
+    "referral-already-submitted": {"prev": "address", "next": "epc"},
 }
 
 summary_map = {
