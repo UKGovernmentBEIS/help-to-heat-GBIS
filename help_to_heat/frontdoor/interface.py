@@ -183,7 +183,7 @@ class DuplicateReferralChecker:
         # needs to compare against the supplier that would've been saved
         saved_supplier = SupplierConverter(self.session_id).get_supplier_on_success_page()
         referral = portal.models.Referral.objects.get(data__uprn=uprn)
-        return referral.supplier == saved_supplier
+        return referral.supplier.name == saved_supplier
 
     def get_date_of_previous_referral(self):
         if not self.is_referral_a_duplicate():
