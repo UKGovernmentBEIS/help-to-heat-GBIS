@@ -19,13 +19,13 @@
     <div class="govuk-form-group {{ 'govuk-form-group--error' if errors else '' }}">
       <fieldset class="govuk-fieldset">
         <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-          {% if errors.get('permission') %}
+          {% if errors.get('submit_another') %}
             <p id="permission-error" class="govuk-error-message">
-              <span class="govuk-visually-hidden">Error:</span> {{errors.get('permission')}}
+              <span class="govuk-visually-hidden">Error:</span> {{errors.get('submit_another')}}
             </p>
           {% endif %}
           <div class="govuk-checkboxes__item">
-            <input class="govuk-checkboxes__input" id="question-submit-another" name="submit-another" type="checkbox" {% if data.get('submit-another') == 'on' %}checked{% endif %}/>
+            <input class="govuk-checkboxes__input" id="question-submit-another" name="submit_another" type="checkbox" {% if data.get('submit_another') == 'on' %}checked{% endif %}/>
             <label class="govuk-label govuk-checkboxes__label" for="question-submit-another" id="question-submit-another-label">
               {{_("I want to submit another referral")}}
             </label>
