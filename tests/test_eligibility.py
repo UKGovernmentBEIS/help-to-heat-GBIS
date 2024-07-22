@@ -5,6 +5,7 @@ from help_to_heat.frontdoor import interface
 from help_to_heat.frontdoor.mock_epc_api import MockEPCApi
 
 from . import utils
+from .fixtures import reset_referrals
 
 eligible_council_tax = {
     "England": {
