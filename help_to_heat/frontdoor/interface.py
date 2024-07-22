@@ -7,7 +7,6 @@ import osdatahub
 import requests
 from django.conf import settings
 
-import help_to_heat.portal.models
 from help_to_heat import portal
 from help_to_heat.utils import Entity, Interface, register_event, with_schema
 
