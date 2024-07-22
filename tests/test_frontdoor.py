@@ -13,7 +13,6 @@ from help_to_heat.frontdoor.mock_os_api import EmptyOSApi, MockOSApi
 from help_to_heat.portal import models
 
 from . import utils
-from .fixtures import reset_referrals
 
 # TODO: PC-380: Add tests for cookie banner
 
