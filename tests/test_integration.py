@@ -9,8 +9,8 @@ from help_to_heat.frontdoor import interface
 from help_to_heat.frontdoor.mock_epc_api import MockEPCApi
 
 from . import utils
-from .test_frontdoor import _do_happy_flow
 from .fixtures import reset_referrals
+from .test_frontdoor import _do_happy_flow
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
