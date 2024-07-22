@@ -1799,6 +1799,84 @@ def test_on_success_page_on_no_to_benefits_income_more_than_31k_eco4_is_not_show
     )
 
 
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_on_submitting_an_address_twice_the_referral_already_submitted_page_is_shown():
+    supplier = "British Gas"
+
+    _do_happy_flow(supplier=supplier)
+
+    client = utils.get_client()
+    page = client.get("/start")
+    page = page.follow()
+
+    session_id = page.path.split("/")[1]
+
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = supplier
+    page = form.submit().follow()
+
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    page = _check_page(page, "park-home", "park_home", "No")
+
+    form = page.get_form()
+    form["building_name_or_number"] = "22"
+    form["postcode"] = "FL23 4JA"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["rrn"] = "2222-2222-2222-2222-2222"
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('A referral has already been submitted')")
+    assert page.has_text("The information you have submitted matches a referral made on")
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_on_submitting_an_address_twice_to_different_suppliers_the_referral_already_submitted_page_is_shown():
+    supplier = "British Gas"
+
+    _do_happy_flow(supplier=supplier)
+
+    client = utils.get_client()
+    page = client.get("/start")
+    page = page.follow()
+
+    session_id = page.path.split("/")[1]
+
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Octopus Energy"
+    page = form.submit().follow()
+
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    page = _check_page(page, "park-home", "park_home", "No")
+
+    form = page.get_form()
+    form["building_name_or_number"] = "22"
+    form["postcode"] = "FL23 4JA"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["rrn"] = "2222-2222-2222-2222-2222"
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('A referral has already been submitted')")
+    assert page.has_text("The information you have submitted matches a referral made to another energy supplier")
+
+
 def _setup_client_and_page():
     client = utils.get_client()
     page = client.get("/start")
