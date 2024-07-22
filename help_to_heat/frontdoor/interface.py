@@ -165,6 +165,36 @@ class SupplierConverter:
         return session_data
 
 
+class DuplicateReferralChecker:
+    def __init__(self, session_id):
+        self.session_id = session_id
+
+    def is_referral_a_duplicate(self):
+        session_data = api.session.get_session(self.session_id)
+        uprn = session_data.get("uprn")
+        return uprn and portal.models.Referral.objects.filter(data__uprn=uprn).exists()
+
+    def is_duplicate_referral_sent_to_same_energy_supplier(self):
+        if not self.is_referral_a_duplicate():
+            return False
+
+        session_data = api.session.get_session(self.session_id)
+        uprn = session_data.get("uprn")
+        # needs to compare against the supplier that would've been saved
+        saved_supplier = SupplierConverter(self.session_id).get_supplier_on_success_page()
+        referral = portal.models.Referral.objects.get(data__uprn=uprn)
+        return referral.supplier == saved_supplier
+
+    def get_date_of_previous_referral(self):
+        if not self.is_referral_a_duplicate():
+            return None
+
+        session_data = api.session.get_session(self.session_id)
+        uprn = session_data.get("uprn")
+        referral = portal.models.Referral.objects.get(data__uprn=uprn)
+        return referral.created_at
+
+
 class Session(Entity):
     @with_schema(load=SaveAnswerSchema, dump=schemas.SessionSchema)
     @register_event(models.Event, "Answer saved")
@@ -525,10 +555,6 @@ class Feedback(Entity):
     def save_feedback(self, session_id, page_name, data):
         models.Feedback.objects.create(session_id=session_id, page_name=page_name, data=data)
         return {"success": True}
-
-
-def is_uprn_a_duplicate(uprn):
-    return portal.models.Referral.objects.filter(data__uprn=uprn).exists()
 
 
 api = Interface(session=Session(), address=Address(), epc=EPC(), feedback=Feedback())

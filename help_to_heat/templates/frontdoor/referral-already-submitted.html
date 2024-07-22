@@ -8,8 +8,13 @@
 {% block content %}
   {% call macros.form_wrapper(prev_url, button_label=_("Continue"), button_extra_classes="govuk-button--secondary") -%}
     <h1 class="govuk-heading-l">{{_("A referral has already been submitted")}}</h1>
-    <p class="govuk-body">{{_("The information you have submitted matches a referral made to another energy supplier on date for address.")}}</p>
-    <p class="govuk-body">{{_("You may submit a referral to energy supplier but you may not receive a different outcome.")}}</p>
+    {% if to_same_energy_supplier %}
+      <p class="govuk-body">{{_("The information you have submitted matches a referral made on %(date_created)s for %(address)s.") % {"date_created": date_created, "address": address}}}</p>
+      <p class="govuk-body">{{_("You do not need to submit another referral unless your circumstances have changed. Contact %(supplier)s if you have a query about a previously submitted referral.") % {"supplier": supplier}}}</p>
+    {% else %}
+      <p class="govuk-body">{{_("The information you have submitted matches a referral made to another energy supplier on %(date_created)s for %(address)s.") % {"date_created": date_created, "address": address}}}</p>
+      <p class="govuk-body">{{_("You may submit a referral to %(supplier)s but you may not receive a different outcome.") % {"supplier": supplier}}}</p>
+    {% endif %}
 
     <div class="govuk-form-group {{ 'govuk-form-group--error' if errors else '' }}">
       <fieldset class="govuk-fieldset">

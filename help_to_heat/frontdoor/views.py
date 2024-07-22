@@ -10,7 +10,7 @@ from django.utils.translation import gettext_lazy as _
 from marshmallow import ValidationError
 
 from help_to_heat import portal, utils
-from .interface import is_uprn_a_duplicate
+from .interface import DuplicateReferralChecker
 
 from ..portal import email_handler
 from . import eligibility, interface, schemas
@@ -483,10 +483,7 @@ class EpcSelectView(PageView):
         return data
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        session_data = interface.api.session.get_session(session_id)
-        uprn = session_data.get("uprn")
-
-        if uprn and is_uprn_a_duplicate(uprn):
+        if DuplicateReferralChecker(session_id).is_referral_a_duplicate():
             return redirect("frontdoor:page", session_id=session_id, page_name="referral-already-submitted")
 
         return super().handle_post(request, session_id, page_name, data, is_change_page)
@@ -517,10 +514,7 @@ class AddressSelectView(PageView):
         return data
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        session_data = interface.api.session.get_session(session_id)
-        uprn = session_data.get("uprn")
-
-        if uprn and is_uprn_a_duplicate(uprn):
+        if DuplicateReferralChecker(session_id).is_referral_a_duplicate():
             return redirect("frontdoor:page", session_id=session_id, page_name="referral-already-submitted")
 
         return super().handle_post(request, session_id, page_name, data, is_change_page)
@@ -528,7 +522,19 @@ class AddressSelectView(PageView):
 
 @register_page("referral-already-submitted")
 class ReferralAlreadySubmitted(PageView):
-    pass
+    def get_context(self, request, session_id, *args, **kwargs):
+        session_data = interface.api.session.get_session(session_id)
+        duplicate_referral_checker = DuplicateReferralChecker(session_id)
+        to_same_energy_supplier = duplicate_referral_checker.is_duplicate_referral_sent_to_same_energy_supplier()
+        date_created = duplicate_referral_checker.get_date_of_previous_referral().strftime("%d/%m/%Y")
+        address = session_data.get("address")
+        supplier = session_data.get("supplier")
+        return {
+            "to_same_energy_supplier": to_same_energy_supplier,
+            "date_created": date_created,
+            "address": address,
+            "supplier": supplier
+        }
 
 
 @register_page("address-manual")
