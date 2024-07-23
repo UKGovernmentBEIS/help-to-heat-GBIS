@@ -235,10 +235,7 @@ LOGGING = {
             "level": "INFO",
             "propagate": False,
         },
-        "django": {
-            "handlers": ["help_to_heat"],
-            "level": "INFO"
-        }
+        "django": {"handlers": ["help_to_heat"], "level": "INFO"},
     },
     "handlers": {
         "help_to_heat": {
