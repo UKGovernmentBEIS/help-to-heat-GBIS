@@ -14,7 +14,9 @@ from help_to_heat import portal, utils
 from ..portal import email_handler
 from . import eligibility, interface, schemas
 from .eligibility import calculate_eligibility, eco4
-from .interface import DuplicateReferralChecker
+from .session_handlers.duplicate_referral_checker import (
+    DuplicateReferralChecker,
+)
 
 SupplierConverter = interface.SupplierConverter
 
