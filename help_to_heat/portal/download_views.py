@@ -271,7 +271,8 @@ def add_extra_row_data(referral, exclude_pii=False):
 
     if exclude_pii:
         for key in pii_keys:
-            row.pop(key)
+            if key in row.keys():
+                row.pop(key)
 
     eligibility = calculate_eligibility(row)
     epc_date = row.get("epc_date")
