@@ -164,6 +164,10 @@ class SupplierConverter:
         return session_data
 
 
+class NoMatchingReferralInSessionException(Exception):
+    pass
+
+
 class DuplicateReferralChecker:
     def __init__(self, session_id):
         self.session_id = session_id
@@ -175,7 +179,7 @@ class DuplicateReferralChecker:
 
     def is_duplicate_referral_sent_to_same_energy_supplier(self):
         if not self.is_referral_a_duplicate():
-            return False
+            raise NoMatchingReferralInSessionException
 
         session_data = api.session.get_session(self.session_id)
         uprn = session_data.get("uprn")
@@ -186,7 +190,7 @@ class DuplicateReferralChecker:
 
     def get_date_of_previous_referral(self):
         if not self.is_referral_a_duplicate():
-            return None
+            raise NoMatchingReferralInSessionException
 
         session_data = api.session.get_session(self.session_id)
         uprn = session_data.get("uprn")
