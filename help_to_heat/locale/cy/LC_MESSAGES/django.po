@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-07-23 10:26+0000\n"
+"POT-Creation-Date: 2024-07-26 10:02+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -508,7 +508,7 @@ msgstr "Rhowch eich tref neu'ch dinas"
 
 #: help_to_heat/frontdoor/views.py:65
 msgid "Please confirm that you want to submit another referral"
-msgstr "TODO"
+msgstr "A wnewch chi gadarnhau eich bod eisiau cyflwyno atgyfeiriad arall"
 
 #: help_to_heat/frontdoor/views.py:66
 msgid "Enter the Council Tax Band of the property"
@@ -2671,40 +2671,60 @@ msgstr "Pa fath o eiddo sydd gennych?"
 msgid ""
 "A referral has already been submitted - Check eligibility for Great British "
 "Insulation Scheme - GOV.UK"
-msgstr "TODO"
+msgstr ""
+"Mae’r atgyfeiriad wedi cael ei gyflwyno’n barod - Gwirio’ch cymhwystra ar "
+"gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
 #: help_to_heat/templates/frontdoor/referral-already-submitted.html:10
 msgid "A referral has already been submitted"
-msgstr "TODO"
+msgstr "Mae’r atgyfeiriad wedi cael ei gyflwyno’n barod"
 
 #: help_to_heat/templates/frontdoor/referral-already-submitted.html:12
+#, python-format
 msgid ""
 "The information you have submitted matches a referral made on "
 "%(date_created)s for %(address)s."
-msgstr "TODO"
+msgstr ""
+"Mae’r wybodaeth rydych chi wedi’i chyflwyno yn cyfateb i atgyfeiriad a "
+"gafodd ei wneud ar %(date_created)s ar gyfer %(address)s."
 
 #: help_to_heat/templates/frontdoor/referral-already-submitted.html:13
+#, python-format
 msgid ""
 "You do not need to submit another referral unless your circumstances have "
 "changed. Contact %(supplier)s if you have a query about a previously "
 "submitted referral."
-msgstr "TODO"
+msgstr ""
+"Does dim angen i chi gyflwyno atgyfeiriad arall oni bai fod eich "
+"amgylchiadau wedi newid. Cysylltwch â %(supplier)s os oes gennych chi "
+"gwestiwn am atgyfeiriad sydd wedi cael ei gyflwyno’n barod."
 
 #: help_to_heat/templates/frontdoor/referral-already-submitted.html:15
+#, python-format
 msgid ""
 "The information you have submitted matches a referral made to another energy "
 "supplier on %(date_created)s for %(address)s."
-msgstr "TODO"
+msgstr ""
+"Mae’r wybodaeth rydych chi wedi’i chyflwyno yn cyfateb i atgyfeiriad a "
+"gafodd ei wneud i gyflenwr ynni arall ar %(date_created)s ar gyfer "
+"%(address)s."
 
 #: help_to_heat/templates/frontdoor/referral-already-submitted.html:16
+#, python-format
 msgid ""
 "You may submit a referral to %(supplier)s but you may not receive a "
 "different outcome."
-msgstr "TODO"
+msgstr ""
+"Cewch gyflwyno atgyfeiriad i %(supplier)s ond efallai y bydd y canlyniad yr "
+"un fath."
 
 #: help_to_heat/templates/frontdoor/referral-already-submitted.html:30
 msgid "I want to submit another referral"
-msgstr "TODO"
+msgstr "Rydw i eisiau cyflwyno atgyfeiriad arall"
+
+#: help_to_heat/templates/frontdoor/referral-already-submitted.html:37
+msgid "Exit service"
+msgstr "Gadewch y gwasanaeth"
 
 #: help_to_heat/templates/frontdoor/schemes.html:5
 msgid ""
