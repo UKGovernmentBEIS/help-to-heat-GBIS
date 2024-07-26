@@ -487,7 +487,9 @@ class EpcSelectView(PageView):
         return data
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        if DuplicateReferralChecker(session_id).is_referral_a_duplicate():
+        duplicate_referral_checker = DuplicateReferralChecker(session_id)
+        if (duplicate_referral_checker.is_referral_a_duplicate()
+                and duplicate_referral_checker.is_duplicate_referral_recent()):
             return redirect("frontdoor:page", session_id=session_id, page_name="referral-already-submitted")
 
         return super().handle_post(request, session_id, page_name, data, is_change_page)
@@ -518,7 +520,9 @@ class AddressSelectView(PageView):
         return data
 
     def handle_post(self, request, session_id, page_name, data, is_change_page):
-        if DuplicateReferralChecker(session_id).is_referral_a_duplicate():
+        duplicate_referral_checker = DuplicateReferralChecker(session_id)
+        if (duplicate_referral_checker.is_referral_a_duplicate()
+                and duplicate_referral_checker.is_duplicate_referral_recent()):
             return redirect("frontdoor:page", session_id=session_id, page_name="referral-already-submitted")
 
         return super().handle_post(request, session_id, page_name, data, is_change_page)

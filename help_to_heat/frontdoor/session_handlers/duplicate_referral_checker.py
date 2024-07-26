@@ -1,3 +1,8 @@
+from datetime import datetime
+
+import pytz
+from dateutil.relativedelta import relativedelta
+
 from help_to_heat import portal
 from help_to_heat.frontdoor.interface import SupplierConverter, api
 
@@ -35,6 +40,10 @@ class DuplicateReferralChecker:
 
         referral = self._try_find_most_recent_duplicate_referral()
         return referral.created_at
+
+    def is_duplicate_referral_recent(self, recent_interval_months = 6):
+        recent_cutoff_date = datetime.utcnow() + relativedelta(months=-recent_interval_months)
+        return self.get_date_of_previous_referral().astimezone(pytz.UTC) > recent_cutoff_date.astimezone(pytz.UTC)
 
 
 class NoMatchingReferralInSessionException(Exception):
