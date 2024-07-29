@@ -17,7 +17,11 @@ class DuplicateReferralChecker:
         if not uprn:
             return None
         recent_cutoff_date = datetime.utcnow() + relativedelta(months=-recent_interval_months)
-        duplicate_referrals = portal.models.Referral.objects.filter(data__uprn=uprn).filter(created_at__gte=recent_cutoff_date.astimezone(pytz.UTC)).order_by("-created_at")
+        duplicate_referrals = (
+            portal.models.Referral.objects.filter(data__uprn=uprn)
+            .filter(created_at__gte=recent_cutoff_date.astimezone(pytz.UTC))
+            .order_by("-created_at")
+        )
         if len(duplicate_referrals) == 0:
             return None
         return duplicate_referrals[0]
