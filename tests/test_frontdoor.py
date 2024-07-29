@@ -1,6 +1,5 @@
 import unittest
 import uuid
-from datetime import timezone
 
 import pytest
 from dateutil.relativedelta import relativedelta
@@ -272,7 +271,6 @@ def _do_happy_flow(supplier="EON", benefits_answer="Yes", park_home=False, house
         supplier_shown = "E.ON Next"
     if supplier == "Shell":
         supplier_shown = "Octopus Energy"
-    print(page.path)
     assert page.has_one(f"h1:contains('Your details have been submitted to {supplier_shown}')")
 
     return session_id, page
