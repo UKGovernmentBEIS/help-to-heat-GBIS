@@ -11,39 +11,36 @@ class DuplicateReferralChecker:
     def __init__(self, session_id):
         self.session_id = session_id
 
-    def _try_find_most_recent_duplicate_referral(self):
+    def _try_find_most_recent_duplicate_referral_within_range(self, recent_interval_months=6):
         session_data = api.session.get_session(self.session_id)
         uprn = session_data.get("uprn")
         if not uprn:
             return None
-        duplicate_referrals = portal.models.Referral.objects.filter(data__uprn=uprn).order_by("-created_at")
+        recent_cutoff_date = datetime.utcnow() + relativedelta(months=-recent_interval_months)
+        duplicate_referrals = portal.models.Referral.objects.filter(data__uprn=uprn).filter(created_at__gte=recent_cutoff_date.astimezone(pytz.UTC)).order_by("-created_at")
         if len(duplicate_referrals) == 0:
             return None
         return duplicate_referrals[0]
 
-    def is_referral_a_duplicate(self):
-        referral = self._try_find_most_recent_duplicate_referral()
+    def is_referral_a_recent_duplicate(self):
+        referral = self._try_find_most_recent_duplicate_referral_within_range()
         return referral is not None
 
-    def is_duplicate_referral_sent_to_same_energy_supplier(self):
-        if not self.is_referral_a_duplicate():
+    def is_recent_duplicate_referral_sent_to_same_energy_supplier(self):
+        if not self.is_referral_a_recent_duplicate():
             raise NoMatchingReferralInSessionException
 
         # needs to compare against the supplier that would've been saved
         saved_supplier = SupplierConverter(self.session_id).get_supplier_on_success_page()
-        referral = self._try_find_most_recent_duplicate_referral()
+        referral = self._try_find_most_recent_duplicate_referral_within_range()
         return referral.supplier.name == saved_supplier
 
     def get_date_of_previous_referral(self):
-        if not self.is_referral_a_duplicate():
+        if not self.is_referral_a_recent_duplicate():
             raise NoMatchingReferralInSessionException
 
-        referral = self._try_find_most_recent_duplicate_referral()
+        referral = self._try_find_most_recent_duplicate_referral_within_range()
         return referral.created_at
-
-    def is_duplicate_referral_recent(self, recent_interval_months = 6):
-        recent_cutoff_date = datetime.utcnow() + relativedelta(months=-recent_interval_months)
-        return self.get_date_of_previous_referral().astimezone(pytz.UTC) > recent_cutoff_date.astimezone(pytz.UTC)
 
 
 class NoMatchingReferralInSessionException(Exception):
