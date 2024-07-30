@@ -14,6 +14,9 @@ from help_to_heat import portal, utils
 from ..portal import email_handler
 from . import eligibility, interface, schemas
 from .eligibility import calculate_eligibility, eco4
+from .session_handlers.duplicate_referral_checker import (
+    DuplicateReferralChecker,
+)
 
 SupplierConverter = interface.SupplierConverter
 
@@ -30,6 +33,7 @@ page_compulsory_field_map = {
     "epc-select": ("rrn",),
     "address-select": ("uprn",),
     "address-manual": ("address_line_1", "town_or_city", "postcode"),
+    "referral-already-submitted": ("submit_another",),
     "council-tax-band": ("council_tax_band",),
     "epc": ("accept_suggested_epc",),
     "benefits": ("benefits",),
@@ -58,6 +62,7 @@ missing_item_errors = {
     "uprn": _("Select your address"),
     "rrn": _("Select your address"),
     "town_or_city": _("Enter your Town or city"),
+    "submit_another": _("Please confirm that you want to submit another referral"),
     "council_tax_band": _("Enter the Council Tax Band of the property"),
     "accept_suggested_epc": _("Select if your EPC rating is correct or not, or that you do not know"),
     "benefits": _("Select if anyone in your household is receiving any benefits listed below"),
@@ -481,6 +486,13 @@ class EpcSelectView(PageView):
         data = interface.api.session.save_answer(session_id, page_name, epc_data)
         return data
 
+    def handle_post(self, request, session_id, page_name, data, is_change_page):
+        duplicate_referral_checker = DuplicateReferralChecker(session_id)
+        if duplicate_referral_checker.is_referral_a_recent_duplicate():
+            return redirect("frontdoor:page", session_id=session_id, page_name="referral-already-submitted")
+
+        return super().handle_post(request, session_id, page_name, data, is_change_page)
+
 
 @register_page("address-select")
 class AddressSelectView(PageView):
@@ -505,6 +517,30 @@ class AddressSelectView(PageView):
         data = interface.api.address.get_address(uprn)
         data = interface.api.session.save_answer(session_id, page_name, data)
         return data
+
+    def handle_post(self, request, session_id, page_name, data, is_change_page):
+        duplicate_referral_checker = DuplicateReferralChecker(session_id)
+        if duplicate_referral_checker.is_referral_a_recent_duplicate():
+            return redirect("frontdoor:page", session_id=session_id, page_name="referral-already-submitted")
+
+        return super().handle_post(request, session_id, page_name, data, is_change_page)
+
+
+@register_page("referral-already-submitted")
+class ReferralAlreadySubmitted(PageView):
+    def get_context(self, request, session_id, *args, **kwargs):
+        session_data = interface.api.session.get_session(session_id)
+        duplicate_referral_checker = DuplicateReferralChecker(session_id)
+        to_same_energy_supplier = duplicate_referral_checker.is_recent_duplicate_referral_sent_to_same_energy_supplier()
+        date_created = duplicate_referral_checker.get_date_of_previous_referral().strftime("%d/%m/%Y")
+        address = session_data.get("address")
+        supplier = session_data.get("supplier")
+        return {
+            "to_same_energy_supplier": to_same_energy_supplier,
+            "date_created": date_created,
+            "address": address,
+            "supplier": supplier,
+        }
 
 
 @register_page("address-manual")
