@@ -13,10 +13,11 @@ import testino
 from django.conf import settings
 from django.utils import timezone
 
-from help_to_heat import wsgi
+from help_to_heat import portal, wsgi
 from help_to_heat.portal import models
 
 __here__ = pathlib.Path(__file__).parent
+
 DATA_DIR = __here__ / "data"
 
 TEST_SERVER_URL = "http://help-to-heat-testserver/"
@@ -128,3 +129,50 @@ def login(client, email, password):
 def get_otp(secret):
     totp = pyotp.TOTP(secret)
     return totp.now()
+
+
+def create_referral(session_id, data=None, supplier="British Gas", creation_timestamp=timezone.now()):
+    if data is None:
+        data = {
+            "rrn": "2222-2222-2222-2222-2222",
+            "loft": "No, I do not have a loft or my loft has been converted into a room",
+            "uprn": "001234567890",
+            "email": "example@example.com",
+            "county": "London",
+            "address": "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA",
+            "country": "England",
+            "schemes": ["GBIS", "ECO4"],
+            "benefits": "No",
+            "epc_date": "",
+            "postcode": "SW1A 2AA",
+            "supplier": supplier,
+            "last_name": "Flimble",
+            "park_home": "No",
+            "wall_type": "I do not know",
+            "epc_rating": "Not found",
+            "first_name": "Flooble",
+            "epc_details": {},
+            "loft_access": "No loft",
+            "own_property": "Yes, I own my property and live in it",
+            "town_or_city": "London",
+            "property_type": "House",
+            "address_line_1": "10, DOWNING STREET",
+            "address_line_2": "LONDON",
+            "contact_number": "",
+            "loft_insulation": "No loft",
+            "wall_insulation": "I do not know",
+            "council_tax_band": "A",
+            "household_income": "Less than £31,000 a year",
+            "property_subtype": "Semi-detached",
+            "number_of_bedrooms": "Two bedrooms",
+            "accept_suggested_epc": "Not found",
+            "user_selected_supplier": "British Gas",
+            "building_name_or_number": "10",
+            "property_main_heat_source": "",
+        }
+    supplier = portal.models.Supplier.objects.get(name=data["supplier"])
+    referral = portal.models.Referral.objects.create(session_id=session_id, data=data, supplier=supplier)
+    referral.save()
+    referral = portal.models.Referral.objects.get()
+    referral.created_at = creation_timestamp
+    referral.save()
