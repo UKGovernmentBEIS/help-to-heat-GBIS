@@ -206,7 +206,9 @@ def team_member_homepage_view(request):
     supplier = user.supplier
     referrals = models.Referral.objects.filter(referral_download=None, supplier=supplier)
     unread_leads = referrals.count()
-    archives = models.ReferralDownload.objects.filter(referral_download__supplier=supplier).order_by("-created_at")
+    archives = (
+        models.ReferralDownload.objects.filter(referral_download__supplier=supplier).order_by("-created_at").distinct()
+    )
     data = {"supplier": supplier, "unread_leads": unread_leads, "archives": archives}
     return render(
         request,
