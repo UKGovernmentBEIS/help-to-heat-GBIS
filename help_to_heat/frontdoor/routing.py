@@ -164,7 +164,7 @@ loft_insulation_field_less_than_threshold = "I have up to 100mm of loft insulati
 loft_insulation_field_dont_know = field_dont_know
 
 
-def requires_answer(answer_key):
+def _requires_answer(answer_key):
     def wrapper(func):
         def next_page_function(answers):
             required_answer = answers.get(answer_key)
@@ -264,7 +264,7 @@ def get_next_page(current_page, answers):
     return unknown_page
 
 
-@requires_answer(country_field)
+@_requires_answer(country_field)
 def _country_next_page(answers):
     country = answers.get(country_field)
     if country in [country_field_england, country_field_scotland, country_field_wales]:
@@ -273,7 +273,7 @@ def _country_next_page(answers):
         return northern_ireland_ineligible_page
 
 
-@requires_answer(supplier_field)
+@_requires_answer(supplier_field)
 def _supplier_next_page(answers):
     supplier = answers.get(supplier_field)
     if supplier in [supplier_field_british_gas, supplier_field_e, supplier_field_edf, supplier_field_eon_next,
@@ -286,17 +286,17 @@ def _supplier_next_page(answers):
         return utility_warehouse_warning_page
 
 
-@requires_answer(bulb_warning_page_field)
+@_requires_answer(bulb_warning_page_field)
 def _bulb_warning_page_next_page(_answers):
     return own_property_page
 
 
-@requires_answer(utility_warehouse_warning_page_field)
+@_requires_answer(utility_warehouse_warning_page_field)
 def _utility_warehouse_warning_page_next_page(_answers):
     return own_property_page
 
 
-@requires_answer(own_property_field)
+@_requires_answer(own_property_field)
 def _own_property_next_page(answers):
     own_property = answers.get(own_property_field)
     if own_property in own_property_fields_non_social_housing:
@@ -307,7 +307,7 @@ def _own_property_next_page(answers):
     return unknown_page
 
 
-@requires_answer(park_home_field)
+@_requires_answer(park_home_field)
 def _park_home_next_page(answers):
     park_home = answers.get(park_home_field)
     if park_home == field_yes:
@@ -316,7 +316,7 @@ def _park_home_next_page(answers):
         return address_page
 
 
-@requires_answer(park_home_main_residence_field)
+@_requires_answer(park_home_main_residence_field)
 def _park_home_main_residence_next_page(answers):
     park_home_main_residence = answers.get(park_home_main_residence_field)
     if park_home_main_residence == field_no:
@@ -325,7 +325,7 @@ def _park_home_main_residence_next_page(answers):
         return address_page
 
 
-@requires_answer(address_choice_field)
+@_requires_answer(address_choice_field)
 def _address_next_page(answers):
     address_choice = answers.get(address_choice_field)
     country = answers.get(country_field)
@@ -340,7 +340,7 @@ def _address_next_page(answers):
         return address_manual_page
 
 
-@requires_answer(epc_select_choice_field)
+@_requires_answer(epc_select_choice_field)
 def _epc_select_next_page(answers):
     choice = answers.get(epc_select_choice_field)
 
@@ -352,7 +352,7 @@ def _epc_select_next_page(answers):
         return address_manual_page
 
 
-@requires_answer(address_select_choice_field)
+@_requires_answer(address_select_choice_field)
 def _address_select_next_page(answers):
     choice = answers.get(address_select_choice_field)
 
@@ -393,7 +393,7 @@ def _post_duplicate_uprn_next_page(answers):
         return _post_council_tax_band_next_page(answers)
 
 
-@requires_answer(council_tax_band_field)
+@_requires_answer(council_tax_band_field)
 def _council_tax_band_next_page(answers):
     return _post_council_tax_band_next_page(answers)
 
@@ -407,7 +407,7 @@ def _post_council_tax_band_next_page(answers):
         return _post_epc_next_page(answers)
 
 
-@requires_answer(epc_accept_suggested_epc_field)
+@_requires_answer(epc_accept_suggested_epc_field)
 def _epc_next_page(answers):
     accept_suggested_epc = answers.get(epc_accept_suggested_epc_field)
     rating_is_eligible = answers.get(epc_rating_is_eligible_field)
@@ -426,7 +426,7 @@ def _post_epc_next_page(answers):
         return _post_circumstances_next_page(answers)
 
 
-@requires_answer(benefits_field)
+@_requires_answer(benefits_field)
 def _benefits_next_page(answers):
     benefits = answers.get(benefits_field)
     if benefits == field_yes:
@@ -435,7 +435,7 @@ def _benefits_next_page(answers):
         return household_income_page
 
 
-@requires_answer(household_income_field)
+@_requires_answer(household_income_field)
 def _household_income_next_page(answers):
     # re-use the existing eligibility logic
     # this code is trusted to be resilient against missing answers
@@ -460,32 +460,32 @@ def _post_circumstances_next_page(answers):
         return property_type_page
 
 
-@requires_answer(property_type_field)
+@_requires_answer(property_type_field)
 def _property_type_next_page(_answers):
     return property_subtype_page
 
 
-@requires_answer(property_subtype_field)
+@_requires_answer(property_subtype_field)
 def _property_subtype_next_page(_answers):
     return number_of_bedrooms_page
 
 
-@requires_answer(number_of_bedrooms_field)
+@_requires_answer(number_of_bedrooms_field)
 def _number_of_bedrooms_next_page(_answers):
     return wall_type_page
 
 
-@requires_answer(wall_type_field)
+@_requires_answer(wall_type_field)
 def _wall_type_next_page(_answers):
     return wall_insulation_page
 
 
-@requires_answer(wall_insulation_field)
+@_requires_answer(wall_insulation_field)
 def _wall_insulation_next_page(_answers):
     return loft_page
 
 
-@requires_answer(loft_field)
+@_requires_answer(loft_field)
 def _loft_next_page(answers):
     loft = answers.get(loft_field)
 
@@ -495,12 +495,12 @@ def _loft_next_page(answers):
         return summary_page
 
 
-@requires_answer(loft_access_field)
+@_requires_answer(loft_access_field)
 def _loft_access_next_page(_answers):
     return loft_insulation_page
 
 
-@requires_answer(loft_insulation_field)
+@_requires_answer(loft_insulation_field)
 def _loft_insulation_next_page(_answers):
     return summary_page
 
