@@ -163,36 +163,6 @@ loft_insulation_field_more_than_threshold = "I have more than 100mm of loft insu
 loft_insulation_field_less_than_threshold = "I have up to 100mm of loft insulation"
 loft_insulation_field_dont_know = field_dont_know
 
-# address_manual_address_line1_field = "address_line_1"
-# address_manual_address_line2_field = "address_line_2"
-
-# page_compulsory_field_map = {
-#     "country": ("country",),
-#     "own-property": ("own_property",),
-#     "park-home": ("park_home",),
-#     "park-home-main-residence": ("park_home_main_residence",),
-#     "address": ("building_name_or_number", "postcode"),
-#     "epc-select": ("rrn",),
-#     "address-select": ("uprn",),
-#     "address-manual": ("address_line_1", "town_or_city", "postcode"),
-#     "referral-already-submitted": ("submit_another",),
-#     "council-tax-band": ("council_tax_band",),
-#     "epc": ("accept_suggested_epc",),
-#     "benefits": ("benefits",),
-#     "household-income": ("household_income",),
-#     "property-type": ("property_type",),
-#     "property-subtype": ("property_subtype",),
-#     "number-of-bedrooms": ("number_of_bedrooms",),
-#     "wall-type": ("wall_type",),
-#     "wall-insulation": ("wall_insulation",),
-#     "loft": ("loft",),
-#     "loft-access": ("loft_access",),
-#     "loft-insulation": ("loft_insulation",),
-#     "supplier": ("supplier",),
-#     "contact-details": ("first_name", "last_name"),
-#     "confirm-and-submit": ("permission", "acknowledge"),
-# }
-
 
 def requires_answer(answer_key):
     def wrapper(func):
@@ -361,8 +331,6 @@ def _address_next_page(answers):
     country = answers.get(country_field)
 
     if address_choice == address_choice_field_write_address:
-        if country is None:
-            return unknown_page
         if country in [country_field_england, country_field_wales]:
             return epc_select_page
         if country == country_field_scotland:
