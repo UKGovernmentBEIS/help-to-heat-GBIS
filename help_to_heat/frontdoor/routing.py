@@ -72,7 +72,9 @@ own_property_field_tenant = "No, I am a tenant"
 own_property_field_social_housing = "No, I am a social housing tenant"
 own_property_field_landlord = "Yes, I am the property owner but I lease the property to one or more tenants"
 own_property_fields_non_social_housing = [
-    own_property_field_own_property, own_property_field_tenant, own_property_field_landlord
+    own_property_field_own_property,
+    own_property_field_tenant,
+    own_property_field_landlord,
 ]
 
 park_home_field = "park_home"
@@ -109,9 +111,15 @@ council_tax_band_field_g = "G"
 council_tax_band_field_h = "H"
 council_tax_band_field_i = "I"
 council_tax_field_bands = [
-    council_tax_band_field_a, council_tax_band_field_b, council_tax_band_field_c, council_tax_band_field_d,
-    council_tax_band_field_e, council_tax_band_field_f, council_tax_band_field_g, council_tax_band_field_h,
-    council_tax_band_field_i
+    council_tax_band_field_a,
+    council_tax_band_field_b,
+    council_tax_band_field_c,
+    council_tax_band_field_d,
+    council_tax_band_field_e,
+    council_tax_band_field_f,
+    council_tax_band_field_g,
+    council_tax_band_field_h,
+    council_tax_band_field_i,
 ]
 
 epc_accept_suggested_epc_field = "accept_suggested_epc"
@@ -179,7 +187,9 @@ def _requires_answer(answer_key):
                 return unknown_page
 
             return func(answers)
+
         return next_page_function
+
     return wrapper
 
 
@@ -298,9 +308,18 @@ def _country_next_page(answers):
 @_requires_answer(supplier_field)
 def _supplier_next_page(answers):
     supplier = answers.get(supplier_field)
-    if supplier in [supplier_field_british_gas, supplier_field_e, supplier_field_edf, supplier_field_eon_next,
-                    supplier_field_foxglove, supplier_field_octopus, supplier_field_ovo, supplier_field_scottish_power,
-                    supplier_field_shell, supplier_field_utilita]:
+    if supplier in [
+        supplier_field_british_gas,
+        supplier_field_e,
+        supplier_field_edf,
+        supplier_field_eon_next,
+        supplier_field_foxglove,
+        supplier_field_octopus,
+        supplier_field_ovo,
+        supplier_field_scottish_power,
+        supplier_field_shell,
+        supplier_field_utilita,
+    ]:
         return own_property_page
     if supplier == supplier_field_bulb:
         return bulb_warning_page
