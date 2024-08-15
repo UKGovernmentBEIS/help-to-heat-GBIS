@@ -71,7 +71,9 @@ own_property_field_own_property = "Yes, I own my property and live in it"
 own_property_field_tenant = "No, I am a tenant"
 own_property_field_social_housing = "No, I am a social housing tenant"
 own_property_field_landlord = "Yes, I am the property owner but I lease the property to one or more tenants"
-own_property_fields_non_social_housing = [own_property_field_own_property, own_property_field_tenant, own_property_field_landlord]
+own_property_fields_non_social_housing = [
+    own_property_field_own_property, own_property_field_tenant, own_property_field_landlord
+]
 
 park_home_field = "park_home"
 # yes/no options
@@ -106,6 +108,11 @@ council_tax_band_field_f = "F"
 council_tax_band_field_g = "G"
 council_tax_band_field_h = "H"
 council_tax_band_field_i = "I"
+council_tax_field_bands = [
+    council_tax_band_field_a, council_tax_band_field_b, council_tax_band_field_c, council_tax_band_field_d,
+    council_tax_band_field_e, council_tax_band_field_f, council_tax_band_field_g, council_tax_band_field_h,
+    council_tax_band_field_i
+]
 
 epc_accept_suggested_epc_field = "accept_suggested_epc"
 epc_rating_is_eligible_field = "epc_rating_is_eligible"
@@ -120,7 +127,7 @@ property_type_field = "property_type"
 property_type_field_house = "House"
 property_type_field_bungalow = "Bungalow"
 property_type_field_apartment = "Apartment, flat or maisonette"
-property_type_field_park_home = "Park home" # set if confirms yes to park home in flow
+property_type_field_park_home = "Park home"  # set if confirms yes to park home in flow
 
 property_subtype_field = "property_subtype"
 property_subtype_field_top_floor = "Top floor"
@@ -189,7 +196,7 @@ def get_next_page(current_page, answers):
     Returns
     -------
     str | None
-        New page ID, or `missing_page` (None) if the user hasn't given the required information on this page to
+        New page ID, or `unknown_page` (None) if the user hasn't given the required information on this page to
         determine the next page.
     """
     if current_page == country_page:

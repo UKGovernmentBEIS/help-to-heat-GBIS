@@ -32,8 +32,8 @@ from help_to_heat.frontdoor.routing import country_field, country_field_england,
     wall_insulation_field, loft_page, loft_field_yes, loft_field_no, loft_field, loft_access_page, loft_access_field, \
     loft_access_field_no, loft_access_field_yes, loft_insulation_page, loft_insulation_field_more_than_threshold, \
     loft_insulation_field_less_than_threshold, loft_insulation_field_dont_know, loft_insulation_field, schemes_page, \
-    contact_details_page, confirm_and_submit_page, success_page
-from tests.test_eligibility_scenarios import council_tax_bands
+    contact_details_page, confirm_and_submit_page, success_page, council_tax_field_bands
+
 
 flow_park_home = "park home flow"
 flow_main = "main (not park) home flow"
@@ -303,7 +303,7 @@ def test_referral_already_submitted_next_page(flow, epc_found, expected_next_pag
 ])
 def test_council_tax_band_next_page(epc_found, expected_next_page):
     for flow_answers in _get_flow_answers(flow_main):
-        for council_tax_band in council_tax_bands:
+        for council_tax_band in council_tax_field_bands:
             answers = {
                 **flow_answers,
                 council_tax_band_field: council_tax_band,
