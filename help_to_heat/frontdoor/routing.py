@@ -177,6 +177,21 @@ def _requires_answer(answer_key):
 
 
 def get_next_page(current_page, answers):
+    """
+    Generates the next page ID in the flow, given the users' current page and answers.
+    Parameters
+    ----------
+    current_page
+        Page ID the user is currently on.
+    answers
+        All answers given by the user so far. Should include answers submitted on the current page
+
+    Returns
+    -------
+    str | None
+        New page ID, or `missing_page` (None) if the user hasn't given the required information on this page to
+        determine the next page.
+    """
     if current_page == country_page:
         return _country_next_page(answers)
 
