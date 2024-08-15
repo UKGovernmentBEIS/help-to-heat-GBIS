@@ -39,6 +39,8 @@ success_page = "success"
 # fields
 field_yes = "Yes"
 field_no = "No"
+field_dont_know = "I do not know"
+field_not_listed = "I do not see my option listed"
 
 country_field = "country"
 country_field_england = "England"
@@ -77,24 +79,36 @@ park_home_field = "park_home"
 park_home_main_residence_field = "park_home_main_residence"
 # yes/no options
 
-address_did_enter_address_field = "address_did_enter_address"
+address_choice_field = "address_choice"
+address_choice_field_write_address = "write address"
+address_choice_field_enter_manually = "enter manually"
+address_choice_duplicate_uprn_field = "address_select_uprn_is_duplicate"
 
 epc_select_choice_field = "epc_select_choice"
 epc_select_choice_field_select_epc = "select epc"
 epc_select_choice_field_epc_api_fail = "epc api fail"
 epc_select_choice_field_enter_manually = "enter manually"
-epc_select_duplicate_uprn_field = "epc_is_duplicate"
 
 address_select_choice_field = "address_select_choice"
 address_select_choice_field_select_address = "select address"
 address_select_choice_field_enter_manually = "enter manually"
 
+duplicate_uprn_field = "uprn_is_duplicate"
+epc_found_field = "epc_found"
+
 council_tax_band_field = "council_tax_band"
+council_tax_band_field_a = "A"
+council_tax_band_field_b = "B"
+council_tax_band_field_c = "C"
+council_tax_band_field_d = "D"
+council_tax_band_field_e = "E"
+council_tax_band_field_f = "F"
+council_tax_band_field_g = "G"
+council_tax_band_field_h = "H"
+council_tax_band_field_i = "I"
 
 epc_accept_suggested_epc_field = "accept_suggested_epc"
-epc_accept_suggested_epc_field_yes = field_yes
-epc_accept_suggested_epc_field_no = field_no
-epc_accept_suggested_epc_field_dont_know = "I do not know"
+epc_rating_is_eligible_field = "epc_rating_is_eligible"
 
 benefits_field = "benefits"
 
@@ -106,21 +120,48 @@ property_type_field = "property_type"
 property_type_field_house = "House"
 property_type_field_bungalow = "Bungalow"
 property_type_field_apartment = "Apartment, flat or maisonette"
+property_type_field_park_home = "Park home" # set if confirms yes to park home in flow
 
 property_subtype_field = "property_subtype"
+property_subtype_field_top_floor = "Top floor"
+property_subtype_field_middle_floor = "Middle floor"
+property_subtype_field_ground_floor = "Ground floor"
+property_subtype_field_detached = "Detached"
+property_subtype_field_semi_detached = "Semi-detached"
+property_subtype_field_terraced = "Terraced"
+property_subtype_field_end_terrace = "End terrace"
 
 number_of_bedrooms_field = "number_of_bedrooms"
+number_of_bedrooms_field_studio = "Studio"
+number_of_bedrooms_field_one = "One bedroom"
+number_of_bedrooms_field_two = "Two bedrooms"
+number_of_bedrooms_field_three_or_more = "Three or more bedrooms"
 
 wall_type_field = "wall_type"
+wall_type_field_solid = "Solid walls"
+wall_type_field_cavity = "Cavity walls"
+wall_type_field_mix = "Mix of solid and cavity walls"
+wall_type_field_not_listed = field_not_listed
+wall_type_field_dont_know = field_dont_know
 
 wall_insulation_field = "wall_insulation"
+wall_insulation_field_yes = "Yes they are all insulated"
+wall_insulation_field_some = "Some are insulated, some are not"
+wall_insulation_field_no = "No they are not insulated"
+wall_insulation_field_dont_know = field_dont_know
 
 loft_field = "loft"
 loft_field_yes = "Yes, I have a loft that has not been converted into a room"
 loft_field_no = "No, I do not have a loft or my loft has been converted into a room"
 
 loft_access_field = "loft_access"
+loft_access_field_yes = "Yes, there is access to my loft"
+loft_access_field_no = "No, there is no access to my loft"
+
 loft_insulation_field = "loft_insulation"
+loft_insulation_field_more_than_threshold = "I have more than 100mm of loft insulation"
+loft_insulation_field_less_than_threshold = "I have up to 100mm of loft insulation"
+loft_insulation_field_dont_know = field_dont_know
 
 # address_manual_address_line1_field = "address_line_1"
 # address_manual_address_line2_field = "address_line_2"
@@ -196,6 +237,18 @@ def get_next_page(current_page, answers):
     if current_page == address_select_page:
         return _address_select_next_page(answers)
 
+    if current_page == address_manual_page:
+        return _address_manual_next_page(answers)
+
+    if current_page == referral_already_submitted_page:
+        return _referral_already_submitted_next_page(answers)
+
+    if current_page == council_tax_band_page:
+        return _council_tax_band_next_page(answers)
+
+    if current_page == epc_page:
+        return _epc_next_page(answers)
+
     if current_page == benefits_page:
         return _benefits_next_page(answers)
 
@@ -237,6 +290,8 @@ def get_next_page(current_page, answers):
 
     if current_page == confirm_and_submit_page:
         return _confirm_and_submit_next_page(answers)
+
+    return unknown_page
 
 
 @requires_answer(country_field)
@@ -300,12 +355,12 @@ def _park_home_main_residence_next_page(answers):
         return address_page
 
 
-@requires_answer(address_did_enter_address_field)
+@requires_answer(address_choice_field)
 def _address_next_page(answers):
-    did_enter_address = answers.get(address_did_enter_address_field)
+    address_choice = answers.get(address_choice_field)
     country = answers.get(country_field)
 
-    if did_enter_address:
+    if address_choice == address_choice_field_write_address:
         if country is None:
             return unknown_page
         if country in [country_field_england, country_field_wales]:
@@ -313,38 +368,16 @@ def _address_next_page(answers):
         if country == country_field_scotland:
             return address_select_page
         return unknown_page
-    else:
+    if address_choice == address_choice_field_enter_manually:
         return address_manual_page
 
 
 @requires_answer(epc_select_choice_field)
 def _epc_select_next_page(answers):
     choice = answers.get(epc_select_choice_field)
-    duplicate_uprn = answers.get(epc_select_duplicate_uprn_field)
-    own_property = answers.get(own_property_field)
-    park_home = answers.get(park_home_field)
 
     if choice == epc_select_choice_field_select_epc:
-        # return unknown if a required answer is missing
-        # but ONLY if the answer is required
-        # (its not required on EPC api fail for instance)
-        # for rigour, assume NO previous answer has been given, the flow may change!
-        if duplicate_uprn is None:
-            return unknown_page
-        if duplicate_uprn:
-            return referral_already_submitted_page
-        else:
-            if own_property is None:
-                return unknown_page
-            if own_property in own_property_fields_non_social_housing:
-                if park_home is None:
-                    return unknown_page
-                if park_home == field_no:
-                    return council_tax_band_page
-                if park_home == field_yes:
-                    return _post_address_select_next_page(answers)
-            if own_property == own_property_field_social_housing:
-                return _post_address_select_next_page(answers)
+        return _post_address_input_next_page(answers)
     if choice == epc_select_choice_field_epc_api_fail:
         return address_select_page
     if choice == epc_select_choice_field_enter_manually:
@@ -356,25 +389,73 @@ def _address_select_next_page(answers):
     choice = answers.get(address_select_choice_field)
 
     if choice == address_select_choice_field_select_address:
-        return _post_address_select_next_page(answers)
-    if choice == address_select_choice_field_enter_manually:
+        return _post_address_input_next_page(answers)
+    if choice == address_choice_field_enter_manually:
         return address_manual_page
 
 
-# consolidate logic for what page to send to after an address is selected
-def _post_address_select_next_page(answers):
-    choice = answers.get(epc_select_choice_field)
-    own_property = answers.get(own_property_field)
-    if choice == epc_select_choice_field_select_epc:
-        return epc_page
-    if choice in [epc_select_choice_field_epc_api_fail, epc_select_choice_field_enter_manually]:
-        if own_property is None:
-            return unknown_page
+def _address_manual_next_page(answers):
+    return _post_epc_next_page(answers)
 
-        if own_property in own_property_fields_non_social_housing:
-            return benefits_page
-        if own_property == own_property_field_social_housing:
-            return property_type_page
+
+# after submitting an address, show already submitted page or continue
+def _post_address_input_next_page(answers):
+    duplicate_uprn = answers.get(duplicate_uprn_field)
+    if duplicate_uprn == field_yes:
+        return referral_already_submitted_page
+    if duplicate_uprn == field_no:
+        return _post_duplicate_uprn_next_page(answers)
+    return unknown_page
+
+
+def _referral_already_submitted_next_page(answers):
+    return _post_duplicate_uprn_next_page(answers)
+
+
+# show council tax band page or not, depending on flow
+def _post_duplicate_uprn_next_page(answers):
+    own_property = answers.get(own_property_field)
+    park_home = answers.get(park_home_field)
+    if own_property in own_property_fields_non_social_housing:
+        if park_home == field_no:
+            return council_tax_band_page
+        if park_home == field_yes:
+            return _post_council_tax_band_next_page(answers)
+    if own_property == own_property_field_social_housing:
+        return _post_council_tax_band_next_page(answers)
+
+
+@requires_answer(council_tax_band_field)
+def _council_tax_band_next_page(answers):
+    return _post_council_tax_band_next_page(answers)
+
+
+# confirms epc if it was found
+def _post_council_tax_band_next_page(answers):
+    epc_found = answers.get(epc_found_field)
+    if epc_found == field_yes:
+        return epc_page
+    if epc_found == field_no:
+        return _post_epc_next_page(answers)
+
+
+@requires_answer(epc_accept_suggested_epc_field)
+def _epc_next_page(answers):
+    accept_suggested_epc = answers.get(epc_accept_suggested_epc_field)
+    rating_is_eligible = answers.get(epc_rating_is_eligible_field)
+    if accept_suggested_epc == field_yes and rating_is_eligible == field_no:
+        return epc_ineligible_page
+    else:
+        return _post_epc_next_page(answers)
+
+
+# ask circumstances questions, depending on flow
+def _post_epc_next_page(answers):
+    own_property = answers.get(own_property_field)
+    if own_property in own_property_fields_non_social_housing:
+        return benefits_page
+    if own_property == own_property_field_social_housing:
+        return _post_circumstances_next_page(answers)
 
 
 @requires_answer(benefits_field)
@@ -398,19 +479,15 @@ def _household_income_next_page(answers):
         return _post_circumstances_next_page(answers)
 
 
+# ask property questions, depending on flow
 def _post_circumstances_next_page(answers):
     own_property = answers.get(own_property_field)
     park_home = answers.get(park_home_field)
-
-    if own_property is None:
-        return unknown_page
     if own_property in own_property_fields_non_social_housing:
-        if park_home is None:
-            return unknown_page
-        if park_home == field_yes:
-            return summary_page
         if park_home == field_no:
             return property_type_page
+        if park_home == field_yes:
+            return summary_page
     if own_property == own_property_field_social_housing:
         return property_type_page
 
