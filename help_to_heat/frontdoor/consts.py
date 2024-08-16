@@ -59,6 +59,20 @@ supplier_field_scottish_power = "Scottish Power"
 supplier_field_shell = "Shell"
 supplier_field_utilita = "Utilita"
 supplier_field_utility_warehouse = "Utility Warehouse"
+supplier_fields = [
+    supplier_field_british_gas,
+    supplier_field_bulb,
+    supplier_field_e,
+    supplier_field_edf,
+    supplier_field_eon_next,
+    supplier_field_foxglove,
+    supplier_field_octopus,
+    supplier_field_ovo,
+    supplier_field_scottish_power,
+    supplier_field_shell,
+    supplier_field_utilita,
+    supplier_field_utility_warehouse
+]
 
 bulb_warning_page_field = "confirm_bulb_warning"
 
