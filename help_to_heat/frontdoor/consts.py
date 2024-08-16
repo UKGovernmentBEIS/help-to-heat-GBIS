@@ -1,5 +1,6 @@
 # page name
 unknown_page = "UNKNOWN-PAGE"
+govuk_start_page = "start_page"
 country_page = "country"
 northern_ireland_ineligible_page = "northern-ireland"
 supplier_page = "supplier"
