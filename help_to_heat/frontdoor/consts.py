@@ -71,7 +71,7 @@ supplier_fields = [
     supplier_field_scottish_power,
     supplier_field_shell,
     supplier_field_utilita,
-    supplier_field_utility_warehouse
+    supplier_field_utility_warehouse,
 ]
 
 bulb_warning_page_field = "confirm_bulb_warning"

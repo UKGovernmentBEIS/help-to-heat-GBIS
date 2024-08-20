@@ -1,4 +1,21 @@
-from help_to_heat.frontdoor.consts import *
+from help_to_heat.frontdoor.consts import (
+    bulb_warning_page_field,
+    country_field,
+    country_field_england,
+    country_field_scotland,
+    country_field_wales,
+    field_no,
+    field_yes,
+    own_property_field,
+    own_property_field_social_housing,
+    own_property_fields_non_social_housing,
+    park_home_field,
+    supplier_field,
+    supplier_field_bulb,
+    supplier_field_utility_warehouse,
+    supplier_fields,
+    utility_warehouse_warning_page_field,
+)
 
 flow_park_home = "park home flow"
 flow_main = "main (not park) home flow"
@@ -14,10 +31,7 @@ def _get_country_answers():
 def _get_supplier_answers():
     for country_answers in _get_country_answers():
         for supplier in supplier_fields:
-            answers = {
-                **country_answers,
-                supplier_field: supplier
-            }
+            answers = {**country_answers, supplier_field: supplier}
 
             if supplier == supplier_field_bulb:
                 answers[bulb_warning_page_field] = field_yes
@@ -52,7 +66,4 @@ def _get_flow_answers(flow):
             all_flow_answers = _get_social_housing_flow_answers()
 
         for flow_answers in all_flow_answers:
-            yield {
-                **supplier_answers,
-                **flow_answers
-            }
+            yield {**supplier_answers, **flow_answers}
