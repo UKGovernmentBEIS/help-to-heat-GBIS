@@ -89,13 +89,15 @@ from help_to_heat.frontdoor.consts import (
 )
 from help_to_heat.frontdoor.eligibility import calculate_eligibility
 
+_unknown_response = unknown_page, False
+
 
 def _requires_answer(answer_key):
     def wrapper(func):
         def next_page_function(answers):
             required_answer = answers.get(answer_key)
             if required_answer is None:
-                return unknown_page
+                return _unknown_response
 
             return func(answers)
 
@@ -116,9 +118,11 @@ def get_next_page(current_page, answers):
 
     Returns
     -------
-    str | None
+    (str | None, bool)
         New page ID, or `unknown_page` (None) if the user hasn't given the required information on this page to
         determine the next page.
+
+        Whether this next page should be redirected to immediately
     """
     if current_page == country_page:
         return _country_next_page(answers)
@@ -204,16 +208,17 @@ def get_next_page(current_page, answers):
     if current_page == confirm_and_submit_page:
         return _confirm_and_submit_next_page(answers)
 
-    return unknown_page
+    return _unknown_response
 
 
 @_requires_answer(country_field)
 def _country_next_page(answers):
     country = answers.get(country_field)
     if country in [country_field_england, country_field_scotland, country_field_wales]:
-        return supplier_page
+        return supplier_page, False
     if country == country_field_northern_ireland:
-        return northern_ireland_ineligible_page
+        return northern_ireland_ineligible_page, False
+    return _unknown_response
 
 
 @_requires_answer(supplier_field)
@@ -231,50 +236,55 @@ def _supplier_next_page(answers):
         supplier_field_shell,
         supplier_field_utilita,
     ]:
-        return own_property_page
+        return own_property_page, False
     if supplier == supplier_field_bulb:
-        return bulb_warning_page
+        return bulb_warning_page, False
     if supplier == supplier_field_utility_warehouse:
-        return utility_warehouse_warning_page
+        return utility_warehouse_warning_page, False
+    return _unknown_response
 
 
 @_requires_answer(bulb_warning_page_field)
 def _bulb_warning_page_next_page(_answers):
-    return own_property_page
+    return own_property_page, False
 
 
 @_requires_answer(utility_warehouse_warning_page_field)
 def _utility_warehouse_warning_page_next_page(_answers):
-    return own_property_page
+    return own_property_page, False
 
 
 @_requires_answer(own_property_field)
 def _own_property_next_page(answers):
     own_property = answers.get(own_property_field)
     if own_property in own_property_fields_non_social_housing:
-        return park_home_page
+        return park_home_page, False
     if own_property == own_property_field_social_housing:
-        return address_page
+        return address_page, False
 
-    return unknown_page
+    return _unknown_response
 
 
 @_requires_answer(park_home_field)
 def _park_home_next_page(answers):
     park_home = answers.get(park_home_field)
     if park_home == field_yes:
-        return park_home_main_residence_page
+        return park_home_main_residence_page, False
     if park_home == field_no:
-        return address_page
+        return address_page, False
+
+    return _unknown_response
 
 
 @_requires_answer(park_home_main_residence_field)
 def _park_home_main_residence_next_page(answers):
     park_home_main_residence = answers.get(park_home_main_residence_field)
     if park_home_main_residence == field_no:
-        return park_home_ineligible_page
+        return park_home_ineligible_page, False
     if park_home_main_residence == field_yes:
-        return address_page
+        return address_page, False
+
+    return _unknown_response
 
 
 @_requires_answer(address_choice_field)
@@ -284,12 +294,13 @@ def _address_next_page(answers):
 
     if address_choice == address_choice_field_write_address:
         if country in [country_field_england, country_field_wales]:
-            return epc_select_page
+            return epc_select_page, False
         if country == country_field_scotland:
-            return address_select_page
-        return unknown_page
+            return address_select_page, False
     if address_choice == address_choice_field_enter_manually:
-        return address_manual_page
+        return address_manual_page, False
+
+    return _unknown_response
 
 
 @_requires_answer(epc_select_choice_field)
@@ -299,9 +310,11 @@ def _epc_select_next_page(answers):
     if choice == epc_select_choice_field_select_epc:
         return _post_address_input_next_page(answers)
     if choice == epc_select_choice_field_epc_api_fail:
-        return address_select_page
+        return address_select_page, True
     if choice == epc_select_choice_field_enter_manually:
-        return address_manual_page
+        return address_manual_page, False
+
+    return _unknown_response
 
 
 @_requires_answer(address_select_choice_field)
@@ -311,7 +324,9 @@ def _address_select_next_page(answers):
     if choice == address_select_choice_field_select_address:
         return _post_address_input_next_page(answers)
     if choice == address_choice_field_enter_manually:
-        return address_manual_page
+        return address_manual_page, False
+
+    return _unknown_response
 
 
 def _address_manual_next_page(answers):
@@ -322,10 +337,11 @@ def _address_manual_next_page(answers):
 def _post_address_input_next_page(answers):
     duplicate_uprn = answers.get(duplicate_uprn_field)
     if duplicate_uprn == field_yes:
-        return referral_already_submitted_page
+        return referral_already_submitted_page, False
     if duplicate_uprn == field_no:
         return _post_duplicate_uprn_next_page(answers)
-    return unknown_page
+
+    return _unknown_response
 
 
 def _referral_already_submitted_next_page(answers):
@@ -338,11 +354,13 @@ def _post_duplicate_uprn_next_page(answers):
     park_home = answers.get(park_home_field)
     if own_property in own_property_fields_non_social_housing:
         if park_home == field_no:
-            return council_tax_band_page
+            return council_tax_band_page, False
         if park_home == field_yes:
             return _post_council_tax_band_next_page(answers)
     if own_property == own_property_field_social_housing:
         return _post_council_tax_band_next_page(answers)
+
+    return _unknown_response
 
 
 @_requires_answer(council_tax_band_field)
@@ -354,9 +372,11 @@ def _council_tax_band_next_page(answers):
 def _post_council_tax_band_next_page(answers):
     epc_found = answers.get(epc_found_field)
     if epc_found == field_yes:
-        return epc_page
+        return epc_page, False
     if epc_found == field_no:
         return _post_epc_next_page(answers)
+
+    return _unknown_response
 
 
 @_requires_answer(epc_accept_suggested_epc_field)
@@ -364,7 +384,7 @@ def _epc_next_page(answers):
     accept_suggested_epc = answers.get(epc_accept_suggested_epc_field)
     rating_is_eligible = answers.get(epc_rating_is_eligible_field)
     if accept_suggested_epc == field_yes and rating_is_eligible == field_no:
-        return epc_ineligible_page
+        return epc_ineligible_page, False
     else:
         return _post_epc_next_page(answers)
 
@@ -373,9 +393,11 @@ def _epc_next_page(answers):
 def _post_epc_next_page(answers):
     own_property = answers.get(own_property_field)
     if own_property in own_property_fields_non_social_housing:
-        return benefits_page
+        return benefits_page, False
     if own_property == own_property_field_social_housing:
         return _post_circumstances_next_page(answers)
+
+    return _unknown_response
 
 
 @_requires_answer(benefits_field)
@@ -384,7 +406,9 @@ def _benefits_next_page(answers):
     if benefits == field_yes:
         return _post_circumstances_next_page(answers)
     if benefits == field_no:
-        return household_income_page
+        return household_income_page, False
+
+    return _unknown_response
 
 
 @_requires_answer(household_income_field)
@@ -394,7 +418,7 @@ def _household_income_next_page(answers):
     eligible_schemes = calculate_eligibility(answers)
 
     if len(eligible_schemes) == 0:
-        return property_ineligible_page
+        return property_ineligible_page, False
     else:
         return _post_circumstances_next_page(answers)
 
@@ -405,36 +429,38 @@ def _post_circumstances_next_page(answers):
     park_home = answers.get(park_home_field)
     if own_property in own_property_fields_non_social_housing:
         if park_home == field_no:
-            return property_type_page
+            return property_type_page, False
         if park_home == field_yes:
-            return summary_page
+            return summary_page, False
     if own_property == own_property_field_social_housing:
-        return property_type_page
+        return property_type_page, False
+
+    return _unknown_response
 
 
 @_requires_answer(property_type_field)
 def _property_type_next_page(_answers):
-    return property_subtype_page
+    return property_subtype_page, False
 
 
 @_requires_answer(property_subtype_field)
 def _property_subtype_next_page(_answers):
-    return number_of_bedrooms_page
+    return number_of_bedrooms_page, False
 
 
 @_requires_answer(number_of_bedrooms_field)
 def _number_of_bedrooms_next_page(_answers):
-    return wall_type_page
+    return wall_type_page, False
 
 
 @_requires_answer(wall_type_field)
 def _wall_type_next_page(_answers):
-    return wall_insulation_page
+    return wall_insulation_page, False
 
 
 @_requires_answer(wall_insulation_field)
 def _wall_insulation_next_page(_answers):
-    return loft_page
+    return loft_page, False
 
 
 @_requires_answer(loft_field)
@@ -442,32 +468,34 @@ def _loft_next_page(answers):
     loft = answers.get(loft_field)
 
     if loft == loft_field_yes:
-        return loft_access_page
+        return loft_access_page, False
     if loft == loft_field_no:
-        return summary_page
+        return summary_page, False
+
+    return _unknown_response
 
 
 @_requires_answer(loft_access_field)
 def _loft_access_next_page(_answers):
-    return loft_insulation_page
+    return loft_insulation_page, False
 
 
 @_requires_answer(loft_insulation_field)
 def _loft_insulation_next_page(_answers):
-    return summary_page
+    return summary_page, False
 
 
 def _summary_next_page(_answers):
-    return schemes_page
+    return schemes_page, False
 
 
 def _schemes_next_page(_answers):
-    return contact_details_page
+    return contact_details_page, False
 
 
 def _contact_details_next_page(_answers):
-    return confirm_and_submit_page
+    return confirm_and_submit_page, False
 
 
 def _confirm_and_submit_next_page(_answers):
-    return success_page
+    return success_page, False
