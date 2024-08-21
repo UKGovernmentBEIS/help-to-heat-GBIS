@@ -26,7 +26,7 @@ from help_to_heat.frontdoor.consts import (
     council_tax_band_field_h,
     council_tax_band_field_i,
     council_tax_band_page,
-    council_tax_field_bands,
+    council_tax_band_fields,
     country_field,
     country_field_england,
     country_field_northern_ireland,
@@ -135,9 +135,9 @@ from help_to_heat.frontdoor.consts import (
 from help_to_heat.frontdoor.routing.forwards_routing import get_next_page
 from tests.routing import (
     get_flow_answers,
-    flow_main,
-    flow_park_home,
-    flow_social_housing,
+    property_flow_main,
+    property_flow_park_home,
+    property_flow_social_housing,
 )
 
 
@@ -380,9 +380,9 @@ def test_address_select_social_housing_next_page(choice, duplicate_uprn, epc_fou
 @pytest.mark.parametrize(
     "flow, expected_next_page",
     [
-        (flow_park_home, benefits_page),
-        (flow_main, council_tax_band_page),
-        (flow_social_housing, property_type_page),
+        (property_flow_park_home, benefits_page),
+        (property_flow_main, council_tax_band_page),
+        (property_flow_social_housing, property_type_page),
     ],
 )
 def test_address_manual_next_page(flow, expected_next_page):
@@ -398,12 +398,12 @@ def test_address_manual_next_page(flow, expected_next_page):
 @pytest.mark.parametrize(
     "flow, epc_found, expected_next_page",
     [
-        (flow_park_home, field_no, benefits_page),
-        (flow_park_home, field_yes, epc_page),
-        (flow_main, field_no, council_tax_band_page),
-        (flow_main, field_yes, council_tax_band_page),
-        (flow_social_housing, field_no, property_type_page),
-        (flow_social_housing, field_yes, epc_page),
+        (property_flow_park_home, field_no, benefits_page),
+        (property_flow_park_home, field_yes, epc_page),
+        (property_flow_main, field_no, council_tax_band_page),
+        (property_flow_main, field_yes, council_tax_band_page),
+        (property_flow_social_housing, field_no, property_type_page),
+        (property_flow_social_housing, field_yes, epc_page),
     ],
 )
 def test_referral_already_submitted_next_page(flow, epc_found, expected_next_page):
@@ -420,8 +420,8 @@ def test_referral_already_submitted_next_page(flow, epc_found, expected_next_pag
     ],
 )
 def test_council_tax_band_next_page(epc_found, expected_next_page):
-    for flow_answers in get_flow_answers(flow_main):
-        for council_tax_band in council_tax_field_bands:
+    for flow_answers in get_flow_answers(property_flow_main):
+        for council_tax_band in council_tax_band_fields:
             answers = {**flow_answers, council_tax_band_field: council_tax_band, epc_found_field: epc_found}
             assert get_next_page(council_tax_band_page, answers) == (expected_next_page, False)
 
@@ -429,12 +429,12 @@ def test_council_tax_band_next_page(epc_found, expected_next_page):
 @pytest.mark.parametrize(
     "flow, eligible, expected_next_page",
     [
-        (flow_park_home, False, epc_ineligible_page),
-        (flow_park_home, True, benefits_page),
-        (flow_main, False, epc_ineligible_page),
-        (flow_main, True, benefits_page),
-        (flow_social_housing, False, epc_ineligible_page),
-        (flow_social_housing, True, property_type_page),
+        (property_flow_park_home, False, epc_ineligible_page),
+        (property_flow_park_home, True, benefits_page),
+        (property_flow_main, False, epc_ineligible_page),
+        (property_flow_main, True, benefits_page),
+        (property_flow_social_housing, False, epc_ineligible_page),
+        (property_flow_social_housing, True, property_type_page),
     ],
 )
 def test_epc_eligible_next_page(flow, eligible, expected_next_page):
@@ -460,10 +460,10 @@ def test_epc_eligible_next_page(flow, eligible, expected_next_page):
 @pytest.mark.parametrize(
     "flow, benefits, expected_next_page",
     [
-        (flow_park_home, field_no, household_income_page),
-        (flow_park_home, field_yes, summary_page),
-        (flow_main, field_no, household_income_page),
-        (flow_main, field_yes, property_type_page),
+        (property_flow_park_home, field_no, household_income_page),
+        (property_flow_park_home, field_yes, summary_page),
+        (property_flow_main, field_no, household_income_page),
+        (property_flow_main, field_yes, property_type_page),
     ],
 )
 def test_benefits_next_page(flow, benefits, expected_next_page):
@@ -476,7 +476,7 @@ def test_benefits_next_page(flow, benefits, expected_next_page):
     "household_income", [household_income_field_less_than_threshold, household_income_field_more_than_threshold]
 )
 def test_household_income_park_home_flow_next_page(household_income):
-    for flow_answers in get_flow_answers(flow_park_home):
+    for flow_answers in get_flow_answers(property_flow_park_home):
         answers = {
             # required answers for eligibility calculation to conclude correctly
             **flow_answers,
@@ -601,7 +601,7 @@ ineligible_council_tax_bands_wales = [
     ],
 )
 def test_household_income_main_flow_next_page(household_income, country, council_tax_bands, expected_next_page):
-    for flow_answers in get_flow_answers(flow_main):
+    for flow_answers in get_flow_answers(property_flow_main):
         for council_tax_band in council_tax_bands:
             answers = {
                 **flow_answers,
