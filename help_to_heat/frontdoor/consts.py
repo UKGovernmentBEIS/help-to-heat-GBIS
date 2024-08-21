@@ -1,5 +1,5 @@
 # page name
-unknown_page = None
+unknown_page = "UNKNOWN-PAGE"
 country_page = "country"
 northern_ireland_ineligible_page = "northern-ireland"
 supplier_page = "supplier"
