@@ -381,9 +381,8 @@ def _post_council_tax_band_next_page(answers):
 
 @_requires_answer(epc_accept_suggested_epc_field)
 def _epc_next_page(answers):
-    accept_suggested_epc = answers.get(epc_accept_suggested_epc_field)
     rating_is_eligible = answers.get(epc_rating_is_eligible_field)
-    if accept_suggested_epc == field_yes and rating_is_eligible == field_no:
+    if rating_is_eligible == field_no:
         return epc_ineligible_page, False
     else:
         return _post_epc_next_page(answers)

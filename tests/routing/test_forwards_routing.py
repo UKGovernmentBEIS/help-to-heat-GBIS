@@ -436,12 +436,8 @@ def test_epc_eligible_next_page(flow, eligible, expected_next_page):
     for flow_answers in _get_flow_answers(flow):
         if eligible:
             eligible_combinations_answers = [
-                {
-                    epc_accept_suggested_epc_field: field_no,
-                },
-                {
-                    epc_accept_suggested_epc_field: field_dont_know,
-                },
+                {epc_accept_suggested_epc_field: field_no, epc_rating_is_eligible_field: field_yes},
+                {epc_accept_suggested_epc_field: field_dont_know, epc_rating_is_eligible_field: field_yes},
                 {epc_accept_suggested_epc_field: field_yes, epc_rating_is_eligible_field: field_yes},
             ]
             for eligible_answers in eligible_combinations_answers:
