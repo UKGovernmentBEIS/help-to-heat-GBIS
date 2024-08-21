@@ -381,13 +381,18 @@ def test_address_select_social_housing_next_page(choice, duplicate_uprn, epc_fou
     "flow, expected_next_page",
     [
         (flow_park_home, benefits_page),
-        (flow_main, benefits_page),
+        (flow_main, council_tax_band_page),
         (flow_social_housing, property_type_page),
     ],
 )
 def test_address_manual_next_page(flow, expected_next_page):
     for flow_answers in _get_flow_answers(flow):
-        assert get_next_page(address_manual_page, flow_answers) == (expected_next_page, False)
+        answers = {
+            **flow_answers,
+            epc_found_field: field_no,
+            duplicate_uprn_field: field_no
+        }
+        assert get_next_page(address_manual_page, answers) == (expected_next_page, False)
 
 
 @pytest.mark.parametrize(

@@ -330,7 +330,7 @@ def _address_select_next_page(answers):
 
 
 def _address_manual_next_page(answers):
-    return _post_epc_next_page(answers)
+    return _post_duplicate_uprn_next_page(answers)
 
 
 # after submitting an address, show already submitted page or continue
