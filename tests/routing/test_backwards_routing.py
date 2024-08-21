@@ -18,6 +18,7 @@ from help_to_heat.frontdoor.consts import (
     council_tax_band_page,
     country_field,
     country_field_england,
+    country_field_northern_ireland,
     country_field_scotland,
     country_field_wales,
     country_page,
@@ -109,19 +110,29 @@ def test_country_prev_page():
 
 
 def test_supplier_prev_page():
-    assert get_prev_page(supplier_page, {}) == country_page
+    for answers in get_country_answers():
+        assert get_prev_page(supplier_page, answers) == country_page
 
 
 def test_northern_ireland_ineligible_prev_page():
-    assert get_prev_page(northern_ireland_ineligible_page, {}) == country_page
+    answers = {country_field: country_field_northern_ireland}
+    assert get_prev_page(northern_ireland_ineligible_page, answers) == country_page
 
 
 def test_bulb_warning_page_prev_page():
-    assert get_prev_page(bulb_warning_page, {}) == supplier_page
+    for country_answers in get_country_answers():
+        answers = {**country_answers, supplier_field: supplier_field_bulb, bulb_warning_page_field: field_yes}
+        assert get_prev_page(bulb_warning_page, answers) == supplier_page
 
 
 def test_utility_warehouse_warning_prev_page():
-    assert get_prev_page(utility_warehouse_warning_page, {}) == supplier_page
+    for country_answers in get_country_answers():
+        answers = {
+            **country_answers,
+            supplier_field: supplier_field_utility_warehouse,
+            utility_warehouse_warning_page_field: field_yes,
+        }
+        assert get_prev_page(utility_warehouse_warning_page, answers) == supplier_page
 
 
 @pytest.mark.parametrize(
@@ -167,7 +178,7 @@ def test_park_home_main_residence_prev_page():
 def test_park_home_ineligible_prev_page():
     for flow_answers in get_property_flow_answers(property_flow_park_home):
         answers = {**flow_answers, park_home_main_residence_field: field_no}
-        assert get_prev_page(park_home_ineligible_page, answers) == park_home_page
+        assert get_prev_page(park_home_ineligible_page, answers) == park_home_main_residence_page
 
 
 @pytest.mark.parametrize(
@@ -185,8 +196,10 @@ def test_address_page_prev_page(flow, expected_prev_page):
 
 def test_epc_select_prev_page():
     for flow_answers in get_all_property_flow_answers():
-        answers = {**flow_answers, address_choice_field: address_choice_field_write_address}
-        assert get_prev_page(epc_select_page, answers) == address_page
+        country = flow_answers.get(country_field)
+        if country != country_field_scotland:
+            answers = {**flow_answers, address_choice_field: address_choice_field_write_address}
+            assert get_prev_page(epc_select_page, answers) == address_page
 
 
 def test_address_select_prev_page():
@@ -217,19 +230,19 @@ def test_address_manual_from_address_page_prev_page():
 
 def test_address_manual_from_epc_select_page_prev_page():
     for flow_answers in get_all_property_flow_answers():
-        country = flow_answers[country_field]
+        country = flow_answers.get(country_field)
         if country in [country_field_england, country_field_wales]:
             answers = {
                 **flow_answers,
                 address_choice_field: address_choice_field_write_address,
                 epc_select_choice_field: epc_select_choice_field_enter_manually,
             }
-            assert get_prev_page(address_manual_page, answers) == address_page
+            assert get_prev_page(address_manual_page, answers) == epc_select_page
 
 
 def test_address_manual_from_address_select_page_prev_page():
     for flow_answers in get_all_property_flow_answers():
-        country = flow_answers[country_field]
+        country = flow_answers.get(country_field)
         if country in [country_field_england, country_field_wales]:
             answers = {
                 **flow_answers,
@@ -237,7 +250,7 @@ def test_address_manual_from_address_select_page_prev_page():
                 epc_select_choice_field: epc_select_choice_field_epc_api_fail,
                 address_select_choice_field: address_select_choice_field_enter_manually,
             }
-            assert get_prev_page(address_manual_page, answers) == address_page
+            assert get_prev_page(address_manual_page, answers) == address_select_page
 
         if country == country_field_scotland:
             answers = {
@@ -245,7 +258,7 @@ def test_address_manual_from_address_select_page_prev_page():
                 address_choice_field: address_choice_field_write_address,
                 address_select_choice_field: address_select_choice_field_enter_manually,
             }
-            assert get_prev_page(address_select_page, answers) == address_page
+            assert get_prev_page(address_manual_page, answers) == address_select_page
 
 
 @pytest.mark.parametrize(
@@ -265,38 +278,68 @@ def test_referral_already_submitted_page_prev_page(address_flow, expected_prev_p
 
 
 @pytest.mark.parametrize(
-    "address_flow, expected_prev_page",
+    "address_flow, duplicate_uprn, expected_prev_page",
     [
-        (address_flow_write_address_epc_hit_select, epc_select_page),
-        (address_flow_write_address_epc_hit_write_manually, address_manual_page),
-        (address_flow_write_address_epc_api_fail_select, address_select_page),
-        (address_flow_write_address_epc_api_fail_manually, address_manual_page),
-        (address_flow_write_address_scotland_select_epc, address_select_page),
-        (address_flow_write_address_scotland_select_no_epc, address_manual_page),
-        (address_flow_write_address_scotland_manually, address_manual_page),
-        (address_flow_manually, address_manual_page),
+        (address_flow_write_address_epc_hit_select, field_no, epc_select_page),
+        (address_flow_write_address_epc_hit_write_manually, field_no, address_manual_page),
+        (address_flow_write_address_epc_api_fail_select, field_no, address_select_page),
+        (address_flow_write_address_epc_api_fail_manually, field_no, address_manual_page),
+        (address_flow_write_address_scotland_select_epc, field_no, address_select_page),
+        (address_flow_write_address_scotland_select_no_epc, field_no, address_select_page),
+        (address_flow_write_address_scotland_manually, field_no, address_manual_page),
+        (address_flow_manually, field_no, address_manual_page),
+        (address_flow_write_address_epc_hit_select, field_yes, referral_already_submitted_page),
+        (address_flow_write_address_epc_hit_write_manually, field_yes, address_manual_page),
+        (address_flow_write_address_epc_api_fail_select, field_yes, referral_already_submitted_page),
+        (address_flow_write_address_epc_api_fail_manually, field_yes, address_manual_page),
+        (address_flow_write_address_scotland_select_epc, field_yes, referral_already_submitted_page),
+        (address_flow_write_address_scotland_select_no_epc, field_yes, referral_already_submitted_page),
+        (address_flow_write_address_scotland_manually, field_yes, address_manual_page),
+        (address_flow_manually, field_yes, address_manual_page),
     ],
 )
-def test_council_tax_band_prev_page(address_flow, expected_prev_page):
-    for address_answers in get_address_answers(address_flow, duplicate_uprn=None, property_flow=property_flow_main):
+def test_council_tax_band_prev_page(address_flow, duplicate_uprn, expected_prev_page):
+    for address_answers in get_address_answers(
+        address_flow, duplicate_uprn=duplicate_uprn, property_flow=property_flow_main
+    ):
         assert get_prev_page(council_tax_band_page, address_answers) == expected_prev_page
 
 
 @pytest.mark.parametrize(
     "address_flow, property_flow, duplicate_uprn, expected_prev_page",
     [
-        (address_flow_write_address_epc_hit_select, property_flow_park_home, field_yes, epc_select_page),
-        (address_flow_write_address_scotland_select_epc, property_flow_park_home, field_yes, address_select_page),
-        (address_flow_write_address_epc_hit_select, property_flow_main, field_yes, council_tax_band_page),
-        (address_flow_write_address_scotland_select_epc, property_flow_main, field_yes, council_tax_band_page),
-        (address_flow_write_address_epc_hit_select, property_flow_social_housing, field_yes, epc_select_page),
-        (address_flow_write_address_scotland_select_epc, property_flow_social_housing, field_yes, address_select_page),
-        (address_flow_write_address_epc_hit_select, property_flow_park_home, field_no, duplicate_uprn_field),
-        (address_flow_write_address_scotland_select_epc, property_flow_park_home, field_no, duplicate_uprn_field),
+        (address_flow_write_address_epc_hit_select, property_flow_park_home, field_no, epc_select_page),
+        (address_flow_write_address_scotland_select_epc, property_flow_park_home, field_no, address_select_page),
         (address_flow_write_address_epc_hit_select, property_flow_main, field_no, council_tax_band_page),
         (address_flow_write_address_scotland_select_epc, property_flow_main, field_no, council_tax_band_page),
-        (address_flow_write_address_epc_hit_select, property_flow_social_housing, field_no, duplicate_uprn_field),
-        (address_flow_write_address_scotland_select_epc, property_flow_social_housing, field_no, duplicate_uprn_field),
+        (address_flow_write_address_epc_hit_select, property_flow_social_housing, field_no, epc_select_page),
+        (address_flow_write_address_scotland_select_epc, property_flow_social_housing, field_no, address_select_page),
+        (
+            address_flow_write_address_epc_hit_select,
+            property_flow_park_home,
+            field_yes,
+            referral_already_submitted_page,
+        ),
+        (
+            address_flow_write_address_scotland_select_epc,
+            property_flow_park_home,
+            field_yes,
+            referral_already_submitted_page,
+        ),
+        (address_flow_write_address_epc_hit_select, property_flow_main, field_yes, council_tax_band_page),
+        (address_flow_write_address_scotland_select_epc, property_flow_main, field_yes, council_tax_band_page),
+        (
+            address_flow_write_address_epc_hit_select,
+            property_flow_social_housing,
+            field_yes,
+            referral_already_submitted_page,
+        ),
+        (
+            address_flow_write_address_scotland_select_epc,
+            property_flow_social_housing,
+            field_yes,
+            referral_already_submitted_page,
+        ),
     ],
 )
 def test_epc_prev_page(address_flow, property_flow, duplicate_uprn, expected_prev_page):
@@ -381,7 +424,7 @@ def test_household_income_prev_page(property_flow):
 
 
 def test_property_ineligible_prev_page():
-    assert get_prev_page(property_ineligible_page, {}) == benefits_page
+    assert get_prev_page(property_ineligible_page, {}) == household_income_page
 
 
 @pytest.mark.parametrize(
@@ -428,7 +471,7 @@ def test_property_type_social_housing_prev_page(address_flow, duplicate_uprn, ex
 
 def test_property_subtype_prev_page():
     for answers in get_property_type_answers():
-        assert get_prev_page(property_type_page, answers) == property_type_page
+        assert get_prev_page(property_subtype_page, answers) == property_type_page
 
 
 def test_number_of_bedrooms_prev_page():

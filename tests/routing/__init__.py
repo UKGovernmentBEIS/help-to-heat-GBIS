@@ -172,6 +172,26 @@ def _get_address_input_answers_pre_duplicate_uprn(address_flow, property_flow=No
         property_flow_answers = get_all_property_flow_answers()
 
     for flow_answers in property_flow_answers:
+        country = flow_answers.get(country_field)
+        # if country wouldn't allow this flow then skip
+        if (
+            address_flow
+            in [
+                address_flow_write_address_epc_hit_select,
+                address_flow_write_address_epc_hit_write_manually,
+                address_flow_write_address_epc_api_fail_select,
+                address_flow_write_address_epc_api_fail_manually,
+            ]
+            and country == country_field_scotland
+        ):
+            continue
+        if address_flow in [
+            address_flow_write_address_scotland_select_epc,
+            address_flow_write_address_scotland_select_no_epc,
+            address_flow_write_address_scotland_manually,
+        ] and country in [country_field_england, country_field_wales]:
+            continue
+
         if address_flow == address_flow_write_address_epc_hit_select:
             yield {
                 **flow_answers,
@@ -332,8 +352,8 @@ def get_circumstances_answers(circumstances_flow=None, address_flow=None, duplic
 def get_property_type_answers():
     # property type questions not asked on park home flow
     for circumstances_answers in [
-        *get_circumstances_answers(property_flow=property_flow_main),
-        *get_circumstances_answers(property_flow=property_flow_social_housing),
+        next(get_circumstances_answers(property_flow=property_flow_main)),
+        next(get_circumstances_answers(property_flow=property_flow_social_housing)),
     ]:
         for property_subtype in [
             property_subtype_field_detached,
@@ -373,28 +393,28 @@ def get_property_type_answers():
 
 
 def get_number_of_bedrooms_answers():
-    for answers in get_property_type_answers():
-        yield {**answers, number_of_bedrooms_field: number_of_bedrooms_field_studio}
-        yield {**answers, number_of_bedrooms_field: number_of_bedrooms_field_one}
-        yield {**answers, number_of_bedrooms_field: number_of_bedrooms_field_two}
-        yield {**answers, number_of_bedrooms_field: number_of_bedrooms_field_three_or_more}
+    answers = next(get_property_type_answers())
+    yield {**answers, number_of_bedrooms_field: number_of_bedrooms_field_studio}
+    yield {**answers, number_of_bedrooms_field: number_of_bedrooms_field_one}
+    yield {**answers, number_of_bedrooms_field: number_of_bedrooms_field_two}
+    yield {**answers, number_of_bedrooms_field: number_of_bedrooms_field_three_or_more}
 
 
 def get_wall_type_answers():
-    for answers in get_number_of_bedrooms_answers():
-        yield {**answers, wall_type_field: wall_type_field_solid}
-        yield {**answers, wall_type_field: wall_type_field_cavity}
-        yield {**answers, wall_type_field: wall_type_field_mix}
-        yield {**answers, wall_type_field: wall_type_field_not_listed}
-        yield {**answers, wall_type_field: wall_type_field_dont_know}
+    answers = next(get_number_of_bedrooms_answers())
+    yield {**answers, wall_type_field: wall_type_field_solid}
+    yield {**answers, wall_type_field: wall_type_field_cavity}
+    yield {**answers, wall_type_field: wall_type_field_mix}
+    yield {**answers, wall_type_field: wall_type_field_not_listed}
+    yield {**answers, wall_type_field: wall_type_field_dont_know}
 
 
 def get_wall_insulation_answers():
-    for answers in get_wall_type_answers():
-        yield {**answers, wall_insulation_field: wall_insulation_field_yes}
-        yield {**answers, wall_insulation_field: wall_insulation_field_some}
-        yield {**answers, wall_insulation_field: wall_insulation_field_no}
-        yield {**answers, wall_insulation_field: wall_insulation_field_dont_know}
+    answers = next(get_wall_type_answers())
+    yield {**answers, wall_insulation_field: wall_insulation_field_yes}
+    yield {**answers, wall_insulation_field: wall_insulation_field_some}
+    yield {**answers, wall_insulation_field: wall_insulation_field_no}
+    yield {**answers, wall_insulation_field: wall_insulation_field_dont_know}
 
 
 def get_loft_answers(loft_flow=None):
@@ -404,24 +424,24 @@ def get_loft_answers(loft_flow=None):
         loft_flows = all_loft_flows
 
     for check_loft_flow in loft_flows:
-        for answers in get_wall_insulation_answers():
-            if check_loft_flow == loft_flow_yes:
-                yield {**answers, loft_field: loft_field_yes}
-            if check_loft_flow == loft_flow_no:
-                yield {**answers, loft_field: loft_field_no}
+        answers = next(get_wall_insulation_answers())
+        if check_loft_flow == loft_flow_yes:
+            yield {**answers, loft_field: loft_field_yes}
+        if check_loft_flow == loft_flow_no:
+            yield {**answers, loft_field: loft_field_no}
 
 
 def get_loft_access_answers():
-    for answers in get_loft_answers(loft_flow_yes):
-        yield {**answers, loft_access_field: loft_access_field_yes}
-        yield {**answers, loft_access_field: loft_access_field_no}
+    answers = next(get_loft_answers(loft_flow_yes))
+    yield {**answers, loft_access_field: loft_access_field_yes}
+    yield {**answers, loft_access_field: loft_access_field_no}
 
 
 def get_loft_insulation_answers():
-    for answers in get_loft_access_answers():
-        yield {**answers, loft_insulation_field: loft_insulation_field_more_than_threshold}
-        yield {**answers, loft_insulation_field: loft_insulation_field_less_than_threshold}
-        yield {**answers, loft_insulation_field: loft_insulation_field_dont_know}
+    answers = next(get_loft_access_answers())
+    yield {**answers, loft_insulation_field: loft_insulation_field_more_than_threshold}
+    yield {**answers, loft_insulation_field: loft_insulation_field_less_than_threshold}
+    yield {**answers, loft_insulation_field: loft_insulation_field_dont_know}
 
 
 def get_summary_answers():
