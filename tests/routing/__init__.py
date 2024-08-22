@@ -8,6 +8,15 @@ from help_to_heat.frontdoor.consts import (
     benefits_field,
     bulb_warning_page_field,
     council_tax_band_field,
+    council_tax_band_field_a,
+    council_tax_band_field_b,
+    council_tax_band_field_c,
+    council_tax_band_field_d,
+    council_tax_band_field_e,
+    council_tax_band_field_f,
+    council_tax_band_field_g,
+    council_tax_band_field_h,
+    council_tax_band_field_i,
     council_tax_band_fields,
     country_field,
     country_field_england,
@@ -105,6 +114,40 @@ circumstances_flow_income_eligible = "income"
 all_circumstances_flows = [
     circumstances_flow_benefits_eligible,
     circumstances_flow_income_eligible,
+]
+
+eligible_council_tax_bands_england = [
+    council_tax_band_field_a,
+    council_tax_band_field_b,
+    council_tax_band_field_c,
+    council_tax_band_field_d,
+]
+ineligible_council_tax_bands_england = [
+    council_tax_band_field_e,
+    council_tax_band_field_f,
+    council_tax_band_field_g,
+    council_tax_band_field_h,
+]
+eligible_council_tax_bands_scotland = [
+    council_tax_band_field_a,
+    council_tax_band_field_b,
+    council_tax_band_field_c,
+    council_tax_band_field_d,
+    council_tax_band_field_e,
+]
+ineligible_council_tax_bands_scotland = [council_tax_band_field_f, council_tax_band_field_g, council_tax_band_field_h]
+eligible_council_tax_bands_wales = [
+    council_tax_band_field_a,
+    council_tax_band_field_b,
+    council_tax_band_field_c,
+    council_tax_band_field_d,
+    council_tax_band_field_e,
+]
+ineligible_council_tax_bands_wales = [
+    council_tax_band_field_f,
+    council_tax_band_field_g,
+    council_tax_band_field_h,
+    council_tax_band_field_i,
 ]
 
 loft_flow_yes = "loft yes"

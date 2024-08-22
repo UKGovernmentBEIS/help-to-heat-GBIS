@@ -15,6 +15,7 @@ from help_to_heat.frontdoor.consts import (
     bulb_warning_page_field,
     confirm_and_submit_page,
     contact_details_page,
+    council_tax_band_field,
     council_tax_band_page,
     country_field,
     country_field_england,
@@ -34,6 +35,8 @@ from help_to_heat.frontdoor.consts import (
     field_no,
     field_yes,
     govuk_start_page,
+    household_income_field,
+    household_income_field_more_than_threshold,
     household_income_page,
     loft_access_page,
     loft_insulation_page,
@@ -96,6 +99,9 @@ from tests.routing import (
     get_summary_answers,
     get_wall_insulation_answers,
     get_wall_type_answers,
+    ineligible_council_tax_bands_england,
+    ineligible_council_tax_bands_scotland,
+    ineligible_council_tax_bands_wales,
     loft_flow_no,
     loft_flow_yes,
     property_flow_main,
@@ -422,8 +428,26 @@ def test_household_income_prev_page(property_flow):
         assert get_prev_page(household_income_page, answers) == benefits_page
 
 
-def test_property_ineligible_prev_page():
-    assert get_prev_page(property_ineligible_page, {}) == household_income_page
+@pytest.mark.parametrize(
+    "country, ineligible_bands",
+    [
+        (country_field_england, ineligible_council_tax_bands_england),
+        (country_field_scotland, ineligible_council_tax_bands_scotland),
+        (country_field_wales, ineligible_council_tax_bands_wales),
+    ],
+)
+def test_property_ineligible_prev_page(country, ineligible_bands):
+    for flow_answers in get_epc_answers(property_flow=property_flow_main):
+        flow_country = flow_answers.get(country_field)
+        if flow_country == country:
+            for council_tax_band in ineligible_bands:
+                answers = {
+                    **flow_answers,
+                    benefits_field: field_no,
+                    household_income_field: household_income_field_more_than_threshold,
+                    council_tax_band_field: council_tax_band,
+                }
+                assert get_prev_page(property_ineligible_page, answers) == household_income_page
 
 
 @pytest.mark.parametrize(

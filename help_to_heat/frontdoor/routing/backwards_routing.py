@@ -1,8 +1,6 @@
 from help_to_heat.frontdoor.consts import (
     country_page,
     govuk_start_page,
-    household_income_page,
-    property_ineligible_page,
     unknown_page,
 )
 from help_to_heat.frontdoor.routing.forwards_routing import get_next_page
@@ -12,10 +10,6 @@ max_route_length = 100
 
 
 def get_prev_page(current_page, answers):
-    # TODO: is this fine? the logic for eligibility can be more complex
-    if current_page == property_ineligible_page:
-        return household_income_page
-
     route_page = start_page
     route = [govuk_start_page]
 

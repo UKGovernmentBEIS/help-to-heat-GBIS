@@ -16,15 +16,6 @@ from help_to_heat.frontdoor.consts import (
     confirm_and_submit_page,
     contact_details_page,
     council_tax_band_field,
-    council_tax_band_field_a,
-    council_tax_band_field_b,
-    council_tax_band_field_c,
-    council_tax_band_field_d,
-    council_tax_band_field_e,
-    council_tax_band_field_f,
-    council_tax_band_field_g,
-    council_tax_band_field_h,
-    council_tax_band_field_i,
     council_tax_band_fields,
     council_tax_band_page,
     country_field,
@@ -134,7 +125,13 @@ from help_to_heat.frontdoor.consts import (
 )
 from help_to_heat.frontdoor.routing.forwards_routing import get_next_page
 from tests.routing import (
+    eligible_council_tax_bands_england,
+    eligible_council_tax_bands_scotland,
+    eligible_council_tax_bands_wales,
     get_property_flow_answers,
+    ineligible_council_tax_bands_england,
+    ineligible_council_tax_bands_scotland,
+    ineligible_council_tax_bands_wales,
     property_flow_main,
     property_flow_park_home,
     property_flow_social_housing,
@@ -482,41 +479,6 @@ def test_household_income_park_home_flow_next_page(household_income):
             park_home_main_residence_field: field_yes,
         }
         assert get_next_page(household_income_page, answers) == (summary_page, False)
-
-
-eligible_council_tax_bands_england = [
-    council_tax_band_field_a,
-    council_tax_band_field_b,
-    council_tax_band_field_c,
-    council_tax_band_field_d,
-]
-ineligible_council_tax_bands_england = [
-    council_tax_band_field_e,
-    council_tax_band_field_f,
-    council_tax_band_field_g,
-    council_tax_band_field_h,
-]
-eligible_council_tax_bands_scotland = [
-    council_tax_band_field_a,
-    council_tax_band_field_b,
-    council_tax_band_field_c,
-    council_tax_band_field_d,
-    council_tax_band_field_e,
-]
-ineligible_council_tax_bands_scotland = [council_tax_band_field_f, council_tax_band_field_g, council_tax_band_field_h]
-eligible_council_tax_bands_wales = [
-    council_tax_band_field_a,
-    council_tax_band_field_b,
-    council_tax_band_field_c,
-    council_tax_band_field_d,
-    council_tax_band_field_e,
-]
-ineligible_council_tax_bands_wales = [
-    council_tax_band_field_f,
-    council_tax_band_field_g,
-    council_tax_band_field_h,
-    council_tax_band_field_i,
-]
 
 
 @pytest.mark.parametrize(
