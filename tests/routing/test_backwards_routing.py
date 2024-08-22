@@ -125,15 +125,15 @@ def test_northern_ireland_ineligible_prev_page():
 
 
 def test_bulb_warning_page_prev_page():
-    for country_answers in get_country_answers():
-        answers = {**country_answers, supplier_field: supplier_field_bulb, bulb_warning_page_field: field_yes}
+    for flow_answers in get_country_answers():
+        answers = {**flow_answers, supplier_field: supplier_field_bulb, bulb_warning_page_field: field_yes}
         assert get_prev_page(bulb_warning_page, answers) == supplier_page
 
 
 def test_utility_warehouse_warning_prev_page():
-    for country_answers in get_country_answers():
+    for flow_answers in get_country_answers():
         answers = {
-            **country_answers,
+            **flow_answers,
             supplier_field: supplier_field_utility_warehouse,
             utility_warehouse_warning_page_field: field_yes,
         }
@@ -276,8 +276,8 @@ def test_address_manual_from_address_select_page_prev_page():
     ],
 )
 def test_referral_already_submitted_page_prev_page(address_flow, expected_prev_page):
-    for address_answers in get_address_answers(address_flow):
-        answers = {**address_answers, duplicate_uprn_field: field_yes}
+    for flow_answers in get_address_answers(address_flow):
+        answers = {**flow_answers, duplicate_uprn_field: field_yes}
 
         assert get_prev_page(referral_already_submitted_page, answers) == expected_prev_page
 
@@ -304,10 +304,10 @@ def test_referral_already_submitted_page_prev_page(address_flow, expected_prev_p
     ],
 )
 def test_council_tax_band_prev_page(address_flow, duplicate_uprn, expected_prev_page):
-    for address_answers in get_address_answers(
+    for flow_answers in get_address_answers(
         address_flow, duplicate_uprn=duplicate_uprn, property_flow=property_flow_main
     ):
-        assert get_prev_page(council_tax_band_page, address_answers) == expected_prev_page
+        assert get_prev_page(council_tax_band_page, flow_answers) == expected_prev_page
 
 
 @pytest.mark.parametrize(
@@ -348,8 +348,8 @@ def test_council_tax_band_prev_page(address_flow, duplicate_uprn, expected_prev_
     ],
 )
 def test_epc_prev_page(address_flow, property_flow, duplicate_uprn, expected_prev_page):
-    for council_tax_band_answers in get_council_tax_band_answers(address_flow, duplicate_uprn, property_flow):
-        assert get_prev_page(epc_page, council_tax_band_answers) == expected_prev_page
+    for flow_answers in get_council_tax_band_answers(address_flow, duplicate_uprn, property_flow):
+        assert get_prev_page(epc_page, flow_answers) == expected_prev_page
 
 
 @pytest.mark.parametrize(
@@ -360,9 +360,9 @@ def test_epc_prev_page(address_flow, property_flow, duplicate_uprn, expected_pre
     ],
 )
 def test_epc_ineligible_prev_page(address_flow, expected_prev_page):
-    for council_tax_band_answers in get_council_tax_band_answers(address_flow):
+    for flow_answers in get_council_tax_band_answers(address_flow):
         answers = {
-            **council_tax_band_answers,
+            **flow_answers,
             epc_accept_suggested_epc_field: field_yes,
             epc_rating_is_eligible_field: field_no,
         }
@@ -417,14 +417,14 @@ def test_epc_ineligible_prev_page(address_flow, expected_prev_page):
     ],
 )
 def test_benefits_prev_page(address_flow, property_flow, duplicate_uprn, expected_prev_page):
-    for epc_answers in get_epc_answers(address_flow, duplicate_uprn, property_flow):
-        assert get_prev_page(benefits_page, epc_answers) == expected_prev_page
+    for flow_answers in get_epc_answers(address_flow, duplicate_uprn, property_flow):
+        assert get_prev_page(benefits_page, flow_answers) == expected_prev_page
 
 
 @pytest.mark.parametrize("property_flow", [property_flow_park_home, property_flow_main])
 def test_household_income_prev_page(property_flow):
-    for epc_answers in get_epc_answers(property_flow=property_flow):
-        answers = {**epc_answers, benefits_field: field_no}
+    for flow_answers in get_epc_answers(property_flow=property_flow):
+        answers = {**flow_answers, benefits_field: field_no}
         assert get_prev_page(household_income_page, answers) == benefits_page
 
 
@@ -458,10 +458,10 @@ def test_property_ineligible_prev_page(country, ineligible_bands):
     ],
 )
 def test_property_type_main_flow_prev_page(circumstances_flow, expected_prev_page):
-    for circumstances_answers in get_circumstances_answers(
+    for flow_answers in get_circumstances_answers(
         circumstances_flow=circumstances_flow, property_flow=property_flow_main
     ):
-        assert get_prev_page(property_type_page, circumstances_answers) == expected_prev_page
+        assert get_prev_page(property_type_page, flow_answers) == expected_prev_page
 
 
 @pytest.mark.parametrize(
@@ -486,45 +486,45 @@ def test_property_type_main_flow_prev_page(circumstances_flow, expected_prev_pag
     ],
 )
 def test_property_type_social_housing_prev_page(address_flow, duplicate_uprn, expected_prev_page):
-    for circumstances_answers in get_circumstances_answers(
+    for flow_answers in get_circumstances_answers(
         address_flow=address_flow, duplicate_uprn=duplicate_uprn, property_flow=property_flow_social_housing
     ):
-        assert get_prev_page(property_type_page, circumstances_answers) == expected_prev_page
+        assert get_prev_page(property_type_page, flow_answers) == expected_prev_page
 
 
 def test_property_subtype_prev_page():
-    for answers in get_property_type_answers():
-        assert get_prev_page(property_subtype_page, answers) == property_type_page
+    for flow_answers in get_property_type_answers():
+        assert get_prev_page(property_subtype_page, flow_answers) == property_type_page
 
 
 def test_number_of_bedrooms_prev_page():
-    for answers in get_number_of_bedrooms_answers():
-        assert get_prev_page(number_of_bedrooms_page, answers) == property_subtype_page
+    for flow_answers in get_number_of_bedrooms_answers():
+        assert get_prev_page(number_of_bedrooms_page, flow_answers) == property_subtype_page
 
 
 def test_wall_type_prev_page():
-    for answers in get_wall_type_answers():
-        assert get_prev_page(wall_type_page, answers) == number_of_bedrooms_page
+    for flow_answers in get_wall_type_answers():
+        assert get_prev_page(wall_type_page, flow_answers) == number_of_bedrooms_page
 
 
 def test_wall_insulation_prev_page():
-    for answers in get_wall_insulation_answers():
-        assert get_prev_page(wall_insulation_page, answers) == wall_type_page
+    for flow_answers in get_wall_insulation_answers():
+        assert get_prev_page(wall_insulation_page, flow_answers) == wall_type_page
 
 
 def test_loft_prev_page():
-    for answers in get_loft_answers():
-        assert get_prev_page(loft_page, answers) == wall_insulation_page
+    for flow_answers in get_loft_answers():
+        assert get_prev_page(loft_page, flow_answers) == wall_insulation_page
 
 
 def test_loft_access_prev_page():
-    for answers in get_loft_access_answers():
-        assert get_prev_page(loft_access_page, answers) == loft_page
+    for flow_answers in get_loft_access_answers():
+        assert get_prev_page(loft_access_page, flow_answers) == loft_page
 
 
 def test_loft_insulation_prev_page():
-    for answers in get_loft_insulation_answers():
-        assert get_prev_page(loft_insulation_page, answers) == loft_access_page
+    for flow_answers in get_loft_insulation_answers():
+        assert get_prev_page(loft_insulation_page, flow_answers) == loft_access_page
 
 
 @pytest.mark.parametrize(
@@ -535,10 +535,10 @@ def test_loft_insulation_prev_page():
     ],
 )
 def test_summary_park_home_prev_page(circumstances_flow, expected_prev_page):
-    for circumstances_answers in get_circumstances_answers(
+    for flow_answers in get_circumstances_answers(
         circumstances_flow=circumstances_flow, property_flow=property_flow_park_home
     ):
-        assert get_prev_page(summary_page, circumstances_answers) == expected_prev_page
+        assert get_prev_page(summary_page, flow_answers) == expected_prev_page
 
 
 @pytest.mark.parametrize(
@@ -550,24 +550,24 @@ def test_summary_park_home_prev_page(circumstances_flow, expected_prev_page):
 )
 def test_summary_other_flows_prev_page(loft_flow, expected_prev_page):
     if loft_flow == loft_flow_yes:
-        summary_answers = get_loft_insulation_answers()
+        flow_answers = get_loft_insulation_answers()
     else:
-        summary_answers = get_loft_answers(loft_flow)
+        flow_answers = get_loft_answers(loft_flow)
 
-    for answers in summary_answers:
+    for answers in flow_answers:
         assert get_prev_page(summary_page, answers) == expected_prev_page
 
 
 def test_schemes_prev_page():
-    for answers in get_summary_answers():
-        assert get_prev_page(schemes_page, answers) == summary_page
+    for flow_answers in get_summary_answers():
+        assert get_prev_page(schemes_page, flow_answers) == summary_page
 
 
 def test_contact_details_prev_page():
-    for answers in get_summary_answers():
-        assert get_prev_page(contact_details_page, answers) == schemes_page
+    for flow_answers in get_summary_answers():
+        assert get_prev_page(contact_details_page, flow_answers) == schemes_page
 
 
 def test_confirm_and_submit_prev_page():
-    for answers in get_summary_answers():
-        assert get_prev_page(confirm_and_submit_page, answers) == contact_details_page
+    for flow_answers in get_summary_answers():
+        assert get_prev_page(confirm_and_submit_page, flow_answers) == contact_details_page
