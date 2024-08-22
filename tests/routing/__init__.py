@@ -145,33 +145,28 @@ def _get_social_housing_flow_answers():
     yield {own_property_field: own_property_field_social_housing, park_home_field: field_no}
 
 
-def get_property_flow_answers(flow):
-    for supplier_answers in get_supplier_answers():
-        all_flow_answers = []
-        if flow == property_flow_park_home:
-            all_flow_answers = _get_park_home_flow_answers()
-        if flow == property_flow_main:
-            all_flow_answers = _get_main_flow_answers()
-        if flow == property_flow_social_housing:
-            all_flow_answers = _get_social_housing_flow_answers()
+def get_property_flow_answers(property_flow=None):
+    if property_flow is not None:
+        property_flows = [property_flow]
+    else:
+        property_flows = all_property_flows
 
-        for flow_answers in all_flow_answers:
-            yield {**supplier_answers, **flow_answers}
+    for check_property_flow in property_flows:
+        for supplier_answers in get_supplier_answers():
+            all_flow_answers = []
+            if check_property_flow == property_flow_park_home:
+                all_flow_answers = _get_park_home_flow_answers()
+            if check_property_flow == property_flow_main:
+                all_flow_answers = _get_main_flow_answers()
+            if check_property_flow == property_flow_social_housing:
+                all_flow_answers = _get_social_housing_flow_answers()
 
-
-def get_all_property_flow_answers():
-    for flow in all_property_flows:
-        for flow_answers in get_property_flow_answers(flow):
-            yield flow_answers
+            for flow_answers in all_flow_answers:
+                yield {**supplier_answers, **flow_answers}
 
 
 def _get_address_input_answers_pre_duplicate_uprn(address_flow, property_flow=None):
-    if property_flow is not None:
-        property_flow_answers = get_property_flow_answers(property_flow)
-    else:
-        property_flow_answers = get_all_property_flow_answers()
-
-    for flow_answers in property_flow_answers:
+    for flow_answers in get_property_flow_answers(property_flow):
         country = flow_answers.get(country_field)
         # if country wouldn't allow this flow then skip
         if (

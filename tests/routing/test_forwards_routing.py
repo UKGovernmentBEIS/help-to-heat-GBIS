@@ -25,8 +25,8 @@ from help_to_heat.frontdoor.consts import (
     council_tax_band_field_g,
     council_tax_band_field_h,
     council_tax_band_field_i,
-    council_tax_band_page,
     council_tax_band_fields,
+    council_tax_band_page,
     country_field,
     country_field_england,
     country_field_northern_ireland,
@@ -134,7 +134,7 @@ from help_to_heat.frontdoor.consts import (
 )
 from help_to_heat.frontdoor.routing.forwards_routing import get_next_page
 from tests.routing import (
-    get_flow_answers,
+    get_property_flow_answers,
     property_flow_main,
     property_flow_park_home,
     property_flow_social_housing,
@@ -386,12 +386,8 @@ def test_address_select_social_housing_next_page(choice, duplicate_uprn, epc_fou
     ],
 )
 def test_address_manual_next_page(flow, expected_next_page):
-    for flow_answers in get_flow_answers(flow):
-        answers = {
-            **flow_answers,
-            epc_found_field: field_no,
-            duplicate_uprn_field: field_no
-        }
+    for flow_answers in get_property_flow_answers(flow):
+        answers = {**flow_answers, epc_found_field: field_no, duplicate_uprn_field: field_no}
         assert get_next_page(address_manual_page, answers) == (expected_next_page, False)
 
 
@@ -407,7 +403,7 @@ def test_address_manual_next_page(flow, expected_next_page):
     ],
 )
 def test_referral_already_submitted_next_page(flow, epc_found, expected_next_page):
-    for flow_answers in get_flow_answers(flow):
+    for flow_answers in get_property_flow_answers(flow):
         answers = {**flow_answers, epc_found_field: epc_found}
         assert get_next_page(referral_already_submitted_page, answers) == (expected_next_page, False)
 
@@ -420,7 +416,7 @@ def test_referral_already_submitted_next_page(flow, epc_found, expected_next_pag
     ],
 )
 def test_council_tax_band_next_page(epc_found, expected_next_page):
-    for flow_answers in get_flow_answers(property_flow_main):
+    for flow_answers in get_property_flow_answers(property_flow_main):
         for council_tax_band in council_tax_band_fields:
             answers = {**flow_answers, council_tax_band_field: council_tax_band, epc_found_field: epc_found}
             assert get_next_page(council_tax_band_page, answers) == (expected_next_page, False)
@@ -438,7 +434,7 @@ def test_council_tax_band_next_page(epc_found, expected_next_page):
     ],
 )
 def test_epc_eligible_next_page(flow, eligible, expected_next_page):
-    for flow_answers in get_flow_answers(flow):
+    for flow_answers in get_property_flow_answers(flow):
         if eligible:
             eligible_combinations_answers = [
                 {epc_accept_suggested_epc_field: field_no, epc_rating_is_eligible_field: field_yes},
@@ -467,7 +463,7 @@ def test_epc_eligible_next_page(flow, eligible, expected_next_page):
     ],
 )
 def test_benefits_next_page(flow, benefits, expected_next_page):
-    for flow_answers in get_flow_answers(flow):
+    for flow_answers in get_property_flow_answers(flow):
         answers = {**flow_answers, benefits_field: benefits}
         assert get_next_page(benefits_page, answers) == (expected_next_page, False)
 
@@ -476,7 +472,7 @@ def test_benefits_next_page(flow, benefits, expected_next_page):
     "household_income", [household_income_field_less_than_threshold, household_income_field_more_than_threshold]
 )
 def test_household_income_park_home_flow_next_page(household_income):
-    for flow_answers in get_flow_answers(property_flow_park_home):
+    for flow_answers in get_property_flow_answers(property_flow_park_home):
         answers = {
             # required answers for eligibility calculation to conclude correctly
             **flow_answers,
@@ -601,7 +597,7 @@ ineligible_council_tax_bands_wales = [
     ],
 )
 def test_household_income_main_flow_next_page(household_income, country, council_tax_bands, expected_next_page):
-    for flow_answers in get_flow_answers(property_flow_main):
+    for flow_answers in get_property_flow_answers(property_flow_main):
         for council_tax_band in council_tax_bands:
             answers = {
                 **flow_answers,

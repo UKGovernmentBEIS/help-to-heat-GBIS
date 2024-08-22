@@ -83,7 +83,6 @@ from tests.routing import (
     circumstances_flow_benefits_eligible,
     circumstances_flow_income_eligible,
     get_address_answers,
-    get_all_property_flow_answers,
     get_circumstances_answers,
     get_council_tax_band_answers,
     get_country_answers,
@@ -195,7 +194,7 @@ def test_address_page_prev_page(flow, expected_prev_page):
 
 
 def test_epc_select_prev_page():
-    for flow_answers in get_all_property_flow_answers():
+    for flow_answers in get_property_flow_answers():
         country = flow_answers.get(country_field)
         if country != country_field_scotland:
             answers = {**flow_answers, address_choice_field: address_choice_field_write_address}
@@ -203,7 +202,7 @@ def test_epc_select_prev_page():
 
 
 def test_address_select_prev_page():
-    for flow_answers in get_all_property_flow_answers():
+    for flow_answers in get_property_flow_answers():
         country = flow_answers[country_field]
         if country in [country_field_england, country_field_wales]:
             answers = {
@@ -219,7 +218,7 @@ def test_address_select_prev_page():
 
 
 def test_address_manual_from_address_page_prev_page():
-    for flow_answers in get_all_property_flow_answers():
+    for flow_answers in get_property_flow_answers():
         answers = {
             **flow_answers,
             address_choice_field: address_choice_field_enter_manually,
@@ -229,7 +228,7 @@ def test_address_manual_from_address_page_prev_page():
 
 
 def test_address_manual_from_epc_select_page_prev_page():
-    for flow_answers in get_all_property_flow_answers():
+    for flow_answers in get_property_flow_answers():
         country = flow_answers.get(country_field)
         if country in [country_field_england, country_field_wales]:
             answers = {
@@ -241,7 +240,7 @@ def test_address_manual_from_epc_select_page_prev_page():
 
 
 def test_address_manual_from_address_select_page_prev_page():
-    for flow_answers in get_all_property_flow_answers():
+    for flow_answers in get_property_flow_answers():
         country = flow_answers.get(country_field)
         if country in [country_field_england, country_field_wales]:
             answers = {
