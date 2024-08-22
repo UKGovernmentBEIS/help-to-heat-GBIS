@@ -123,6 +123,9 @@ def get_next_page(current_page, answers):
         determine the next page.
 
         Whether this next page should be redirected to immediately
+
+        TODO PC-1227: the redirect return (and its logic) can be removed as part of PC-1255
+
     """
     if current_page == country_page:
         return _country_next_page(answers)
@@ -310,6 +313,7 @@ def _epc_select_next_page(answers):
     if choice == epc_select_choice_field_select_epc:
         return _post_address_input_next_page(answers)
     if choice == epc_select_choice_field_epc_api_fail:
+        # redirect them immediately as there is no data to show
         return address_select_page, True
     if choice == epc_select_choice_field_enter_manually:
         return address_manual_page, False
