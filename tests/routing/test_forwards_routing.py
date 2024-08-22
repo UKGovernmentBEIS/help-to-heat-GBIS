@@ -237,10 +237,10 @@ def test_address_enter_manually_next_page():
     "choice, duplicate_uprn, expected_next_page, expected_redirect",
     [
         (epc_select_choice_field_select_epc, field_no, epc_page, False),
-        (epc_select_choice_field_epc_api_fail, field_no, address_select_page, True),
-        (epc_select_choice_field_enter_manually, field_no, address_manual_page, False),
         (epc_select_choice_field_select_epc, field_yes, referral_already_submitted_page, False),
+        (epc_select_choice_field_epc_api_fail, field_no, address_select_page, True),
         (epc_select_choice_field_epc_api_fail, field_yes, address_select_page, True),
+        (epc_select_choice_field_enter_manually, field_no, address_manual_page, False),
         (epc_select_choice_field_enter_manually, field_yes, address_manual_page, False),
     ],
 )
@@ -261,10 +261,10 @@ def test_epc_select_park_home_next_page(choice, duplicate_uprn, expected_next_pa
     "choice, duplicate_uprn, expected_next_page, expected_redirect",
     [
         (epc_select_choice_field_select_epc, field_no, council_tax_band_page, False),
-        (epc_select_choice_field_epc_api_fail, field_no, address_select_page, True),
-        (epc_select_choice_field_enter_manually, field_no, address_manual_page, False),
         (epc_select_choice_field_select_epc, field_yes, referral_already_submitted_page, False),
+        (epc_select_choice_field_epc_api_fail, field_no, address_select_page, True),
         (epc_select_choice_field_epc_api_fail, field_yes, address_select_page, True),
+        (epc_select_choice_field_enter_manually, field_no, address_manual_page, False),
         (epc_select_choice_field_enter_manually, field_yes, address_manual_page, False),
     ],
 )
@@ -285,10 +285,10 @@ def test_epc_select_not_park_home_not_already_submitted_next_page(
     "choice, duplicate_uprn, expected_next_page, expected_redirect",
     [
         (epc_select_choice_field_select_epc, field_no, epc_page, False),
-        (epc_select_choice_field_epc_api_fail, field_no, address_select_page, True),
-        (epc_select_choice_field_enter_manually, field_no, address_manual_page, False),
         (epc_select_choice_field_select_epc, field_yes, referral_already_submitted_page, False),
+        (epc_select_choice_field_epc_api_fail, field_no, address_select_page, True),
         (epc_select_choice_field_epc_api_fail, field_yes, address_select_page, True),
+        (epc_select_choice_field_enter_manually, field_no, address_manual_page, False),
         (epc_select_choice_field_enter_manually, field_yes, address_manual_page, False),
     ],
 )
@@ -306,14 +306,14 @@ def test_epc_select_social_housing_next_page(choice, duplicate_uprn, expected_ne
 @pytest.mark.parametrize(
     "choice, duplicate_uprn, epc_found, expected_next_page",
     [
-        (address_select_choice_field_select_address, field_yes, field_yes, referral_already_submitted_page),
-        (address_select_choice_field_enter_manually, field_yes, field_yes, address_manual_page),
-        (address_select_choice_field_select_address, field_yes, field_no, referral_already_submitted_page),
-        (address_select_choice_field_enter_manually, field_yes, field_no, address_manual_page),
-        (address_select_choice_field_select_address, field_no, field_yes, epc_page),
-        (address_select_choice_field_enter_manually, field_no, field_yes, address_manual_page),
         (address_select_choice_field_select_address, field_no, field_no, benefits_page),
+        (address_select_choice_field_select_address, field_no, field_yes, epc_page),
+        (address_select_choice_field_select_address, field_yes, field_no, referral_already_submitted_page),
+        (address_select_choice_field_select_address, field_yes, field_yes, referral_already_submitted_page),
         (address_select_choice_field_enter_manually, field_no, field_no, address_manual_page),
+        (address_select_choice_field_enter_manually, field_no, field_yes, address_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_no, address_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_yes, address_manual_page),
     ],
 )
 def test_address_select_park_home_next_page(choice, duplicate_uprn, epc_found, expected_next_page):
@@ -331,14 +331,14 @@ def test_address_select_park_home_next_page(choice, duplicate_uprn, epc_found, e
 @pytest.mark.parametrize(
     "choice, duplicate_uprn, epc_found, expected_next_page",
     [
-        (address_select_choice_field_select_address, field_yes, field_yes, referral_already_submitted_page),
-        (address_select_choice_field_enter_manually, field_yes, field_yes, address_manual_page),
-        (address_select_choice_field_select_address, field_yes, field_no, referral_already_submitted_page),
-        (address_select_choice_field_enter_manually, field_yes, field_no, address_manual_page),
-        (address_select_choice_field_select_address, field_no, field_yes, council_tax_band_page),
-        (address_select_choice_field_enter_manually, field_no, field_yes, address_manual_page),
         (address_select_choice_field_select_address, field_no, field_no, council_tax_band_page),
+        (address_select_choice_field_select_address, field_no, field_yes, council_tax_band_page),
+        (address_select_choice_field_select_address, field_yes, field_no, referral_already_submitted_page),
+        (address_select_choice_field_select_address, field_yes, field_yes, referral_already_submitted_page),
         (address_select_choice_field_enter_manually, field_no, field_no, address_manual_page),
+        (address_select_choice_field_enter_manually, field_no, field_yes, address_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_no, address_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_yes, address_manual_page),
     ],
 )
 def test_address_select_not_park_home_next_page(choice, duplicate_uprn, epc_found, expected_next_page):
@@ -356,14 +356,14 @@ def test_address_select_not_park_home_next_page(choice, duplicate_uprn, epc_foun
 @pytest.mark.parametrize(
     "choice, duplicate_uprn, epc_found, expected_next_page",
     [
-        (address_select_choice_field_select_address, field_yes, field_yes, referral_already_submitted_page),
-        (address_select_choice_field_enter_manually, field_yes, field_yes, address_manual_page),
-        (address_select_choice_field_select_address, field_yes, field_no, referral_already_submitted_page),
-        (address_select_choice_field_enter_manually, field_yes, field_no, address_manual_page),
-        (address_select_choice_field_select_address, field_no, field_yes, epc_page),
-        (address_select_choice_field_enter_manually, field_no, field_yes, address_manual_page),
         (address_select_choice_field_select_address, field_no, field_no, property_type_page),
+        (address_select_choice_field_select_address, field_no, field_yes, epc_page),
+        (address_select_choice_field_select_address, field_yes, field_no, referral_already_submitted_page),
+        (address_select_choice_field_select_address, field_yes, field_yes, referral_already_submitted_page),
         (address_select_choice_field_enter_manually, field_no, field_no, address_manual_page),
+        (address_select_choice_field_enter_manually, field_no, field_yes, address_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_no, address_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_yes, address_manual_page),
     ],
 )
 def test_address_select_social_housing_next_page(choice, duplicate_uprn, epc_found, expected_next_page):
@@ -398,12 +398,12 @@ def test_address_manual_next_page(flow, expected_next_page):
 @pytest.mark.parametrize(
     "flow, epc_found, expected_next_page",
     [
-        (flow_park_home, field_yes, epc_page),
         (flow_park_home, field_no, benefits_page),
-        (flow_main, field_yes, council_tax_band_page),
+        (flow_park_home, field_yes, epc_page),
         (flow_main, field_no, council_tax_band_page),
-        (flow_social_housing, field_yes, epc_page),
+        (flow_main, field_yes, council_tax_band_page),
         (flow_social_housing, field_no, property_type_page),
+        (flow_social_housing, field_yes, epc_page),
     ],
 )
 def test_referral_already_submitted_next_page(flow, epc_found, expected_next_page):
@@ -415,8 +415,8 @@ def test_referral_already_submitted_next_page(flow, epc_found, expected_next_pag
 @pytest.mark.parametrize(
     "epc_found, expected_next_page",
     [
-        (field_yes, epc_page),
         (field_no, benefits_page),
+        (field_yes, epc_page),
     ],
 )
 def test_council_tax_band_next_page(epc_found, expected_next_page):
@@ -429,12 +429,12 @@ def test_council_tax_band_next_page(epc_found, expected_next_page):
 @pytest.mark.parametrize(
     "flow, eligible, expected_next_page",
     [
-        (flow_park_home, True, benefits_page),
         (flow_park_home, False, epc_ineligible_page),
-        (flow_main, True, benefits_page),
+        (flow_park_home, True, benefits_page),
         (flow_main, False, epc_ineligible_page),
-        (flow_social_housing, True, property_type_page),
+        (flow_main, True, benefits_page),
         (flow_social_housing, False, epc_ineligible_page),
+        (flow_social_housing, True, property_type_page),
     ],
 )
 def test_epc_eligible_next_page(flow, eligible, expected_next_page):
@@ -460,10 +460,10 @@ def test_epc_eligible_next_page(flow, eligible, expected_next_page):
 @pytest.mark.parametrize(
     "flow, benefits, expected_next_page",
     [
-        (flow_park_home, field_yes, summary_page),
         (flow_park_home, field_no, household_income_page),
-        (flow_main, field_yes, property_type_page),
+        (flow_park_home, field_yes, summary_page),
         (flow_main, field_no, household_income_page),
+        (flow_main, field_yes, property_type_page),
     ],
 )
 def test_benefits_next_page(flow, benefits, expected_next_page):
@@ -533,31 +533,13 @@ ineligible_council_tax_bands_wales = [
             property_type_page,
         ),
         (
-            household_income_field_more_than_threshold,
-            country_field_england,
-            eligible_council_tax_bands_england,
-            property_type_page,
-        ),
-        (
             household_income_field_less_than_threshold,
             country_field_england,
             ineligible_council_tax_bands_england,
             property_type_page,
         ),
         (
-            household_income_field_more_than_threshold,
-            country_field_england,
-            ineligible_council_tax_bands_england,
-            property_ineligible_page,
-        ),
-        (
             household_income_field_less_than_threshold,
-            country_field_scotland,
-            eligible_council_tax_bands_scotland,
-            property_type_page,
-        ),
-        (
-            household_income_field_more_than_threshold,
             country_field_scotland,
             eligible_council_tax_bands_scotland,
             property_type_page,
@@ -569,19 +551,7 @@ ineligible_council_tax_bands_wales = [
             property_type_page,
         ),
         (
-            household_income_field_more_than_threshold,
-            country_field_scotland,
-            ineligible_council_tax_bands_scotland,
-            property_ineligible_page,
-        ),
-        (
             household_income_field_less_than_threshold,
-            country_field_wales,
-            eligible_council_tax_bands_wales,
-            property_type_page,
-        ),
-        (
-            household_income_field_more_than_threshold,
             country_field_wales,
             eligible_council_tax_bands_wales,
             property_type_page,
@@ -590,6 +560,36 @@ ineligible_council_tax_bands_wales = [
             household_income_field_less_than_threshold,
             country_field_wales,
             ineligible_council_tax_bands_wales,
+            property_type_page,
+        ),
+        (
+            household_income_field_more_than_threshold,
+            country_field_england,
+            eligible_council_tax_bands_england,
+            property_type_page,
+        ),
+        (
+            household_income_field_more_than_threshold,
+            country_field_england,
+            ineligible_council_tax_bands_england,
+            property_ineligible_page,
+        ),
+        (
+            household_income_field_more_than_threshold,
+            country_field_scotland,
+            eligible_council_tax_bands_scotland,
+            property_type_page,
+        ),
+        (
+            household_income_field_more_than_threshold,
+            country_field_scotland,
+            ineligible_council_tax_bands_scotland,
+            property_ineligible_page,
+        ),
+        (
+            household_income_field_more_than_threshold,
+            country_field_wales,
+            eligible_council_tax_bands_wales,
             property_type_page,
         ),
         (
