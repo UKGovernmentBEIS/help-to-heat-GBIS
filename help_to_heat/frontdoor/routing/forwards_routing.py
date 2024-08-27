@@ -119,8 +119,8 @@ def get_next_page(current_page, answers):
     Returns
     -------
     (str | None, bool)
-        New page ID, or `unknown_page` (None) if the user hasn't given the required information on this page to
-        determine the next page.
+        New page ID, or `unknown_page` (variable in consts.py) if the user hasn't given the required
+        information on this page to determine the next page.
 
         Whether this next page should be redirected to immediately
 
