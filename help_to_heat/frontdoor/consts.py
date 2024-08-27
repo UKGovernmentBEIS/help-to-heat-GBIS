@@ -1,5 +1,6 @@
 # page name
 unknown_page = "UNKNOWN-PAGE"
+govuk_start_page = "start_page"
 country_page = "country"
 northern_ireland_ineligible_page = "northern-ireland"
 supplier_page = "supplier"
@@ -121,7 +122,7 @@ council_tax_band_field_f = "F"
 council_tax_band_field_g = "G"
 council_tax_band_field_h = "H"
 council_tax_band_field_i = "I"
-council_tax_field_bands = [
+council_tax_band_fields = [
     council_tax_band_field_a,
     council_tax_band_field_b,
     council_tax_band_field_c,
