@@ -67,8 +67,10 @@ from help_to_heat.frontdoor.consts import (
     property_type_field_apartment,
     property_type_field_bungalow,
     property_type_field_house,
+    shell_warning_page_field,
     supplier_field,
     supplier_field_bulb,
+    supplier_field_shell,
     supplier_field_utility_warehouse,
     supplier_fields,
     utility_warehouse_warning_page_field,
@@ -190,6 +192,8 @@ def get_supplier_answers():
 
             if supplier == supplier_field_bulb:
                 answers[bulb_warning_page_field] = field_yes
+            if supplier == supplier_field_shell:
+                answers[shell_warning_page_field] = field_yes
             if supplier == supplier_field_utility_warehouse:
                 answers[utility_warehouse_warning_page_field] = field_yes
 

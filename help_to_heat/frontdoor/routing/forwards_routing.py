@@ -63,6 +63,8 @@ from help_to_heat.frontdoor.consts import (
     property_type_page,
     referral_already_submitted_page,
     schemes_page,
+    shell_warning_page,
+    shell_warning_page_field,
     success_page,
     summary_page,
     supplier_field,
@@ -135,6 +137,9 @@ def get_next_page(current_page, answers):
 
     if current_page == bulb_warning_page:
         return _bulb_warning_page_next_page(answers)
+
+    if current_page == shell_warning_page:
+        return _shell_warning_page_next_page(answers)
 
     if current_page == utility_warehouse_warning_page:
         return _utility_warehouse_warning_page_next_page(answers)
@@ -236,12 +241,13 @@ def _supplier_next_page(answers):
         supplier_field_octopus,
         supplier_field_ovo,
         supplier_field_scottish_power,
-        supplier_field_shell,
         supplier_field_utilita,
     ]:
         return own_property_page, False
     if supplier == supplier_field_bulb:
         return bulb_warning_page, False
+    if supplier == supplier_field_shell:
+        return shell_warning_page, False
     if supplier == supplier_field_utility_warehouse:
         return utility_warehouse_warning_page, False
     return _unknown_response
@@ -249,6 +255,11 @@ def _supplier_next_page(answers):
 
 @_requires_answer(bulb_warning_page_field)
 def _bulb_warning_page_next_page(_answers):
+    return own_property_page, False
+
+
+@_requires_answer(shell_warning_page_field)
+def _shell_warning_page_next_page(_answers):
     return own_property_page, False
 
 

@@ -6,6 +6,7 @@ northern_ireland_ineligible_page = "northern-ireland"
 supplier_page = "supplier"
 own_property_page = "own-property"
 bulb_warning_page = "bulb-warning-page"
+shell_warning_page = "shell-warning-page"
 utility_warehouse_warning_page = "utility-warehouse-warning-page"
 park_home_page = "park-home"
 park_home_main_residence_page = "park-home-main-residence"
@@ -76,6 +77,8 @@ supplier_fields = [
 ]
 
 bulb_warning_page_field = "confirm_bulb_warning"
+
+shell_warning_page_field = "confirm_shell_warning"
 
 utility_warehouse_warning_page_field = "confirm_utility_warehouse_warning"
 

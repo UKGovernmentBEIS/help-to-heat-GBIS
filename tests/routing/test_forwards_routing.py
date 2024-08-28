@@ -13,6 +13,7 @@ from help_to_heat.frontdoor.consts import (
     benefits_field,
     benefits_page,
     bulb_warning_page,
+    bulb_warning_page_field,
     confirm_and_submit_page,
     contact_details_page,
     council_tax_band_field,
@@ -92,6 +93,8 @@ from help_to_heat.frontdoor.consts import (
     property_type_page,
     referral_already_submitted_page,
     schemes_page,
+    shell_warning_page,
+    shell_warning_page_field,
     success_page,
     summary_page,
     supplier_field,
@@ -109,6 +112,7 @@ from help_to_heat.frontdoor.consts import (
     supplier_field_utility_warehouse,
     supplier_page,
     utility_warehouse_warning_page,
+    utility_warehouse_warning_page_field,
     wall_insulation_field,
     wall_insulation_field_dont_know,
     wall_insulation_field_no,
@@ -164,7 +168,7 @@ def test_country_next_page(country, expected_next_page):
         (supplier_field_octopus, own_property_page),
         (supplier_field_ovo, own_property_page),
         (supplier_field_scottish_power, own_property_page),
-        (supplier_field_shell, own_property_page),
+        (supplier_field_shell, shell_warning_page),
         (supplier_field_utilita, own_property_page),
         (supplier_field_utility_warehouse, utility_warehouse_warning_page),
     ],
@@ -172,6 +176,21 @@ def test_country_next_page(country, expected_next_page):
 def test_supplier_next_page(supplier, expected_next_page):
     answers = {supplier_field: supplier}
     assert get_next_page(supplier_page, answers) == (expected_next_page, False)
+
+
+def test_bulb_warning_page_next_page():
+    answers = {bulb_warning_page_field: field_yes}
+    assert get_next_page(bulb_warning_page, answers) == (own_property_page, False)
+
+
+def test_shell_warning_page_next_page():
+    answers = {shell_warning_page_field: field_yes}
+    assert get_next_page(shell_warning_page, answers) == (own_property_page, False)
+
+
+def test_utility_warehouse_warning_page_next_page():
+    answers = {utility_warehouse_warning_page_field: field_yes}
+    assert get_next_page(utility_warehouse_warning_page, answers) == (own_property_page, False)
 
 
 @pytest.mark.parametrize(
