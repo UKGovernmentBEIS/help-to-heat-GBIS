@@ -102,6 +102,7 @@ park_home_main_residence_field = "park_home_main_residence"
 address_choice_field = "address_choice"
 address_choice_field_write_address = "write address"
 address_choice_field_enter_manually = "enter manually"
+address_click_enter_manually = "enter-manually"
 
 epc_select_choice_field = "epc_select_choice"
 epc_select_choice_field_select_epc = "select epc"
