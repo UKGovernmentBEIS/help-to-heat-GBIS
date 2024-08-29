@@ -23,7 +23,7 @@ from .consts import (
     address_field,
     address_manual_page,
     address_postcode_field,
-    address_select_choice_field,
+    bulb_warning_page_field,
     click_enter_manually,
     country_field,
     country_field_scotland,
@@ -35,6 +35,7 @@ from .consts import (
     epc_rating_is_eligible_field,
     epc_select_choice_field,
     epc_select_choice_field_epc_api_fail,
+    epc_select_choice_field_select_epc,
     field_no,
     field_yes,
     loft_access_field,
@@ -49,7 +50,10 @@ from .consts import (
     property_type_field,
     property_type_field_park_home,
     rrn_field,
+    shell_warning_page_field,
+    unknown_page,
     uprn_field,
+    utility_warehouse_warning_page_field,
 )
 from .eligibility import calculate_eligibility, eco4
 from .routing.backwards_routing import get_prev_page
@@ -289,8 +293,9 @@ class PageView(utils.MethodDispatcher):
     def get(self, request, session_id, page_name, data=None, errors=None, is_change_page=False):
         if not errors:
             errors = {}
-        if not data:
-            data = interface.api.session.get_answer(session_id, page_name)
+        answers = interface.api.session.get_answer(session_id, page_name)
+        if data:
+            answers = {**answers, **data}
         click_choice = request.GET.get("click")
         if click_choice is not None:
             answers = interface.api.session.get_session(session_id)
@@ -309,7 +314,12 @@ class PageView(utils.MethodDispatcher):
             prev_page_url = page_name_to_url(session_id, get_prev_page(page_name, answers))
 
             next_page_name = get_next_page(page_name, answers)
-            next_page_url = page_name_to_url(session_id, next_page_name)
+            if next_page_name == unknown_page:
+                # it's pretty normal to not know the next page yet
+                # TODO: find out if next_page_url is actually used
+                next_page_url = None
+            else:
+                next_page_url = page_name_to_url(session_id, next_page_name)
 
         session = interface.api.session.get_session(session_id)
         # Once a user has created a referral, they can no longer access their old session
@@ -317,12 +327,12 @@ class PageView(utils.MethodDispatcher):
             return redirect("/")
 
         try:
-            extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data=data)
+            extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data=answers)
         except Exception:  # noqa:B902
             logger.exception("An unknown error occurred")
             return redirect("/sorry")
         context = {
-            "data": data,
+            "data": answers,
             "session_id": session_id,
             "page_name": page_name,
             "errors": errors,
@@ -382,6 +392,9 @@ class PageView(utils.MethodDispatcher):
         else:
             answers = interface.api.session.get_session(session_id)
             next_page_name = get_next_page(page_name, answers)
+            if next_page_name == unknown_page:
+                print(dict(answers))
+                return redirect("/sorry")
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
     def validate(self, request, session_id, page_name, data, is_change_page):
@@ -547,13 +560,13 @@ class AddressView(PageView):
         building_name_or_number = data.get(address_building_name_or_number_field)
         postcode = data.get(address_postcode_field)
         try:
-            data[address_select_choice_field] = address_choice_field_write_address
+            data[address_choice_field] = address_choice_field_write_address
             if country != country_field_scotland:
                 address_and_rrn_details = interface.api.epc.get_address_and_epc_rrn(building_name_or_number, postcode)
                 data[address_all_address_and_rnn_details_field] = address_and_rrn_details
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
-            data[address_select_choice_field] = address_choice_field_epc_api_fail
+            data[address_choice_field] = address_choice_field_epc_api_fail
 
         return data
 
@@ -612,9 +625,10 @@ class EpcSelectView(PageView):
         data = {**data, **epc_data}
 
         duplicate_referral_checker = DuplicateReferralChecker(session_id)
-        if duplicate_referral_checker.is_referral_a_recent_duplicate():
-            data[duplicate_uprn_field] = field_yes
-
+        data[duplicate_uprn_field] = (
+            field_yes if duplicate_referral_checker.is_referral_a_recent_duplicate() else field_no
+        )
+        data[epc_select_choice_field] = epc_select_choice_field_select_epc
         data[epc_found_field] = field_yes
         return data
 
@@ -653,8 +667,9 @@ class AddressSelectView(PageView):
         data[address_field] = address_data["address"]
 
         duplicate_referral_checker = DuplicateReferralChecker(session_id)
-        if duplicate_referral_checker.is_referral_a_recent_duplicate():
-            data[duplicate_uprn_field] = field_yes
+        data[duplicate_uprn_field] = (
+            field_yes if duplicate_referral_checker.is_referral_a_recent_duplicate() else field_no
+        )
 
         data[epc_found_field] = field_no
 
@@ -709,6 +724,8 @@ class AddressManualView(PageView):
         )
         address = ", ".join(f for f in fields if f)
         data[address_field] = address
+        data[duplicate_uprn_field] = field_no
+        data[epc_found_field] = field_no
         return data
 
     # def handle_post(self, request, session_id, page_name, data, is_change_page):  # noq E501
@@ -1097,17 +1114,23 @@ class SchemesView(PageView):
 
 @register_page("bulb-warning-page")
 class BulbWarningPageView(PageView):
-    pass
+    def save_post_data(self, data, session_id, page_name):
+        data[bulb_warning_page_field] = field_yes
+        return data
 
 
 @register_page("utility-warehouse-warning-page")
 class UtilityWarehousePageView(PageView):
-    pass
+    def save_post_data(self, data, session_id, page_name):
+        data[utility_warehouse_warning_page_field] = field_yes
+        return data
 
 
 @register_page("shell-warning-page")
 class ShellWarningPageView(PageView):
-    pass
+    def save_post_data(self, data, session_id, page_name):
+        data[shell_warning_page_field] = field_yes
+        return data
 
 
 @register_page("applications-closed")

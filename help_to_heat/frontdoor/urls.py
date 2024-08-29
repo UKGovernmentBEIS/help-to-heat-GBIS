@@ -25,7 +25,7 @@ frontdoor_patterns = [
     path("feedback/thanks/", views.feedback_thanks_view, name="feedback-thanks"),
     path("feedback/<uuid:session_id>/<str:page_name>/", views.FeedbackView, name="feedback"),
     path("feedback/thanks/<uuid:session_id>/<str:page_name>/", views.feedback_thanks_view, name="feedback-thanks"),
-    # path("<uuid:session_id>/<str:page_name>/change/", views.change_page_view, name="change-page"),
+    path("<uuid:session_id>/<str:page_name>/change/", views.change_page_view, name="change-page"),
     path("<uuid:session_id>/<str:page_name>/", views.page_view, name="page"),
     path("i18n/", include("django.conf.urls.i18n")),
 ]

@@ -776,6 +776,14 @@ class SessionSchema(Schema):
     last_name = fields.String(validate=validate.Length(max=128))
     contact_number = fields.String(validate=validate.Length(max=128))
     email = fields.String(required=False)
+    confirm_bulb_warning = fields.String()
+    confirm_shell_warning = fields.String()
+    confirm_utility_warehouse_warning = fields.String()
+    address_choice = fields.String()
+    epc_select_choice = fields.String()
+    address_select_choice = fields.String()
+    uprn_is_duplicate = fields.String()
+    epc_found = fields.String()
 
     @validates("email")
     def validate_email(self, value):
