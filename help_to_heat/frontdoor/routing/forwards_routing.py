@@ -1,6 +1,7 @@
 from help_to_heat.frontdoor.consts import (
     address_choice_field,
     address_choice_field_enter_manually,
+    address_choice_field_epc_api_fail,
     address_choice_field_write_address,
     address_manual_page,
     address_page,
@@ -311,6 +312,8 @@ def _address_next_page(answers):
             return epc_select_page, False
         if country == country_field_scotland:
             return address_select_page, False
+    if address_choice == address_choice_field_epc_api_fail:
+        return address_select_page, False
     if address_choice == address_choice_field_enter_manually:
         return address_manual_page, False
 
@@ -324,8 +327,7 @@ def _epc_select_next_page(answers):
     if choice == epc_select_choice_field_select_epc:
         return _post_address_input_next_page(answers)
     if choice == epc_select_choice_field_epc_api_fail:
-        # redirect them immediately as there is no data to show
-        return address_select_page, True
+        return address_select_page, False
     if choice == epc_select_choice_field_enter_manually:
         return address_manual_page, False
 

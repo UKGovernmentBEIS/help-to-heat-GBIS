@@ -3,6 +3,7 @@ import pytest
 from help_to_heat.frontdoor.consts import (
     address_choice_field,
     address_choice_field_enter_manually,
+    address_choice_field_epc_api_fail,
     address_choice_field_write_address,
     address_manual_page,
     address_page,
@@ -222,12 +223,14 @@ def test_address_select_prev_page():
     for flow_answers in get_property_flow_answers():
         country = flow_answers[country_field]
         if country in [country_field_england, country_field_wales]:
+            answers = {**flow_answers, address_choice_field: address_choice_field_epc_api_fail}
+            assert get_prev_page(address_select_page, answers) == address_page
             answers = {
                 **flow_answers,
                 address_choice_field: address_choice_field_write_address,
                 epc_select_choice_field: epc_select_choice_field_epc_api_fail,
             }
-            assert get_prev_page(address_select_page, answers) == address_page
+            assert get_prev_page(address_select_page, answers) == epc_select_page
 
         if country == country_field_scotland:
             answers = {**flow_answers, address_choice_field: address_choice_field_write_address}

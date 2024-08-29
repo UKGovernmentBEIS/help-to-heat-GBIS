@@ -3,6 +3,7 @@ import pytest
 from help_to_heat.frontdoor.consts import (
     address_choice_field,
     address_choice_field_enter_manually,
+    address_choice_field_epc_api_fail,
     address_choice_field_write_address,
     address_manual_page,
     address_page,
@@ -244,6 +245,11 @@ def test_address_write_address_next_page(country, expected_next_page):
     assert get_next_page(address_page, answers) == (expected_next_page, False)
 
 
+def test_address_epc_api_fail_next_page():
+    answers = {address_choice_field: address_choice_field_epc_api_fail}
+    assert get_next_page(address_page, answers) == (address_select_page, False)
+
+
 def test_address_enter_manually_next_page():
     answers = {address_choice_field: address_choice_field_enter_manually}
     assert get_next_page(address_page, answers) == (address_manual_page, False)
@@ -254,8 +260,8 @@ def test_address_enter_manually_next_page():
     [
         (epc_select_choice_field_select_epc, field_no, epc_page, False),
         (epc_select_choice_field_select_epc, field_yes, referral_already_submitted_page, False),
-        (epc_select_choice_field_epc_api_fail, field_no, address_select_page, True),
-        (epc_select_choice_field_epc_api_fail, field_yes, address_select_page, True),
+        (epc_select_choice_field_epc_api_fail, field_no, address_select_page, False),
+        (epc_select_choice_field_epc_api_fail, field_yes, address_select_page, False),
         (epc_select_choice_field_enter_manually, field_no, address_manual_page, False),
         (epc_select_choice_field_enter_manually, field_yes, address_manual_page, False),
     ],
@@ -278,8 +284,8 @@ def test_epc_select_park_home_next_page(choice, duplicate_uprn, expected_next_pa
     [
         (epc_select_choice_field_select_epc, field_no, council_tax_band_page, False),
         (epc_select_choice_field_select_epc, field_yes, referral_already_submitted_page, False),
-        (epc_select_choice_field_epc_api_fail, field_no, address_select_page, True),
-        (epc_select_choice_field_epc_api_fail, field_yes, address_select_page, True),
+        (epc_select_choice_field_epc_api_fail, field_no, address_select_page, False),
+        (epc_select_choice_field_epc_api_fail, field_yes, address_select_page, False),
         (epc_select_choice_field_enter_manually, field_no, address_manual_page, False),
         (epc_select_choice_field_enter_manually, field_yes, address_manual_page, False),
     ],
@@ -302,8 +308,8 @@ def test_epc_select_not_park_home_not_already_submitted_next_page(
     [
         (epc_select_choice_field_select_epc, field_no, epc_page, False),
         (epc_select_choice_field_select_epc, field_yes, referral_already_submitted_page, False),
-        (epc_select_choice_field_epc_api_fail, field_no, address_select_page, True),
-        (epc_select_choice_field_epc_api_fail, field_yes, address_select_page, True),
+        (epc_select_choice_field_epc_api_fail, field_no, address_select_page, False),
+        (epc_select_choice_field_epc_api_fail, field_yes, address_select_page, False),
         (epc_select_choice_field_enter_manually, field_no, address_manual_page, False),
         (epc_select_choice_field_enter_manually, field_yes, address_manual_page, False),
     ],
