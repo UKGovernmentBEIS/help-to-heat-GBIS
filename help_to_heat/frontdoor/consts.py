@@ -101,8 +101,11 @@ park_home_main_residence_field = "park_home_main_residence"
 
 address_choice_field = "address_choice"
 address_choice_field_write_address = "write address"
+address_choice_field_epc_api_fail = "epc api fail"
 address_choice_field_enter_manually = "enter manually"
-address_click_enter_manually = "enter-manually"
+address_building_name_or_number_field = "building_name_or_number"
+address_postcode_field = "postcode"
+address_all_address_and_rnn_details_field = "address_and_rrn_details"
 
 epc_select_choice_field = "epc_select_choice"
 epc_select_choice_field_select_epc = "select epc"
@@ -115,6 +118,11 @@ address_select_choice_field_enter_manually = "enter manually"
 
 duplicate_uprn_field = "uprn_is_duplicate"
 epc_found_field = "epc_found"
+rrn_field = "rrn"
+address_field = "address"
+epc_details_field = "epc_details"
+uprn_field = "uprn"
+property_main_heat_source_field = "property_main_heat_source"
 
 council_tax_band_field = "council_tax_band"
 council_tax_band_field_a = "A"
@@ -139,6 +147,7 @@ council_tax_band_fields = [
 ]
 
 epc_accept_suggested_epc_field = "accept_suggested_epc"
+epc_rating_field = "epc_rating"
 epc_rating_is_eligible_field = "epc_rating_is_eligible"
 
 benefits_field = "benefits"
@@ -188,8 +197,13 @@ loft_field_no = "No, I do not have a loft or my loft has been converted into a r
 loft_access_field = "loft_access"
 loft_access_field_yes = "Yes, there is access to my loft"
 loft_access_field_no = "No, there is no access to my loft"
+loft_access_field_no_loft = "No loft"
 
 loft_insulation_field = "loft_insulation"
 loft_insulation_field_more_than_threshold = "I have more than 100mm of loft insulation"
 loft_insulation_field_less_than_threshold = "I have up to 100mm of loft insulation"
 loft_insulation_field_dont_know = field_dont_know
+loft_insulation_field_no_loft = "No loft"
+
+# specific actions the user can take on a page (that isn't submitting)
+click_enter_manually = "enter-manually"
