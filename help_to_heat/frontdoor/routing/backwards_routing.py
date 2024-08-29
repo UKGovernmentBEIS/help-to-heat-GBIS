@@ -24,13 +24,9 @@ def get_prev_page(current_page, answers):
         if route_page == unknown_page:
             return unknown_page
 
-        next_page, redirect = get_next_page(route_page, answers)
+        next_page = get_next_page(route_page, answers)
 
-        # if this next page is redirected to, do not include the current page in the route.
-        # if A redirects to B, and this was not excluded, then pressing back on B would send to A
-        # A would then redirect back to B, causing the back button to do nothing overall
-        if not redirect:
-            route.append(route_page)
+        route.append(route_page)
 
         route_page = next_page
 

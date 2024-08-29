@@ -295,7 +295,7 @@ class PageView(utils.MethodDispatcher):
         if click_choice is not None:
             answers = interface.api.session.get_session(session_id)
             answers = self.save_click_data(answers, click_choice)
-            next_page_name, _ = get_next_page(page_name, answers)
+            next_page_name = get_next_page(page_name, answers)
             return redirect(page_name_to_url(session_id, next_page_name))
 
         if is_change_page:
@@ -308,11 +308,8 @@ class PageView(utils.MethodDispatcher):
             answers = interface.api.session.get_session(session_id)
             prev_page_url = page_name_to_url(session_id, get_prev_page(page_name, answers))
 
-            next_page_name, should_redirect = get_next_page(page_name, answers)
+            next_page_name = get_next_page(page_name, answers)
             next_page_url = page_name_to_url(session_id, next_page_name)
-
-            if should_redirect:
-                return redirect(next_page_url)
 
         session = interface.api.session.get_session(session_id)
         # Once a user has created a referral, they can no longer access their old session
@@ -384,7 +381,7 @@ class PageView(utils.MethodDispatcher):
             next_page_name = schemas.change_page_lookup[page_name]
         else:
             answers = interface.api.session.get_session(session_id)
-            next_page_name = get_next_page(page_name, answers)[0]
+            next_page_name = get_next_page(page_name, answers)
         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
     def validate(self, request, session_id, page_name, data, is_change_page):
