@@ -4,6 +4,7 @@ import pytz
 from dateutil.relativedelta import relativedelta
 
 from help_to_heat import portal
+from help_to_heat.frontdoor.consts import uprn_field
 from help_to_heat.frontdoor.interface import SupplierConverter, api
 
 
@@ -13,7 +14,7 @@ class DuplicateReferralChecker:
 
     def _try_find_most_recent_duplicate_referral_within_range(self, recent_interval_months=6):
         session_data = api.session.get_session(self.session_id)
-        uprn = session_data.get("uprn")
+        uprn = session_data.get(uprn_field)
         if not uprn:
             return None
         recent_cutoff_date = datetime.utcnow() + relativedelta(months=-recent_interval_months)
