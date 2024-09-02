@@ -5,7 +5,7 @@ from help_to_heat.frontdoor.consts import (
 )
 from help_to_heat.frontdoor.routing import (
     CouldNotCalculateRouteException,
-    get_route,
+    calculate_route,
 )
 
 start_page = country_page
@@ -20,8 +20,10 @@ def get_prev_page(current_page, answers):
         return unknown_page
 
     try:
-        route = get_route(answers, current_page)
+        route = calculate_route(answers, current_page)
 
+        # if the page has been found, the last item in the list (index -1) will be the current page
+        # so, the item before the last one (index -2) will be the previous page
         return route[-2]
     except CouldNotCalculateRouteException:
         return unknown_page

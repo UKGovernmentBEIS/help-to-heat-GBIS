@@ -8,17 +8,36 @@ from help_to_heat.frontdoor.routing.forwards_routing import get_next_page
 max_route_length = 100
 
 
-def get_route(answers, target_page, start_page=None):
-    if start_page is None:
-        start_page = govuk_start_page
+def calculate_route(answers, to_page, from_page=None):
+    """
+    Calculates the route through the site the user will take given their current answers, stopping at the specified
+    page.
 
-    route = deque([start_page])
+    Parameters
+    ----------
+    answers
+        All answers given by the user so far
+    to_page
+        The page the route should be calculated to
+    from_page
+        The page the route should be calculated from. If not given route will be calculated from govuk_start_page
+
+    Returns
+    -------
+    List[str]
+        List of pages between from_page and to_page, inclusive at both ends
+
+    """
+    if from_page is None:
+        from_page = govuk_start_page
+
+    route = deque([from_page])
 
     while len(route) < max_route_length:
         current_page = route[-1]
 
-        if current_page == target_page:
-            return route
+        if current_page == to_page:
+            return list(route)
 
         if current_page == unknown_page:
             raise CouldNotCalculateRouteException
