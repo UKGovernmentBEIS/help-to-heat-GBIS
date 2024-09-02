@@ -593,10 +593,8 @@ class AddressSelectView(PageView):
         }
 
     def save_click_data(self, data, session_id, page_name, click_choice):
-        print(click_choice)
         if click_choice == click_enter_manually:
             data[address_select_choice_field] = address_select_choice_field_enter_manually
-        print(dict(data))
         return data
 
     def save_post_data(self, data, session_id, page_name):
