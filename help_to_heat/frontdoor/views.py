@@ -409,6 +409,8 @@ class PageView(utils.MethodDispatcher):
         If the user clicks an alternate button on a page that isn't submit, this method will be called with the click
         choice.
 
+        For instance, when the user presses 'Enter manually'
+
         Click choices are defined in consts.py.
 
         The returned data object will be used to decide which page to send to
@@ -421,7 +423,9 @@ class PageView(utils.MethodDispatcher):
 
         Should be using sparingly and not for routing purposes, else user could be rerouted on pressing refresh
 
-        The user submitted data will be already added to the data object
+        For instance, saving tracking data when a user loads the page
+
+        data will be the user submitted data for this page
         """
         return data
 
@@ -429,7 +433,9 @@ class PageView(utils.MethodDispatcher):
         """
         Add any additional answers to be saved to the session on POST
 
-        The user submitted data will be already added to the data object
+        For instance, checking and storing whether the UPRN is duplicate
+
+        data will be the user submitted data for this page
 
         The returned data object will be used to decide which page to send to
         """
@@ -439,6 +445,8 @@ class PageView(utils.MethodDispatcher):
         """
         Any additional logic to run post the answers being saved to the session. Redirects are not possible here.
         Use routing methods to implement changes to the flow
+
+        For instance, sending emails on submit
         """
         pass
 
