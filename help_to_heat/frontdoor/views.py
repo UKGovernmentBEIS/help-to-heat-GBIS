@@ -64,7 +64,7 @@ from .consts import (
     address_select_choice_field, address_select_choice_field_enter_manually, address_select_choice_field_select_address,
     address_manual_address_line_1_field, address_manual_address_line_2_field, address_manual_town_or_city_field,
     address_manual_county_field, address_manual_postcode_field, park_home_field, own_property_field,
-    own_property_field_social_housing,
+    own_property_field_social_housing, council_tax_band_field, household_income_field, benefits_field,
 )
 from .eligibility import calculate_eligibility, eco4
 from .routing.backwards_routing import get_prev_page
@@ -219,64 +219,6 @@ def change_page_view(request, session_id, page_name):
     return page_map[page_name](request, session_id, page_name, is_change_page=True)
 
 
-# def get_prev_next_page_name(page_name, session_id=None):
-#     is_park_home = False
-#     is_social_housing = False
-#     receives_benefits = False
-#
-#     if session_id:
-#         session_data = interface.api.session.get_session(session_id)
-#         is_park_home = session_data.get("park_home") == "Yes"
-#         is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
-#         receives_benefits = session_data.get("benefits") == "Yes"
-#
-#     # This question is asked first, so this path should take precedence in case users have
-#     # gone back and changed their answers
-#     if is_social_housing:
-#         mapping = schemas.page_prev_next_map_social_housing
-#         order = schemas.page_order_social_housing
-#     elif is_park_home:
-#         mapping = schemas.page_prev_next_map_park_home
-#         order = schemas.page_order_park_home
-#     else:
-#         mapping = schemas.page_prev_next_map
-#         order = schemas.page_order
-#
-#     if page_name in mapping:
-#         prev_page_name = mapping[page_name]["prev"]
-#         next_page_name = mapping[page_name]["next"]
-#     else:
-#         assert page_name in order, page_name
-#         page_index = order.index(page_name)
-#         if page_index == 0:
-#             prev_page_name = "homepage"
-#         else:
-#             prev_page_name = order[page_index - 1]
-#         if page_index + 1 == len(order):
-#             next_page_name = None
-#         else:
-#             next_page_name = order[page_index + 1]
-#
-#     if prev_page_name == "household-income" and receives_benefits:
-#         prev_page_name = "benefits"
-#
-#     return prev_page_name, next_page_name
-
-
-# def get_prev_next_urls(session_id, page_name):
-#     prev_page_name, next_page_name = get_prev_next_page_name(page_name, session_id)
-#     if prev_page_name == "homepage":
-#         prev_page_url = "https://www.gov.uk/apply-great-british-insulation-scheme"
-#     else:
-#         prev_page_url = prev_page_name and reverse(
-#             "frontdoor:page", kwargs=dict(session_id=session_id, page_name=prev_page_name)
-#         )
-#     next_page_url = next_page_name and reverse(
-#         "frontdoor:page", kwargs=dict(session_id=session_id, page_name=next_page_name)
-#     )
-#     return prev_page_url, next_page_url
-
-
 def page_name_to_url(session_id, page_name):
     return reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
 
@@ -320,21 +262,12 @@ class PageView(utils.MethodDispatcher):
 
         if is_change_page:
             # TODO PC-1232: change how change page works
-            assert page_name in schemas.change_page_lookup
-            prev_page_name = schemas.change_page_lookup[page_name]
-            prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=prev_page_name))
-            next_page_url = None
+            pass
+            # assert page_name in schemas.change_page_lookup
+            # prev_page_name = schemas.change_page_lookup[page_name]
+            # prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=prev_page_name))
         else:
             prev_page_url = page_name_to_url(session_id, get_prev_page(page_name, answers))
-
-            next_page_name = get_next_page(page_name, answers)
-            if next_page_name == unknown_page:
-                # it's pretty normal to not know the next page yet
-                # TODO: find out if next_page_url is actually used
-                next_page_url = None
-            else:
-                next_page_url = page_name_to_url(session_id, next_page_name)
-
 
         # Once a user has created a referral, they can no longer access their old session
         if "referral_created_at" in answers and page_name != "success":
@@ -351,7 +284,6 @@ class PageView(utils.MethodDispatcher):
             "page_name": page_name,
             "errors": errors,
             "prev_url": prev_page_url,
-            "next_url": next_page_url,
             **extra_context,
         }
 
@@ -363,11 +295,7 @@ class PageView(utils.MethodDispatcher):
         if not ("safe_to_cache" in context and context["safe_to_cache"]):
             response["cache-control"] = "no-store"
             response["Pragma"] = "no-cache"
-        # return self.handle_get(response, request, session_id, page_name, context)
         return response
-
-    # def get_prev_next_urls(self, session_id, page_name):
-    #     return get_prev_next_urls(session_id, page_name)
 
     def get_extra_context(self, request, session_id, page_name, data):
         return {}
@@ -854,9 +782,9 @@ class SchemesView(PageView):
         if (
             (not is_in_park_home)
             and (not is_social_housing)
-            and session_data.get("council_tax_band") is None
-            and session_data.get("household_income") is None
-            and session_data.get("benefits") is None
+            and session_data.get(council_tax_band_field) is None
+            and session_data.get(household_income_field) is None
+            and session_data.get(benefits_field) is None
         ):
             eligible_schemes = ("GBIS",)
 
