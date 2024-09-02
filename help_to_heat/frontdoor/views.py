@@ -276,6 +276,8 @@ def change_page_view(request, session_id, page_name):
 
 
 def page_name_to_url(session_id, page_name):
+    if page_name == unknown_page:
+        return reverse("frontdoor:sorry")
     return reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
 
 
