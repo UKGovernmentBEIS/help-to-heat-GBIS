@@ -121,7 +121,7 @@ from .consts import (
     wall_type_field_dont_know,
     wall_type_field_mix,
     wall_type_field_solid,
-    wall_type_page, page_name_field,
+    wall_type_page, page_name_field, govuk_start_page_url,
 )
 from .eligibility import calculate_eligibility, eco4
 from .routing.backwards_routing import get_prev_page
@@ -228,7 +228,7 @@ def register_page(name):
 
 
 def redirect_to_homepage_view(request):
-    next_url = "https://www.gov.uk/apply-great-british-insulation-scheme"
+    next_url = govuk_start_page_url
     return redirect(next_url)
 
 
@@ -241,7 +241,7 @@ def start_view(request):
 
 
 def holding_page_view(request):
-    previous_path = "https://www.gov.uk/apply-great-british-insulation-scheme"
+    previous_path = govuk_start_page_url
     context = {"previous_path": previous_path}
     return render(request, template_name="frontdoor/holding-page.html", context=context)
 
@@ -280,7 +280,7 @@ def page_name_to_url(session_id, page_name):
     if page_name == unknown_page:
         return reverse("frontdoor:sorry")
     if page_name == govuk_start_page:
-        return "https://www.gov.uk/apply-great-british-insulation-scheme"
+        return govuk_start_page_url
     return reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
 
 
