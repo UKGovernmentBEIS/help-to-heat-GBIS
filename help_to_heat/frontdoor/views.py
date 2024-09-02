@@ -341,13 +341,10 @@ class PageView(utils.MethodDispatcher):
         if "referral_created_at" in answers and page_name != "success":
             return redirect("/")
 
-        try:
-            extra_context = self.get_extra_context(
-                request=request, session_id=session_id, page_name=page_name, data=data
-            )
-        except Exception:  # noqa:B902
-            logger.exception("An unknown error occurred")
-            return redirect("/sorry")
+        extra_context = self.build_extra_context(
+            request=request, session_id=session_id, page_name=page_name, data=data
+        )
+
         context = {
             "data": data,
             "session_id": session_id,
