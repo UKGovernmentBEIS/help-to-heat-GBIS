@@ -35,6 +35,42 @@ schemes_page = "schemes"
 contact_details_page = "contact-details"
 confirm_and_submit_page = "confirm-and-submit"
 success_page = "success"
+all_pages = [
+    country_page,
+    northern_ireland_ineligible_page,
+    supplier_page,
+    own_property_page,
+    bulb_warning_page,
+    shell_warning_page,
+    utility_warehouse_warning_page,
+    park_home_page,
+    park_home_main_residence_page,
+    park_home_ineligible_page,
+    address_page,
+    epc_select_page,
+    address_select_page,
+    referral_already_submitted_page,
+    address_manual_page,
+    council_tax_band_page,
+    epc_page,
+    epc_ineligible_page,
+    benefits_page,
+    household_income_page,
+    property_ineligible_page,
+    property_type_page,
+    property_subtype_page,
+    number_of_bedrooms_page,
+    wall_type_page,
+    wall_insulation_page,
+    loft_page,
+    loft_access_page,
+    loft_insulation_page,
+    summary_page,
+    schemes_page,
+    contact_details_page,
+    confirm_and_submit_page,
+    success_page
+]
 
 # fields and field options
 field_yes = "Yes"
@@ -75,6 +111,7 @@ supplier_fields = [
     supplier_field_utilita,
     supplier_field_utility_warehouse,
 ]
+user_selected_supplier_field = "user_selected_supplier"
 
 bulb_warning_page_field = "confirm_bulb_warning"
 
@@ -115,6 +152,12 @@ epc_select_choice_field_enter_manually = "enter manually"
 address_select_choice_field = "address_select_choice"
 address_select_choice_field_select_address = "select address"
 address_select_choice_field_enter_manually = "enter manually"
+
+address_manual_address_line_1_field = "address_line_1"
+address_manual_address_line_2_field = "address_line_2"
+address_manual_town_or_city_field = "town_or_city"
+address_manual_county_field = "county"
+address_manual_postcode_field = "postcode"
 
 duplicate_uprn_field = "uprn_is_duplicate"
 epc_found_field = "epc_found"

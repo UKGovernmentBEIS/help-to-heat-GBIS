@@ -53,7 +53,18 @@ from .consts import (
     shell_warning_page_field,
     unknown_page,
     uprn_field,
-    utility_warehouse_warning_page_field,
+    utility_warehouse_warning_page_field, all_pages, country_page, country_field_wales, supplier_field,
+    user_selected_supplier_field, northern_ireland_ineligible_page, park_home_ineligible_page, epc_ineligible_page,
+    property_ineligible_page, success_page, confirm_and_submit_page, contact_details_page, shell_warning_page,
+    utility_warehouse_warning_page, bulb_warning_page, schemes_page, summary_page, loft_insulation_page,
+    loft_access_page, loft_page, wall_insulation_page, wall_type_page, number_of_bedrooms_page, property_subtype_page,
+    property_type_page, household_income_page, benefits_page, epc_page, council_tax_band_page,
+    referral_already_submitted_page, address_select_page, epc_select_page, address_page, park_home_main_residence_page,
+    park_home_page, own_property_page, supplier_page, epc_select_choice_field_enter_manually,
+    address_select_choice_field, address_select_choice_field_enter_manually, address_select_choice_field_select_address,
+    address_manual_address_line_1_field, address_manual_address_line_2_field, address_manual_town_or_city_field,
+    address_manual_county_field, address_manual_postcode_field, park_home_field, own_property_field,
+    own_property_field_social_housing,
 )
 from .eligibility import calculate_eligibility, eco4
 from .routing.backwards_routing import get_prev_page
@@ -142,7 +153,7 @@ unavailable_suppliers = []
 
 def unavailable_supplier_redirect(session_id):
     session_data = interface.api.session.get_session(session_id)
-    supplier = session_data["supplier"]
+    supplier = session_data[supplier_field]
     if supplier not in unavailable_suppliers:
         return None
 
@@ -187,19 +198,20 @@ def not_found_page_view(request, exception):
 
 
 def page_view(request, session_id, page_name):
-    if page_name not in (schemas.page_order + schemas.extra_pages + schemas.page_order_park_home):
+    if page_name not in all_pages:
         raise Http404("Invalid url")
 
     if page_name in page_map:
         return page_map[page_name](request, session_id, page_name)
 
     # Save a blank answer to record the page visit for analytics
-    # interface.api.session.save_answer(session_id, page_name, {"_page_name": page_name})
-    # prev_page_url, next_page_url = get_prev_next_urls(session_id, page_name)
-    # context = {"session_id": session_id, "page_name": page_name, "prev_url": prev_page_url}
-    # response = render(request, template_name=f"frontdoor/{page_name}.html", context=context)
-    # response["x-vcap-request-id"] = session_id
-    # return response
+    interface.api.session.save_answer(session_id, page_name, {"_page_name": page_name})
+    answers = interface.api.session.get_session(session_id)
+    prev_page_url = get_prev_page(page_name, answers)
+    context = {"session_id": session_id, "page_name": page_name, "prev_url": prev_page_url}
+    response = render(request, template_name=f"frontdoor/{page_name}.html", context=context)
+    response["x-vcap-request-id"] = session_id
+    return response
 
 
 def change_page_view(request, session_id, page_name):
@@ -290,18 +302,21 @@ def reset_epc_details(session_id):
 
 
 class PageView(utils.MethodDispatcher):
-    def get(self, request, session_id, page_name, data=None, errors=None, is_change_page=False):
+    def get(self, request, session_id, page_name, extra_data=None, errors=None, is_change_page=False):
         if not errors:
             errors = {}
-        answers = interface.api.session.get_answer(session_id, page_name)
-        if data:
-            answers = {**answers, **data}
+        answers = interface.api.session.get_session(session_id)
+        data = interface.api.session.get_answer(session_id, page_name)
+        if extra_data:
+            data = {**data, **extra_data}
         click_choice = request.GET.get("click")
         if click_choice is not None:
-            answers = interface.api.session.get_session(session_id)
-            answers = self.save_click_data(answers, click_choice)
+            answers = self.save_click_data(answers, session_id, page_name, click_choice)
             next_page_name = get_next_page(page_name, answers)
-            return redirect(page_name_to_url(session_id, next_page_name))
+            if next_page_name != unknown_page:
+                return redirect(page_name_to_url(session_id, next_page_name))
+            else:
+                return redirect("/sorry")
 
         if is_change_page:
             # TODO PC-1232: change how change page works
@@ -310,7 +325,6 @@ class PageView(utils.MethodDispatcher):
             prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=prev_page_name))
             next_page_url = None
         else:
-            answers = interface.api.session.get_session(session_id)
             prev_page_url = page_name_to_url(session_id, get_prev_page(page_name, answers))
 
             next_page_name = get_next_page(page_name, answers)
@@ -321,18 +335,18 @@ class PageView(utils.MethodDispatcher):
             else:
                 next_page_url = page_name_to_url(session_id, next_page_name)
 
-        session = interface.api.session.get_session(session_id)
+
         # Once a user has created a referral, they can no longer access their old session
-        if "referral_created_at" in session and page_name != "success":
+        if "referral_created_at" in answers and page_name != "success":
             return redirect("/")
 
         try:
-            extra_context = self.get_context(request=request, session_id=session_id, page_name=page_name, data=answers)
+            extra_context = self.get_extra_context(request=request, session_id=session_id, page_name=page_name, data=data)
         except Exception:  # noqa:B902
             logger.exception("An unknown error occurred")
             return redirect("/sorry")
         context = {
-            "data": answers,
+            "data": data,
             "session_id": session_id,
             "page_name": page_name,
             "errors": errors,
@@ -352,50 +366,68 @@ class PageView(utils.MethodDispatcher):
         # return self.handle_get(response, request, session_id, page_name, context)
         return response
 
-    def save_get_data(self, data, session_id, page_name):
-        return data
-
-    def save_click_data(self, data, click_choice):
-        # if there are any routing links to click on this page, this method should be overridden
-        return data
-
     # def get_prev_next_urls(self, session_id, page_name):
     #     return get_prev_next_urls(session_id, page_name)
 
-    def get_context(self, request, session_id, page_name, data):
+    def get_extra_context(self, request, session_id, page_name, data):
         return {}
 
     def post(self, request, session_id, page_name, is_change_page=False):
         data = request.POST.dict()
         errors = self.validate(request, session_id, page_name, data, is_change_page)
         if errors:
-            return self.get(request, session_id, page_name, data=data, errors=errors, is_change_page=is_change_page)
+            return self.get(request, session_id, page_name, extra_data=data, errors=errors, is_change_page=is_change_page)
         else:
             try:
                 data = self.save_post_data(data, session_id, page_name)
                 data = interface.api.session.save_answer(session_id, page_name, data)
             except ValidationError as val_errors:
                 errors = {field: val_errors.messages["data"][field][0] for field in val_errors.messages["data"]}
-                return self.get(request, session_id, page_name, data=data, errors=errors, is_change_page=is_change_page)
+                return self.get(request, session_id, page_name, extra_data=data, errors=errors, is_change_page=is_change_page)
             except Exception:  # noqa:B902
                 logger.exception("An unknown error occurred saving data")
                 return redirect("/sorry")
-            return self.handle_post(request, session_id, page_name, data, is_change_page)
+
+            answers = interface.api.session.get_session(session_id)
+            self.handle_saved_answers(request, session_id, page_name, answers, is_change_page)
+
+            if is_change_page:
+                assert page_name in schemas.change_page_lookup
+                next_page_name = schemas.change_page_lookup[page_name]
+            else:
+                next_page_name = get_next_page(page_name, answers)
+                if next_page_name == unknown_page:
+                    print(dict(answers))
+                    return redirect("/sorry")
+            return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+
+    def save_click_data(self, answers, session_id, page_name, click_choice):
+        """
+        If the user clicks an alternate button on a page that isn't submit, this method will be called with the click
+        choice.
+
+        Click choices are defined in consts.py.
+
+        The returned data object will be used to decide which page to send to
+        """
+        return answers
 
     def save_post_data(self, data, session_id, page_name):
+        """
+        Add any additional answers to be saved to the session
+
+        The user submitted data will be already added to the data object
+
+        The returned data object will be used to decide which page to send to
+        """
         return data
 
-    def handle_post(self, request, session_id, page_name, data, is_change_page):
-        if is_change_page:
-            assert page_name in schemas.change_page_lookup
-            next_page_name = schemas.change_page_lookup[page_name]
-        else:
-            answers = interface.api.session.get_session(session_id)
-            next_page_name = get_next_page(page_name, answers)
-            if next_page_name == unknown_page:
-                print(dict(answers))
-                return redirect("/sorry")
-        return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
+    def handle_saved_answers(self, request, session_id, page_name, answers, is_change_page):
+        """
+        Any additional logic to run post the answers being saved to the session. Redirects are not possible here.
+        Use routing methods to implement changes to the flow
+        """
+        pass
 
     def validate(self, request, session_id, page_name, data, is_change_page):
         fields = page_compulsory_field_map.get(page_name, ())
@@ -404,155 +436,58 @@ class PageView(utils.MethodDispatcher):
         return errors
 
 
-@register_page("country")
+@register_page(country_page)
 class CountryView(PageView):
-    def get_context(self, *args, **kwargs):
+    def get_extra_context(self, *args, **kwargs):
         return {"country_options": schemas.country_options_map}
 
-    # def handle_post(self, request, session_id, page_name, data, is_change_page):
-    #     if data["country"] == "Northern Ireland":
-    #         return redirect("frontdoor:page", session_id=session_id, page_name="northern-ireland")
-    #     else:
-    #         return super().handle_post(request, session_id, page_name, data, is_change_page)
 
-
-@register_page("supplier")
+@register_page(supplier_page)
 class SupplierView(PageView):
-    def get_context(self, *args, **kwargs):
+    def get_extra_context(self, *args, **kwargs):
         return {"supplier_options": schemas.supplier_options}
 
-    # def handle_post(self, request, session_id, page_name, data, is_change_page):
-    #     prev_page_name, next_page_name = get_prev_next_page_name(page_name)
-    #     request_data = dict(request.POST.dict())
-    #     request_supplier = request_data.get("supplier")
-    #     # to be updated when we get full list of excluded suppliers
-    #     converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse", "Shell"]
-    #     unavailable_suppliers = []
-    #     if request_supplier == "Bulb, now part of Octopus Energy":
-    #         next_page_name = "bulb-warning-page"
-    #     if request_supplier == "Utility Warehouse":
-    #         next_page_name = "utility-warehouse-warning-page"
-    #     if request_supplier == "Shell":
-    #         next_page_name = "shell-warning-page"
-    #     if request_supplier in unavailable_suppliers:
-    #         next_page_name = "applications-closed"
-    #
-    #     if is_change_page:
-    #         if (request_supplier in converted_suppliers) or (request_supplier in unavailable_suppliers):
-    #             return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
-    #         else:
-    #             assert page_name in schemas.change_page_lookup
-    #             next_page_name = schemas.change_page_lookup[page_name]
-    #     return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
-
     def save_post_data(self, data, session_id, page_name):
-        request_supplier = data.get("supplier")
-        data["user_selected_supplier"] = request_supplier
+        request_supplier = data.get(supplier_field)
+        data[user_selected_supplier_field] = request_supplier
         return data
 
 
-@register_page("own-property")
+@register_page(own_property_page)
 class OwnPropertyView(PageView):
-    def get_context(self, *args, **kwargs):
+    def get_extra_context(self, *args, **kwargs):
         return {"own_property_options_map": schemas.own_property_options_map}
 
-    # def handle_post(self, request, session_id, page_name, data, is_change_page):
-    #     prev_page_name, next_page_name = get_prev_next_page_name(page_name, session_id)
-    #
-    #     if is_change_page:
-    #         assert page_name in schemas.change_page_lookup
-    #         next_page_name = schemas.change_page_lookup[page_name]
-    #
-    #     return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
-    # def get_prev_next_urls(self, session_id, page_name):
-    #     session_data = interface.api.session.get_session(session_id)
-    #     request_supplier = session_data.get("supplier")
-    #     prev_page_url, next_page_url = super().get_prev_next_urls(session_id, page_name)
-    #     acquired_supplier_warning_pages = {
-    #         "Bulb, now part of Octopus Energy": "bulb-warning-page",
-    #         "Utility Warehouse": "utility-warehouse-warning-page",
-    #         "Shell": "shell-warning-page",
-    #     }
-    #     if request_supplier in acquired_supplier_warning_pages:
-    #         prev_page_url = reverse(
-    #             "frontdoor:page",
-    #             kwargs=dict(session_id=session_id, page_name=acquired_supplier_warning_pages[request_supplier]),
-    #         )
-    #     return prev_page_url, next_page_url
-
-
-@register_page("park-home")
+@register_page(park_home_page)
 class ParkHomeView(PageView):
-    def get_context(self, *args, **kwargs):
+    def get_extra_context(self, *args, **kwargs):
         return {"park_home_options_map": schemas.park_home_options_map}
 
-    # def handle_post(self, request, session_id, page_name, data, is_change_page):
-    #     prev_page_name, next_page_name = get_prev_next_page_name(page_name, session_id)
-    #     data = request.POST.dict()
-    #     park_home = data.get("park_home")
-    #
-    #     if park_home == "No":
-    #         next_page_name = "address"
-    #
-    #     return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
-
-@register_page("park-home-main-residence")
+@register_page(park_home_main_residence_page)
 class ParkHomeMainResidenceView(PageView):
-    def get_context(self, *args, **kwargs):
+    def get_extra_context(self, *args, **kwargs):
         return {"park_home_main_residence_options_map": schemas.park_home_main_residence_options_map}
-
-    # def handle_post(self, request, session_id, page_name, data, is_change_page):
-    #     prev_page_name, next_page_name = get_prev_next_page_name(page_name, session_id)
-    #     data = request.POST.dict()
-    #     park_home_main_residence = data.get("park_home_main_residence")
-    #
-    #     if is_change_page:
-    #         assert page_name in schemas.change_page_lookup
-    #         next_page_name = schemas.change_page_lookup[page_name]
-    #     if park_home_main_residence == "No":
-    #         next_page_name = "park-home-application-closed"
-    #
-    #     return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
     def save_post_data(self, data, session_id, page_name):
         park_home_main_residence = data.get(park_home_main_residence_field)
-        if park_home_main_residence == "Yes":
+        if park_home_main_residence == field_yes:
             data[property_type_field] = property_type_field_park_home
             data[property_subtype_field] = property_type_field_park_home
         data = interface.api.session.save_answer(session_id, page_name, data)
         return data
 
 
-@register_page("address")
+@register_page(address_page)
 class AddressView(PageView):
-    # def handle_post(self, request, session_id, page_name, data, is_change_page):
-    #     pass
-    # building_name_or_number = data["building_name_or_number"]
-    # postcode = data["postcode"]
-    # country = interface.api.session.get_answer(session_id, "country")["country"]
-    # reset_epc_details(session_id)
-    # try:
-    #     if country == "Scotland":
-    #         return redirect("frontdoor:page", session_id=session_id, page_name="address-select")
-    #     else:
-    #         address_and_rrn_details = interface.api.epc.get_address_and_epc_rrn(building_name_or_number, postcode)
-    #         interface.api.session.save_answer(
-    #             session_id, page_name, {"address_and_rrn_details": address_and_rrn_details}
-    #         )
-    #         return redirect("frontdoor:page", session_id=session_id, page_name="epc-select")
-    # except Exception as e:  # noqa: B902
-    #     logger.exception(f"An error occurred: {e}")
-    #     return redirect("frontdoor:page", session_id=session_id, page_name="address-select")
+    def get_extra_context(self, request, session_id, page_name, data):
+        return {"manual_url": f"{page_name_to_url(session_id, page_name)}?click={click_enter_manually}"}
 
-    def get_context(self, request, session_id, page_name, data):
-        return {"manual_url": f"{page_name_to_url(session_id, address_manual_page)}?click=enter-manually"}
-
-    def save_click_data(self, data, click_choice):
+    def save_click_data(self, answers, session_id, page_name, click_choice):
         if click_choice == click_enter_manually:
-            data[address_choice_field] = address_choice_field_enter_manually
-        return data
+            answers[address_choice_field] = address_choice_field_enter_manually
+        return answers
 
     def save_post_data(self, data, session_id, page_name):
         reset_epc_details(session_id)
@@ -571,7 +506,7 @@ class AddressView(PageView):
         return data
 
 
-@register_page("epc-select")
+@register_page(epc_select_page)
 class EpcSelectView(PageView):
     def format_address(self, address):
         address_parts = [
@@ -585,9 +520,9 @@ class EpcSelectView(PageView):
         non_empty_address_parts = filter(None, address_parts)
         return ", ".join(non_empty_address_parts)
 
-    def get_context(self, request, session_id, *args, **kwargs):
-        data = interface.api.session.get_answer(session_id, "address")
-        address_and_rrn_details = data.get("address_and_rrn_details", "")
+    def get_extra_context(self, request, session_id, page_name, data):
+        data = interface.api.session.get_answer(session_id, address_page)
+        address_and_rrn_details = data.get(address_all_address_and_rnn_details_field, [])
         rrn_options = tuple(
             {
                 "value": a["epcRrn"],
@@ -595,7 +530,15 @@ class EpcSelectView(PageView):
             }
             for a in address_and_rrn_details
         )
-        return {"rrn_options": rrn_options}
+        return {
+            "rrn_options": rrn_options,
+            "manual_url": f"{page_name_to_url(session_id, page_name)}?click={click_enter_manually}"
+        }
+
+    def save_click_data(self, answers, session_id, page_name, click_choice):
+        if click_choice == click_enter_manually:
+            answers[epc_select_choice_field] = epc_select_choice_field_enter_manually
+        return answers
 
     def save_post_data(self, data, session_id, page_name):
         rrn = data.get(rrn_field)
@@ -608,6 +551,7 @@ class EpcSelectView(PageView):
             data[epc_select_choice_field] = epc_select_choice_field_epc_api_fail
             return data
 
+        data[epc_select_choice_field] = epc_select_choice_field_select_epc
         address = self.format_address(epc["data"]["assessment"]["address"])
         epc_details = epc["data"]["assessment"]
 
@@ -628,21 +572,16 @@ class EpcSelectView(PageView):
         data[duplicate_uprn_field] = (
             field_yes if duplicate_referral_checker.is_referral_a_recent_duplicate() else field_no
         )
-        data[epc_select_choice_field] = epc_select_choice_field_select_epc
         data[epc_found_field] = field_yes
         return data
 
-    # def handle_post(self, request, session_id, page_name, data, is_change_page):
-    #
-    #     return super().handle_post(request, session_id, page_name, data, is_change_page)
 
-
-@register_page("address-select")
+@register_page(address_select_page)
 class AddressSelectView(PageView):
-    def get_context(self, request, session_id, *args, **kwargs):
-        data = interface.api.session.get_answer(session_id, "address")
-        building_name_or_number = data["building_name_or_number"]
-        postcode = data["postcode"]
+    def get_extra_context(self, request, session_id, page_name, data):
+        data = interface.api.session.get_answer(session_id, address_page)
+        building_name_or_number = data[address_building_name_or_number_field]
+        postcode = data[address_postcode_field]
         addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
         uprn_options = tuple(
             {
@@ -653,16 +592,20 @@ class AddressSelectView(PageView):
             }
             for a in addresses
         )
-        return {"uprn_options": uprn_options}
+        return {
+            "uprn_options": uprn_options,
+            "manual_url": f"{page_name_to_url(session_id, page_name)}?click={click_enter_manually}"
+        }
 
-    # def save_data(self, request, session_id, page_name, *args, **kwargs):
-    #     uprn = request.POST["uprn"]
-    #     data = interface.api.address.get_address(uprn)
-    #     data = interface.api.session.save_answer(session_id, page_name, data)
-    #     return data
+    def save_click_data(self, answers, session_id, page_name, click_choice):
+        if click_choice == click_enter_manually:
+            answers[address_select_choice_field] = address_select_choice_field_enter_manually
+        return answers
 
     def save_post_data(self, data, session_id, page_name):
-        uprn = data.get("uprn")
+        data[address_select_choice_field] = address_select_choice_field_select_address
+
+        uprn = data.get(uprn_field)
         address_data = interface.api.address.get_address(uprn)
         data[address_field] = address_data["address"]
 
@@ -675,23 +618,16 @@ class AddressSelectView(PageView):
 
         return data
 
-    # def handle_post(self, request, session_id, page_name, data, is_change_page):
-    #     duplicate_referral_checker = DuplicateReferralChecker(session_id)
-    #     if duplicate_referral_checker.is_referral_a_recent_duplicate():
-    #         return redirect("frontdoor:page", session_id=session_id, page_name="referral-already-submitted")
-    #
-    #     return super().handle_post(request, session_id, page_name, data, is_change_page)
 
-
-@register_page("referral-already-submitted")
+@register_page(referral_already_submitted_page)
 class ReferralAlreadySubmitted(PageView):
-    def get_context(self, request, session_id, *args, **kwargs):
+    def get_extra_context(self, request, session_id, *args, **kwargs):
         session_data = interface.api.session.get_session(session_id)
         duplicate_referral_checker = DuplicateReferralChecker(session_id)
         to_same_energy_supplier = duplicate_referral_checker.is_recent_duplicate_referral_sent_to_same_energy_supplier()
         date_created = duplicate_referral_checker.get_date_of_previous_referral().strftime("%d/%m/%Y")
-        address = session_data.get("address")
-        supplier = session_data.get("supplier")
+        address = session_data.get(address_field)
+        supplier = session_data.get(supplier_field)
         return {
             "to_same_energy_supplier": to_same_energy_supplier,
             "date_created": date_created,
@@ -700,27 +636,17 @@ class ReferralAlreadySubmitted(PageView):
         }
 
 
-@register_page("address-manual")
+@register_page(address_manual_page)
 class AddressManualView(PageView):
-    def get_context(self, request, session_id, page_name, data, *args, **kwargs):
-        answer_data = interface.api.session.get_answer(session_id, "address")
+    def get_extra_context(self, request, session_id, page_name, data, *args, **kwargs):
+        answer_data = interface.api.session.get_answer(session_id, address_page)
         data = {**answer_data, **data}
         return {"data": data}
-
-    # def save_data(self, request, session_id, page_name, *args, **kwargs):
-    #     data = request.POST.dict()
-    #     fields = tuple(
-    #         data.get(key) for key in ("address_line_1", "address_line_2", "town_or_city", "county", "postcode")
-    #     )
-    #     address = ", ".join(f for f in fields if f)
-    #     data = {**data, "address": address}
-    #     data = interface.api.session.save_answer(session_id, page_name, data)
-    #     return data
 
     def save_post_data(self, data, session_id, page_name):
         reset_epc_details(session_id)
         fields = tuple(
-            data.get(key) for key in ("address_line_1", "address_line_2", "town_or_city", "county", "postcode")
+            data.get(key) for key in (address_manual_address_line_1_field, address_manual_address_line_2_field, address_manual_town_or_city_field, address_manual_county_field, address_manual_postcode_field)
         )
         address = ", ".join(f for f in fields if f)
         data[address_field] = address
@@ -728,29 +654,25 @@ class AddressManualView(PageView):
         data[epc_found_field] = field_no
         return data
 
-    # def handle_post(self, request, session_id, page_name, data, is_change_page):  # noq E501
-    #     reset_epc_details(session_id)
-    #     return super().handle_post(request, session_id, page_name, data, is_change_page)
 
-
-@register_page("council-tax-band")
+@register_page(council_tax_band_page)
 class CouncilTaxBandView(PageView):
-    def get_context(self, request, session_id, *args, **kwargs):
-        data = interface.api.session.get_answer(session_id, "country")
-        selected_country = data.get("country")
+    def get_extra_context(self, request, session_id, *args, **kwargs):
+        data = interface.api.session.get_answer(session_id, country_page)
+        selected_country = data.get(country_field)
         council_tax_bands = schemas.council_tax_band_options
-        if selected_country == "Wales":
+        if selected_country == country_field_wales:
             council_tax_bands = schemas.welsh_council_tax_band_options
         return {"council_tax_band_options": council_tax_bands}
 
 
-@register_page("epc")
+@register_page(epc_page)
 class EpcView(PageView):
-    def get_context(self, request, session_id, page_name, data):
+    def get_extra_context(self, request, session_id, page_name, data):
         session_data = interface.api.session.get_session(session_id)
         country = session_data.get(country_field)
 
-        if country == "Scotland":
+        if country == country_field_scotland:
             uprn = session_data.get(uprn_field)
             address = session_data.get(address_field)
             epc = interface.api.epc.get_epc_scotland(uprn) if uprn else {}
@@ -779,136 +701,67 @@ class EpcView(PageView):
             }
             return context
 
-    # def handle_get(self, response, request, session_id, page_name, context):
-    #     session_data = interface.api.session.get_session(session_id)
-    #     country = session_data.get("country")
-    #
-    #     if country == "Scotland":
-    #         uprn = session_data.get("uprn")
-    #         epc = interface.api.epc.get_epc_scotland(uprn) if uprn else {}
-    #     else:
-    #         rrn = session_data.get("rrn")
-    #         epc = session_data.get("epc_details") if rrn else {}
-    #
-    #     if not epc:
-    #         _, next_page_name = get_prev_next_page_name(page_name, session_id)
-    #         return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
-    #     return super().handle_get(response, request, session_id, page_name, context)
-
     def save_post_data(self, data, session_id, page_name):
         accept_suggested_epc = data.get(epc_accept_suggested_epc_field)
         epc_rating = data.get(epc_rating_field).upper()
         data[epc_rating_is_eligible_field] = (
-            field_no if (epc_rating in ("A", "B", "C")) and (accept_suggested_epc == "Yes") else field_yes
+            field_no if (epc_rating in ("A", "B", "C")) and (accept_suggested_epc == field_yes) else field_yes
         )
         return data
 
 
-@register_page("benefits")
+@register_page(benefits_page)
 class BenefitsView(PageView):
-    def get_context(self, request, session_id, *args, **kwargs):
+    def get_extra_context(self, request, session_id, *args, **kwargs):
         context = interface.api.session.get_session(session_id)
         return {"benefits_options": schemas.yes_no_options_map, "context": context}
 
-    # def handle_post(self, request, session_id, page_name, data, is_change_page):
-    #     benefits = data.get("benefits")
-    #     session_data = interface.api.session.get_session(session_id)
-    #     park_home = session_data.get("park_home")
-    #     if benefits == "Yes":
-    #         if park_home == "Yes":
-    #             return redirect("frontdoor:page", session_id=session_id, page_name="summary")
-    #         return redirect("frontdoor:page", session_id=session_id, page_name="property-type")
-    #     return super().handle_post(request, session_id, page_name, data, is_change_page)
 
-    # def get_prev_next_urls(self, session_id, page_name):
-    #     session_data = interface.api.session.get_session(session_id)
-    #     park_home = session_data.get("park_home")
-    #     epc_rating = session_data.get("epc_rating", "Not found")
-    #
-    #     if park_home == "Yes" and epc_rating == "Not found":
-    #         _, next_page_url = get_prev_next_urls(session_id, page_name)
-    #         prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="address"))
-    #         return prev_page_url, next_page_url
-    #     else:
-    #         return super().get_prev_next_urls(session_id, page_name)
-
-
-@register_page("household-income")
+@register_page(household_income_page)
 class HouseholdIncomeView(PageView):
-    def get_context(self, *args, **kwargs):
+    def get_extra_context(self, *args, **kwargs):
         return {"household_income_options": schemas.household_income_options_map}
 
-    # def handle_post(self, request, session_id, page_name, data, is_change_page):
-    #     # This is the final question that determines eligibility,
-    #     # so we can check the eligible schemes to decide where to forward.
-    #     session_data = interface.api.session.get_session(session_id)
-    #     eligible_schemes = eligibility.calculate_eligibility(session_data)
-    #     if len(eligible_schemes) == 0:
-    #         return redirect("frontdoor:page", session_id=session_id, page_name="ineligible")
-    #     else:
-    #         return super().handle_post(request, session_id, page_name, data, is_change_page)
 
-
-@register_page("property-type")
+@register_page(property_type_page)
 class PropertyTypeView(PageView):
-    def get_context(self, *args, **kwargs):
+    def get_extra_context(self, *args, **kwargs):
         return {"property_type_options": schemas.property_type_options_map}
 
-    # def get_prev_next_urls(self, session_id, page_name):
-    #     session_data = interface.api.session.get_session(session_id)
-    #     own_property = session_data.get("own_property")
-    #     epc_rating = session_data.get("epc_rating", "Not found")
-    #
-    #     if own_property == "No, I am a social housing tenant" and epc_rating == "Not found":
-    #         _, next_page_url = get_prev_next_urls(session_id, page_name)
-    #         prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="address"))
-    #         return prev_page_url, next_page_url
-    #     else:
-    #         return super().get_prev_next_urls(session_id, page_name)
 
-
-@register_page("property-subtype")
+@register_page(property_subtype_page)
 class PropertySubtypeView(PageView):
-    def get_context(self, request, session_id, *args, **kwargs):
-        data = interface.api.session.get_answer(session_id, "property-type")
-        property_type = data["property_type"]
+    def get_extra_context(self, request, session_id, *args, **kwargs):
+        data = interface.api.session.get_answer(session_id, property_type_page)
+        property_type = data[property_type_field]
         return {
             "property_type": schemas.property_subtype_titles_options_map[property_type],
             "property_subtype_options": schemas.property_subtype_options_map[property_type],
         }
 
 
-@register_page("number-of-bedrooms")
+@register_page(number_of_bedrooms_page)
 class NumberOfBedroomsView(PageView):
-    def get_context(self, *args, **kwargs):
+    def get_extra_context(self, *args, **kwargs):
         return {"number_of_bedrooms_options": schemas.number_of_bedrooms_options_map}
 
 
-@register_page("wall-type")
+@register_page(wall_type_page)
 class WallTypeView(PageView):
-    def get_context(self, *args, **kwargs):
+    def get_extra_context(self, *args, **kwargs):
         return {"wall_type_options": schemas.wall_type_options_map}
 
 
-@register_page("wall-insulation")
+@register_page(wall_insulation_page)
 class WallInsulationView(PageView):
-    def get_context(self, *args, **kwargs):
+    def get_extra_context(self, *args, **kwargs):
         return {"wall_insulation_options": schemas.wall_insulation_options_map}
 
 
-@register_page("loft")
+@register_page(loft_page)
 class LoftView(PageView):
-    def get_context(self, *args, **kwargs):
+    def get_extra_context(self, *args, **kwargs):
         return {"loft_options": schemas.loft_options_map}
-
-    # def save_data(self, request, session_id, page_name, *args, **kwargs):
-    #     data = request.POST.dict()
-    #     loft = data.get("loft")
-    #     if loft == "No, I do not have a loft or my loft has been converted into a room":
-    #         data["loft_access"] = "No loft"
-    #         data["loft_insulation"] = "No loft"
-    #     data = interface.api.session.save_answer(session_id, page_name, data)
-    #     return data
 
     def save_post_data(self, data, session_id, page_name):
         loft = data.get(loft_field)
@@ -917,51 +770,34 @@ class LoftView(PageView):
             data[loft_insulation_field] = loft_insulation_field_no_loft
         return data
 
-    # def handle_post(self, request, session_id, page_name, data, is_change_page):
-    #     prev_page_name, next_page_name = get_prev_next_page_name(page_name)
-    #     loft = data.get("loft")
-    #     if loft == "No, I do not have a loft or my loft has been converted into a room":
-    #         next_page_name = "summary"
-    #     return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
-
-@register_page("loft-access")
+@register_page(loft_access_page)
 class LoftAccessView(PageView):
-    def get_context(self, *args, **kwargs):
+    def get_extra_context(self, *args, **kwargs):
         return {"loft_access_options": schemas.loft_access_options_map}
 
 
-@register_page("loft-insulation")
+@register_page(loft_insulation_page)
 class LoftInsulationView(PageView):
-    def get_context(self, *args, **kwargs):
+    def get_extra_context(self, *args, **kwargs):
         return {"loft_insulation_options": schemas.loft_insulation_options_map}
 
-    # def get_prev_next_urls(self, session_id, page_name):
-    #     loft_data = interface.api.session.get_answer(session_id, "loft")
-    #
-    #     if loft_data.get("loft", None) == "Yes, I have a loft that has not been converted into a room":
-    #         _, next_page_url = get_prev_next_urls(session_id, page_name)
-    #         prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="loft-access"))
-    #         return prev_page_url, next_page_url
-    #     else:
-    #         return super().get_prev_next_urls(session_id, page_name)
 
-
-@register_page("summary")
+@register_page(summary_page)
 class SummaryView(PageView):
-    def get_context(self, request, session_id, *args, **kwargs):
-        session_data = interface.api.session.get_session(session_id)
-        summary_lines = tuple(
-            {
-                "question": schemas.summary_map[question],
-                "answer": self.get_answer(session_data, question),
-                "change_url": self.get_change_url(session_id, question, page_name),
-            }
-            for page_name, questions in schemas.household_pages.items()
-            for question in questions
-            if self.show_question(session_data, question)
-        )
-        return {"summary_lines": summary_lines}
+    # def get_extra_context(self, request, session_id, *args, **kwargs):
+    #     session_data = interface.api.session.get_session(session_id)
+    #     summary_lines = tuple(
+    #         {
+    #             "question": schemas.summary_map[question],
+    #             "answer": self.get_answer(session_data, question),
+    #             "change_url": self.get_change_url(session_id, question, page_name),
+    #         }
+    #         for page_name, questions in schemas.household_pages.items()
+    #         for question in questions
+    #         # if self.show_question(session_data, question)
+    #     )
+    #     return {"summary_lines": summary_lines}
 
     def show_question(self, session_data, question):
         question_answered = question in session_data and question in schemas.summary_map
@@ -993,36 +829,24 @@ class SummaryView(PageView):
             return reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
         return reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name))
 
-    def handle_post(self, request, session_id, page_name, data, is_change_page):
+    def handle_saved_answers(self, request, session_id, page_name, answers, is_change_page):
         supplier_redirect = unavailable_supplier_redirect(session_id)
         if supplier_redirect is not None:
             return supplier_redirect
-        return super().handle_post(request, session_id, page_name, data, is_change_page)
-
-    # def get_prev_next_urls(self, session_id, page_name):
-    #     session_data = interface.api.session.get_session(session_id)
-    #     loft = session_data.get("loft")
-    #
-    #     # if the user answered this, they went down the loft insulation route
-    #     if loft == "Yes, I have a loft that has not been converted into a room":
-    #         _, next_page_url = get_prev_next_urls(session_id, page_name)
-    #         prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="loft-insulation"))
-    #         return prev_page_url, next_page_url
-    #     else:
-    #         return super().get_prev_next_urls(session_id, page_name)
+        return super().handle_saved_answers(request, session_id, page_name, answers, is_change_page)
 
 
-@register_page("schemes")
+@register_page(schemes_page)
 class SchemesView(PageView):
-    def get_context(self, request, session_id, *args, **kwargs):
+    def get_extra_context(self, request, session_id, *args, **kwargs):
         session_data = interface.api.session.get_session(session_id)
         eligible_schemes = eligibility.calculate_eligibility(session_data)
         _ = interface.api.session.save_answer(session_id, "schemes", {"schemes": eligible_schemes})
         eligible_schemes = tuple(schemas.schemes_map[scheme] for scheme in eligible_schemes if not scheme == "ECO4")
         supplier_name = SupplierConverter(session_id).get_supplier_on_general_pages()
 
-        is_in_park_home = session_data.get("park_home", "No") == "Yes"
-        is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
+        is_in_park_home = session_data.get(park_home_field, field_no) == field_yes
+        is_social_housing = session_data.get(own_property_field) == own_property_field_social_housing
 
         # TODO PC-1191: Edge case whereby user on social housing route goes back on "Check your answers" page and
         #  changes answer to "Yes I own my own home". Overriding eligibility for "GBIS" ensures user sees the
@@ -1112,21 +936,21 @@ class SchemesView(PageView):
         return errors
 
 
-@register_page("bulb-warning-page")
+@register_page(bulb_warning_page)
 class BulbWarningPageView(PageView):
     def save_post_data(self, data, session_id, page_name):
         data[bulb_warning_page_field] = field_yes
         return data
 
 
-@register_page("utility-warehouse-warning-page")
+@register_page(utility_warehouse_warning_page)
 class UtilityWarehousePageView(PageView):
     def save_post_data(self, data, session_id, page_name):
         data[utility_warehouse_warning_page_field] = field_yes
         return data
 
 
-@register_page("shell-warning-page")
+@register_page(shell_warning_page)
 class ShellWarningPageView(PageView):
     def save_post_data(self, data, session_id, page_name):
         data[shell_warning_page_field] = field_yes
@@ -1135,14 +959,14 @@ class ShellWarningPageView(PageView):
 
 @register_page("applications-closed")
 class ApplicationsClosedView(PageView):
-    def get_context(self, session_id, *args, **kwargs):
+    def get_extra_context(self, session_id, *args, **kwargs):
         supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
         return {"supplier": supplier}
 
 
-@register_page("contact-details")
+@register_page(contact_details_page)
 class ContactDetailsView(PageView):
-    def get_context(self, session_id, *args, **kwargs):
+    def get_extra_context(self, session_id, *args, **kwargs):
         supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
         return {"supplier": supplier}
 
@@ -1159,23 +983,23 @@ class ContactDetailsView(PageView):
         return errors
 
 
-@register_page("confirm-and-submit")
+@register_page(confirm_and_submit_page)
 class ConfirmSubmitView(PageView):
-    def get_context(self, request, session_id, *args, **kwargs):
-        session_data = interface.api.session.get_session(session_id)
-        summary_lines = tuple(
-            {
-                "question": schemas.confirm_sumbit_map[question],
-                "answer": session_data.get(question),
-                "change_url": reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name)),
-            }
-            for page_name, questions in schemas.details_pages.items()
-            for question in questions
-        )
-        supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
-        return {"summary_lines": summary_lines, "supplier": supplier}
+    # def get_extra_context(self, request, session_id, *args, **kwargs):
+    #     session_data = interface.api.session.get_session(session_id)
+    #     summary_lines = tuple(
+    #         {
+    #             "question": schemas.confirm_sumbit_map[question],
+    #             "answer": session_data.get(question),
+    #             "change_url": reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name)),
+    #         }
+    #         for page_name, questions in schemas.details_pages.items()
+    #         for question in questions
+    #     )
+    #     supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
+    #     return {"summary_lines": summary_lines, "supplier": supplier}
 
-    def handle_post(self, request, session_id, page_name, data, is_change_page):
+    def handle_saved_answers(self, request, session_id, page_name, answers, is_change_page):
         supplier_redirect = unavailable_supplier_redirect(session_id)
         if supplier_redirect is not None:
             return supplier_redirect
@@ -1187,12 +1011,11 @@ class ConfirmSubmitView(PageView):
             referral = portal.models.Referral.objects.get(session_id=session_id)
             session_data["referral_id"] = referral.formatted_referral_id
             email_handler.send_referral_confirmation_email(session_data, request.LANGUAGE_CODE)
-        return super().handle_post(request, session_id, page_name, data, is_change_page)
 
 
-@register_page("success")
+@register_page(success_page)
 class SuccessView(PageView):
-    def get_context(self, session_id, *args, **kwargs):
+    def get_extra_context(self, session_id, *args, **kwargs):
         supplier = SupplierConverter(session_id).get_supplier_on_success_page()
         session_data = interface.api.session.get_session(session_id)
         is_eco4_eligible = eco4 in calculate_eligibility(session_data)
@@ -1202,6 +1025,26 @@ class SuccessView(PageView):
             "referral_id": referral.formatted_referral_id,
             "is_eco4_eligible": is_eco4_eligible,
         }
+
+
+@register_page(northern_ireland_ineligible_page)
+class NorthernIrelandView(PageView):
+    pass
+
+
+@register_page(park_home_ineligible_page)
+class ParkHomeIneligiblePage(PageView):
+    pass
+
+
+@register_page(epc_ineligible_page)
+class EpcIneligiblePage(PageView):
+    pass
+
+
+@register_page(property_ineligible_page)
+class IneligiblePage(PageView):
+    pass
 
 
 class FeedbackView(utils.MethodDispatcher):
