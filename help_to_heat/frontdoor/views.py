@@ -120,7 +120,7 @@ from .consts import (
     wall_type_field_dont_know,
     wall_type_field_mix,
     wall_type_field_solid,
-    wall_type_page,
+    wall_type_page, page_name_field,
 )
 from .eligibility import calculate_eligibility, eco4
 from .routing.backwards_routing import get_prev_page
@@ -322,6 +322,12 @@ class PageView(utils.MethodDispatcher):
             else:
                 return redirect("/sorry")
 
+        old_data = data.copy()
+        self.save_get_data(data, session_id, page_name)
+        # only save an answer on get if new answers were given
+        if data != old_data:
+            interface.api.session.save_answer(session_id, page_name, data)
+
         if is_change_page:
             # TODO PC-1232: change how change page works
             pass
@@ -407,9 +413,19 @@ class PageView(utils.MethodDispatcher):
         """
         return data
 
+    def save_get_data(self, data, session_id, page_name):
+        """
+        Add any additional answers to be saved on GET
+
+        Should be using sparingly and not for routing purposes, else user could be rerouted on pressing refresh
+
+        The user submitted data will be already added to the data object
+        """
+        return data
+
     def save_post_data(self, data, session_id, page_name):
         """
-        Add any additional answers to be saved to the session
+        Add any additional answers to be saved to the session on POST
 
         The user submitted data will be already added to the data object
 
@@ -1035,22 +1051,32 @@ class SuccessView(PageView):
 
 @register_page(northern_ireland_ineligible_page)
 class NorthernIrelandView(PageView):
-    pass
+    def save_get_data(self, data, session_id, page_name):
+        # this is saved for analytics purposes
+        # see https://github.com/UKGovernmentBEIS/help-to-heat-GBIS/commit/973f9a520c68d3b4b08ebab302614f1d030cec3e
+        data[page_name_field] = page_name
+        return data
 
 
 @register_page(park_home_ineligible_page)
 class ParkHomeIneligiblePage(PageView):
-    pass
+    def save_get_data(self, data, session_id, page_name):
+        data[page_name_field] = page_name
+        return data
 
 
 @register_page(epc_ineligible_page)
 class EpcIneligiblePage(PageView):
-    pass
+    def save_get_data(self, data, session_id, page_name):
+        data[page_name_field] = page_name
+        return data
 
 
 @register_page(property_ineligible_page)
 class IneligiblePage(PageView):
-    pass
+    def save_get_data(self, data, session_id, page_name):
+        data[page_name_field] = page_name
+        return data
 
 
 class FeedbackView(utils.MethodDispatcher):
