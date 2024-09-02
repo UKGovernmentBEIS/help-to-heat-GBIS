@@ -62,6 +62,7 @@ from .consts import (
     epc_select_page,
     field_no,
     field_yes,
+    govuk_start_page,
     household_income_field,
     household_income_field_more_than_threshold,
     household_income_page,
@@ -278,6 +279,8 @@ def change_page_view(request, session_id, page_name):
 def page_name_to_url(session_id, page_name):
     if page_name == unknown_page:
         return reverse("frontdoor:sorry")
+    if page_name == govuk_start_page:
+        return "https://www.gov.uk/apply-great-british-insulation-scheme"
     return reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
 
 
