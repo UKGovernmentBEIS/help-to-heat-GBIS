@@ -84,6 +84,7 @@ from .consts import (
     own_property_field,
     own_property_field_social_housing,
     own_property_page,
+    page_name_field,
     park_home_field,
     park_home_ineligible_page,
     park_home_main_residence_field,
@@ -120,7 +121,7 @@ from .consts import (
     wall_type_field_dont_know,
     wall_type_field_mix,
     wall_type_field_solid,
-    wall_type_page, page_name_field,
+    wall_type_page,
 )
 from .eligibility import calculate_eligibility, eco4
 from .routing.backwards_routing import get_prev_page
@@ -341,9 +342,7 @@ class PageView(utils.MethodDispatcher):
         if "referral_created_at" in answers and page_name != "success":
             return redirect("/")
 
-        extra_context = self.build_extra_context(
-            request=request, session_id=session_id, page_name=page_name, data=data
-        )
+        extra_context = self.build_extra_context(request=request, session_id=session_id, page_name=page_name, data=data)
 
         context = {
             "data": data,
