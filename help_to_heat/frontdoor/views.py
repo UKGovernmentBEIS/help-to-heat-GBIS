@@ -916,7 +916,7 @@ class SchemesView(PageView):
         fields = page_compulsory_field_map.get(page_name, ())
         missing_fields = tuple(field for field in fields if not data.get(field))
         errors = {field: missing_item_errors[field] for field in missing_fields}
-        is_park_home = session_data.get(park_home_field, field_no) == field_no
+        is_park_home = session_data.get(park_home_field, field_no) == field_yes
         is_not_on_benefits = session_data.get(benefits_field, field_no) == field_no
         is_income_above_threshold = (
             session_data.get(household_income_field, household_income_field_more_than_threshold)
