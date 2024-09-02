@@ -64,7 +64,12 @@ from .consts import (
     address_select_choice_field, address_select_choice_field_enter_manually, address_select_choice_field_select_address,
     address_manual_address_line_1_field, address_manual_address_line_2_field, address_manual_town_or_city_field,
     address_manual_county_field, address_manual_postcode_field, park_home_field, own_property_field,
-    own_property_field_social_housing, council_tax_band_field, household_income_field, benefits_field,
+    own_property_field_social_housing, council_tax_band_field, household_income_field, benefits_field, wall_type_field,
+    wall_type_field_solid, wall_type_field_mix, wall_type_field_dont_know, wall_type_field_cavity,
+    wall_insulation_field, wall_insulation_field_some, wall_insulation_field_no, wall_insulation_field_dont_know,
+    household_income_field_more_than_threshold, loft_field_yes, loft_access_field_yes,
+    loft_insulation_field_more_than_threshold, loft_insulation_field_dont_know,
+    loft_insulation_field_less_than_threshold,
 )
 from .eligibility import calculate_eligibility, eco4
 from .routing.backwards_routing import get_prev_page
@@ -788,34 +793,34 @@ class SchemesView(PageView):
         ):
             eligible_schemes = ("GBIS",)
 
-        is_solid_walls = session_data.get("wall_type") in [
-            "Solid walls",
-            "Mix of solid and cavity walls",
-            "I do not know",
+        is_solid_walls = session_data.get(wall_type_field) in [
+            wall_type_field_solid,
+            wall_type_field_mix,
+            wall_type_field_dont_know,
         ]
-        is_cavity_walls = session_data.get("wall_type") in [
-            "Cavity walls",
-            "Mix of solid and cavity walls",
-            "I do not know",
+        is_cavity_walls = session_data.get(wall_type_field) in [
+            wall_type_field_cavity,
+            wall_type_field_mix,
+            wall_type_field_dont_know,
         ]
-        is_wall_insulation_present = not session_data.get("wall_insulation") in [
-            "Some are insulated, some are not",
-            "No they are not insulated",
-            "I do not know",
+        is_wall_insulation_present = not session_data.get(wall_insulation_field) in [
+            wall_insulation_field_some,
+            wall_insulation_field_no,
+            wall_insulation_field_dont_know,
         ]
-        is_not_on_benefits = session_data.get("benefits", "No") == "No"
+        is_not_on_benefits = session_data.get(benefits_field, field_no) == field_no
         is_income_above_threshold = (
-            session_data.get("household_income", "£31,000 or more a year") == "£31,000 or more a year"
+            session_data.get(household_income_field, household_income_field_more_than_threshold) == household_income_field_more_than_threshold
         )
-        is_loft_present = session_data.get("loft") == "Yes, I have a loft that has not been converted into a room"
-        is_there_access_to_loft = session_data.get("loft_access") == "Yes, there is access to my loft"
-        is_loft_insulation_over_threshold = session_data.get("loft_insulation") in [
-            "I have more than 100mm of loft insulation",
-            "I do not know",
+        is_loft_present = session_data.get(loft_field) == loft_field_yes
+        is_there_access_to_loft = session_data.get(loft_access_field) == loft_access_field_yes
+        is_loft_insulation_over_threshold = session_data.get(loft_insulation_field) in [
+            loft_insulation_field_more_than_threshold,
+            loft_insulation_field_dont_know,
         ]
-        is_loft_insulation_under_threshold = session_data.get("loft_insulation") in [
-            "I have up to 100mm of loft insulation",
-            "I do not know",
+        is_loft_insulation_under_threshold = session_data.get(loft_insulation_field) in [
+            loft_insulation_field_less_than_threshold,
+            loft_insulation_field_dont_know,
         ]
         show_park_home_text = is_in_park_home and not is_social_housing
         show_loft_insulation_text = (not show_park_home_text) and is_loft_present and is_there_access_to_loft
@@ -841,12 +846,12 @@ class SchemesView(PageView):
         fields = page_compulsory_field_map.get(page_name, ())
         missing_fields = tuple(field for field in fields if not data.get(field))
         errors = {field: missing_item_errors[field] for field in missing_fields}
-        is_park_home = session_data.get("park_home", "No") == "Yes"
-        is_not_on_benefits = session_data.get("benefits", "No") == "No"
+        is_park_home = session_data.get(park_home_field, field_no) == field_no
+        is_not_on_benefits = session_data.get(benefits_field, field_no) == field_no
         is_income_above_threshold = (
-            session_data.get("household_income", "£31,000 or more a year") == "£31,000 or more a year"
+            session_data.get(household_income_field, household_income_field_more_than_threshold) == household_income_field_more_than_threshold
         )
-        is_social_housing = session_data.get("own_property") == "No, I am a social housing tenant"
+        is_social_housing = session_data.get(own_property_field) == own_property_field_social_housing
         should_verify_contribution_checkbox = (is_park_home and not is_social_housing) or (
             (not is_social_housing) and is_not_on_benefits and is_income_above_threshold
         )
