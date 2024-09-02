@@ -311,7 +311,7 @@ class PageView(utils.MethodDispatcher):
             data = {**data, **extra_data}
         click_choice = request.GET.get("click")
         if click_choice is not None:
-            self.save_click_data(data, session_id, page_name, click_choice)
+            data = self.save_click_data(data, session_id, page_name, click_choice)
             interface.api.session.save_answer(session_id, page_name, data)
 
             # add new data to full answers object to calculate new next page
@@ -323,7 +323,7 @@ class PageView(utils.MethodDispatcher):
                 return redirect("/sorry")
 
         old_data = data.copy()
-        self.save_get_data(data, session_id, page_name)
+        data = self.save_get_data(data, session_id, page_name)
         # only save an answer on get if new answers were given
         if data != old_data:
             interface.api.session.save_answer(session_id, page_name, data)
@@ -373,7 +373,7 @@ class PageView(utils.MethodDispatcher):
             )
         else:
             try:
-                self.save_post_data(data, session_id, page_name)
+                data = self.save_post_data(data, session_id, page_name)
                 data = interface.api.session.save_answer(session_id, page_name, data)
             except ValidationError as val_errors:
                 errors = {field: val_errors.messages["data"][field][0] for field in val_errors.messages["data"]}
@@ -413,7 +413,7 @@ class PageView(utils.MethodDispatcher):
 
         The returned data object will be used to decide which page to send to
         """
-        pass
+        return data
 
     def save_get_data(self, data, session_id, page_name):
         """
@@ -423,7 +423,7 @@ class PageView(utils.MethodDispatcher):
 
         The user submitted data will be already added to the data object
         """
-        pass
+        return data
 
     def save_post_data(self, data, session_id, page_name):
         """
@@ -433,7 +433,7 @@ class PageView(utils.MethodDispatcher):
 
         The returned data object will be used to decide which page to send to
         """
-        pass
+        return data
 
     def handle_saved_answers(self, request, session_id, page_name, answers, is_change_page):
         """
@@ -463,6 +463,7 @@ class SupplierView(PageView):
     def save_post_data(self, data, session_id, page_name):
         request_supplier = data.get(supplier_field)
         data[user_selected_supplier_field] = request_supplier
+        return data
 
 
 @register_page(own_property_page)
@@ -488,6 +489,7 @@ class ParkHomeMainResidenceView(PageView):
             data[property_type_field] = property_type_field_park_home
             data[property_subtype_field] = property_type_field_park_home
         data = interface.api.session.save_answer(session_id, page_name, data)
+        return data
 
 
 @register_page(address_page)
@@ -498,6 +500,7 @@ class AddressView(PageView):
     def save_click_data(self, data, session_id, page_name, click_choice):
         if click_choice == click_enter_manually:
             data[address_choice_field] = address_choice_field_enter_manually
+        return data
 
     def save_post_data(self, data, session_id, page_name):
         reset_epc_details(session_id)
@@ -512,6 +515,8 @@ class AddressView(PageView):
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
             data[address_choice_field] = address_choice_field_epc_api_fail
+
+        return data
 
 
 @register_page(epc_select_page)
@@ -546,6 +551,7 @@ class EpcSelectView(PageView):
     def save_click_data(self, data, session_id, page_name, click_choice):
         if click_choice == click_enter_manually:
             data[epc_select_choice_field] = epc_select_choice_field_enter_manually
+        return data
 
     def save_post_data(self, data, session_id, page_name):
         rrn = data.get(rrn_field)
@@ -580,6 +586,7 @@ class EpcSelectView(PageView):
             field_yes if duplicate_referral_checker.is_referral_a_recent_duplicate() else field_no
         )
         data[epc_found_field] = field_yes
+        return data
 
 
 @register_page(address_select_page)
@@ -606,6 +613,7 @@ class AddressSelectView(PageView):
     def save_click_data(self, data, session_id, page_name, click_choice):
         if click_choice == click_enter_manually:
             data[address_select_choice_field] = address_select_choice_field_enter_manually
+        return data
 
     def save_post_data(self, data, session_id, page_name):
         data[address_select_choice_field] = address_select_choice_field_select_address
@@ -620,6 +628,8 @@ class AddressSelectView(PageView):
         )
 
         data[epc_found_field] = field_no
+
+        return data
 
 
 @register_page(referral_already_submitted_page)
@@ -662,6 +672,7 @@ class AddressManualView(PageView):
         data[address_field] = address
         data[duplicate_uprn_field] = field_no
         data[epc_found_field] = field_no
+        return data
 
 
 @register_page(council_tax_band_page)
@@ -716,6 +727,7 @@ class EpcView(PageView):
         data[epc_rating_is_eligible_field] = (
             field_no if (epc_rating in ("A", "B", "C")) and (accept_suggested_epc == field_yes) else field_yes
         )
+        return data
 
 
 @register_page(benefits_page)
@@ -776,6 +788,7 @@ class LoftView(PageView):
         if loft == loft_field_no:
             data[loft_access_field] = loft_access_field_no_loft
             data[loft_insulation_field] = loft_insulation_field_no_loft
+        return data
 
 
 @register_page(loft_access_page)
@@ -949,18 +962,21 @@ class SchemesView(PageView):
 class BulbWarningPageView(PageView):
     def save_post_data(self, data, session_id, page_name):
         data[bulb_warning_page_field] = field_yes
+        return data
 
 
 @register_page(utility_warehouse_warning_page)
 class UtilityWarehousePageView(PageView):
     def save_post_data(self, data, session_id, page_name):
         data[utility_warehouse_warning_page_field] = field_yes
+        return data
 
 
 @register_page(shell_warning_page)
 class ShellWarningPageView(PageView):
     def save_post_data(self, data, session_id, page_name):
         data[shell_warning_page_field] = field_yes
+        return data
 
 
 @register_page("applications-closed")
@@ -1041,24 +1057,28 @@ class NorthernIrelandView(PageView):
         # this is saved for analytics purposes
         # see https://github.com/UKGovernmentBEIS/help-to-heat-GBIS/commit/973f9a520c68d3b4b08ebab302614f1d030cec3e
         data[page_name_field] = page_name
+        return data
 
 
 @register_page(park_home_ineligible_page)
 class ParkHomeIneligiblePage(PageView):
     def save_get_data(self, data, session_id, page_name):
         data[page_name_field] = page_name
+        return data
 
 
 @register_page(epc_ineligible_page)
 class EpcIneligiblePage(PageView):
     def save_get_data(self, data, session_id, page_name):
         data[page_name_field] = page_name
+        return data
 
 
 @register_page(property_ineligible_page)
 class IneligiblePage(PageView):
     def save_get_data(self, data, session_id, page_name):
         data[page_name_field] = page_name
+        return data
 
 
 class FeedbackView(utils.MethodDispatcher):
