@@ -890,6 +890,7 @@ class SessionSchema(Schema):
     address_select_choice = fields.String()
     uprn_is_duplicate = fields.String()
     epc_found = fields.String()
+    epc_rating_is_eligible = fields.String()
 
     @validates("email")
     def validate_email(self, value):
