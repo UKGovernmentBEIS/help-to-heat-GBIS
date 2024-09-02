@@ -387,7 +387,6 @@ class PageView(utils.MethodDispatcher):
             else:
                 next_page_name = get_next_page(page_name, answers)
                 if next_page_name == unknown_page:
-                    print(dict(answers))
                     return redirect("/sorry")
             return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
@@ -990,7 +989,9 @@ class ConfirmSubmitView(PageView):
     #         {
     #             "question": schemas.confirm_sumbit_map[question],
     #             "answer": session_data.get(question),
-    #             "change_url": reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name)),
+    #             "change_url": reverse(
+    #               "frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name)
+    #             ),
     #         }
     #         for page_name, questions in schemas.details_pages.items()
     #         for question in questions
