@@ -69,7 +69,7 @@ all_pages = [
     schemes_page,
     contact_details_page,
     confirm_and_submit_page,
-    success_page
+    success_page,
 ]
 
 # fields and field options

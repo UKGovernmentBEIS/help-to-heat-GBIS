@@ -21,55 +21,106 @@ from .consts import (
     address_choice_field_epc_api_fail,
     address_choice_field_write_address,
     address_field,
+    address_manual_address_line_1_field,
+    address_manual_address_line_2_field,
+    address_manual_county_field,
     address_manual_page,
+    address_manual_postcode_field,
+    address_manual_town_or_city_field,
+    address_page,
     address_postcode_field,
+    address_select_choice_field,
+    address_select_choice_field_enter_manually,
+    address_select_choice_field_select_address,
+    address_select_page,
+    all_pages,
+    benefits_field,
+    benefits_page,
+    bulb_warning_page,
     bulb_warning_page_field,
     click_enter_manually,
+    confirm_and_submit_page,
+    contact_details_page,
+    council_tax_band_field,
+    council_tax_band_page,
     country_field,
     country_field_scotland,
+    country_field_wales,
+    country_page,
     duplicate_uprn_field,
     epc_accept_suggested_epc_field,
     epc_details_field,
     epc_found_field,
+    epc_ineligible_page,
+    epc_page,
     epc_rating_field,
     epc_rating_is_eligible_field,
     epc_select_choice_field,
+    epc_select_choice_field_enter_manually,
     epc_select_choice_field_epc_api_fail,
     epc_select_choice_field_select_epc,
+    epc_select_page,
     field_no,
     field_yes,
+    household_income_field,
+    household_income_field_more_than_threshold,
+    household_income_page,
     loft_access_field,
     loft_access_field_no_loft,
+    loft_access_field_yes,
+    loft_access_page,
     loft_field,
     loft_field_no,
+    loft_field_yes,
     loft_insulation_field,
+    loft_insulation_field_dont_know,
+    loft_insulation_field_less_than_threshold,
+    loft_insulation_field_more_than_threshold,
     loft_insulation_field_no_loft,
+    loft_insulation_page,
+    loft_page,
+    northern_ireland_ineligible_page,
+    number_of_bedrooms_page,
+    own_property_field,
+    own_property_field_social_housing,
+    own_property_page,
+    park_home_field,
+    park_home_ineligible_page,
     park_home_main_residence_field,
+    park_home_main_residence_page,
+    park_home_page,
+    property_ineligible_page,
     property_main_heat_source_field,
     property_subtype_field,
+    property_subtype_page,
     property_type_field,
     property_type_field_park_home,
+    property_type_page,
+    referral_already_submitted_page,
     rrn_field,
+    schemes_page,
+    shell_warning_page,
     shell_warning_page_field,
+    success_page,
+    summary_page,
+    supplier_field,
+    supplier_page,
     unknown_page,
     uprn_field,
-    utility_warehouse_warning_page_field, all_pages, country_page, country_field_wales, supplier_field,
-    user_selected_supplier_field, northern_ireland_ineligible_page, park_home_ineligible_page, epc_ineligible_page,
-    property_ineligible_page, success_page, confirm_and_submit_page, contact_details_page, shell_warning_page,
-    utility_warehouse_warning_page, bulb_warning_page, schemes_page, summary_page, loft_insulation_page,
-    loft_access_page, loft_page, wall_insulation_page, wall_type_page, number_of_bedrooms_page, property_subtype_page,
-    property_type_page, household_income_page, benefits_page, epc_page, council_tax_band_page,
-    referral_already_submitted_page, address_select_page, epc_select_page, address_page, park_home_main_residence_page,
-    park_home_page, own_property_page, supplier_page, epc_select_choice_field_enter_manually,
-    address_select_choice_field, address_select_choice_field_enter_manually, address_select_choice_field_select_address,
-    address_manual_address_line_1_field, address_manual_address_line_2_field, address_manual_town_or_city_field,
-    address_manual_county_field, address_manual_postcode_field, park_home_field, own_property_field,
-    own_property_field_social_housing, council_tax_band_field, household_income_field, benefits_field, wall_type_field,
-    wall_type_field_solid, wall_type_field_mix, wall_type_field_dont_know, wall_type_field_cavity,
-    wall_insulation_field, wall_insulation_field_some, wall_insulation_field_no, wall_insulation_field_dont_know,
-    household_income_field_more_than_threshold, loft_field_yes, loft_access_field_yes,
-    loft_insulation_field_more_than_threshold, loft_insulation_field_dont_know,
-    loft_insulation_field_less_than_threshold,
+    user_selected_supplier_field,
+    utility_warehouse_warning_page,
+    utility_warehouse_warning_page_field,
+    wall_insulation_field,
+    wall_insulation_field_dont_know,
+    wall_insulation_field_no,
+    wall_insulation_field_some,
+    wall_insulation_page,
+    wall_type_field,
+    wall_type_field_cavity,
+    wall_type_field_dont_know,
+    wall_type_field_mix,
+    wall_type_field_solid,
+    wall_type_page,
 )
 from .eligibility import calculate_eligibility, eco4
 from .routing.backwards_routing import get_prev_page
@@ -279,7 +330,9 @@ class PageView(utils.MethodDispatcher):
             return redirect("/")
 
         try:
-            extra_context = self.get_extra_context(request=request, session_id=session_id, page_name=page_name, data=data)
+            extra_context = self.get_extra_context(
+                request=request, session_id=session_id, page_name=page_name, data=data
+            )
         except Exception:  # noqa:B902
             logger.exception("An unknown error occurred")
             return redirect("/sorry")
@@ -309,14 +362,18 @@ class PageView(utils.MethodDispatcher):
         data = request.POST.dict()
         errors = self.validate(request, session_id, page_name, data, is_change_page)
         if errors:
-            return self.get(request, session_id, page_name, extra_data=data, errors=errors, is_change_page=is_change_page)
+            return self.get(
+                request, session_id, page_name, extra_data=data, errors=errors, is_change_page=is_change_page
+            )
         else:
             try:
                 data = self.save_post_data(data, session_id, page_name)
                 data = interface.api.session.save_answer(session_id, page_name, data)
             except ValidationError as val_errors:
                 errors = {field: val_errors.messages["data"][field][0] for field in val_errors.messages["data"]}
-                return self.get(request, session_id, page_name, extra_data=data, errors=errors, is_change_page=is_change_page)
+                return self.get(
+                    request, session_id, page_name, extra_data=data, errors=errors, is_change_page=is_change_page
+                )
             except Exception:  # noqa:B902
                 logger.exception("An unknown error occurred saving data")
                 return redirect("/sorry")
@@ -465,7 +522,7 @@ class EpcSelectView(PageView):
         )
         return {
             "rrn_options": rrn_options,
-            "manual_url": f"{page_name_to_url(session_id, page_name)}?click={click_enter_manually}"
+            "manual_url": f"{page_name_to_url(session_id, page_name)}?click={click_enter_manually}",
         }
 
     def save_click_data(self, answers, session_id, page_name, click_choice):
@@ -527,7 +584,7 @@ class AddressSelectView(PageView):
         )
         return {
             "uprn_options": uprn_options,
-            "manual_url": f"{page_name_to_url(session_id, page_name)}?click={click_enter_manually}"
+            "manual_url": f"{page_name_to_url(session_id, page_name)}?click={click_enter_manually}",
         }
 
     def save_click_data(self, answers, session_id, page_name, click_choice):
@@ -579,7 +636,14 @@ class AddressManualView(PageView):
     def save_post_data(self, data, session_id, page_name):
         reset_epc_details(session_id)
         fields = tuple(
-            data.get(key) for key in (address_manual_address_line_1_field, address_manual_address_line_2_field, address_manual_town_or_city_field, address_manual_county_field, address_manual_postcode_field)
+            data.get(key)
+            for key in (
+                address_manual_address_line_1_field,
+                address_manual_address_line_2_field,
+                address_manual_town_or_city_field,
+                address_manual_county_field,
+                address_manual_postcode_field,
+            )
         )
         address = ", ".join(f for f in fields if f)
         data[address_field] = address
@@ -810,7 +874,8 @@ class SchemesView(PageView):
         ]
         is_not_on_benefits = session_data.get(benefits_field, field_no) == field_no
         is_income_above_threshold = (
-            session_data.get(household_income_field, household_income_field_more_than_threshold) == household_income_field_more_than_threshold
+            session_data.get(household_income_field, household_income_field_more_than_threshold)
+            == household_income_field_more_than_threshold
         )
         is_loft_present = session_data.get(loft_field) == loft_field_yes
         is_there_access_to_loft = session_data.get(loft_access_field) == loft_access_field_yes
@@ -849,7 +914,8 @@ class SchemesView(PageView):
         is_park_home = session_data.get(park_home_field, field_no) == field_no
         is_not_on_benefits = session_data.get(benefits_field, field_no) == field_no
         is_income_above_threshold = (
-            session_data.get(household_income_field, household_income_field_more_than_threshold) == household_income_field_more_than_threshold
+            session_data.get(household_income_field, household_income_field_more_than_threshold)
+            == household_income_field_more_than_threshold
         )
         is_social_housing = session_data.get(own_property_field) == own_property_field_social_housing
         should_verify_contribution_checkbox = (is_park_home and not is_social_housing) or (
