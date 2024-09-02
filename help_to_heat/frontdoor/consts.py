@@ -253,5 +253,7 @@ last_name_field = "last_name"
 contact_number_field = "contact_number"
 email_field = "email"
 
+page_name_field = "_page_name"
+
 # specific actions the user can take on a page (that isn't submitting)
 click_enter_manually = "enter-manually"
