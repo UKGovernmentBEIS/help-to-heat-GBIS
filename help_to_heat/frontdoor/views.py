@@ -63,6 +63,7 @@ from .consts import (
     field_no,
     field_yes,
     govuk_start_page,
+    govuk_start_page_url,
     household_income_field,
     household_income_field_more_than_threshold,
     household_income_page,
@@ -122,7 +123,7 @@ from .consts import (
     wall_type_field_dont_know,
     wall_type_field_mix,
     wall_type_field_solid,
-    wall_type_page, govuk_start_page_url
+    wall_type_page,
 )
 from .eligibility import calculate_eligibility, eco4
 from .routing.backwards_routing import get_prev_page
