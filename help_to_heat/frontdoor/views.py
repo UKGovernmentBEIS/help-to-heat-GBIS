@@ -309,7 +309,11 @@ class PageView(utils.MethodDispatcher):
             data = {**data, **extra_data}
         click_choice = request.GET.get("click")
         if click_choice is not None:
-            answers = self.save_click_data(answers, session_id, page_name, click_choice)
+            data = self.save_click_data(data, session_id, page_name, click_choice)
+            interface.api.session.save_answer(session_id, page_name, data)
+
+            # add new data to full answers object to calculate new next page
+            answers = {**answers, **data}
             next_page_name = get_next_page(page_name, answers)
             if next_page_name != unknown_page:
                 return redirect(page_name_to_url(session_id, next_page_name))
@@ -390,7 +394,7 @@ class PageView(utils.MethodDispatcher):
                     return redirect("/sorry")
             return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
-    def save_click_data(self, answers, session_id, page_name, click_choice):
+    def save_click_data(self, data, session_id, page_name, click_choice):
         """
         If the user clicks an alternate button on a page that isn't submit, this method will be called with the click
         choice.
@@ -399,7 +403,7 @@ class PageView(utils.MethodDispatcher):
 
         The returned data object will be used to decide which page to send to
         """
-        return answers
+        return data
 
     def save_post_data(self, data, session_id, page_name):
         """
@@ -473,10 +477,10 @@ class AddressView(PageView):
     def get_extra_context(self, request, session_id, page_name, data):
         return {"manual_url": f"{page_name_to_url(session_id, page_name)}?click={click_enter_manually}"}
 
-    def save_click_data(self, answers, session_id, page_name, click_choice):
+    def save_click_data(self, data, session_id, page_name, click_choice):
         if click_choice == click_enter_manually:
-            answers[address_choice_field] = address_choice_field_enter_manually
-        return answers
+            data[address_choice_field] = address_choice_field_enter_manually
+        return data
 
     def save_post_data(self, data, session_id, page_name):
         reset_epc_details(session_id)
@@ -524,10 +528,10 @@ class EpcSelectView(PageView):
             "manual_url": f"{page_name_to_url(session_id, page_name)}?click={click_enter_manually}",
         }
 
-    def save_click_data(self, answers, session_id, page_name, click_choice):
+    def save_click_data(self, data, session_id, page_name, click_choice):
         if click_choice == click_enter_manually:
-            answers[epc_select_choice_field] = epc_select_choice_field_enter_manually
-        return answers
+            data[epc_select_choice_field] = epc_select_choice_field_enter_manually
+        return data
 
     def save_post_data(self, data, session_id, page_name):
         rrn = data.get(rrn_field)
@@ -586,10 +590,12 @@ class AddressSelectView(PageView):
             "manual_url": f"{page_name_to_url(session_id, page_name)}?click={click_enter_manually}",
         }
 
-    def save_click_data(self, answers, session_id, page_name, click_choice):
+    def save_click_data(self, data, session_id, page_name, click_choice):
+        print(click_choice)
         if click_choice == click_enter_manually:
-            answers[address_select_choice_field] = address_select_choice_field_enter_manually
-        return answers
+            data[address_select_choice_field] = address_select_choice_field_enter_manually
+        print(dict(data))
+        return data
 
     def save_post_data(self, data, session_id, page_name):
         data[address_select_choice_field] = address_select_choice_field_select_address
