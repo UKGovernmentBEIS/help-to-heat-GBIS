@@ -1,11 +1,12 @@
-from collections import deque
-
 from help_to_heat.frontdoor.consts import (
     country_page,
     govuk_start_page,
     unknown_page,
 )
-from help_to_heat.frontdoor.routing.forwards_routing import get_next_page
+from help_to_heat.frontdoor.routing import (
+    CouldNotCalculateRouteException,
+    get_route,
+)
 
 start_page = country_page
 # in case of infinite loop ensure a route can't go on forever
@@ -14,20 +15,13 @@ max_route_length = 100
 
 
 def get_prev_page(current_page, answers):
-    route_page = start_page
-    route = deque([govuk_start_page])
+    # there is no previous page to this
+    if current_page == govuk_start_page:
+        return unknown_page
 
-    while len(route) < max_route_length:
-        if route_page == current_page:
-            return route.pop()
+    try:
+        route = get_route(answers, current_page)
 
-        if route_page == unknown_page:
-            return unknown_page
-
-        next_page = get_next_page(route_page, answers)
-
-        route.append(route_page)
-
-        route_page = next_page
-
-    return unknown_page
+        return route[-2]
+    except CouldNotCalculateRouteException:
+        return unknown_page

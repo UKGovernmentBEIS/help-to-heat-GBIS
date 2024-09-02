@@ -71,6 +71,7 @@ from help_to_heat.frontdoor.consts import (
     supplier_field_utilita,
     supplier_field_utility_warehouse,
     supplier_page,
+    unknown_page,
     utility_warehouse_warning_page,
     utility_warehouse_warning_page_field,
     wall_insulation_page,
@@ -111,6 +112,10 @@ from tests.routing import (
     property_flow_park_home,
     property_flow_social_housing,
 )
+
+
+def test_govuk_start_page_prev_page():
+    assert get_prev_page(govuk_start_page, {}) == unknown_page
 
 
 def test_country_prev_page():

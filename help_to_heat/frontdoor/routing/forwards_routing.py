@@ -35,6 +35,7 @@ from help_to_heat.frontdoor.consts import (
     epc_select_page,
     field_no,
     field_yes,
+    govuk_start_page,
     household_income_field,
     household_income_page,
     loft_access_field,
@@ -125,6 +126,9 @@ def get_next_page(current_page, answers):
         New page ID, or `unknown_page` (variable in consts.py) if the user hasn't given the required
         information on this page to determine the next page.
     """
+    if current_page == govuk_start_page:
+        return _govuk_start_page_next_page(answers)
+
     if current_page == country_page:
         return _country_next_page(answers)
 
@@ -213,6 +217,10 @@ def get_next_page(current_page, answers):
         return _confirm_and_submit_next_page(answers)
 
     return _unknown_response
+
+
+def _govuk_start_page_next_page(answers):
+    return country_page
 
 
 @_requires_answer(country_field)
