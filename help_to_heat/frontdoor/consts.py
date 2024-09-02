@@ -257,3 +257,6 @@ page_name_field = "_page_name"
 
 # specific actions the user can take on a page (that isn't submitting)
 click_enter_manually = "enter-manually"
+
+# other
+govuk_start_page_url = "https://www.gov.uk/apply-great-british-insulation-scheme"
