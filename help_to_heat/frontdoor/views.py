@@ -244,7 +244,7 @@ def start_view(request):
 
 def holding_page_view(request):
     previous_path = govuk_start_page_url
-    context = {"previous_path": previous_path}
+    context = {"previous_path": previous_path, "govuk_url": govuk_start_page_url}
     return render(request, template_name="frontdoor/holding-page.html", context=context)
 
 
@@ -1164,6 +1164,7 @@ def privacy_policy_view(request, session_id=None, page_name=None):
         "session_id": session_id,
         "page_name": page_name,
         "prev_url": prev_page_url,
+        "govuk_url": govuk_start_page_url,
     }
     return render(request, template_name="frontdoor/privacy-policy.html", context=context)
 
@@ -1174,5 +1175,6 @@ def accessibility_statement_view(request, session_id=None, page_name=None):
         "session_id": session_id,
         "page_name": page_name,
         "prev_url": prev_page_url,
+        "govuk_url": govuk_start_page_url,
     }
     return render(request, template_name="frontdoor/accessibility-statement.html", context=context)
