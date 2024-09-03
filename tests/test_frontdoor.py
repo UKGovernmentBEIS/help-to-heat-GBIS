@@ -813,9 +813,6 @@ def test_epc_lookup_failure():
     assert page.has_one("h1:contains('What is the council tax band of your property?')")
     page = _check_page(page, "council-tax-band", "council_tax_band", "B")
 
-    assert page.status_code == 302
-    page = page.follow()
-
     assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
     page = _check_page(page, "benefits", "benefits", "Yes")
 
