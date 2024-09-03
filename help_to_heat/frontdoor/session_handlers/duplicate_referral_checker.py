@@ -9,11 +9,24 @@ from help_to_heat.frontdoor.interface import SupplierConverter, api
 
 
 class DuplicateReferralChecker:
-    def __init__(self, session_id):
+    def __init__(self, session_id, extra_data=None):
+        """
+        Parameters
+        ----------
+        session_id
+            User's session id
+        extra_data
+            Any extra answers to consider that has not yet been saved as an answer. For instance, if the UPRN has only
+            just been retrieved and is not yet in the session, pass it here.
+        """
         self.session_id = session_id
+        self.extra_data = {} if extra_data is None else extra_data
 
     def _try_find_most_recent_duplicate_referral_within_range(self, recent_interval_months=6):
-        session_data = api.session.get_session(self.session_id)
+        session_data = {
+            **api.session.get_session(self.session_id),
+            **self.extra_data
+        }
         uprn = session_data.get(uprn_field)
         if not uprn:
             return None
