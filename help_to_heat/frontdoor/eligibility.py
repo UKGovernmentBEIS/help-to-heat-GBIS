@@ -1,8 +1,22 @@
-from help_to_heat.frontdoor.consts import country_field, own_property_field, park_home_field, field_yes, \
-    park_home_main_residence_field, council_tax_band_field, field_no, epc_rating_field, epc_rating_field_not_found, \
-    epc_accept_suggested_epc_field, benefits_field, household_income_field, country_field_england, \
-    country_field_scotland, country_field_wales, own_property_field_social_housing, \
-    household_income_field_less_than_threshold
+from help_to_heat.frontdoor.consts import (
+    benefits_field,
+    council_tax_band_field,
+    country_field,
+    country_field_england,
+    country_field_scotland,
+    country_field_wales,
+    epc_accept_suggested_epc_field,
+    epc_rating_field,
+    epc_rating_field_not_found,
+    field_no,
+    field_yes,
+    household_income_field,
+    household_income_field_less_than_threshold,
+    own_property_field,
+    own_property_field_social_housing,
+    park_home_field,
+    park_home_main_residence_field,
+)
 
 gbis = "GBIS"
 eco4 = "ECO4"
