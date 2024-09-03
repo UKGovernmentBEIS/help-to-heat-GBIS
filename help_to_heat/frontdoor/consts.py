@@ -259,4 +259,5 @@ page_name_field = "_page_name"
 click_enter_manually = "enter-manually"
 
 # other
+# also is used in frontdoor/base.html
 govuk_start_page_url = "https://www.gov.uk/apply-great-british-insulation-scheme"
