@@ -592,7 +592,7 @@ class EpcSelectView(PageView):
 
         data = {**data, **epc_data}
 
-        duplicate_referral_checker = DuplicateReferralChecker(session_id)
+        duplicate_referral_checker = DuplicateReferralChecker(session_id, data)
         data[duplicate_uprn_field] = (
             field_yes if duplicate_referral_checker.is_referral_a_recent_duplicate() else field_no
         )
