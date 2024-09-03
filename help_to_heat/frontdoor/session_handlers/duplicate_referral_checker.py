@@ -23,10 +23,7 @@ class DuplicateReferralChecker:
         self.extra_data = {} if extra_data is None else extra_data
 
     def _try_find_most_recent_duplicate_referral_within_range(self, recent_interval_months=6):
-        session_data = {
-            **api.session.get_session(self.session_id),
-            **self.extra_data
-        }
+        session_data = {**api.session.get_session(self.session_id), **self.extra_data}
         uprn = session_data.get(uprn_field)
         if not uprn:
             return None
