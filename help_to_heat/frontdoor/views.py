@@ -242,7 +242,7 @@ def start_view(request):
 
 def holding_page_view(request):
     previous_path = govuk_start_page_url
-    context = {"previous_path": previous_path}
+    context = {"previous_path": previous_path, "govuk_url": govuk_start_page_url}
     return render(request, template_name="frontdoor/holding-page.html", context=context)
 
 
@@ -262,7 +262,7 @@ def page_view(request, session_id, page_name):
         return page_map[page_name](request, session_id, page_name)
 
     # Save a blank answer to record the page visit for analytics
-    interface.api.session.save_answer(session_id, page_name, {"_page_name": page_name})
+    save_answer(session_id, page_name, {"_page_name": page_name})
     answers = interface.api.session.get_session(session_id)
     prev_page_url = get_prev_page(page_name, answers)
     context = {"session_id": session_id, "page_name": page_name, "prev_url": prev_page_url}
@@ -278,18 +278,18 @@ def change_page_view(request, session_id, page_name):
 
 def page_name_to_url(session_id, page_name):
     if page_name == unknown_page:
-        return reverse("frontdoor:sorry")
+        return reverse("frontdoor:sorry-unavailable")
     if page_name == govuk_start_page:
         return govuk_start_page_url
     return reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
 
 
 def save_answer(session_id, page_name, answer):
-    interface.api.session.save_answer(session_id, page_name, answer)
+    return interface.api.session.save_answer(session_id, page_name, answer)
 
 
 def reset_epc_details(session_id):
-    interface.api.session.save_answer(
+    save_answer(
         session_id,
         "epc-select",
         {
@@ -315,7 +315,7 @@ class PageView(utils.MethodDispatcher):
         click_choice = request.GET.get("click")
         if click_choice is not None:
             data = self.save_click_data(data, session_id, page_name, click_choice)
-            interface.api.session.save_answer(session_id, page_name, data)
+            save_answer(session_id, page_name, data)
 
             # add new data to full answers object to calculate new next page
             answers = {**answers, **data}
@@ -329,7 +329,7 @@ class PageView(utils.MethodDispatcher):
         data = self.save_get_data(data, session_id, page_name)
         # only save an answer on get if new answers were given
         if data != old_data:
-            interface.api.session.save_answer(session_id, page_name, data)
+            save_answer(session_id, page_name, data)
 
         if is_change_page:
             # for pages that block progression, allow the user to press back out of these whilst keeping change state
@@ -380,7 +380,7 @@ class PageView(utils.MethodDispatcher):
         else:
             try:
                 data = self.save_post_data(data, session_id, page_name)
-                data = interface.api.session.save_answer(session_id, page_name, data)
+                data = save_answer(session_id, page_name, data)
             except ValidationError as val_errors:
                 errors = {field: val_errors.messages["data"][field][0] for field in val_errors.messages["data"]}
                 return self.get(
@@ -878,7 +878,7 @@ class SchemesView(PageView):
     def build_extra_context(self, request, session_id, *args, **kwargs):
         session_data = interface.api.session.get_session(session_id)
         eligible_schemes = eligibility.calculate_eligibility(session_data)
-        _ = interface.api.session.save_answer(session_id, schemes_page, {schemes_field: eligible_schemes})
+        save_answer(session_id, schemes_page, {schemes_field: eligible_schemes})
         eligible_schemes = tuple(schemas.schemes_map[scheme] for scheme in eligible_schemes if not scheme == "ECO4")
         supplier_name = SupplierConverter(session_id).get_supplier_on_general_pages()
 
@@ -1052,7 +1052,7 @@ class ConfirmSubmitView(PageView):
             return supplier_redirect
 
         interface.api.session.create_referral(session_id)
-        interface.api.session.save_answer(session_id, page_name, {"referral_created_at": str(timezone.now())})
+        save_answer(session_id, page_name, {"referral_created_at": str(timezone.now())})
         session_data = interface.api.session.get_session(session_id)
         session_data = SupplierConverter(session_id).replace_in_session_data(session_data)
         if session_data.get("email"):
@@ -1177,6 +1177,7 @@ def privacy_policy_view(request, session_id=None, page_name=None):
         "session_id": session_id,
         "page_name": page_name,
         "prev_url": prev_page_url,
+        "govuk_url": govuk_start_page_url,
     }
     return render(request, template_name="frontdoor/privacy-policy.html", context=context)
 
@@ -1187,5 +1188,6 @@ def accessibility_statement_view(request, session_id=None, page_name=None):
         "session_id": session_id,
         "page_name": page_name,
         "prev_url": prev_page_url,
+        "govuk_url": govuk_start_page_url,
     }
     return render(request, template_name="frontdoor/accessibility-statement.html", context=context)
