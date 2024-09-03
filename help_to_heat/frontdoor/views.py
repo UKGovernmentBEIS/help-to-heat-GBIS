@@ -126,6 +126,7 @@ from .consts import (
     wall_type_page,
 )
 from .eligibility import calculate_eligibility, eco4
+from .routing import calculate_route
 from .routing.backwards_routing import get_prev_page
 from .routing.forwards_routing import get_next_page
 from .session_handlers.duplicate_referral_checker import (
@@ -816,39 +817,45 @@ class LoftInsulationView(PageView):
 
 @register_page(summary_page)
 class SummaryView(PageView):
-    # def get_extra_context(self, request, session_id, *args, **kwargs):
-    #     session_data = interface.api.session.get_session(session_id)
-    #     summary_lines = tuple(
-    #         {
-    #             "question": schemas.summary_map[question],
-    #             "answer": self.get_answer(session_data, question),
-    #             "change_url": self.get_change_url(session_id, question, page_name),
-    #         }
-    #         for page_name, questions in schemas.household_pages.items()
-    #         for question in questions
-    #         # if self.show_question(session_data, question)
-    #     )
-    #     return {"summary_lines": summary_lines}
+    def build_extra_context(self, request, session_id, *args, **kwargs):
+        session_data = interface.api.session.get_session(session_id)
+        summary_lines = tuple(
+            {
+                "question": schemas.summary_map[question],
+                "answer": self.get_answer(session_data, question),
+                "change_url": self.get_change_url(session_id, question, page_name),
+            }
+            for page_name, question in self.get_summary_questions(session_data)
+        )
+        return {"summary_lines": summary_lines}
+
+    def get_summary_questions(self, session_data):
+        for page_name in calculate_route(session_data, to_page=summary_page):
+            if page_name in schemas.page_questions.keys():
+                for question in schemas.page_questions[page_name]:
+                    if self.show_question(session_data, question):
+                        yield page_name, question
 
     def show_question(self, session_data, question):
-        question_answered = question in session_data and question in schemas.summary_map
-        if not question_answered:
-            return False
-        if question in ["property_type", "property_subtype"]:
-            property_type = self.get_answer(session_data, "property_type")
-            return property_type != "Park home"
-        if question in ["park_home", "park_home_main_residence"]:
-            own_property = self.get_answer(session_data, "own_property")
-            return own_property != "No, I am a social housing tenant"
-        if question == "epc_rating":
-            epc_rating = session_data.get("epc_rating", "Not found")
-            accept_suggested_epc = session_data.get("accept_suggested_epc")
-            return epc_rating != "Not found" and accept_suggested_epc == "Yes"
-        if question in ["loft_access", "loft_insulation"]:
-            loft_answer = self.get_answer(session_data, "loft")
-            return loft_answer == "Yes, I have a loft that has not been converted into a room"
-        else:
-            return True
+        return question in schemas.summary_map
+        # question_answered = question in schemas.summary_map
+        # if not question_answered:
+        #     return False
+        # if question in ["property_type", "property_subtype"]:
+        #     property_type = self.get_answer(session_data, "property_type")
+        #     return property_type != "Park home"
+        # if question in ["park_home", "park_home_main_residence"]:
+        #     own_property = self.get_answer(session_data, "own_property")
+        #     return own_property != "No, I am a social housing tenant"
+        # if question == "epc_rating":
+        #     epc_rating = session_data.get("epc_rating", "Not found")
+        #     accept_suggested_epc = session_data.get("accept_suggested_epc")
+        #     return epc_rating != "Not found" and accept_suggested_epc == "Yes"
+        # if question in ["loft_access", "loft_insulation"]:
+        #     loft_answer = self.get_answer(session_data, "loft")
+        #     return loft_answer == "Yes, I have a loft that has not been converted into a room"
+        # else:
+        #     return True
 
     def get_answer(self, session_data, question):
         answer = session_data.get(question)
