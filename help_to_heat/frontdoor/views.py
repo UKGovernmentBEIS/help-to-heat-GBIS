@@ -510,14 +510,6 @@ class ParkHomeMainResidenceView(PageView):
     def build_extra_context(self, *args, **kwargs):
         return {"park_home_main_residence_options_map": schemas.park_home_main_residence_options_map}
 
-    def save_post_data(self, data, session_id, page_name):
-        park_home_main_residence = data.get(park_home_main_residence_field)
-        if park_home_main_residence == field_yes:
-            data[property_type_field] = property_type_field_park_home
-            data[property_subtype_field] = property_type_field_park_home
-        data = interface.api.session.save_answer(session_id, page_name, data)
-        return data
-
 
 @register_page(address_page)
 class AddressView(PageView):
@@ -810,13 +802,6 @@ class LoftView(PageView):
     def build_extra_context(self, *args, **kwargs):
         return {"loft_options": schemas.loft_options_map}
 
-    def save_post_data(self, data, session_id, page_name):
-        loft = data.get(loft_field)
-        if loft == loft_field_no:
-            data[loft_access_field] = loft_access_field_no_loft
-            data[loft_insulation_field] = loft_insulation_field_no_loft
-        return data
-
 
 @register_page(loft_access_page)
 class LoftAccessView(PageView):
@@ -1060,10 +1045,28 @@ class ConfirmSubmitView(PageView):
     def get_change_url(self, session_id, page_name):
         return reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name))
 
+    def save_post_data(self, data, session_id, page_name):
+        # any final processing of answers to do before it's submitted
+
+        # override property type of park home
+        park_home_main_residence = data.get(park_home_main_residence_field)
+        if park_home_main_residence == field_yes:
+            data[property_type_field] = property_type_field_park_home
+            data[property_subtype_field] = property_type_field_park_home
+        data = interface.api.session.save_answer(session_id, page_name, data)
+
+        # override loft access if no loft
+        loft = data.get(loft_field)
+        if loft == loft_field_no:
+            data[loft_access_field] = loft_access_field_no_loft
+            data[loft_insulation_field] = loft_insulation_field_no_loft
+        return data
+
     def handle_saved_answers(self, request, session_id, page_name, answers, is_change_page):
         supplier_redirect = unavailable_supplier_redirect(session_id)
         if supplier_redirect is not None:
             return supplier_redirect
+
         interface.api.session.create_referral(session_id)
         interface.api.session.save_answer(session_id, page_name, {"referral_created_at": str(timezone.now())})
         session_data = interface.api.session.get_session(session_id)

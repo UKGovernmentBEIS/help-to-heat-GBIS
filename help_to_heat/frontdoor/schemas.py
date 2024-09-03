@@ -6,7 +6,9 @@ from phonenumbers import NumberParseException
 
 from help_to_heat.frontdoor.consts import (
     address_field,
+    address_manual_page,
     address_page,
+    address_select_page,
     benefits_field,
     benefits_page,
     bulb_warning_page,
@@ -34,6 +36,7 @@ from help_to_heat.frontdoor.consts import (
     email_field,
     epc_page,
     epc_rating_field,
+    epc_select_page,
     field_dont_know,
     field_no,
     field_yes,
@@ -92,6 +95,7 @@ from help_to_heat.frontdoor.consts import (
     property_type_field_house,
     property_type_field_park_home,
     property_type_page,
+    referral_already_submitted_page,
     schemes_page,
     shell_warning_page,
     shell_warning_page_field,
@@ -351,6 +355,20 @@ ineligible_pages = [
     northern_ireland_ineligible_page,
     park_home_ineligible_page,
     property_ineligible_page,
+]
+
+# if pressing submit is routed to send to one of these pages,
+# then, override the change page behaviour and send to this page instead.
+# used for mandatory follow-up questions
+# for instance, the address input page must always ask the user to select a new address, even if one is already in
+# session, and ask them to confirm a new epc
+# normally cached answers can be used, but in this case the old answer is now irrelevant and so it must be re-asked
+change_page_override_pages = [
+    epc_select_page,
+    address_select_page,
+    address_manual_page,
+    referral_already_submitted_page,
+    epc_page,
 ]
 
 # where the route starts for questions in this change page
