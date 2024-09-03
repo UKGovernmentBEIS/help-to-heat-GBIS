@@ -262,7 +262,7 @@ def page_view(request, session_id, page_name):
         return page_map[page_name](request, session_id, page_name)
 
     # Save a blank answer to record the page visit for analytics
-    interface.api.session.save_answer(session_id, page_name, {"_page_name": page_name})
+    save_answer(session_id, page_name, {"_page_name": page_name})
     answers = interface.api.session.get_session(session_id)
     prev_page_url = get_prev_page(page_name, answers)
     context = {"session_id": session_id, "page_name": page_name, "prev_url": prev_page_url}
@@ -283,11 +283,11 @@ def page_name_to_url(session_id, page_name):
 
 
 def save_answer(session_id, page_name, answer):
-    interface.api.session.save_answer(session_id, page_name, answer)
+    return interface.api.session.save_answer(session_id, page_name, answer)
 
 
 def reset_epc_details(session_id):
-    interface.api.session.save_answer(
+    save_answer(
         session_id,
         "epc-select",
         {
@@ -313,7 +313,7 @@ class PageView(utils.MethodDispatcher):
         click_choice = request.GET.get("click")
         if click_choice is not None:
             data = self.save_click_data(data, session_id, page_name, click_choice)
-            interface.api.session.save_answer(session_id, page_name, data)
+            save_answer(session_id, page_name, data)
 
             # add new data to full answers object to calculate new next page
             answers = {**answers, **data}
@@ -327,7 +327,7 @@ class PageView(utils.MethodDispatcher):
         data = self.save_get_data(data, session_id, page_name)
         # only save an answer on get if new answers were given
         if data != old_data:
-            interface.api.session.save_answer(session_id, page_name, data)
+            save_answer(session_id, page_name, data)
 
         if is_change_page:
             # TODO PC-1232: change how change page works
@@ -373,7 +373,7 @@ class PageView(utils.MethodDispatcher):
         else:
             try:
                 data = self.save_post_data(data, session_id, page_name)
-                data = interface.api.session.save_answer(session_id, page_name, data)
+                data = save_answer(session_id, page_name, data)
             except ValidationError as val_errors:
                 errors = {field: val_errors.messages["data"][field][0] for field in val_errors.messages["data"]}
                 return self.get(
@@ -495,7 +495,7 @@ class ParkHomeMainResidenceView(PageView):
         if park_home_main_residence == field_yes:
             data[property_type_field] = property_type_field_park_home
             data[property_subtype_field] = property_type_field_park_home
-        data = interface.api.session.save_answer(session_id, page_name, data)
+        data = save_answer(session_id, page_name, data)
         return data
 
 
@@ -868,7 +868,7 @@ class SchemesView(PageView):
     def build_extra_context(self, request, session_id, *args, **kwargs):
         session_data = interface.api.session.get_session(session_id)
         eligible_schemes = eligibility.calculate_eligibility(session_data)
-        _ = interface.api.session.save_answer(session_id, "schemes", {"schemes": eligible_schemes})
+        save_answer(session_id, "schemes", {"schemes": eligible_schemes})
         eligible_schemes = tuple(schemas.schemes_map[scheme] for scheme in eligible_schemes if not scheme == "ECO4")
         supplier_name = SupplierConverter(session_id).get_supplier_on_general_pages()
 
@@ -1035,7 +1035,7 @@ class ConfirmSubmitView(PageView):
         if supplier_redirect is not None:
             return supplier_redirect
         interface.api.session.create_referral(session_id)
-        interface.api.session.save_answer(session_id, page_name, {"referral_created_at": str(timezone.now())})
+        save_answer(session_id, page_name, {"referral_created_at": str(timezone.now())})
         session_data = interface.api.session.get_session(session_id)
         session_data = SupplierConverter(session_id).replace_in_session_data(session_data)
         if session_data.get("email"):
