@@ -287,7 +287,7 @@ confirm_sumbit_map = {
     email_field: _("Email"),
 }
 
-page_questions = {
+page_display_questions = {
     country_page: (country_field,),
     supplier_page: (supplier_field,),
     bulb_warning_page: (bulb_warning_page_field,),
@@ -309,6 +309,7 @@ page_questions = {
     loft_page: (loft_field,),
     loft_access_page: (loft_access_field,),
     loft_insulation_page: (loft_insulation_field,),
+    contact_details_page: (first_name_field, last_name_field, contact_number_field, email_field),
 }
 
 # details_pages = {

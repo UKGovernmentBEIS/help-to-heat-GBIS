@@ -846,8 +846,8 @@ class SummaryView(PageView):
 
     def get_summary_questions(self, session_data):
         for page_name in calculate_route(session_data, to_page=summary_page):
-            if page_name in schemas.page_questions.keys():
-                for question in schemas.page_questions[page_name]:
+            if page_name in schemas.page_display_questions.keys():
+                for question in schemas.page_display_questions[page_name]:
                     if self.show_question(session_data, question):
                         yield page_name, question
 
@@ -1038,21 +1038,27 @@ class ContactDetailsView(PageView):
 
 @register_page(confirm_and_submit_page)
 class ConfirmSubmitView(PageView):
-    # def get_extra_context(self, request, session_id, *args, **kwargs):
-    #     session_data = interface.api.session.get_session(session_id)
-    #     summary_lines = tuple(
-    #         {
-    #             "question": schemas.confirm_sumbit_map[question],
-    #             "answer": session_data.get(question),
-    #             "change_url": reverse(
-    #               "frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name)
-    #             ),
-    #         }
-    #         for page_name, questions in schemas.details_pages.items()
-    #         for question in questions
-    #     )
-    #     supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
-    #     return {"summary_lines": summary_lines, "supplier": supplier}
+    def build_extra_context(self, request, session_id, *args, **kwargs):
+        session_data = interface.api.session.get_session(session_id)
+        summary_lines = tuple(
+            {
+                "question": schemas.confirm_sumbit_map[question],
+                "answer": session_data.get(question),
+                "change_url": self.get_change_url(session_id, page_name),
+            }
+            for page_name, question in self.get_confirm_submit_questions(session_data)
+        )
+        supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
+        return {"summary_lines": summary_lines, "supplier": supplier}
+
+    def get_confirm_submit_questions(self, session_data):
+        for page_name in calculate_route(session_data, from_page=schemes_page, to_page=confirm_and_submit_page):
+            if page_name in schemas.page_display_questions:
+                for question in schemas.page_display_questions[page_name]:
+                    yield page_name, question
+
+    def get_change_url(self, session_id, page_name):
+        return reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name))
 
     def handle_saved_answers(self, request, session_id, page_name, answers, is_change_page):
         supplier_redirect = unavailable_supplier_redirect(session_id)
