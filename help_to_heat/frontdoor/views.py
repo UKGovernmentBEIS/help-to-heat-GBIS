@@ -126,7 +126,7 @@ from .consts import (
     wall_type_page,
 )
 from .eligibility import calculate_eligibility, eco4
-from .routing import calculate_route
+from .routing import CouldNotCalculateRouteException, calculate_route
 from .routing.backwards_routing import get_prev_page
 from .routing.forwards_routing import get_next_page
 from .session_handlers.duplicate_referral_checker import (
@@ -335,11 +335,16 @@ class PageView(utils.MethodDispatcher):
             interface.api.session.save_answer(session_id, page_name, data)
 
         if is_change_page:
-            # TODO PC-1232: change how change page works
-            pass
-            # assert page_name in schemas.change_page_lookup
-            # prev_page_name = schemas.change_page_lookup[page_name]
-            # prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=prev_page_name))
+            # for pages that block progression, allow the user to press back out of these whilst keeping change state
+            if page_name in schemas.ineligible_pages:
+                prev_page_name = get_prev_page(page_name, answers)
+                prev_page_url = reverse(
+                    "frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=prev_page_name)
+                )
+            else:
+                assert page_name in schemas.change_page_lookup
+                prev_page_name = schemas.change_page_lookup[page_name]
+                prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=prev_page_name))
         else:
             prev_page_url = page_name_to_url(session_id, get_prev_page(page_name, answers))
 
@@ -393,11 +398,21 @@ class PageView(utils.MethodDispatcher):
 
             if is_change_page:
                 assert page_name in schemas.change_page_lookup
-                next_page_name = schemas.change_page_lookup[page_name]
-            else:
-                next_page_name = get_next_page(page_name, answers)
-                if next_page_name == unknown_page:
-                    return redirect("/sorry")
+                change_page = schemas.change_page_lookup[page_name]
+                start_of_route = schemas.change_page_start_of_route_lookup[change_page]
+
+                try:
+                    # ensure the user has answers to complete the route
+                    calculate_route(answers, from_page=start_of_route, to_page=change_page)
+                    return redirect("frontdoor:page", session_id=session_id, page_name=change_page)
+                except CouldNotCalculateRouteException as e:
+                    # if not, take them to the question that is preventing them from finishing
+                    last_page_name = e.partial_route[-1]
+                    return redirect("frontdoor:change-page", session_id=session_id, page_name=last_page_name)
+
+            next_page_name = get_next_page(page_name, answers)
+            if next_page_name == unknown_page:
+                return redirect("/sorry")
             return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
     def build_extra_context(self, request, session_id, page_name, data):
@@ -823,7 +838,7 @@ class SummaryView(PageView):
             {
                 "question": schemas.summary_map[question],
                 "answer": self.get_answer(session_data, question),
-                "change_url": self.get_change_url(session_id, question, page_name),
+                "change_url": self.get_change_url(session_id, page_name),
             }
             for page_name, question in self.get_summary_questions(session_data)
         )
@@ -862,9 +877,7 @@ class SummaryView(PageView):
         answers_map = schemas.check_your_answers_options_map.get(question)
         return answers_map[answer] if answers_map else answer
 
-    def get_change_url(self, session_id, question, page_name):
-        if question == "park_home":
-            return reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
+    def get_change_url(self, session_id, page_name):
         return reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name))
 
     def handle_saved_answers(self, request, session_id, page_name, answers, is_change_page):

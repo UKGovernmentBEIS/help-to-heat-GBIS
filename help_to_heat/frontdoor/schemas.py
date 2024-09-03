@@ -11,6 +11,8 @@ from help_to_heat.frontdoor.consts import (
     benefits_page,
     bulb_warning_page,
     bulb_warning_page_field,
+    confirm_and_submit_page,
+    contact_details_page,
     contact_number_field,
     council_tax_band_field,
     council_tax_band_field_a,
@@ -56,6 +58,7 @@ from help_to_heat.frontdoor.consts import (
     loft_insulation_field_no_loft,
     loft_insulation_page,
     loft_page,
+    northern_ireland_ineligible_page,
     number_of_bedrooms_field,
     number_of_bedrooms_field_one,
     number_of_bedrooms_field_studio,
@@ -69,9 +72,11 @@ from help_to_heat.frontdoor.consts import (
     own_property_field_tenant,
     own_property_page,
     park_home_field,
+    park_home_ineligible_page,
     park_home_main_residence_field,
     park_home_main_residence_page,
     park_home_page,
+    property_ineligible_page,
     property_subtype_field,
     property_subtype_field_detached,
     property_subtype_field_end_terrace,
@@ -87,8 +92,10 @@ from help_to_heat.frontdoor.consts import (
     property_type_field_house,
     property_type_field_park_home,
     property_type_page,
+    schemes_page,
     shell_warning_page,
     shell_warning_page_field,
+    summary_page,
     supplier_field,
     supplier_field_british_gas,
     supplier_field_bulb,
@@ -312,6 +319,44 @@ page_questions = {
 #     **{page_name: "summary" for page_name in household_pages},
 #     **{page_name: "confirm-and-submit" for page_name in details_pages},
 # }
+
+# which change page to send back to
+change_page_lookup = {
+    country_page: summary_page,
+    supplier_page: summary_page,
+    bulb_warning_page: summary_page,
+    shell_warning_page: summary_page,
+    utility_warehouse_warning_page: summary_page,
+    own_property_page: summary_page,
+    park_home_page: summary_page,
+    park_home_main_residence_page: summary_page,
+    address_page: summary_page,
+    council_tax_band_page: summary_page,
+    epc_page: summary_page,
+    benefits_page: summary_page,
+    household_income_page: summary_page,
+    property_type_page: summary_page,
+    property_subtype_page: summary_page,
+    number_of_bedrooms_page: summary_page,
+    wall_type_page: summary_page,
+    wall_insulation_page: summary_page,
+    loft_page: summary_page,
+    loft_access_page: summary_page,
+    loft_insulation_page: summary_page,
+    contact_details_page: confirm_and_submit_page,
+}
+
+ineligible_pages = [
+    northern_ireland_ineligible_page,
+    park_home_ineligible_page,
+    property_ineligible_page,
+]
+
+# where the route starts for questions in this change page
+change_page_start_of_route_lookup = {
+    summary_page: country_page,
+    confirm_and_submit_page: schemes_page,
+}
 
 # question_page_lookup = {
 #     question: page_name

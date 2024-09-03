@@ -40,7 +40,7 @@ def calculate_route(answers, to_page, from_page=None):
             return list(route)
 
         if current_page == unknown_page:
-            raise CouldNotCalculateRouteException
+            raise CouldNotCalculateRouteException(from_page, to_page, list(route)[:-1])
 
         next_page = get_next_page(current_page, answers)
 
@@ -50,4 +50,6 @@ def calculate_route(answers, to_page, from_page=None):
 
 
 class CouldNotCalculateRouteException(Exception):
-    pass
+    def __init__(self, from_page, to_page, partial_route):
+        super().__init__(f"Could not calculate a route from {from_page} to {to_page}")
+        self.partial_route = partial_route
