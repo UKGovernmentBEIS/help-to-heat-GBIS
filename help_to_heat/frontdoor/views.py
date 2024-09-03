@@ -49,11 +49,13 @@ from .consts import (
     country_page,
     duplicate_uprn_field,
     epc_accept_suggested_epc_field,
+    epc_accept_suggested_epc_field_not_found,
     epc_details_field,
     epc_found_field,
     epc_ineligible_page,
     epc_page,
     epc_rating_field,
+    epc_rating_field_not_found,
     epc_rating_is_eligible_field,
     epc_select_choice_field,
     epc_select_choice_field_enter_manually,
@@ -101,6 +103,7 @@ from .consts import (
     property_type_page,
     referral_already_submitted_page,
     rrn_field,
+    schemes_field,
     schemes_page,
     shell_warning_page,
     shell_warning_page_field,
@@ -300,8 +303,8 @@ def reset_epc_details(session_id):
             "epc_details": {},
             "uprn": "",
             "property_main_heat_source": "",
-            "epc_rating": "Not found",
-            "accept_suggested_epc": "Not found",
+            "epc_rating": epc_rating_field_not_found,
+            "accept_suggested_epc": epc_accept_suggested_epc_field_not_found,
             "epc_date": "",
         },
     )
@@ -881,7 +884,7 @@ class SchemesView(PageView):
     def build_extra_context(self, request, session_id, *args, **kwargs):
         session_data = interface.api.session.get_session(session_id)
         eligible_schemes = eligibility.calculate_eligibility(session_data)
-        _ = interface.api.session.save_answer(session_id, "schemes", {"schemes": eligible_schemes})
+        _ = interface.api.session.save_answer(session_id, schemes_page, {schemes_field: eligible_schemes})
         eligible_schemes = tuple(schemas.schemes_map[scheme] for scheme in eligible_schemes if not scheme == "ECO4")
         supplier_name = SupplierConverter(session_id).get_supplier_on_general_pages()
 
@@ -1048,23 +1051,6 @@ class ConfirmSubmitView(PageView):
 
     def get_change_url(self, session_id, page_name):
         return reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name))
-
-    def save_post_data(self, data, session_id, page_name):
-        # any final processing of answers to do before it's submitted
-
-        # override property type of park home
-        park_home_main_residence = data.get(park_home_main_residence_field)
-        if park_home_main_residence == field_yes:
-            data[property_type_field] = property_type_field_park_home
-            data[property_subtype_field] = property_type_field_park_home
-        data = interface.api.session.save_answer(session_id, page_name, data)
-
-        # override loft access if no loft
-        loft = data.get(loft_field)
-        if loft == loft_field_no:
-            data[loft_access_field] = loft_access_field_no_loft
-            data[loft_insulation_field] = loft_insulation_field_no_loft
-        return data
 
     def handle_saved_answers(self, request, session_id, page_name, answers, is_change_page):
         supplier_redirect = unavailable_supplier_redirect(session_id)

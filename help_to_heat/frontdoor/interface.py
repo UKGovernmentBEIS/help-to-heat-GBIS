@@ -11,9 +11,29 @@ from help_to_heat import portal
 from help_to_heat.utils import Entity, Interface, register_event, with_schema
 
 from . import models, schemas
-from .consts import all_pages
+from .consts import (
+    all_pages,
+    confirm_and_submit_page,
+    epc_accept_suggested_epc_field,
+    epc_accept_suggested_epc_field_not_found,
+    epc_rating_field,
+    epc_rating_field_not_found,
+    field_yes,
+    loft_access_field,
+    loft_access_field_no_loft,
+    loft_field,
+    loft_field_no,
+    loft_insulation_field,
+    loft_insulation_field_no_loft,
+    park_home_main_residence_field,
+    property_subtype_field,
+    property_type_field,
+    property_type_field_park_home,
+    supplier_field,
+)
 from .epc_api import EPCApi
 from .os_api import OSApi, ThrottledApiException
+from .routing import calculate_route
 
 
 class SaveAnswerSchema(marshmallow.Schema):
@@ -28,6 +48,11 @@ class RemoveAnswerSchema(marshmallow.Schema):
 
 
 class GetAnswerSchema(marshmallow.Schema):
+    session_id = marshmallow.fields.UUID()
+    page_name = marshmallow.fields.String(validate=marshmallow.validate.OneOf(all_pages))
+
+
+class GetPageAnswersSchema(marshmallow.Schema):
     session_id = marshmallow.fields.UUID()
     page_name = marshmallow.fields.String(validate=marshmallow.validate.OneOf(all_pages))
 
@@ -184,6 +209,14 @@ class Session(Entity):
         except models.Answer.DoesNotExist:
             return {}
 
+    @with_schema(load=GetPageAnswersSchema, dump=schemas.SessionSchema)
+    def get_page_answers(self, session_id, page_name):
+        page_answers = (
+            models.Answer.objects.filter(session_id=session_id, page_name=page_name).order_by("created_at").all()
+        )
+        answers = {k: v for a in page_answers for (k, v) in a.data.items()}
+        return answers
+
     @with_schema(load=GetSessionSchema, dump=schemas.SessionSchema)
     def get_session(self, session_id):
         answers = models.Answer.objects.filter(session_id=session_id).order_by("created_at").all()
@@ -193,10 +226,38 @@ class Session(Entity):
     @with_schema(load=CreateReferralSchema, dump=ReferralSchema)
     @register_event(models.Event, "Referral created")
     def create_referral(self, session_id):
-        session_data = api.session.get_session(session_id)
-        data = SupplierConverter(session_id).replace_in_session_data(session_data)
-        supplier = portal.models.Supplier.objects.get(name=data["supplier"])
-        referral = portal.models.Referral.objects.create(session_id=session_id, data=data, supplier=supplier)
+        answers = api.session.get_session(session_id)
+
+        # filter to only answers given on the user's current route
+        route = calculate_route(answers, confirm_and_submit_page)
+        given_answers = {}
+        for route_page_name in route:
+            page_answers = api.session.get_page_answers(session_id, route_page_name)
+            given_answers = {**given_answers, **page_answers}
+
+        # override property type of park home
+        park_home_main_residence = given_answers.get(park_home_main_residence_field)
+        if park_home_main_residence == field_yes:
+            given_answers[property_type_field] = property_type_field_park_home
+            given_answers[property_subtype_field] = property_type_field_park_home
+
+        # override loft access if no loft
+        loft = given_answers.get(loft_field)
+        if loft == loft_field_no:
+            given_answers[loft_access_field] = loft_access_field_no_loft
+            given_answers[loft_insulation_field] = loft_insulation_field_no_loft
+
+        # ensure not found EPCs are displayed as such
+        # this will normally be set as an answer, but if the route never tries an EPC this answer will be excluded
+        if epc_rating_field not in given_answers:
+            given_answers[epc_rating_field] = epc_rating_field_not_found
+            given_answers[epc_accept_suggested_epc_field] = epc_accept_suggested_epc_field_not_found
+
+        # override supplier
+        given_answers = SupplierConverter(session_id).replace_in_session_data(given_answers)
+
+        supplier = portal.models.Supplier.objects.get(name=given_answers[supplier_field])
+        referral = portal.models.Referral.objects.create(session_id=session_id, data=given_answers, supplier=supplier)
         referral_data = {"id": referral.id, "session_id": referral.session_id, "data": referral.data}
         return referral_data
 

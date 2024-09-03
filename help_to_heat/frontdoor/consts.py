@@ -36,6 +36,7 @@ contact_details_page = "contact-details"
 confirm_and_submit_page = "confirm-and-submit"
 success_page = "success"
 all_pages = [
+    govuk_start_page,
     country_page,
     northern_ireland_ineligible_page,
     supplier_page,
@@ -190,7 +191,9 @@ council_tax_band_fields = [
 ]
 
 epc_accept_suggested_epc_field = "accept_suggested_epc"
+epc_accept_suggested_epc_field_not_found = "Not found"
 epc_rating_field = "epc_rating"
+epc_rating_field_not_found = "Not found"
 epc_rating_is_eligible_field = "epc_rating_is_eligible"
 
 benefits_field = "benefits"
@@ -254,6 +257,7 @@ contact_number_field = "contact_number"
 email_field = "email"
 
 page_name_field = "_page_name"
+schemes_field = "schemes"
 
 # specific actions the user can take on a page (that isn't submitting)
 click_enter_manually = "enter-manually"
