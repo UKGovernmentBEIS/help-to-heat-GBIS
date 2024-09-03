@@ -34,6 +34,7 @@ from help_to_heat.frontdoor.consts import (
     country_field_wales,
     country_page,
     email_field,
+    epc_ineligible_page,
     epc_page,
     epc_rating_field,
     epc_select_page,
@@ -336,6 +337,10 @@ change_page_lookup = {
     park_home_page: summary_page,
     park_home_main_residence_page: summary_page,
     address_page: summary_page,
+    epc_select_page: summary_page,
+    address_select_page: summary_page,
+    address_manual_page: summary_page,
+    referral_already_submitted_page: summary_page,
     council_tax_band_page: summary_page,
     epc_page: summary_page,
     benefits_page: summary_page,
@@ -351,14 +356,9 @@ change_page_lookup = {
     contact_details_page: confirm_and_submit_page,
 }
 
-ineligible_pages = [
-    northern_ireland_ineligible_page,
-    park_home_ineligible_page,
-    property_ineligible_page,
-]
-
 # if pressing submit is routed to send to one of these pages,
 # then, override the change page behaviour and send to this page instead.
+# pressing back while on these pages will send to the previous page, not the summary page as normal
 # used for mandatory follow-up questions
 # for instance, the address input page must always ask the user to select a new address, even if one is already in
 # session, and ask them to confirm a new epc
@@ -368,7 +368,12 @@ change_page_override_pages = [
     address_select_page,
     address_manual_page,
     referral_already_submitted_page,
+    council_tax_band_page,
     epc_page,
+    northern_ireland_ineligible_page,
+    park_home_ineligible_page,
+    epc_ineligible_page,
+    property_ineligible_page,
 ]
 
 # where the route starts for questions in this change page

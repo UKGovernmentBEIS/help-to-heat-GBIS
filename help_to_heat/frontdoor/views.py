@@ -336,7 +336,7 @@ class PageView(utils.MethodDispatcher):
 
         if is_change_page:
             # for pages that block progression, allow the user to press back out of these whilst keeping change state
-            if page_name in schemas.ineligible_pages:
+            if page_name in schemas.change_page_override_pages:
                 prev_page_name = get_prev_page(page_name, answers)
                 prev_page_url = reverse(
                     "frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=prev_page_name)
@@ -396,7 +396,12 @@ class PageView(utils.MethodDispatcher):
             answers = interface.api.session.get_session(session_id)
             self.handle_saved_answers(request, session_id, page_name, answers, is_change_page)
 
+            next_page_name = get_next_page(page_name, answers)
+
             if is_change_page:
+                if next_page_name in schemas.change_page_override_pages:
+                    return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
+
                 assert page_name in schemas.change_page_lookup
                 change_page = schemas.change_page_lookup[page_name]
                 start_of_route = schemas.change_page_start_of_route_lookup[change_page]
@@ -410,7 +415,6 @@ class PageView(utils.MethodDispatcher):
                     last_page_name = e.partial_route[-1]
                     return redirect("frontdoor:change-page", session_id=session_id, page_name=last_page_name)
 
-            next_page_name = get_next_page(page_name, answers)
             if next_page_name == unknown_page:
                 return redirect("/sorry")
             return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
