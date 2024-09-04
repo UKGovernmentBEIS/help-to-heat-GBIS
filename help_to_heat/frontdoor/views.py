@@ -303,13 +303,15 @@ def reset_epc_details(session_id):
 
 
 class PageView(utils.MethodDispatcher):
-    def get(self, request, session_id, page_name, extra_data=None, errors=None, is_change_page=False):
+    def get(self, request, session_id, page_name, unsaved_data=None, errors=None, is_change_page=False):
         if not errors:
             errors = {}
         answers = interface.api.session.get_session(session_id)
         data = interface.api.session.get_answer(session_id, page_name)
-        if extra_data:
-            data = {**data, **extra_data}
+        # if there were validation errors some user inputted data won't have been stored as an answer
+        # they will be passed as unsaved_data so they don't disappear from the page
+        if unsaved_data:
+            data = {**data, **unsaved_data}
         click_choice = request.GET.get("click")
         if click_choice is not None:
             data_with_click_answers = self.save_click_data(data.copy(), session_id, page_name, click_choice)
@@ -369,7 +371,7 @@ class PageView(utils.MethodDispatcher):
         errors = self.validate(request, session_id, page_name, data, is_change_page)
         if errors:
             return self.get(
-                request, session_id, page_name, extra_data=data, errors=errors, is_change_page=is_change_page
+                request, session_id, page_name, unsaved_data=data, errors=errors, is_change_page=is_change_page
             )
         else:
             try:
@@ -378,7 +380,7 @@ class PageView(utils.MethodDispatcher):
             except ValidationError as val_errors:
                 errors = {field: val_errors.messages["data"][field][0] for field in val_errors.messages["data"]}
                 return self.get(
-                    request, session_id, page_name, extra_data=data, errors=errors, is_change_page=is_change_page
+                    request, session_id, page_name, unsaved_data=data, errors=errors, is_change_page=is_change_page
                 )
             except Exception:  # noqa:B902
                 logger.exception("An unknown error occurred saving data")
