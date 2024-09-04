@@ -188,15 +188,6 @@ page_display_questions = {
     contact_details_page: (first_name_field, last_name_field, contact_number_field, email_field),
 }
 
-# details_pages = {
-#     "contact-details": ("first_name", "last_name", "contact_number", "email"),
-# }
-
-# change_page_lookup = {
-#     **{page_name: "summary" for page_name in household_pages},
-#     **{page_name: "confirm-and-submit" for page_name in details_pages},
-# }
-
 # which change page to send back to
 change_page_lookup = {
     country_page: summary_page,
@@ -252,14 +243,6 @@ change_page_start_of_journey_lookup = {
     summary_page: country_page,
     confirm_and_submit_page: schemes_page,
 }
-
-# question_page_lookup = {
-#     question: page_name
-#     for page_name, questions in itertools.chain(household_pages.items(), details_pages.items())
-#     for question in questions
-# }
-
-# pages = page_order + extra_pages + page_order_park_home
 
 country_options_map = (
     {
