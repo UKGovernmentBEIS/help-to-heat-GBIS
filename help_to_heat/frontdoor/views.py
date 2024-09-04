@@ -41,7 +41,6 @@ from .consts import (
     click_enter_manually,
     confirm_and_submit_page,
     contact_details_page,
-    council_tax_band_field,
     council_tax_band_page,
     country_field,
     country_field_scotland,
