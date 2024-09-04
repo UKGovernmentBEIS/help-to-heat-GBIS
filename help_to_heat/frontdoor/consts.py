@@ -16,6 +16,8 @@ epc_select_page = "epc-select"
 address_select_page = "address-select"
 referral_already_submitted_page = "referral-already-submitted"
 address_manual_page = "address-manual"
+epc_select_manual_page = "epc-select-manual"
+address_select_manual_page = "address-select-manual"
 council_tax_band_page = "council-tax-band"
 epc_page = "epc"
 epc_ineligible_page = "epc-ineligible"
@@ -51,6 +53,8 @@ all_pages = [
     address_select_page,
     referral_already_submitted_page,
     address_manual_page,
+    epc_select_manual_page,
+    address_select_manual_page,
     council_tax_band_page,
     epc_page,
     epc_ineligible_page,
@@ -254,6 +258,3 @@ contact_number_field = "contact_number"
 email_field = "email"
 
 page_name_field = "_page_name"
-
-# specific actions the user can take on a page (that isn't submitting)
-click_enter_manually = "enter-manually"
