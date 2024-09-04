@@ -843,24 +843,6 @@ class SummaryView(PageView):
 
     def show_question(self, session_data, question):
         return question in schemas.summary_map
-        # question_answered = question in schemas.summary_map
-        # if not question_answered:
-        #     return False
-        # if question in ["property_type", "property_subtype"]:
-        #     property_type = self.get_answer(session_data, "property_type")
-        #     return property_type != "Park home"
-        # if question in ["park_home", "park_home_main_residence"]:
-        #     own_property = self.get_answer(session_data, "own_property")
-        #     return own_property != "No, I am a social housing tenant"
-        # if question == "epc_rating":
-        #     epc_rating = session_data.get("epc_rating", "Not found")
-        #     accept_suggested_epc = session_data.get("accept_suggested_epc")
-        #     return epc_rating != "Not found" and accept_suggested_epc == "Yes"
-        # if question in ["loft_access", "loft_insulation"]:
-        #     loft_answer = self.get_answer(session_data, "loft")
-        #     return loft_answer == "Yes, I have a loft that has not been converted into a room"
-        # else:
-        #     return True
 
     def get_answer(self, session_data, question):
         answer = session_data.get(question)
@@ -888,18 +870,6 @@ class SchemesView(PageView):
 
         is_in_park_home = session_data.get(park_home_field, field_no) == field_yes
         is_social_housing = session_data.get(own_property_field) == own_property_field_social_housing
-
-        # TODO PC-1191: Edge case whereby user on social housing route goes back on "Check your answers" page and
-        #  changes answer to "Yes I own my own home". Overriding eligibility for "GBIS" ensures user sees the
-        #  eligibility page. Default answers for logic below will further ensure user sees contribution information.
-        if (
-            (not is_in_park_home)
-            and (not is_social_housing)
-            and session_data.get(council_tax_band_field) is None
-            and session_data.get(household_income_field) is None
-            and session_data.get(benefits_field) is None
-        ):
-            eligible_schemes = ("GBIS",)
 
         is_solid_walls = session_data.get(wall_type_field) in [
             wall_type_field_solid,
@@ -1054,7 +1024,6 @@ class ConfirmSubmitView(PageView):
         supplier_redirect = unavailable_supplier_redirect(session_id)
         if supplier_redirect is not None:
             return supplier_redirect
-
         interface.api.session.create_referral(session_id)
         save_answer(session_id, page_name, {"referral_created_at": str(timezone.now())})
         session_data = interface.api.session.get_session(session_id)
