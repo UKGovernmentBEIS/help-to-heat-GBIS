@@ -9,9 +9,9 @@ from help_to_heat.frontdoor.routing import (
 )
 
 start_page = country_page
-# in case of infinite loop ensure a route can't go on forever
-# currently the longest route is under 30 pages
-max_route_length = 100
+# in case of infinite loop ensure a journey can't go on forever
+# currently the longest journey is under 30 pages
+max_journey_length = 100
 
 
 def get_prev_page(current_page, answers):
