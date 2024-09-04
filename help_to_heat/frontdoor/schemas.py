@@ -7,7 +7,10 @@ from phonenumbers import NumberParseException
 from help_to_heat.frontdoor.consts import (
     address_field,
     benefits_field,
-    contact_number_field,
+    contact_details_contact_number_field,
+    contact_details_email_field,
+    contact_details_first_name_field,
+    contact_details_last_name_field,
     council_tax_band_field,
     council_tax_band_field_a,
     council_tax_band_field_b,
@@ -23,16 +26,13 @@ from help_to_heat.frontdoor.consts import (
     country_field_northern_ireland,
     country_field_scotland,
     country_field_wales,
-    email_field,
     epc_rating_field,
     field_dont_know,
     field_no,
     field_yes,
-    first_name_field,
     household_income_field,
     household_income_field_less_than_threshold,
     household_income_field_more_than_threshold,
-    last_name_field,
     loft_access_field,
     loft_access_field_no,
     loft_access_field_no_loft,
@@ -250,10 +250,10 @@ summary_map = {
 
 confirm_sumbit_map = {
     supplier_field: _("Energy supplier"),
-    first_name_field: _("First name"),
-    last_name_field: _("Last name"),
-    contact_number_field: _("Contact number"),
-    email_field: _("Email"),
+    contact_details_first_name_field: _("First name"),
+    contact_details_last_name_field: _("Last name"),
+    contact_details_contact_number_field: _("Contact number"),
+    contact_details_email_field: _("Email"),
 }
 
 # household_pages = {
