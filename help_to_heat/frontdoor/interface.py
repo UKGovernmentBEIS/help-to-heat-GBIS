@@ -33,7 +33,7 @@ from .consts import (
 )
 from .epc_api import EPCApi
 from .os_api import OSApi, ThrottledApiException
-from .routing import calculate_route
+from .routing import calculate_journey
 
 
 class SaveAnswerSchema(marshmallow.Schema):
@@ -228,11 +228,11 @@ class Session(Entity):
     def create_referral(self, session_id):
         answers = api.session.get_session(session_id)
 
-        # filter to only answers given on the user's current route
-        route = calculate_route(answers, confirm_and_submit_page)
+        # filter to only answers given on the user's journey
+        journey = calculate_journey(answers, confirm_and_submit_page)
         given_answers = {}
-        for route_page_name in route:
-            page_answers = api.session.get_page_answers(session_id, route_page_name)
+        for journey_page_name in journey:
+            page_answers = api.session.get_page_answers(session_id, journey_page_name)
             given_answers = {**given_answers, **page_answers}
 
         # override property type of park home
@@ -248,7 +248,7 @@ class Session(Entity):
             given_answers[loft_insulation_field] = loft_insulation_field_no_loft
 
         # ensure not found EPCs are displayed as such
-        # this will normally be set as an answer, but if the route never tries an EPC this answer will be excluded
+        # this will normally be set as an answer, but if the journey never tries an EPC this answer will be excluded
         if epc_rating_field not in given_answers:
             given_answers[epc_rating_field] = epc_rating_field_not_found
             given_answers[epc_accept_suggested_epc_field] = epc_accept_suggested_epc_field_not_found

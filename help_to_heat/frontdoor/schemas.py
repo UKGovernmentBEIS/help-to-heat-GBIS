@@ -247,8 +247,8 @@ change_page_override_pages = [
     property_ineligible_page,
 ]
 
-# where the route starts for questions in this change page
-change_page_start_of_route_lookup = {
+# where the journey starts for questions in this change page
+change_page_start_of_journey_lookup = {
     summary_page: country_page,
     confirm_and_submit_page: schemes_page,
 }

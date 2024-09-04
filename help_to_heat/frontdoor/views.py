@@ -123,7 +123,7 @@ from .consts import (
     wall_type_page,
 )
 from .eligibility import calculate_eligibility, eco4
-from .routing import CouldNotCalculateRouteException, calculate_route
+from .routing import CouldNotCalculateJourneyException, calculate_journey
 from .routing.backwards_routing import get_prev_page
 from .routing.forwards_routing import get_next_page
 from .session_handlers.duplicate_referral_checker import (
@@ -393,15 +393,15 @@ class PageView(utils.MethodDispatcher):
 
                 assert page_name in schemas.change_page_lookup
                 change_page = schemas.change_page_lookup[page_name]
-                start_of_route = schemas.change_page_start_of_route_lookup[change_page]
+                start_of_journey = schemas.change_page_start_of_journey_lookup[change_page]
 
                 try:
-                    # ensure the user has answers to complete the route
-                    calculate_route(answers, from_page=start_of_route, to_page=change_page)
+                    # ensure the user has answers to complete the journey
+                    calculate_journey(answers, from_page=start_of_journey, to_page=change_page)
                     return redirect("frontdoor:page", session_id=session_id, page_name=change_page)
-                except CouldNotCalculateRouteException as e:
+                except CouldNotCalculateJourneyException as e:
                     # if not, take them to the question that is preventing them from finishing
-                    last_page_name = e.partial_route[-1]
+                    last_page_name = e.partial_journey[-1]
                     return redirect("frontdoor:change-page", session_id=session_id, page_name=last_page_name)
 
             if next_page_name == unknown_page:
@@ -818,7 +818,7 @@ class SummaryView(PageView):
         return {"summary_lines": summary_lines}
 
     def get_summary_questions(self, session_data):
-        for page_name in calculate_route(session_data, to_page=summary_page):
+        for page_name in calculate_journey(session_data, to_page=summary_page):
             if page_name in schemas.page_display_questions.keys():
                 for question in schemas.page_display_questions[page_name]:
                     if self.show_question(session_data, question):
@@ -995,7 +995,7 @@ class ConfirmSubmitView(PageView):
         return {"summary_lines": summary_lines, "supplier": supplier}
 
     def get_confirm_submit_questions(self, session_data):
-        for page_name in calculate_route(session_data, from_page=schemes_page, to_page=confirm_and_submit_page):
+        for page_name in calculate_journey(session_data, from_page=schemes_page, to_page=confirm_and_submit_page):
             if page_name in schemas.page_display_questions:
                 for question in schemas.page_display_questions[page_name]:
                     yield page_name, question
