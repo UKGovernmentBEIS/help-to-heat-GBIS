@@ -3,7 +3,10 @@ from help_to_heat.frontdoor.consts import (
     govuk_start_page,
     unknown_page,
 )
-from help_to_heat.frontdoor.routing import calculate_route, CouldNotCalculateRouteException
+from help_to_heat.frontdoor.routing import (
+    CouldNotCalculateRouteException,
+    calculate_route,
+)
 
 start_page = country_page
 # in case of infinite loop ensure a route can't go on forever
