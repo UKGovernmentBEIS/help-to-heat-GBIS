@@ -7,6 +7,7 @@ from help_to_heat.frontdoor.consts import (
     address_page,
     address_select_choice_field,
     address_select_choice_field_select_address,
+    address_select_manual_page,
     address_select_page,
     benefits_field,
     benefits_page,
@@ -32,6 +33,7 @@ from help_to_heat.frontdoor.consts import (
     epc_select_choice_field_enter_manually,
     epc_select_choice_field_epc_api_fail,
     epc_select_choice_field_select_epc,
+    epc_select_manual_page,
     epc_select_page,
     field_no,
     field_yes,
@@ -164,6 +166,12 @@ def get_next_page(current_page, answers):
 
     if current_page == address_manual_page:
         return _address_manual_next_page(answers)
+
+    if current_page == epc_select_manual_page:
+        return _epc_select_manual_next_page(answers)
+
+    if current_page == address_select_manual_page:
+        return _address_select_manual_next_page(answers)
 
     if current_page == referral_already_submitted_page:
         return _referral_already_submitted_next_page(answers)
@@ -333,7 +341,7 @@ def _epc_select_next_page(answers):
     if choice == epc_select_choice_field_epc_api_fail:
         return address_select_page
     if choice == epc_select_choice_field_enter_manually:
-        return address_manual_page
+        return epc_select_manual_page
 
     return _unknown_response
 
@@ -345,12 +353,20 @@ def _address_select_next_page(answers):
     if choice == address_select_choice_field_select_address:
         return _post_address_input_next_page(answers)
     if choice == address_choice_field_enter_manually:
-        return address_manual_page
+        return address_select_manual_page
 
     return _unknown_response
 
 
 def _address_manual_next_page(answers):
+    return _post_duplicate_uprn_next_page(answers)
+
+
+def _epc_select_manual_next_page(answers):
+    return _post_duplicate_uprn_next_page(answers)
+
+
+def _address_select_manual_next_page(answers):
     return _post_duplicate_uprn_next_page(answers)
 
 

@@ -32,13 +32,13 @@ from .consts import (
     address_select_choice_field,
     address_select_choice_field_enter_manually,
     address_select_choice_field_select_address,
+    address_select_manual_page,
     address_select_page,
     all_pages,
     benefits_field,
     benefits_page,
     bulb_warning_page,
     bulb_warning_page_field,
-    click_enter_manually,
     confirm_and_submit_page,
     contact_details_page,
     council_tax_band_page,
@@ -60,6 +60,7 @@ from .consts import (
     epc_select_choice_field_enter_manually,
     epc_select_choice_field_epc_api_fail,
     epc_select_choice_field_select_epc,
+    epc_select_manual_page,
     epc_select_page,
     field_no,
     field_yes,
@@ -314,18 +315,6 @@ class PageView(utils.MethodDispatcher):
         # they will be passed as unsaved_data so that they don't disappear from the page
         if unsaved_data:
             data = {**data, **unsaved_data}
-        click_choice = request.GET.get("click")
-        if click_choice is not None:
-            data_with_click_answers = self.save_click_data(data.copy(), session_id, page_name, click_choice)
-            save_answer(session_id, page_name, data_with_click_answers)
-
-            # add new data to full answers object to calculate new next page
-            answers = {**answers, **data}
-            next_page_name = get_next_page(page_name, answers)
-            if next_page_name != unknown_page:
-                return redirect(page_name_to_url(session_id, next_page_name))
-            else:
-                return redirect("/sorry")
 
         data_with_get_answers = self.save_get_data(data.copy(), session_id, page_name)
         # only save an answer on get if new answers were given
@@ -427,19 +416,6 @@ class PageView(utils.MethodDispatcher):
         """
         return {}
 
-    def save_click_data(self, data, session_id, page_name, click_choice):
-        """
-        If the user clicks an alternate button on a page that isn't submit, this method will be called with the click
-        choice.
-
-        For instance, when the user presses 'Enter manually'
-
-        Click choices are defined in consts.py.
-
-        The returned data object will be used to decide which page to send to
-        """
-        return data
-
     def save_get_data(self, data, session_id, page_name):
         """
         Add any additional answers to be saved on GET
@@ -518,12 +494,7 @@ class ParkHomeMainResidenceView(PageView):
 @register_page(address_page)
 class AddressView(PageView):
     def build_extra_context(self, request, session_id, page_name, data):
-        return {"manual_url": f"{page_name_to_url(session_id, page_name)}?click={click_enter_manually}"}
-
-    def save_click_data(self, data, session_id, page_name, click_choice):
-        if click_choice == click_enter_manually:
-            data[address_choice_field] = address_choice_field_enter_manually
-        return data
+        return {"manual_url": page_name_to_url(session_id, address_manual_page)}
 
     def save_post_data(self, data, session_id, page_name):
         reset_epc_details(session_id)
@@ -568,13 +539,8 @@ class EpcSelectView(PageView):
         )
         return {
             "rrn_options": rrn_options,
-            "manual_url": f"{page_name_to_url(session_id, page_name)}?click={click_enter_manually}",
+            "manual_url": page_name_to_url(session_id, epc_select_manual_page),
         }
-
-    def save_click_data(self, data, session_id, page_name, click_choice):
-        if click_choice == click_enter_manually:
-            data[epc_select_choice_field] = epc_select_choice_field_enter_manually
-        return data
 
     def save_post_data(self, data, session_id, page_name):
         rrn = data.get(rrn_field)
@@ -630,13 +596,8 @@ class AddressSelectView(PageView):
         )
         return {
             "uprn_options": uprn_options,
-            "manual_url": f"{page_name_to_url(session_id, page_name)}?click={click_enter_manually}",
+            "manual_url": page_name_to_url(session_id, address_select_manual_page),
         }
-
-    def save_click_data(self, data, session_id, page_name, click_choice):
-        if click_choice == click_enter_manually:
-            data[address_select_choice_field] = address_select_choice_field_enter_manually
-        return data
 
     def save_post_data(self, data, session_id, page_name):
         data[address_select_choice_field] = address_select_choice_field_select_address
@@ -672,12 +633,27 @@ class ReferralAlreadySubmitted(PageView):
         }
 
 
+# so that the routing can discern which way to go, there are three registered manual pages
+# these use the same template and share a view
+# the user is linked here directly, bypassing the routing logic. this means back button url must be manually given
+# after submitting, an answer that the user went this way is saved to the session. normal routing can take over again
 @register_page(address_manual_page)
+@register_page(epc_select_manual_page)
+@register_page(address_select_manual_page)
 class AddressManualView(PageView):
     def build_extra_context(self, request, session_id, page_name, data, *args, **kwargs):
         answer_data = interface.api.session.get_answer(session_id, address_page)
         data = {**answer_data, **data}
-        return {"data": data}
+        prev_page_name = unknown_page
+        if page_name == address_manual_page:
+            prev_page_name = address_page
+        elif page_name == epc_select_manual_page:
+            prev_page_name = epc_select_page
+        elif page_name == address_select_manual_page:
+            prev_page_name = address_select_page
+
+        prev_url = page_name_to_url(session_id, prev_page_name)
+        return {"data": data, "prev_url": prev_url}
 
     def save_post_data(self, data, session_id, page_name):
         reset_epc_details(session_id)
@@ -695,6 +671,14 @@ class AddressManualView(PageView):
         data[address_field] = address
         data[duplicate_uprn_field] = field_no
         data[epc_found_field] = field_no
+
+        if page_name == address_manual_page:
+            data[address_choice_field] = address_choice_field_enter_manually
+        if page_name == epc_select_manual_page:
+            data[epc_select_choice_field] = epc_select_choice_field_enter_manually
+        if page_name == address_select_manual_page:
+            data[address_select_choice_field] = address_select_choice_field_enter_manually
+
         return data
 
 
