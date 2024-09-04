@@ -752,7 +752,7 @@ def test_no_address():
     form["county"] = "Big County"
     page = form.submit().follow()
 
-    data = interface.api.session.get_answer(session_id, page_name="address-manual")
+    data = interface.api.session.get_answer(session_id, page_name="address-select-manual")
     assert data["address_line_1"] == "22 Acacia Avenue"
     assert data["town_or_city"] == "Metropolis"
     assert data["address_line_2"] == "Smalltown"
