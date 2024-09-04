@@ -158,6 +158,8 @@ address_select_choice_field = "address_select_choice"
 address_select_choice_field_select_address = "select address"
 address_select_choice_field_enter_manually = "enter manually"
 
+referral_already_submitted_field = "submit_another"
+
 address_manual_address_line_1_field = "address_line_1"
 address_manual_address_line_2_field = "address_line_2"
 address_manual_town_or_city_field = "town_or_city"
@@ -255,10 +257,17 @@ loft_insulation_field_less_than_threshold = "I have up to 100mm of loft insulati
 loft_insulation_field_dont_know = field_dont_know
 loft_insulation_field_no_loft = "No loft"
 
-first_name_field = "first_name"
-last_name_field = "last_name"
-contact_number_field = "contact_number"
-email_field = "email"
+schemes_ventilation_acknowledgement_field = "ventilation_acknowledgement"
+schemes_contribution_acknowledgement_field = "contribution_acknowledgement"
+
+
+contact_details_first_name_field = "first_name"
+contact_details_last_name_field = "last_name"
+contact_details_contact_number_field = "contact_number"
+contact_details_email_field = "email"
+
+confirm_and_submit_permission_field = "permission"
+confirm_and_submit_acknowledge_field = "acknowledge"
 
 page_name_field = "_page_name"
 schemes_field = "schemes"

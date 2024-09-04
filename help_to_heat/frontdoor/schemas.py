@@ -14,8 +14,11 @@ from help_to_heat.frontdoor.consts import (
     bulb_warning_page,
     bulb_warning_page_field,
     confirm_and_submit_page,
+    contact_details_contact_number_field,
+    contact_details_email_field,
+    contact_details_first_name_field,
+    contact_details_last_name_field,
     contact_details_page,
-    contact_number_field,
     council_tax_band_field,
     council_tax_band_field_a,
     council_tax_band_field_b,
@@ -33,7 +36,6 @@ from help_to_heat.frontdoor.consts import (
     country_field_scotland,
     country_field_wales,
     country_page,
-    email_field,
     epc_ineligible_page,
     epc_page,
     epc_rating_field,
@@ -41,12 +43,10 @@ from help_to_heat.frontdoor.consts import (
     field_dont_know,
     field_no,
     field_yes,
-    first_name_field,
     household_income_field,
     household_income_field_less_than_threshold,
     household_income_field_more_than_threshold,
     household_income_page,
-    last_name_field,
     loft_access_field,
     loft_access_field_no,
     loft_access_field_no_loft,
@@ -157,10 +157,10 @@ summary_map = {
 
 confirm_sumbit_map = {
     supplier_field: _("Energy supplier"),
-    first_name_field: _("First name"),
-    last_name_field: _("Last name"),
-    contact_number_field: _("Contact number"),
-    email_field: _("Email"),
+    contact_details_first_name_field: _("First name"),
+    contact_details_last_name_field: _("Last name"),
+    contact_details_contact_number_field: _("Contact number"),
+    contact_details_email_field: _("Email"),
 }
 
 page_display_questions = {
@@ -185,7 +185,12 @@ page_display_questions = {
     loft_page: (loft_field,),
     loft_access_page: (loft_access_field,),
     loft_insulation_page: (loft_insulation_field,),
-    contact_details_page: (first_name_field, last_name_field, contact_number_field, email_field),
+    contact_details_page: (
+        contact_details_first_name_field,
+        contact_details_last_name_field,
+        contact_details_contact_number_field,
+        contact_details_email_field,
+    ),
 }
 
 # which change page to send back to
