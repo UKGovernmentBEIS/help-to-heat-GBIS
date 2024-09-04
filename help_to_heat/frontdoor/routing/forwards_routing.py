@@ -136,13 +136,13 @@ def get_next_page(current_page, answers):
         return _supplier_next_page(answers)
 
     if current_page == bulb_warning_page:
-        return _bulb_warning_page_next_page()
+        return _bulb_warning_page_next_page(answers)
 
     if current_page == shell_warning_page:
-        return _shell_warning_page_next_page()
+        return _shell_warning_page_next_page(answers)
 
     if current_page == utility_warehouse_warning_page:
-        return _utility_warehouse_warning_page_next_page()
+        return _utility_warehouse_warning_page_next_page(answers)
 
     if current_page == own_property_page:
         return _own_property_next_page(answers)
@@ -181,28 +181,28 @@ def get_next_page(current_page, answers):
         return _household_income_next_page(answers)
 
     if current_page == property_type_page:
-        return _property_type_next_page()
+        return _property_type_next_page(answers)
 
     if current_page == property_subtype_page:
-        return _property_subtype_next_page()
+        return _property_subtype_next_page(answers)
 
     if current_page == number_of_bedrooms_page:
-        return _number_of_bedrooms_next_page()
+        return _number_of_bedrooms_next_page(answers)
 
     if current_page == wall_type_page:
-        return _wall_type_next_page()
+        return _wall_type_next_page(answers)
 
     if current_page == wall_insulation_page:
-        return _wall_insulation_next_page()
+        return _wall_insulation_next_page(answers)
 
     if current_page == loft_page:
         return _loft_next_page(answers)
 
     if current_page == loft_access_page:
-        return _loft_access_next_page()
+        return _loft_access_next_page(answers)
 
     if current_page == loft_insulation_page:
-        return _loft_insulation_next_page()
+        return _loft_insulation_next_page(answers)
 
     if current_page == summary_page:
         return _summary_next_page()
@@ -257,18 +257,19 @@ def _supplier_next_page(answers):
     return _unknown_response
 
 
+# the answers object is not used by the function but is used by the decorator
 @_requires_answer(bulb_warning_page_field)
-def _bulb_warning_page_next_page():
+def _bulb_warning_page_next_page(_answers):
     return own_property_page
 
 
 @_requires_answer(shell_warning_page_field)
-def _shell_warning_page_next_page():
+def _shell_warning_page_next_page(_answers):
     return own_property_page
 
 
 @_requires_answer(utility_warehouse_warning_page_field)
-def _utility_warehouse_warning_page_next_page():
+def _utility_warehouse_warning_page_next_page(_answers):
     return own_property_page
 
 
@@ -458,27 +459,27 @@ def _post_circumstances_next_page(answers):
 
 
 @_requires_answer(property_type_field)
-def _property_type_next_page():
+def _property_type_next_page(_answers):
     return property_subtype_page
 
 
 @_requires_answer(property_subtype_field)
-def _property_subtype_next_page():
+def _property_subtype_next_page(_answers):
     return number_of_bedrooms_page
 
 
 @_requires_answer(number_of_bedrooms_field)
-def _number_of_bedrooms_next_page():
+def _number_of_bedrooms_next_page(_answers):
     return wall_type_page
 
 
 @_requires_answer(wall_type_field)
-def _wall_type_next_page():
+def _wall_type_next_page(_answers):
     return wall_insulation_page
 
 
 @_requires_answer(wall_insulation_field)
-def _wall_insulation_next_page():
+def _wall_insulation_next_page(_answers):
     return loft_page
 
 
@@ -495,12 +496,12 @@ def _loft_next_page(answers):
 
 
 @_requires_answer(loft_access_field)
-def _loft_access_next_page():
+def _loft_access_next_page(_answers):
     return loft_insulation_page
 
 
 @_requires_answer(loft_insulation_field)
-def _loft_insulation_next_page():
+def _loft_insulation_next_page(_answers):
     return summary_page
 
 
