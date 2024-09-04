@@ -10,6 +10,7 @@ from help_to_heat.frontdoor.consts import (
     address_select_choice_field,
     address_select_choice_field_enter_manually,
     address_select_choice_field_select_address,
+    address_select_manual_page,
     address_select_page,
     benefits_field,
     benefits_page,
@@ -36,6 +37,7 @@ from help_to_heat.frontdoor.consts import (
     epc_select_choice_field_enter_manually,
     epc_select_choice_field_epc_api_fail,
     epc_select_choice_field_select_epc,
+    epc_select_manual_page,
     epc_select_page,
     field_dont_know,
     field_no,
@@ -262,8 +264,8 @@ def test_address_enter_manually_next_page():
         (epc_select_choice_field_select_epc, field_yes, referral_already_submitted_page),
         (epc_select_choice_field_epc_api_fail, field_no, address_select_page),
         (epc_select_choice_field_epc_api_fail, field_yes, address_select_page),
-        (epc_select_choice_field_enter_manually, field_no, address_manual_page),
-        (epc_select_choice_field_enter_manually, field_yes, address_manual_page),
+        (epc_select_choice_field_enter_manually, field_no, epc_select_manual_page),
+        (epc_select_choice_field_enter_manually, field_yes, epc_select_manual_page),
     ],
 )
 def test_epc_select_park_home_next_page(choice, duplicate_uprn, expected_next_page):
@@ -286,8 +288,8 @@ def test_epc_select_park_home_next_page(choice, duplicate_uprn, expected_next_pa
         (epc_select_choice_field_select_epc, field_yes, referral_already_submitted_page),
         (epc_select_choice_field_epc_api_fail, field_no, address_select_page),
         (epc_select_choice_field_epc_api_fail, field_yes, address_select_page),
-        (epc_select_choice_field_enter_manually, field_no, address_manual_page),
-        (epc_select_choice_field_enter_manually, field_yes, address_manual_page),
+        (epc_select_choice_field_enter_manually, field_no, epc_select_manual_page),
+        (epc_select_choice_field_enter_manually, field_yes, epc_select_manual_page),
     ],
 )
 def test_epc_select_not_park_home_not_already_submitted_next_page(choice, duplicate_uprn, expected_next_page):
@@ -308,8 +310,8 @@ def test_epc_select_not_park_home_not_already_submitted_next_page(choice, duplic
         (epc_select_choice_field_select_epc, field_yes, referral_already_submitted_page),
         (epc_select_choice_field_epc_api_fail, field_no, address_select_page),
         (epc_select_choice_field_epc_api_fail, field_yes, address_select_page),
-        (epc_select_choice_field_enter_manually, field_no, address_manual_page),
-        (epc_select_choice_field_enter_manually, field_yes, address_manual_page),
+        (epc_select_choice_field_enter_manually, field_no, epc_select_manual_page),
+        (epc_select_choice_field_enter_manually, field_yes, epc_select_manual_page),
     ],
 )
 def test_epc_select_social_housing_next_page(choice, duplicate_uprn, expected_next_page):
@@ -330,10 +332,10 @@ def test_epc_select_social_housing_next_page(choice, duplicate_uprn, expected_ne
         (address_select_choice_field_select_address, field_no, field_yes, epc_page),
         (address_select_choice_field_select_address, field_yes, field_no, referral_already_submitted_page),
         (address_select_choice_field_select_address, field_yes, field_yes, referral_already_submitted_page),
-        (address_select_choice_field_enter_manually, field_no, field_no, address_manual_page),
-        (address_select_choice_field_enter_manually, field_no, field_yes, address_manual_page),
-        (address_select_choice_field_enter_manually, field_yes, field_no, address_manual_page),
-        (address_select_choice_field_enter_manually, field_yes, field_yes, address_manual_page),
+        (address_select_choice_field_enter_manually, field_no, field_no, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_no, field_yes, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_no, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_yes, address_select_manual_page),
     ],
 )
 def test_address_select_park_home_next_page(choice, duplicate_uprn, epc_found, expected_next_page):
@@ -355,10 +357,10 @@ def test_address_select_park_home_next_page(choice, duplicate_uprn, epc_found, e
         (address_select_choice_field_select_address, field_no, field_yes, council_tax_band_page),
         (address_select_choice_field_select_address, field_yes, field_no, referral_already_submitted_page),
         (address_select_choice_field_select_address, field_yes, field_yes, referral_already_submitted_page),
-        (address_select_choice_field_enter_manually, field_no, field_no, address_manual_page),
-        (address_select_choice_field_enter_manually, field_no, field_yes, address_manual_page),
-        (address_select_choice_field_enter_manually, field_yes, field_no, address_manual_page),
-        (address_select_choice_field_enter_manually, field_yes, field_yes, address_manual_page),
+        (address_select_choice_field_enter_manually, field_no, field_no, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_no, field_yes, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_no, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_yes, address_select_manual_page),
     ],
 )
 def test_address_select_not_park_home_next_page(choice, duplicate_uprn, epc_found, expected_next_page):
@@ -380,10 +382,10 @@ def test_address_select_not_park_home_next_page(choice, duplicate_uprn, epc_foun
         (address_select_choice_field_select_address, field_no, field_yes, epc_page),
         (address_select_choice_field_select_address, field_yes, field_no, referral_already_submitted_page),
         (address_select_choice_field_select_address, field_yes, field_yes, referral_already_submitted_page),
-        (address_select_choice_field_enter_manually, field_no, field_no, address_manual_page),
-        (address_select_choice_field_enter_manually, field_no, field_yes, address_manual_page),
-        (address_select_choice_field_enter_manually, field_yes, field_no, address_manual_page),
-        (address_select_choice_field_enter_manually, field_yes, field_yes, address_manual_page),
+        (address_select_choice_field_enter_manually, field_no, field_no, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_no, field_yes, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_no, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_yes, address_select_manual_page),
     ],
 )
 def test_address_select_social_housing_next_page(choice, duplicate_uprn, epc_found, expected_next_page):
@@ -409,6 +411,34 @@ def test_address_manual_next_page(flow, expected_next_page):
     for flow_answers in get_property_flow_answers(flow):
         answers = {**flow_answers, epc_found_field: field_no, duplicate_uprn_field: field_no}
         assert get_next_page(address_manual_page, answers) == expected_next_page
+
+
+@pytest.mark.parametrize(
+    "flow, expected_next_page",
+    [
+        (property_flow_park_home, benefits_page),
+        (property_flow_main, council_tax_band_page),
+        (property_flow_social_housing, property_type_page),
+    ],
+)
+def test_epc_select_manual_next_page(flow, expected_next_page):
+    for flow_answers in get_property_flow_answers(flow):
+        answers = {**flow_answers, epc_found_field: field_no, duplicate_uprn_field: field_no}
+        assert get_next_page(epc_select_manual_page, answers) == expected_next_page
+
+
+@pytest.mark.parametrize(
+    "flow, expected_next_page",
+    [
+        (property_flow_park_home, benefits_page),
+        (property_flow_main, council_tax_band_page),
+        (property_flow_social_housing, property_type_page),
+    ],
+)
+def test_address_select_manual_next_page(flow, expected_next_page):
+    for flow_answers in get_property_flow_answers(flow):
+        answers = {**flow_answers, epc_found_field: field_no, duplicate_uprn_field: field_no}
+        assert get_next_page(address_select_manual_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
