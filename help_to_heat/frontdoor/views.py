@@ -308,8 +308,9 @@ class PageView(utils.MethodDispatcher):
             errors = {}
         answers = interface.api.session.get_session(session_id)
         data = interface.api.session.get_answer(session_id, page_name)
+
         # if there were validation errors some user inputted data won't have been stored as an answer
-        # they will be passed as unsaved_data so they don't disappear from the page
+        # they will be passed as unsaved_data so that they don't disappear from the page
         if unsaved_data:
             data = {**data, **unsaved_data}
         click_choice = request.GET.get("click")
