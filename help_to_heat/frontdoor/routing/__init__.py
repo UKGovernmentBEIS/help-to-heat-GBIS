@@ -46,7 +46,7 @@ def calculate_route(answers, to_page, from_page=None):
 
         route.append(next_page)
 
-    raise CouldNotCalculateRouteException
+    raise CouldNotCalculateRouteException(from_page, to_page, list(route))
 
 
 class CouldNotCalculateRouteException(Exception):
