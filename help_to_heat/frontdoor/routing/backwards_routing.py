@@ -19,11 +19,8 @@ def get_prev_page(current_page, answers):
     if current_page == govuk_start_page:
         return unknown_page
 
-    try:
-        journey = calculate_journey(answers, current_page)
+    journey = calculate_journey(answers, current_page)
 
-        # if the page has been found, the last item in the list (index -1) will be the current page
-        # so, the item before the last one (index -2) will be the previous page
-        return journey[-2]
-    except CouldNotCalculateJourneyException:
-        return unknown_page
+    # if the page has been found, the last item in the list (index -1) will be the current page
+    # so, the item before the last one (index -2) will be the previous page
+    return journey[-2]
