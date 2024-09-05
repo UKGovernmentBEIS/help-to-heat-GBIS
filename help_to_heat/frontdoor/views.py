@@ -432,6 +432,11 @@ class PageView(utils.MethodDispatcher):
                     return redirect("frontdoor:page", session_id=session_id, page_name=change_page)
                 except CouldNotCalculateJourneyException as e:
                     # if not, take them to the question that is preventing them from finishing
+                    # for instance, if the journey ends at the park home main resident page (and not summary page), then
+                    # this must mean the user hasn't given an answer to it
+                    # so, extract the last page in the route and send the user there in the change page state
+                    # this cycle keeps happening until a journey to summary can be completed, at which point we know
+                    # the user has now answered all required questions
                     last_page_name = e.partial_journey[-1]
                     return redirect("frontdoor:change-page", session_id=session_id, page_name=last_page_name)
 
