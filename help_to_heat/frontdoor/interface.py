@@ -255,7 +255,7 @@ class Session(Entity):
             given_answers[epc_rating_field] = epc_rating_field_not_found
             given_answers[epc_accept_suggested_epc_field] = epc_accept_suggested_epc_field_not_found
 
-        # override supplier
+        # if the supplier has been replaced (ie Octopus manages Shell), then replace the Shell with Octopus in answers
         given_answers = SupplierConverter(session_id).replace_in_session_data(given_answers)
 
         supplier = portal.models.Supplier.objects.get(name=given_answers[supplier_field])
