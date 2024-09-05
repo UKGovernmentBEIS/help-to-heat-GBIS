@@ -352,19 +352,7 @@ class PageView(utils.MethodDispatcher):
         if data_with_get_answers != data:
             save_answer(session_id, page_name, data_with_get_answers)
 
-        if is_change_page:
-            # for pages that block progression, allow the user to press back out of these whilst keeping change state
-            if page_name in schemas.change_page_override_pages:
-                prev_page_name = get_prev_page(page_name, answers)
-                prev_page_url = reverse(
-                    "frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=prev_page_name)
-                )
-            else:
-                assert page_name in schemas.change_page_lookup
-                prev_page_name = schemas.change_page_lookup[page_name]
-                prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=prev_page_name))
-        else:
-            prev_page_url = page_name_to_url(session_id, get_prev_page(page_name, answers))
+        prev_page_url = self._get_prev_page_url(request, session_id, page_name, is_change_page)
 
         # Once a user has created a referral, they can no longer access their old session
         if "referral_created_at" in answers and page_name != "success":
@@ -490,6 +478,24 @@ class PageView(utils.MethodDispatcher):
         missing_fields = tuple(field for field in fields if not data.get(field))
         errors = {field: missing_item_errors[field] for field in missing_fields}
         return errors
+
+    def _get_prev_page_url(self, request, session_id, page_name, is_change_page):
+        answers = interface.api.session.get_session(session_id)
+
+        if is_change_page:
+            # for pages that block progression, allow the user to press back out of these whilst keeping change state
+            if page_name in schemas.change_page_override_pages:
+                prev_page_name = get_prev_page(page_name, answers)
+                return reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=prev_page_name))
+            else:
+                assert page_name in schemas.change_page_lookup
+                prev_page_name = schemas.change_page_lookup[page_name]
+                return reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=prev_page_name))
+
+        if page_name in schemas.back_button_overrides:
+            return page_name_to_url(session_id, schemas.back_button_overrides[page_name])
+
+        return page_name_to_url(session_id, get_prev_page(page_name, answers))
 
 
 @register_page(country_page)
@@ -680,16 +686,8 @@ class AddressManualView(PageView):
     def build_extra_context(self, request, session_id, page_name, data, *args, **kwargs):
         answer_data = interface.api.session.get_answer(session_id, address_page)
         data = {**answer_data, **data}
-        prev_page_name = unknown_page
-        if page_name == address_manual_page:
-            prev_page_name = address_page
-        elif page_name == epc_select_manual_page:
-            prev_page_name = epc_select_page
-        elif page_name == address_select_manual_page:
-            prev_page_name = address_select_page
 
-        prev_url = page_name_to_url(session_id, prev_page_name)
-        return {"data": data, "prev_url": prev_url}
+        return {"data": data}
 
     def save_post_data(self, data, session_id, page_name):
         reset_epc_details(session_id)
