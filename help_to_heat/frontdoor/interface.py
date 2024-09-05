@@ -226,6 +226,9 @@ class Session(Entity):
     @with_schema(load=CreateReferralSchema, dump=ReferralSchema)
     @register_event(models.Event, "Referral created")
     def create_referral(self, session_id):
+        # add some cosmetic information to the exported referral to help out suppliers
+        # e.g. set dependent answers that would be blank to a meaningful string
+
         answers = api.session.get_session(session_id)
 
         # filter to only answers given on the user's journey
