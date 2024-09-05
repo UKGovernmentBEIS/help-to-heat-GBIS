@@ -248,7 +248,9 @@ class Session(Entity):
             given_answers[loft_insulation_field] = loft_insulation_field_no_loft
 
         # ensure not found EPCs are displayed as such
-        # this will normally be set as an answer, but if the journey never tries an EPC this answer will be excluded
+        # this will normally be set as an answer on pressing submit on 'address' page
+        # though this is not guaranteed, ie if user presses to enter manually
+        # so this check ensures it's not missed out
         if epc_rating_field not in given_answers:
             given_answers[epc_rating_field] = epc_rating_field_not_found
             given_answers[epc_accept_suggested_epc_field] = epc_accept_suggested_epc_field_not_found
