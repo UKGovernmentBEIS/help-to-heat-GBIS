@@ -37,6 +37,7 @@ from help_to_heat.frontdoor.consts import (
     epc_select_page,
     field_no,
     field_yes,
+    govuk_start_page,
     household_income_field,
     household_income_page,
     loft_access_field,
@@ -127,6 +128,9 @@ def get_next_page(current_page, answers):
         New page ID, or `unknown_page` (variable in consts.py) if the user hasn't given the required
         information on this page to determine the next page.
     """
+    if current_page == govuk_start_page:
+        return _govuk_start_page_next_page()
+
     if current_page == country_page:
         return _country_next_page(answers)
 
@@ -209,18 +213,22 @@ def get_next_page(current_page, answers):
         return _loft_insulation_next_page(answers)
 
     if current_page == summary_page:
-        return _summary_next_page(answers)
+        return _summary_next_page()
 
     if current_page == schemes_page:
-        return _schemes_next_page(answers)
+        return _schemes_next_page()
 
     if current_page == contact_details_page:
-        return _contact_details_next_page(answers)
+        return _contact_details_next_page()
 
     if current_page == confirm_and_submit_page:
-        return _confirm_and_submit_next_page(answers)
+        return _confirm_and_submit_next_page()
 
     return _unknown_response
+
+
+def _govuk_start_page_next_page():
+    return country_page
 
 
 @_requires_answer(country_field)
@@ -257,6 +265,7 @@ def _supplier_next_page(answers):
     return _unknown_response
 
 
+# the answers object is not used by the function but is used by the decorator
 @_requires_answer(bulb_warning_page_field)
 def _bulb_warning_page_next_page(_answers):
     return own_property_page
@@ -512,17 +521,17 @@ def _loft_insulation_next_page(_answers):
     return summary_page
 
 
-def _summary_next_page(_answers):
+def _summary_next_page():
     return schemes_page
 
 
-def _schemes_next_page(_answers):
+def _schemes_next_page():
     return contact_details_page
 
 
-def _contact_details_next_page(_answers):
+def _contact_details_next_page():
     return confirm_and_submit_page
 
 
-def _confirm_and_submit_next_page(_answers):
+def _confirm_and_submit_next_page():
     return success_page

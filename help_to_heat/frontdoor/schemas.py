@@ -6,6 +6,10 @@ from phonenumbers import NumberParseException
 
 from help_to_heat.frontdoor.consts import (
     address_field,
+    address_manual_page,
+    address_page,
+    address_select_manual_page,
+    address_select_page,
     benefits_field,
     contact_details_contact_number_field,
     contact_details_email_field,
@@ -27,6 +31,8 @@ from help_to_heat.frontdoor.consts import (
     country_field_scotland,
     country_field_wales,
     epc_rating_field,
+    epc_select_manual_page,
+    epc_select_page,
     field_dont_know,
     field_no,
     field_yes,
@@ -254,6 +260,12 @@ confirm_sumbit_map = {
     contact_details_last_name_field: _("Last name"),
     contact_details_contact_number_field: _("Contact number"),
     contact_details_email_field: _("Email"),
+}
+
+back_button_overrides = {
+    address_manual_page: address_page,
+    epc_select_manual_page: epc_select_page,
+    address_select_manual_page: address_select_page,
 }
 
 # household_pages = {
