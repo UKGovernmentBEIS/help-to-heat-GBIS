@@ -307,12 +307,15 @@ def change_page_view(request, session_id, page_name):
     return page_map[page_name](request, session_id, page_name, is_change_page=True)
 
 
-def page_name_to_url(session_id, page_name):
+def page_name_to_url(session_id, page_name, is_change_page=False):
     if page_name == unknown_page:
         return reverse("frontdoor:sorry-unavailable")
     if page_name == govuk_start_page:
         return govuk_start_page_url
-    return reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
+    return reverse(
+        "frontdoor:page" if not is_change_page else "frontdoor:change-page",
+        kwargs=dict(session_id=session_id, page_name=page_name),
+    )
 
 
 def save_answer(session_id, page_name, answer):
@@ -359,7 +362,11 @@ class PageView(utils.MethodDispatcher):
             return redirect("/")
 
         extra_context = self.build_extra_context(
-            request=request, session_id=session_id, page_name=page_name, data=data_with_get_answers
+            request=request,
+            session_id=session_id,
+            page_name=page_name,
+            data=data_with_get_answers,
+            is_change_page=is_change_page,
         )
 
         context = {
@@ -432,7 +439,7 @@ class PageView(utils.MethodDispatcher):
                 return redirect("/sorry")
             return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
-    def build_extra_context(self, request, session_id, page_name, data):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
         """
         Build any additional data to be added to the context.
 
@@ -535,8 +542,8 @@ class ParkHomeMainResidenceView(PageView):
 
 @register_page(address_page)
 class AddressView(PageView):
-    def build_extra_context(self, request, session_id, page_name, data):
-        return {"manual_url": page_name_to_url(session_id, address_manual_page)}
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+        return {"manual_url": page_name_to_url(session_id, address_manual_page, is_change_page)}
 
     def save_post_data(self, data, session_id, page_name):
         reset_epc_details(session_id)
@@ -569,7 +576,7 @@ class EpcSelectView(PageView):
         non_empty_address_parts = filter(None, address_parts)
         return ", ".join(non_empty_address_parts)
 
-    def build_extra_context(self, request, session_id, page_name, data):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
         data = interface.api.session.get_answer(session_id, address_page)
         address_and_rrn_details = data.get(address_all_address_and_rnn_details_field, [])
         rrn_options = tuple(
@@ -581,7 +588,7 @@ class EpcSelectView(PageView):
         )
         return {
             "rrn_options": rrn_options,
-            "manual_url": page_name_to_url(session_id, epc_select_manual_page),
+            "manual_url": page_name_to_url(session_id, epc_select_manual_page, is_change_page),
         }
 
     def save_post_data(self, data, session_id, page_name):
@@ -622,7 +629,7 @@ class EpcSelectView(PageView):
 
 @register_page(address_select_page)
 class AddressSelectView(PageView):
-    def build_extra_context(self, request, session_id, page_name, data):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
         data = interface.api.session.get_answer(session_id, address_page)
         building_name_or_number = data[address_building_name_or_number_field]
         postcode = data[address_postcode_field]
@@ -638,7 +645,7 @@ class AddressSelectView(PageView):
         )
         return {
             "uprn_options": uprn_options,
-            "manual_url": page_name_to_url(session_id, address_select_manual_page),
+            "manual_url": page_name_to_url(session_id, address_select_manual_page, is_change_page),
         }
 
     def save_post_data(self, data, session_id, page_name):
@@ -729,7 +736,7 @@ class CouncilTaxBandView(PageView):
 
 @register_page(epc_page)
 class EpcView(PageView):
-    def build_extra_context(self, request, session_id, page_name, data):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
         session_data = interface.api.session.get_session(session_id)
         country = session_data.get(country_field)
 
