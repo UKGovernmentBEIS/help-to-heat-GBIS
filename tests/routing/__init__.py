@@ -1,6 +1,7 @@
 from help_to_heat.frontdoor.consts import (
     address_choice_field,
     address_choice_field_enter_manually,
+    address_choice_field_epc_api_fail,
     address_choice_field_write_address,
     address_select_choice_field,
     address_select_choice_field_enter_manually,
@@ -67,8 +68,10 @@ from help_to_heat.frontdoor.consts import (
     property_type_field_apartment,
     property_type_field_bungalow,
     property_type_field_house,
+    shell_warning_page_field,
     supplier_field,
     supplier_field_bulb,
+    supplier_field_shell,
     supplier_field_utility_warehouse,
     supplier_fields,
     utility_warehouse_warning_page_field,
@@ -190,6 +193,8 @@ def get_supplier_answers():
 
             if supplier == supplier_field_bulb:
                 answers[bulb_warning_page_field] = field_yes
+            if supplier == supplier_field_shell:
+                answers[shell_warning_page_field] = field_yes
             if supplier == supplier_field_utility_warehouse:
                 answers[utility_warehouse_warning_page_field] = field_yes
 
@@ -271,6 +276,12 @@ def _get_address_input_answers_pre_duplicate_uprn(address_flow, property_flow=No
         if address_flow == address_flow_write_address_epc_api_fail_select:
             yield {
                 **flow_answers,
+                address_choice_field: address_choice_field_epc_api_fail,
+                address_select_choice_field: address_select_choice_field_select_address,
+                epc_found_field: field_no,
+            }
+            yield {
+                **flow_answers,
                 address_choice_field: address_choice_field_write_address,
                 epc_select_choice_field: epc_select_choice_field_epc_api_fail,
                 address_select_choice_field: address_select_choice_field_select_address,
@@ -278,6 +289,12 @@ def _get_address_input_answers_pre_duplicate_uprn(address_flow, property_flow=No
             }
 
         if address_flow == address_flow_write_address_epc_api_fail_manually:
+            yield {
+                **flow_answers,
+                address_choice_field: address_choice_field_epc_api_fail,
+                address_select_choice_field: address_select_choice_field_enter_manually,
+                epc_found_field: field_no,
+            }
             yield {
                 **flow_answers,
                 address_choice_field: address_choice_field_write_address,

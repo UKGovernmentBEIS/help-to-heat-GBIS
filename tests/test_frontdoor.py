@@ -752,7 +752,7 @@ def test_no_address():
     form["county"] = "Big County"
     page = form.submit().follow()
 
-    data = interface.api.session.get_answer(session_id, page_name="address-manual")
+    data = interface.api.session.get_answer(session_id, page_name="address-select-manual")
     assert data["address_line_1"] == "22 Acacia Avenue"
     assert data["town_or_city"] == "Metropolis"
     assert data["address_line_2"] == "Smalltown"
@@ -824,9 +824,6 @@ def test_epc_lookup_failure():
 
     assert page.has_one("h1:contains('What is the council tax band of your property?')")
     page = _check_page(page, "council-tax-band", "council_tax_band", "B")
-
-    assert page.status_code == 302
-    page = page.follow()
 
     assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
     page = _check_page(page, "benefits", "benefits", "Yes")

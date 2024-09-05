@@ -3,11 +3,13 @@ import pytest
 from help_to_heat.frontdoor.consts import (
     address_choice_field,
     address_choice_field_enter_manually,
+    address_choice_field_epc_api_fail,
     address_choice_field_write_address,
     address_manual_page,
     address_page,
     address_select_choice_field,
     address_select_choice_field_enter_manually,
+    address_select_manual_page,
     address_select_page,
     benefits_field,
     benefits_page,
@@ -31,6 +33,7 @@ from help_to_heat.frontdoor.consts import (
     epc_select_choice_field,
     epc_select_choice_field_enter_manually,
     epc_select_choice_field_epc_api_fail,
+    epc_select_manual_page,
     epc_select_page,
     field_no,
     field_yes,
@@ -53,6 +56,8 @@ from help_to_heat.frontdoor.consts import (
     property_type_page,
     referral_already_submitted_page,
     schemes_page,
+    shell_warning_page,
+    shell_warning_page_field,
     summary_page,
     supplier_field,
     supplier_field_british_gas,
@@ -130,6 +135,12 @@ def test_bulb_warning_page_prev_page():
         assert get_prev_page(bulb_warning_page, answers) == supplier_page
 
 
+def test_shell_warning_page_prev_page():
+    for flow_answers in get_country_answers():
+        answers = {**flow_answers, supplier_field: supplier_field_shell, shell_warning_page_field: field_yes}
+        assert get_prev_page(shell_warning_page, answers) == supplier_page
+
+
 def test_utility_warehouse_warning_prev_page():
     for flow_answers in get_country_answers():
         answers = {
@@ -152,7 +163,7 @@ def test_utility_warehouse_warning_prev_page():
         (supplier_field_octopus, supplier_page),
         (supplier_field_ovo, supplier_page),
         (supplier_field_scottish_power, supplier_page),
-        (supplier_field_shell, supplier_page),
+        (supplier_field_shell, shell_warning_page),
         (supplier_field_utilita, supplier_page),
         (supplier_field_utility_warehouse, utility_warehouse_warning_page),
     ],
@@ -163,6 +174,9 @@ def test_own_property_prev_page(supplier, expected_prev_page):
 
         if supplier == supplier_field_bulb:
             answers[bulb_warning_page_field] = field_yes
+
+        if supplier == supplier_field_shell:
+            answers[shell_warning_page_field] = field_yes
 
         if supplier == supplier_field_utility_warehouse:
             answers[utility_warehouse_warning_page_field] = field_yes
@@ -211,12 +225,14 @@ def test_address_select_prev_page():
     for flow_answers in get_property_flow_answers():
         country = flow_answers[country_field]
         if country in [country_field_england, country_field_wales]:
+            answers = {**flow_answers, address_choice_field: address_choice_field_epc_api_fail}
+            assert get_prev_page(address_select_page, answers) == address_page
             answers = {
                 **flow_answers,
                 address_choice_field: address_choice_field_write_address,
                 epc_select_choice_field: epc_select_choice_field_epc_api_fail,
             }
-            assert get_prev_page(address_select_page, answers) == address_page
+            assert get_prev_page(address_select_page, answers) == epc_select_page
 
         if country == country_field_scotland:
             answers = {**flow_answers, address_choice_field: address_choice_field_write_address}
@@ -233,7 +249,7 @@ def test_address_manual_from_address_page_prev_page():
         assert get_prev_page(address_manual_page, answers) == address_page
 
 
-def test_address_manual_from_epc_select_page_prev_page():
+def test_epc_select_manual_from_epc_select_page_prev_page():
     for flow_answers in get_property_flow_answers():
         country = flow_answers.get(country_field)
         if country in [country_field_england, country_field_wales]:
@@ -242,10 +258,10 @@ def test_address_manual_from_epc_select_page_prev_page():
                 address_choice_field: address_choice_field_write_address,
                 epc_select_choice_field: epc_select_choice_field_enter_manually,
             }
-            assert get_prev_page(address_manual_page, answers) == epc_select_page
+            assert get_prev_page(epc_select_manual_page, answers) == epc_select_page
 
 
-def test_address_manual_from_address_select_page_prev_page():
+def test_address_select_manual_from_address_select_page_prev_page():
     for flow_answers in get_property_flow_answers():
         country = flow_answers.get(country_field)
         if country in [country_field_england, country_field_wales]:
@@ -255,7 +271,7 @@ def test_address_manual_from_address_select_page_prev_page():
                 epc_select_choice_field: epc_select_choice_field_epc_api_fail,
                 address_select_choice_field: address_select_choice_field_enter_manually,
             }
-            assert get_prev_page(address_manual_page, answers) == address_select_page
+            assert get_prev_page(address_select_manual_page, answers) == address_select_page
 
         if country == country_field_scotland:
             answers = {
@@ -263,7 +279,7 @@ def test_address_manual_from_address_select_page_prev_page():
                 address_choice_field: address_choice_field_write_address,
                 address_select_choice_field: address_select_choice_field_enter_manually,
             }
-            assert get_prev_page(address_manual_page, answers) == address_select_page
+            assert get_prev_page(address_select_manual_page, answers) == address_select_page
 
 
 @pytest.mark.parametrize(
@@ -287,18 +303,18 @@ def test_referral_already_submitted_page_prev_page(address_flow, expected_prev_p
     [
         (address_flow_write_address_epc_hit_select, field_no, epc_select_page),
         (address_flow_write_address_epc_hit_select, field_yes, referral_already_submitted_page),
-        (address_flow_write_address_epc_hit_write_manually, field_no, address_manual_page),
-        (address_flow_write_address_epc_hit_write_manually, field_yes, address_manual_page),
+        (address_flow_write_address_epc_hit_write_manually, field_no, epc_select_manual_page),
+        (address_flow_write_address_epc_hit_write_manually, field_yes, epc_select_manual_page),
         (address_flow_write_address_epc_api_fail_select, field_no, address_select_page),
         (address_flow_write_address_epc_api_fail_select, field_yes, referral_already_submitted_page),
-        (address_flow_write_address_epc_api_fail_manually, field_no, address_manual_page),
-        (address_flow_write_address_epc_api_fail_manually, field_yes, address_manual_page),
+        (address_flow_write_address_epc_api_fail_manually, field_no, address_select_manual_page),
+        (address_flow_write_address_epc_api_fail_manually, field_yes, address_select_manual_page),
         (address_flow_write_address_scotland_select_epc, field_no, address_select_page),
         (address_flow_write_address_scotland_select_epc, field_yes, referral_already_submitted_page),
         (address_flow_write_address_scotland_select_no_epc, field_no, address_select_page),
         (address_flow_write_address_scotland_select_no_epc, field_yes, referral_already_submitted_page),
-        (address_flow_write_address_scotland_manually, field_no, address_manual_page),
-        (address_flow_write_address_scotland_manually, field_yes, address_manual_page),
+        (address_flow_write_address_scotland_manually, field_no, address_select_manual_page),
+        (address_flow_write_address_scotland_manually, field_yes, address_select_manual_page),
         (address_flow_manually, field_no, address_manual_page),
         (address_flow_manually, field_yes, address_manual_page),
     ],
@@ -376,8 +392,8 @@ def test_epc_ineligible_prev_page(address_flow, expected_prev_page):
         (address_flow_write_address_epc_hit_select, property_flow_park_home, field_yes, epc_page),
         (address_flow_write_address_epc_hit_select, property_flow_main, field_no, epc_page),
         (address_flow_write_address_epc_hit_select, property_flow_main, field_yes, epc_page),
-        (address_flow_write_address_epc_hit_write_manually, property_flow_park_home, field_no, address_manual_page),
-        (address_flow_write_address_epc_hit_write_manually, property_flow_park_home, field_yes, address_manual_page),
+        (address_flow_write_address_epc_hit_write_manually, property_flow_park_home, field_no, epc_select_manual_page),
+        (address_flow_write_address_epc_hit_write_manually, property_flow_park_home, field_yes, epc_select_manual_page),
         (address_flow_write_address_epc_hit_write_manually, property_flow_main, field_no, council_tax_band_page),
         (address_flow_write_address_epc_hit_write_manually, property_flow_main, field_yes, council_tax_band_page),
         (address_flow_write_address_epc_api_fail_select, property_flow_park_home, field_no, address_select_page),
@@ -389,8 +405,18 @@ def test_epc_ineligible_prev_page(address_flow, expected_prev_page):
         ),
         (address_flow_write_address_epc_api_fail_select, property_flow_main, field_no, council_tax_band_page),
         (address_flow_write_address_epc_api_fail_select, property_flow_main, field_yes, council_tax_band_page),
-        (address_flow_write_address_epc_api_fail_manually, property_flow_park_home, field_no, address_manual_page),
-        (address_flow_write_address_epc_api_fail_manually, property_flow_park_home, field_yes, address_manual_page),
+        (
+            address_flow_write_address_epc_api_fail_manually,
+            property_flow_park_home,
+            field_no,
+            address_select_manual_page,
+        ),
+        (
+            address_flow_write_address_epc_api_fail_manually,
+            property_flow_park_home,
+            field_yes,
+            address_select_manual_page,
+        ),
         (address_flow_write_address_epc_api_fail_manually, property_flow_main, field_no, council_tax_band_page),
         (address_flow_write_address_epc_api_fail_manually, property_flow_main, field_yes, council_tax_band_page),
         (address_flow_write_address_scotland_select_epc, property_flow_park_home, field_no, epc_page),
@@ -406,8 +432,8 @@ def test_epc_ineligible_prev_page(address_flow, expected_prev_page):
         ),
         (address_flow_write_address_scotland_select_no_epc, property_flow_main, field_no, council_tax_band_page),
         (address_flow_write_address_scotland_select_no_epc, property_flow_main, field_yes, council_tax_band_page),
-        (address_flow_write_address_scotland_manually, property_flow_park_home, field_no, address_manual_page),
-        (address_flow_write_address_scotland_manually, property_flow_park_home, field_yes, address_manual_page),
+        (address_flow_write_address_scotland_manually, property_flow_park_home, field_no, address_select_manual_page),
+        (address_flow_write_address_scotland_manually, property_flow_park_home, field_yes, address_select_manual_page),
         (address_flow_write_address_scotland_manually, property_flow_main, field_no, council_tax_band_page),
         (address_flow_write_address_scotland_manually, property_flow_main, field_yes, council_tax_band_page),
         (address_flow_manually, property_flow_park_home, field_no, address_manual_page),
@@ -469,18 +495,18 @@ def test_property_type_main_flow_prev_page(circumstances_flow, expected_prev_pag
     [
         (address_flow_write_address_epc_hit_select, field_no, epc_page),
         (address_flow_write_address_epc_hit_select, field_yes, epc_page),
-        (address_flow_write_address_epc_hit_write_manually, field_no, address_manual_page),
-        (address_flow_write_address_epc_hit_write_manually, field_yes, address_manual_page),
+        (address_flow_write_address_epc_hit_write_manually, field_no, epc_select_manual_page),
+        (address_flow_write_address_epc_hit_write_manually, field_yes, epc_select_manual_page),
         (address_flow_write_address_epc_api_fail_select, field_no, address_select_page),
         (address_flow_write_address_epc_api_fail_select, field_yes, referral_already_submitted_page),
-        (address_flow_write_address_epc_api_fail_manually, field_no, address_manual_page),
-        (address_flow_write_address_epc_api_fail_manually, field_yes, address_manual_page),
+        (address_flow_write_address_epc_api_fail_manually, field_no, address_select_manual_page),
+        (address_flow_write_address_epc_api_fail_manually, field_yes, address_select_manual_page),
         (address_flow_write_address_scotland_select_epc, field_no, epc_page),
         (address_flow_write_address_scotland_select_epc, field_yes, epc_page),
         (address_flow_write_address_scotland_select_no_epc, field_no, address_select_page),
         (address_flow_write_address_scotland_select_no_epc, field_yes, referral_already_submitted_page),
-        (address_flow_write_address_scotland_manually, field_no, address_manual_page),
-        (address_flow_write_address_scotland_manually, field_yes, address_manual_page),
+        (address_flow_write_address_scotland_manually, field_no, address_select_manual_page),
+        (address_flow_write_address_scotland_manually, field_yes, address_select_manual_page),
         (address_flow_manually, field_no, address_manual_page),
         (address_flow_manually, field_yes, address_manual_page),
     ],

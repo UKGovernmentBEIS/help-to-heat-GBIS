@@ -11,24 +11,25 @@ from help_to_heat import portal
 from help_to_heat.utils import Entity, Interface, register_event, with_schema
 
 from . import models, schemas
+from .consts import all_pages
 from .epc_api import EPCApi
 from .os_api import OSApi, ThrottledApiException
 
 
 class SaveAnswerSchema(marshmallow.Schema):
     session_id = marshmallow.fields.UUID()
-    page_name = marshmallow.fields.String(validate=marshmallow.validate.OneOf(schemas.pages))
+    page_name = marshmallow.fields.String(validate=marshmallow.validate.OneOf(all_pages))
     data = marshmallow.fields.Nested(schemas.SessionSchema(unknown=marshmallow.EXCLUDE))
 
 
 class RemoveAnswerSchema(marshmallow.Schema):
     session_id = marshmallow.fields.UUID()
-    page_name = marshmallow.fields.String(validate=marshmallow.validate.OneOf(schemas.pages))
+    page_name = marshmallow.fields.String(validate=marshmallow.validate.OneOf(all_pages))
 
 
 class GetAnswerSchema(marshmallow.Schema):
     session_id = marshmallow.fields.UUID()
-    page_name = marshmallow.fields.String(validate=marshmallow.validate.OneOf(schemas.pages))
+    page_name = marshmallow.fields.String(validate=marshmallow.validate.OneOf(all_pages))
 
 
 class GetSessionSchema(marshmallow.Schema):

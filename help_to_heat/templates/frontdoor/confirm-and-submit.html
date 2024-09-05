@@ -8,7 +8,7 @@
 {% block content %} 
   {% call macros.form_wrapper(prev_url, button_label=_("Submit")) -%}
     <h1 class="govuk-heading-l">{{_("Confirm and submit")}}</h1>
-    {{macros.details_summary(summary_lines)}}
+{#    {{macros.details_summary(summary_lines)}}#}
 
     <div class="govuk-form-group {{ 'govuk-form-group--error' if errors else '' }}">
       <fieldset class="govuk-fieldset">

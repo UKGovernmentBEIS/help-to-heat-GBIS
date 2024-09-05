@@ -3,16 +3,19 @@ import pytest
 from help_to_heat.frontdoor.consts import (
     address_choice_field,
     address_choice_field_enter_manually,
+    address_choice_field_epc_api_fail,
     address_choice_field_write_address,
     address_manual_page,
     address_page,
     address_select_choice_field,
     address_select_choice_field_enter_manually,
     address_select_choice_field_select_address,
+    address_select_manual_page,
     address_select_page,
     benefits_field,
     benefits_page,
     bulb_warning_page,
+    bulb_warning_page_field,
     confirm_and_submit_page,
     contact_details_page,
     council_tax_band_field,
@@ -34,6 +37,7 @@ from help_to_heat.frontdoor.consts import (
     epc_select_choice_field_enter_manually,
     epc_select_choice_field_epc_api_fail,
     epc_select_choice_field_select_epc,
+    epc_select_manual_page,
     epc_select_page,
     field_dont_know,
     field_no,
@@ -92,6 +96,8 @@ from help_to_heat.frontdoor.consts import (
     property_type_page,
     referral_already_submitted_page,
     schemes_page,
+    shell_warning_page,
+    shell_warning_page_field,
     success_page,
     summary_page,
     supplier_field,
@@ -109,6 +115,7 @@ from help_to_heat.frontdoor.consts import (
     supplier_field_utility_warehouse,
     supplier_page,
     utility_warehouse_warning_page,
+    utility_warehouse_warning_page_field,
     wall_insulation_field,
     wall_insulation_field_dont_know,
     wall_insulation_field_no,
@@ -149,7 +156,7 @@ from tests.routing import (
 )
 def test_country_next_page(country, expected_next_page):
     answers = {country_field: country}
-    assert get_next_page(country_page, answers) == (expected_next_page, False)
+    assert get_next_page(country_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
@@ -164,14 +171,29 @@ def test_country_next_page(country, expected_next_page):
         (supplier_field_octopus, own_property_page),
         (supplier_field_ovo, own_property_page),
         (supplier_field_scottish_power, own_property_page),
-        (supplier_field_shell, own_property_page),
+        (supplier_field_shell, shell_warning_page),
         (supplier_field_utilita, own_property_page),
         (supplier_field_utility_warehouse, utility_warehouse_warning_page),
     ],
 )
 def test_supplier_next_page(supplier, expected_next_page):
     answers = {supplier_field: supplier}
-    assert get_next_page(supplier_page, answers) == (expected_next_page, False)
+    assert get_next_page(supplier_page, answers) == expected_next_page
+
+
+def test_bulb_warning_page_next_page():
+    answers = {bulb_warning_page_field: field_yes}
+    assert get_next_page(bulb_warning_page, answers) == own_property_page
+
+
+def test_shell_warning_page_next_page():
+    answers = {shell_warning_page_field: field_yes}
+    assert get_next_page(shell_warning_page, answers) == own_property_page
+
+
+def test_utility_warehouse_warning_page_next_page():
+    answers = {utility_warehouse_warning_page_field: field_yes}
+    assert get_next_page(utility_warehouse_warning_page, answers) == own_property_page
 
 
 @pytest.mark.parametrize(
@@ -185,7 +207,7 @@ def test_supplier_next_page(supplier, expected_next_page):
 )
 def test_own_property_next_page(own_property, expected_next_page):
     answers = {own_property_field: own_property}
-    assert get_next_page(own_property_page, answers) == (expected_next_page, False)
+    assert get_next_page(own_property_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
@@ -197,7 +219,7 @@ def test_own_property_next_page(own_property, expected_next_page):
 )
 def test_park_home_next_page(park_home, expected_next_page):
     answers = {park_home_field: park_home}
-    assert get_next_page(park_home_page, answers) == (expected_next_page, False)
+    assert get_next_page(park_home_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
@@ -209,7 +231,7 @@ def test_park_home_next_page(park_home, expected_next_page):
 )
 def test_park_home_main_residence_next_page(park_home_main_residence, expected_next_page):
     answers = {park_home_main_residence_field: park_home_main_residence}
-    assert get_next_page(park_home_main_residence_page, answers) == (expected_next_page, False)
+    assert get_next_page(park_home_main_residence_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
@@ -222,26 +244,31 @@ def test_park_home_main_residence_next_page(park_home_main_residence, expected_n
 )
 def test_address_write_address_next_page(country, expected_next_page):
     answers = {address_choice_field: address_choice_field_write_address, country_field: country}
-    assert get_next_page(address_page, answers) == (expected_next_page, False)
+    assert get_next_page(address_page, answers) == expected_next_page
+
+
+def test_address_epc_api_fail_next_page():
+    answers = {address_choice_field: address_choice_field_epc_api_fail}
+    assert get_next_page(address_page, answers) == address_select_page
 
 
 def test_address_enter_manually_next_page():
     answers = {address_choice_field: address_choice_field_enter_manually}
-    assert get_next_page(address_page, answers) == (address_manual_page, False)
+    assert get_next_page(address_page, answers) == address_manual_page
 
 
 @pytest.mark.parametrize(
-    "choice, duplicate_uprn, expected_next_page, expected_redirect",
+    "choice, duplicate_uprn, expected_next_page",
     [
-        (epc_select_choice_field_select_epc, field_no, epc_page, False),
-        (epc_select_choice_field_select_epc, field_yes, referral_already_submitted_page, False),
-        (epc_select_choice_field_epc_api_fail, field_no, address_select_page, True),
-        (epc_select_choice_field_epc_api_fail, field_yes, address_select_page, True),
-        (epc_select_choice_field_enter_manually, field_no, address_manual_page, False),
-        (epc_select_choice_field_enter_manually, field_yes, address_manual_page, False),
+        (epc_select_choice_field_select_epc, field_no, epc_page),
+        (epc_select_choice_field_select_epc, field_yes, referral_already_submitted_page),
+        (epc_select_choice_field_epc_api_fail, field_no, address_select_page),
+        (epc_select_choice_field_epc_api_fail, field_yes, address_select_page),
+        (epc_select_choice_field_enter_manually, field_no, epc_select_manual_page),
+        (epc_select_choice_field_enter_manually, field_yes, epc_select_manual_page),
     ],
 )
-def test_epc_select_park_home_next_page(choice, duplicate_uprn, expected_next_page, expected_redirect):
+def test_epc_select_park_home_next_page(choice, duplicate_uprn, expected_next_page):
     epc_found = field_yes if choice == epc_select_choice_field_select_epc else field_no
     for own_property in own_property_fields_non_social_housing:
         answers = {
@@ -251,23 +278,21 @@ def test_epc_select_park_home_next_page(choice, duplicate_uprn, expected_next_pa
             park_home_field: field_yes,
             epc_found_field: epc_found,
         }
-        assert get_next_page(epc_select_page, answers) == (expected_next_page, expected_redirect)
+        assert get_next_page(epc_select_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
-    "choice, duplicate_uprn, expected_next_page, expected_redirect",
+    "choice, duplicate_uprn, expected_next_page",
     [
-        (epc_select_choice_field_select_epc, field_no, council_tax_band_page, False),
-        (epc_select_choice_field_select_epc, field_yes, referral_already_submitted_page, False),
-        (epc_select_choice_field_epc_api_fail, field_no, address_select_page, True),
-        (epc_select_choice_field_epc_api_fail, field_yes, address_select_page, True),
-        (epc_select_choice_field_enter_manually, field_no, address_manual_page, False),
-        (epc_select_choice_field_enter_manually, field_yes, address_manual_page, False),
+        (epc_select_choice_field_select_epc, field_no, council_tax_band_page),
+        (epc_select_choice_field_select_epc, field_yes, referral_already_submitted_page),
+        (epc_select_choice_field_epc_api_fail, field_no, address_select_page),
+        (epc_select_choice_field_epc_api_fail, field_yes, address_select_page),
+        (epc_select_choice_field_enter_manually, field_no, epc_select_manual_page),
+        (epc_select_choice_field_enter_manually, field_yes, epc_select_manual_page),
     ],
 )
-def test_epc_select_not_park_home_not_already_submitted_next_page(
-    choice, duplicate_uprn, expected_next_page, expected_redirect
-):
+def test_epc_select_not_park_home_not_already_submitted_next_page(choice, duplicate_uprn, expected_next_page):
     for own_property in own_property_fields_non_social_housing:
         answers = {
             epc_select_choice_field: choice,
@@ -275,21 +300,21 @@ def test_epc_select_not_park_home_not_already_submitted_next_page(
             own_property_field: own_property,
             park_home_field: field_no,
         }
-        assert get_next_page(epc_select_page, answers) == (expected_next_page, expected_redirect)
+        assert get_next_page(epc_select_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
-    "choice, duplicate_uprn, expected_next_page, expected_redirect",
+    "choice, duplicate_uprn, expected_next_page",
     [
-        (epc_select_choice_field_select_epc, field_no, epc_page, False),
-        (epc_select_choice_field_select_epc, field_yes, referral_already_submitted_page, False),
-        (epc_select_choice_field_epc_api_fail, field_no, address_select_page, True),
-        (epc_select_choice_field_epc_api_fail, field_yes, address_select_page, True),
-        (epc_select_choice_field_enter_manually, field_no, address_manual_page, False),
-        (epc_select_choice_field_enter_manually, field_yes, address_manual_page, False),
+        (epc_select_choice_field_select_epc, field_no, epc_page),
+        (epc_select_choice_field_select_epc, field_yes, referral_already_submitted_page),
+        (epc_select_choice_field_epc_api_fail, field_no, address_select_page),
+        (epc_select_choice_field_epc_api_fail, field_yes, address_select_page),
+        (epc_select_choice_field_enter_manually, field_no, epc_select_manual_page),
+        (epc_select_choice_field_enter_manually, field_yes, epc_select_manual_page),
     ],
 )
-def test_epc_select_social_housing_next_page(choice, duplicate_uprn, expected_next_page, expected_redirect):
+def test_epc_select_social_housing_next_page(choice, duplicate_uprn, expected_next_page):
     epc_found = field_yes if choice == epc_select_choice_field_select_epc else field_no
     answers = {
         epc_select_choice_field: choice,
@@ -297,7 +322,7 @@ def test_epc_select_social_housing_next_page(choice, duplicate_uprn, expected_ne
         own_property_field: own_property_field_social_housing,
         epc_found_field: epc_found,
     }
-    assert get_next_page(epc_select_page, answers) == (expected_next_page, expected_redirect)
+    assert get_next_page(epc_select_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
@@ -307,10 +332,10 @@ def test_epc_select_social_housing_next_page(choice, duplicate_uprn, expected_ne
         (address_select_choice_field_select_address, field_no, field_yes, epc_page),
         (address_select_choice_field_select_address, field_yes, field_no, referral_already_submitted_page),
         (address_select_choice_field_select_address, field_yes, field_yes, referral_already_submitted_page),
-        (address_select_choice_field_enter_manually, field_no, field_no, address_manual_page),
-        (address_select_choice_field_enter_manually, field_no, field_yes, address_manual_page),
-        (address_select_choice_field_enter_manually, field_yes, field_no, address_manual_page),
-        (address_select_choice_field_enter_manually, field_yes, field_yes, address_manual_page),
+        (address_select_choice_field_enter_manually, field_no, field_no, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_no, field_yes, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_no, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_yes, address_select_manual_page),
     ],
 )
 def test_address_select_park_home_next_page(choice, duplicate_uprn, epc_found, expected_next_page):
@@ -322,7 +347,7 @@ def test_address_select_park_home_next_page(choice, duplicate_uprn, epc_found, e
             epc_found_field: epc_found,
             duplicate_uprn_field: duplicate_uprn,
         }
-        assert get_next_page(address_select_page, answers) == (expected_next_page, False)
+        assert get_next_page(address_select_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
@@ -332,10 +357,10 @@ def test_address_select_park_home_next_page(choice, duplicate_uprn, epc_found, e
         (address_select_choice_field_select_address, field_no, field_yes, council_tax_band_page),
         (address_select_choice_field_select_address, field_yes, field_no, referral_already_submitted_page),
         (address_select_choice_field_select_address, field_yes, field_yes, referral_already_submitted_page),
-        (address_select_choice_field_enter_manually, field_no, field_no, address_manual_page),
-        (address_select_choice_field_enter_manually, field_no, field_yes, address_manual_page),
-        (address_select_choice_field_enter_manually, field_yes, field_no, address_manual_page),
-        (address_select_choice_field_enter_manually, field_yes, field_yes, address_manual_page),
+        (address_select_choice_field_enter_manually, field_no, field_no, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_no, field_yes, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_no, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_yes, address_select_manual_page),
     ],
 )
 def test_address_select_not_park_home_next_page(choice, duplicate_uprn, epc_found, expected_next_page):
@@ -347,7 +372,7 @@ def test_address_select_not_park_home_next_page(choice, duplicate_uprn, epc_foun
             epc_found_field: epc_found,
             duplicate_uprn_field: duplicate_uprn,
         }
-        assert get_next_page(address_select_page, answers) == (expected_next_page, False)
+        assert get_next_page(address_select_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
@@ -357,10 +382,10 @@ def test_address_select_not_park_home_next_page(choice, duplicate_uprn, epc_foun
         (address_select_choice_field_select_address, field_no, field_yes, epc_page),
         (address_select_choice_field_select_address, field_yes, field_no, referral_already_submitted_page),
         (address_select_choice_field_select_address, field_yes, field_yes, referral_already_submitted_page),
-        (address_select_choice_field_enter_manually, field_no, field_no, address_manual_page),
-        (address_select_choice_field_enter_manually, field_no, field_yes, address_manual_page),
-        (address_select_choice_field_enter_manually, field_yes, field_no, address_manual_page),
-        (address_select_choice_field_enter_manually, field_yes, field_yes, address_manual_page),
+        (address_select_choice_field_enter_manually, field_no, field_no, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_no, field_yes, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_no, address_select_manual_page),
+        (address_select_choice_field_enter_manually, field_yes, field_yes, address_select_manual_page),
     ],
 )
 def test_address_select_social_housing_next_page(choice, duplicate_uprn, epc_found, expected_next_page):
@@ -371,7 +396,7 @@ def test_address_select_social_housing_next_page(choice, duplicate_uprn, epc_fou
         epc_found_field: epc_found,
         duplicate_uprn_field: duplicate_uprn,
     }
-    assert get_next_page(address_select_page, answers) == (expected_next_page, False)
+    assert get_next_page(address_select_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
@@ -385,7 +410,35 @@ def test_address_select_social_housing_next_page(choice, duplicate_uprn, epc_fou
 def test_address_manual_next_page(flow, expected_next_page):
     for flow_answers in get_property_flow_answers(flow):
         answers = {**flow_answers, epc_found_field: field_no, duplicate_uprn_field: field_no}
-        assert get_next_page(address_manual_page, answers) == (expected_next_page, False)
+        assert get_next_page(address_manual_page, answers) == expected_next_page
+
+
+@pytest.mark.parametrize(
+    "flow, expected_next_page",
+    [
+        (property_flow_park_home, benefits_page),
+        (property_flow_main, council_tax_band_page),
+        (property_flow_social_housing, property_type_page),
+    ],
+)
+def test_epc_select_manual_next_page(flow, expected_next_page):
+    for flow_answers in get_property_flow_answers(flow):
+        answers = {**flow_answers, epc_found_field: field_no, duplicate_uprn_field: field_no}
+        assert get_next_page(epc_select_manual_page, answers) == expected_next_page
+
+
+@pytest.mark.parametrize(
+    "flow, expected_next_page",
+    [
+        (property_flow_park_home, benefits_page),
+        (property_flow_main, council_tax_band_page),
+        (property_flow_social_housing, property_type_page),
+    ],
+)
+def test_address_select_manual_next_page(flow, expected_next_page):
+    for flow_answers in get_property_flow_answers(flow):
+        answers = {**flow_answers, epc_found_field: field_no, duplicate_uprn_field: field_no}
+        assert get_next_page(address_select_manual_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
@@ -402,7 +455,7 @@ def test_address_manual_next_page(flow, expected_next_page):
 def test_referral_already_submitted_next_page(flow, epc_found, expected_next_page):
     for flow_answers in get_property_flow_answers(flow):
         answers = {**flow_answers, epc_found_field: epc_found}
-        assert get_next_page(referral_already_submitted_page, answers) == (expected_next_page, False)
+        assert get_next_page(referral_already_submitted_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
@@ -416,7 +469,7 @@ def test_council_tax_band_next_page(epc_found, expected_next_page):
     for flow_answers in get_property_flow_answers(property_flow_main):
         for council_tax_band in council_tax_band_fields:
             answers = {**flow_answers, council_tax_band_field: council_tax_band, epc_found_field: epc_found}
-            assert get_next_page(council_tax_band_page, answers) == (expected_next_page, False)
+            assert get_next_page(council_tax_band_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
@@ -440,14 +493,14 @@ def test_epc_eligible_next_page(flow, eligible, expected_next_page):
             ]
             for eligible_answers in eligible_combinations_answers:
                 answers = {**eligible_answers, **flow_answers}
-                assert get_next_page(epc_page, answers) == (expected_next_page, False)
+                assert get_next_page(epc_page, answers) == expected_next_page
         else:
             answers = {
                 **flow_answers,
                 epc_accept_suggested_epc_field: field_yes,
                 epc_rating_is_eligible_field: field_no,
             }
-            assert get_next_page(epc_page, answers) == (expected_next_page, False)
+            assert get_next_page(epc_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
@@ -462,7 +515,7 @@ def test_epc_eligible_next_page(flow, eligible, expected_next_page):
 def test_benefits_next_page(flow, benefits, expected_next_page):
     for flow_answers in get_property_flow_answers(flow):
         answers = {**flow_answers, benefits_field: benefits}
-        assert get_next_page(benefits_page, answers) == (expected_next_page, False)
+        assert get_next_page(benefits_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
@@ -478,7 +531,7 @@ def test_household_income_park_home_flow_next_page(household_income):
             property_type_field: property_type_field_park_home,
             park_home_main_residence_field: field_yes,
         }
-        assert get_next_page(household_income_page, answers) == (summary_page, False)
+        assert get_next_page(household_income_page, answers) == summary_page
 
 
 @pytest.mark.parametrize(
@@ -567,7 +620,7 @@ def test_household_income_main_flow_next_page(household_income, country, council
                 council_tax_band_field: council_tax_band,
                 household_income_field: household_income,
             }
-            assert get_next_page(household_income_page, answers) == (expected_next_page, False)
+            assert get_next_page(household_income_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
@@ -575,7 +628,7 @@ def test_household_income_main_flow_next_page(household_income, country, council
 )
 def test_property_type_next_page(property_type):
     answers = {property_type_field: property_type}
-    assert get_next_page(property_type_page, answers) == (property_subtype_page, False)
+    assert get_next_page(property_type_page, answers) == property_subtype_page
 
 
 @pytest.mark.parametrize(
@@ -592,7 +645,7 @@ def test_property_type_next_page(property_type):
 )
 def test_property_subtype_next_page(property_subtype):
     answers = {property_subtype_field: property_subtype}
-    assert get_next_page(property_subtype_page, answers) == (number_of_bedrooms_page, False)
+    assert get_next_page(property_subtype_page, answers) == number_of_bedrooms_page
 
 
 @pytest.mark.parametrize(
@@ -606,7 +659,7 @@ def test_property_subtype_next_page(property_subtype):
 )
 def test_number_of_bedrooms_next_page(number_of_bedrooms):
     answers = {number_of_bedrooms_field: number_of_bedrooms}
-    assert get_next_page(number_of_bedrooms_page, answers) == (wall_type_page, False)
+    assert get_next_page(number_of_bedrooms_page, answers) == wall_type_page
 
 
 @pytest.mark.parametrize(
@@ -621,7 +674,7 @@ def test_number_of_bedrooms_next_page(number_of_bedrooms):
 )
 def test_wall_type_next_page(wall_type):
     answers = {wall_type_field: wall_type}
-    assert get_next_page(wall_type_page, answers) == (wall_insulation_page, False)
+    assert get_next_page(wall_type_page, answers) == wall_insulation_page
 
 
 @pytest.mark.parametrize(
@@ -635,7 +688,7 @@ def test_wall_type_next_page(wall_type):
 )
 def test_wall_insulation_next_page(wall_insulation):
     answers = {wall_insulation_field: wall_insulation}
-    assert get_next_page(wall_insulation_page, answers) == (loft_page, False)
+    assert get_next_page(wall_insulation_page, answers) == loft_page
 
 
 @pytest.mark.parametrize(
@@ -647,7 +700,7 @@ def test_wall_insulation_next_page(wall_insulation):
 )
 def test_loft_next_page(loft, expected_next_page):
     answers = {loft_field: loft}
-    assert get_next_page(loft_page, answers) == (expected_next_page, False)
+    assert get_next_page(loft_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
@@ -659,7 +712,7 @@ def test_loft_next_page(loft, expected_next_page):
 )
 def test_loft_access_next_page(loft_access):
     answers = {loft_access_field: loft_access}
-    assert get_next_page(loft_access_page, answers) == (loft_insulation_page, False)
+    assert get_next_page(loft_access_page, answers) == loft_insulation_page
 
 
 @pytest.mark.parametrize(
@@ -672,20 +725,20 @@ def test_loft_access_next_page(loft_access):
 )
 def test_loft_insulation_next_page(loft_insulation):
     answers = {loft_insulation_field: loft_insulation}
-    assert get_next_page(loft_insulation_page, answers) == (summary_page, False)
+    assert get_next_page(loft_insulation_page, answers) == summary_page
 
 
 def test_summary_next_page():
-    assert get_next_page(summary_page, {}) == (schemes_page, False)
+    assert get_next_page(summary_page, {}) == schemes_page
 
 
 def test_schemes_next_page():
-    assert get_next_page(schemes_page, {}) == (contact_details_page, False)
+    assert get_next_page(schemes_page, {}) == contact_details_page
 
 
 def test_contact_details_next_page():
-    assert get_next_page(contact_details_page, {}) == (confirm_and_submit_page, False)
+    assert get_next_page(contact_details_page, {}) == confirm_and_submit_page
 
 
 def test_confirm_and_submit_page():
-    assert get_next_page(confirm_and_submit_page, {}) == (success_page, False)
+    assert get_next_page(confirm_and_submit_page, {}) == success_page

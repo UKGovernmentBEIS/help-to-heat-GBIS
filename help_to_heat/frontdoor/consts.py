@@ -6,6 +6,7 @@ northern_ireland_ineligible_page = "northern-ireland"
 supplier_page = "supplier"
 own_property_page = "own-property"
 bulb_warning_page = "bulb-warning-page"
+shell_warning_page = "shell-warning-page"
 utility_warehouse_warning_page = "utility-warehouse-warning-page"
 park_home_page = "park-home"
 park_home_main_residence_page = "park-home-main-residence"
@@ -15,11 +16,13 @@ epc_select_page = "epc-select"
 address_select_page = "address-select"
 referral_already_submitted_page = "referral-already-submitted"
 address_manual_page = "address-manual"
+epc_select_manual_page = "epc-select-manual"
+address_select_manual_page = "address-select-manual"
 council_tax_band_page = "council-tax-band"
 epc_page = "epc"
 epc_ineligible_page = "epc-ineligible"
 benefits_page = "benefits"
-household_income_page = "household-income-page"
+household_income_page = "household-income"
 property_ineligible_page = "ineligible"
 property_type_page = "property-type"
 property_subtype_page = "property-subtype"
@@ -34,6 +37,44 @@ schemes_page = "schemes"
 contact_details_page = "contact-details"
 confirm_and_submit_page = "confirm-and-submit"
 success_page = "success"
+all_pages = [
+    country_page,
+    northern_ireland_ineligible_page,
+    supplier_page,
+    own_property_page,
+    bulb_warning_page,
+    shell_warning_page,
+    utility_warehouse_warning_page,
+    park_home_page,
+    park_home_main_residence_page,
+    park_home_ineligible_page,
+    address_page,
+    epc_select_page,
+    address_select_page,
+    referral_already_submitted_page,
+    address_manual_page,
+    epc_select_manual_page,
+    address_select_manual_page,
+    council_tax_band_page,
+    epc_page,
+    epc_ineligible_page,
+    benefits_page,
+    household_income_page,
+    property_ineligible_page,
+    property_type_page,
+    property_subtype_page,
+    number_of_bedrooms_page,
+    wall_type_page,
+    wall_insulation_page,
+    loft_page,
+    loft_access_page,
+    loft_insulation_page,
+    summary_page,
+    schemes_page,
+    contact_details_page,
+    confirm_and_submit_page,
+    success_page,
+]
 
 # fields and field options
 field_yes = "Yes"
@@ -74,8 +115,11 @@ supplier_fields = [
     supplier_field_utilita,
     supplier_field_utility_warehouse,
 ]
+user_selected_supplier_field = "user_selected_supplier"
 
 bulb_warning_page_field = "confirm_bulb_warning"
+
+shell_warning_page_field = "confirm_shell_warning"
 
 utility_warehouse_warning_page_field = "confirm_utility_warehouse_warning"
 
@@ -98,7 +142,11 @@ park_home_main_residence_field = "park_home_main_residence"
 
 address_choice_field = "address_choice"
 address_choice_field_write_address = "write address"
+address_choice_field_epc_api_fail = "epc api fail"
 address_choice_field_enter_manually = "enter manually"
+address_building_name_or_number_field = "building_name_or_number"
+address_postcode_field = "postcode"
+address_all_address_and_rnn_details_field = "address_and_rrn_details"
 
 epc_select_choice_field = "epc_select_choice"
 epc_select_choice_field_select_epc = "select epc"
@@ -109,8 +157,21 @@ address_select_choice_field = "address_select_choice"
 address_select_choice_field_select_address = "select address"
 address_select_choice_field_enter_manually = "enter manually"
 
+referral_already_submitted_field = "submit_another"
+
+address_manual_address_line_1_field = "address_line_1"
+address_manual_address_line_2_field = "address_line_2"
+address_manual_town_or_city_field = "town_or_city"
+address_manual_county_field = "county"
+address_manual_postcode_field = "postcode"
+
 duplicate_uprn_field = "uprn_is_duplicate"
 epc_found_field = "epc_found"
+rrn_field = "rrn"
+address_field = "address"
+epc_details_field = "epc_details"
+uprn_field = "uprn"
+property_main_heat_source_field = "property_main_heat_source"
 
 council_tax_band_field = "council_tax_band"
 council_tax_band_field_a = "A"
@@ -135,6 +196,7 @@ council_tax_band_fields = [
 ]
 
 epc_accept_suggested_epc_field = "accept_suggested_epc"
+epc_rating_field = "epc_rating"
 epc_rating_is_eligible_field = "epc_rating_is_eligible"
 
 benefits_field = "benefits"
@@ -184,8 +246,24 @@ loft_field_no = "No, I do not have a loft or my loft has been converted into a r
 loft_access_field = "loft_access"
 loft_access_field_yes = "Yes, there is access to my loft"
 loft_access_field_no = "No, there is no access to my loft"
+loft_access_field_no_loft = "No loft"
 
 loft_insulation_field = "loft_insulation"
 loft_insulation_field_more_than_threshold = "I have more than 100mm of loft insulation"
 loft_insulation_field_less_than_threshold = "I have up to 100mm of loft insulation"
 loft_insulation_field_dont_know = field_dont_know
+loft_insulation_field_no_loft = "No loft"
+
+schemes_ventilation_acknowledgement_field = "ventilation_acknowledgement"
+schemes_contribution_acknowledgement_field = "contribution_acknowledgement"
+
+
+contact_details_first_name_field = "first_name"
+contact_details_last_name_field = "last_name"
+contact_details_contact_number_field = "contact_number"
+contact_details_email_field = "email"
+
+confirm_and_submit_permission_field = "permission"
+confirm_and_submit_acknowledge_field = "acknowledge"
+
+page_name_field = "_page_name"
