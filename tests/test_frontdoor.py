@@ -398,7 +398,7 @@ def test_own_property_back_button_with_supplier_should_return_to_supplier_warnin
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 @utils.mock_os_api
-def test_benefits_back_button_with_park_home_and_no_epc_should_return_to_address_page():
+def test_benefits_back_button_with_park_home_and_no_epc_should_return_to_address_select_page():
     client = utils.get_client()
     page = client.get("/start")
     assert page.status_code == 302
@@ -443,19 +443,16 @@ def test_benefits_back_button_with_park_home_and_no_epc_should_return_to_address
     assert data["uprn"] == "100023336956"
     assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
 
-    assert page.status_code == 302
-    page = page.follow()
-
     assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
 
     page = page.click(contains="Back")
 
-    assert page.has_one('h1:contains("What is the property\'s address?")')
+    assert page.has_one('h1:contains("Select your address")')
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 @utils.mock_os_api
-def test_benefits_back_button_with_park_home_and_scotland_should_return_to_address_page():
+def test_benefits_back_button_with_park_home_and_scotland_should_return_to_address_select_page():
     client = utils.get_client()
     page = client.get("/start")
     assert page.status_code == 302
@@ -500,20 +497,17 @@ def test_benefits_back_button_with_park_home_and_scotland_should_return_to_addre
     assert data["uprn"] == "100023336956"
     assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
 
-    assert page.status_code == 302
-    page = page.follow()
-
     assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
 
     page = page.click(contains="Back")
 
-    assert page.has_one('h1:contains("What is the property\'s address?")')
+    assert page.has_one('h1:contains("Select your address")')
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 @utils.mock_os_api
-def test_property_type_back_button_with_social_housing_and_no_epc_should_return_to_address_page():
+def test_property_type_back_button_with_social_housing_and_no_epc_should_return_to_address_select_page():
     client = utils.get_client()
     page = client.get("/start")
     assert page.status_code == 302
@@ -552,19 +546,16 @@ def test_property_type_back_button_with_social_housing_and_no_epc_should_return_
     assert data["uprn"] == "100023336956"
     assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
 
-    assert page.status_code == 302
-    page = page.follow()
-
     assert page.has_one("h1:contains('What kind of property do you have?')")
 
     page = page.click(contains="Back")
 
-    assert page.has_one('h1:contains("What is the property\'s address?")')
+    assert page.has_one('h1:contains("Select your address")')
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", MockOSApi)
 @utils.mock_os_api
-def test_property_type_back_button_with_social_housing_and_scotland_should_return_to_address_page():
+def test_property_type_back_button_with_social_housing_and_scotland_should_return_to_address_select_page():
     client = utils.get_client()
     page = client.get("/start")
     assert page.status_code == 302
@@ -603,14 +594,11 @@ def test_property_type_back_button_with_social_housing_and_scotland_should_retur
     assert data["uprn"] == "100023336956"
     assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
 
-    assert page.status_code == 302
-    page = page.follow()
-
     assert page.has_one("h1:contains('What kind of property do you have?')")
 
     page = page.click(contains="Back")
 
-    assert page.has_one('h1:contains("What is the property\'s address?")')
+    assert page.has_one('h1:contains("Select your address")')
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApiWithEPCC)

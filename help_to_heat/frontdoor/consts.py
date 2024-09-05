@@ -267,3 +267,7 @@ confirm_and_submit_permission_field = "permission"
 confirm_and_submit_acknowledge_field = "acknowledge"
 
 page_name_field = "_page_name"
+
+# other
+# also is used in frontdoor/base.html
+govuk_start_page_url = "https://www.gov.uk/apply-great-british-insulation-scheme"
