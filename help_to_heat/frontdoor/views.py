@@ -55,11 +55,13 @@ from .consts import (
     country_page,
     duplicate_uprn_field,
     epc_accept_suggested_epc_field,
+    epc_accept_suggested_epc_field_not_found,
     epc_details_field,
     epc_found_field,
     epc_ineligible_page,
     epc_page,
     epc_rating_field,
+    epc_rating_field_not_found,
     epc_rating_is_eligible_field,
     epc_select_choice_field,
     epc_select_choice_field_enter_manually,
@@ -75,17 +77,14 @@ from .consts import (
     household_income_field_more_than_threshold,
     household_income_page,
     loft_access_field,
-    loft_access_field_no_loft,
     loft_access_field_yes,
     loft_access_page,
     loft_field,
-    loft_field_no,
     loft_field_yes,
     loft_insulation_field,
     loft_insulation_field_dont_know,
     loft_insulation_field_less_than_threshold,
     loft_insulation_field_more_than_threshold,
-    loft_insulation_field_no_loft,
     loft_insulation_page,
     loft_page,
     northern_ireland_ineligible_page,
@@ -105,12 +104,12 @@ from .consts import (
     property_subtype_field,
     property_subtype_page,
     property_type_field,
-    property_type_field_park_home,
     property_type_page,
     referral_already_submitted_field,
     referral_already_submitted_page,
     rrn_field,
     schemes_contribution_acknowledgement_field,
+    schemes_field,
     schemes_page,
     schemes_ventilation_acknowledgement_field,
     shell_warning_page,
@@ -137,6 +136,7 @@ from .consts import (
     wall_type_page,
 )
 from .eligibility import calculate_eligibility, eco4
+from .routing import CouldNotCalculateJourneyException, calculate_journey
 from .routing.backwards_routing import get_prev_page
 from .routing.forwards_routing import get_next_page
 from .session_handlers.duplicate_referral_checker import (
@@ -178,7 +178,7 @@ page_compulsory_field_map = {
     benefits_page: (benefits_field,),
     household_income_page: (household_income_field,),
     property_type_page: (property_type_field,),
-    property_subtype_field: (property_subtype_field,),
+    property_subtype_page: (property_subtype_field,),
     number_of_bedrooms_page: (number_of_bedrooms_field,),
     wall_type_page: (wall_type_field,),
     wall_insulation_page: (wall_insulation_field,),
@@ -307,12 +307,15 @@ def change_page_view(request, session_id, page_name):
     return page_map[page_name](request, session_id, page_name, is_change_page=True)
 
 
-def page_name_to_url(session_id, page_name):
+def page_name_to_url(session_id, page_name, is_change_page=False):
     if page_name == unknown_page:
         return reverse("frontdoor:sorry-unavailable")
     if page_name == govuk_start_page:
         return govuk_start_page_url
-    return reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
+    return reverse(
+        "frontdoor:page" if not is_change_page else "frontdoor:change-page",
+        kwargs=dict(session_id=session_id, page_name=page_name),
+    )
 
 
 def save_answer(session_id, page_name, answer):
@@ -328,8 +331,8 @@ def reset_epc_details(session_id):
             "epc_details": {},
             "uprn": "",
             "property_main_heat_source": "",
-            "epc_rating": "Not found",
-            "accept_suggested_epc": "Not found",
+            "epc_rating": epc_rating_field_not_found,
+            "accept_suggested_epc": epc_accept_suggested_epc_field_not_found,
             "epc_date": "",
         },
     )
@@ -352,16 +355,18 @@ class PageView(utils.MethodDispatcher):
         if data_with_get_answers != data:
             save_answer(session_id, page_name, data_with_get_answers)
 
-        prev_page_url = page_name_to_url(
-            session_id, self._get_prev_page_name(request, session_id, page_name, is_change_page)
-        )
+        prev_page_url = self._get_prev_page_url(request, session_id, page_name, is_change_page)
 
         # Once a user has created a referral, they can no longer access their old session
         if "referral_created_at" in answers and page_name != "success":
             return redirect("/")
 
         extra_context = self.build_extra_context(
-            request=request, session_id=session_id, page_name=page_name, data=data_with_get_answers
+            request=request,
+            session_id=session_id,
+            page_name=page_name,
+            data=data_with_get_answers,
+            is_change_page=is_change_page,
         )
 
         context = {
@@ -406,16 +411,35 @@ class PageView(utils.MethodDispatcher):
             answers = interface.api.session.get_session(session_id)
             self.handle_saved_answers(request, session_id, page_name, answers, is_change_page)
 
+            next_page_name = get_next_page(page_name, answers)
+
             if is_change_page:
+                if next_page_name in schemas.change_page_override_pages:
+                    return redirect("frontdoor:change-page", session_id=session_id, page_name=next_page_name)
+
                 assert page_name in schemas.change_page_lookup
-                next_page_name = schemas.change_page_lookup[page_name]
-            else:
-                next_page_name = get_next_page(page_name, answers)
-                if next_page_name == unknown_page:
-                    return redirect("/sorry")
+                change_page = schemas.change_page_lookup[page_name]
+                start_of_journey = schemas.change_page_start_of_journey_lookup[change_page]
+
+                try:
+                    # ensure the user has answers to complete the journey
+                    calculate_journey(answers, from_page=start_of_journey, to_page=change_page)
+                    return redirect("frontdoor:page", session_id=session_id, page_name=change_page)
+                except CouldNotCalculateJourneyException as e:
+                    # if not, take them to the question that is preventing them from finishing
+                    # for instance, if the journey ends at the park home main resident page (and not summary page), then
+                    # this must mean the user hasn't given an answer to it
+                    # so, extract the last page in the route and send the user there in the change page state
+                    # this cycle keeps happening until a journey to summary can be completed, at which point we know
+                    # the user has now answered all required questions
+                    last_page_name = e.partial_journey[-1]
+                    return redirect("frontdoor:change-page", session_id=session_id, page_name=last_page_name)
+
+            if next_page_name == unknown_page:
+                return redirect("/sorry")
             return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
-    def build_extra_context(self, request, session_id, page_name, data):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
         """
         Build any additional data to be added to the context.
 
@@ -462,20 +486,23 @@ class PageView(utils.MethodDispatcher):
         errors = {field: missing_item_errors[field] for field in missing_fields}
         return errors
 
-    def _get_prev_page_name(self, request, session_id, page_name, is_change_page):
+    def _get_prev_page_url(self, request, session_id, page_name, is_change_page):
         answers = interface.api.session.get_session(session_id)
 
-        if page_name in schemas.back_button_overrides:
-            return schemas.back_button_overrides[page_name]
-
         if is_change_page:
-            # TODO PC-1232: change how change page works
-            return unknown_page
-            # assert page_name in schemas.change_page_lookup
-            # prev_page_name = schemas.change_page_lookup[page_name]
-            # prev_page_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=prev_page_name))
+            # for pages that block progression, allow the user to press back out of these whilst keeping change state
+            if page_name in schemas.change_page_override_pages:
+                prev_page_name = get_prev_page(page_name, answers)
+                return reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=prev_page_name))
+            else:
+                assert page_name in schemas.change_page_lookup
+                prev_page_name = schemas.change_page_lookup[page_name]
+                return reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=prev_page_name))
 
-        return get_prev_page(page_name, answers)
+        if page_name in schemas.back_button_overrides:
+            return page_name_to_url(session_id, schemas.back_button_overrides[page_name])
+
+        return page_name_to_url(session_id, get_prev_page(page_name, answers))
 
 
 @register_page(country_page)
@@ -512,19 +539,11 @@ class ParkHomeMainResidenceView(PageView):
     def build_extra_context(self, *args, **kwargs):
         return {"park_home_main_residence_options_map": schemas.park_home_main_residence_options_map}
 
-    def save_post_data(self, data, session_id, page_name):
-        park_home_main_residence = data.get(park_home_main_residence_field)
-        if park_home_main_residence == field_yes:
-            data[property_type_field] = property_type_field_park_home
-            data[property_subtype_field] = property_type_field_park_home
-        data = save_answer(session_id, page_name, data)
-        return data
-
 
 @register_page(address_page)
 class AddressView(PageView):
-    def build_extra_context(self, request, session_id, page_name, data):
-        return {"manual_url": page_name_to_url(session_id, address_manual_page)}
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+        return {"manual_url": page_name_to_url(session_id, address_manual_page, is_change_page)}
 
     def save_post_data(self, data, session_id, page_name):
         reset_epc_details(session_id)
@@ -557,7 +576,7 @@ class EpcSelectView(PageView):
         non_empty_address_parts = filter(None, address_parts)
         return ", ".join(non_empty_address_parts)
 
-    def build_extra_context(self, request, session_id, page_name, data):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
         data = interface.api.session.get_answer(session_id, address_page)
         address_and_rrn_details = data.get(address_all_address_and_rnn_details_field, [])
         rrn_options = tuple(
@@ -569,7 +588,7 @@ class EpcSelectView(PageView):
         )
         return {
             "rrn_options": rrn_options,
-            "manual_url": page_name_to_url(session_id, epc_select_manual_page),
+            "manual_url": page_name_to_url(session_id, epc_select_manual_page, is_change_page),
         }
 
     def save_post_data(self, data, session_id, page_name):
@@ -610,7 +629,7 @@ class EpcSelectView(PageView):
 
 @register_page(address_select_page)
 class AddressSelectView(PageView):
-    def build_extra_context(self, request, session_id, page_name, data):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
         data = interface.api.session.get_answer(session_id, address_page)
         building_name_or_number = data[address_building_name_or_number_field]
         postcode = data[address_postcode_field]
@@ -626,7 +645,7 @@ class AddressSelectView(PageView):
         )
         return {
             "uprn_options": uprn_options,
-            "manual_url": page_name_to_url(session_id, address_select_manual_page),
+            "manual_url": page_name_to_url(session_id, address_select_manual_page, is_change_page),
         }
 
     def save_post_data(self, data, session_id, page_name):
@@ -717,7 +736,7 @@ class CouncilTaxBandView(PageView):
 
 @register_page(epc_page)
 class EpcView(PageView):
-    def build_extra_context(self, request, session_id, page_name, data):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
         session_data = interface.api.session.get_session(session_id)
         country = session_data.get(country_field)
 
@@ -812,13 +831,6 @@ class LoftView(PageView):
     def build_extra_context(self, *args, **kwargs):
         return {"loft_options": schemas.loft_options_map}
 
-    def save_post_data(self, data, session_id, page_name):
-        loft = data.get(loft_field)
-        if loft == loft_field_no:
-            data[loft_access_field] = loft_access_field_no_loft
-            data[loft_insulation_field] = loft_insulation_field_no_loft
-        return data
-
 
 @register_page(loft_access_page)
 class LoftAccessView(PageView):
@@ -834,48 +846,34 @@ class LoftInsulationView(PageView):
 
 @register_page(summary_page)
 class SummaryView(PageView):
-    # def get_extra_context(self, request, session_id, *args, **kwargs):
-    #     session_data = interface.api.session.get_session(session_id)
-    #     summary_lines = tuple(
-    #         {
-    #             "question": schemas.summary_map[question],
-    #             "answer": self.get_answer(session_data, question),
-    #             "change_url": self.get_change_url(session_id, question, page_name),
-    #         }
-    #         for page_name, questions in schemas.household_pages.items()
-    #         for question in questions
-    #         # if self.show_question(session_data, question)
-    #     )
-    #     return {"summary_lines": summary_lines}
+    def build_extra_context(self, request, session_id, *args, **kwargs):
+        session_data = interface.api.session.get_session(session_id)
+        summary_lines = tuple(
+            {
+                "question": schemas.summary_map[question],
+                "answer": self.get_answer(session_data, question),
+                "change_url": self.get_change_url(session_id, page_name),
+            }
+            for page_name, question in self.get_summary_questions(session_data)
+        )
+        return {"summary_lines": summary_lines}
+
+    def get_summary_questions(self, session_data):
+        for page_name in calculate_journey(session_data, to_page=summary_page):
+            if page_name in schemas.page_display_questions.keys():
+                for question in schemas.page_display_questions[page_name]:
+                    if self.show_question(session_data, question):
+                        yield page_name, question
 
     def show_question(self, session_data, question):
-        question_answered = question in session_data and question in schemas.summary_map
-        if not question_answered:
-            return False
-        if question in ["property_type", "property_subtype"]:
-            property_type = self.get_answer(session_data, "property_type")
-            return property_type != "Park home"
-        if question in ["park_home", "park_home_main_residence"]:
-            own_property = self.get_answer(session_data, "own_property")
-            return own_property != "No, I am a social housing tenant"
-        if question == "epc_rating":
-            epc_rating = session_data.get("epc_rating", "Not found")
-            accept_suggested_epc = session_data.get("accept_suggested_epc")
-            return epc_rating != "Not found" and accept_suggested_epc == "Yes"
-        if question in ["loft_access", "loft_insulation"]:
-            loft_answer = self.get_answer(session_data, "loft")
-            return loft_answer == "Yes, I have a loft that has not been converted into a room"
-        else:
-            return True
+        return question in schemas.summary_map
 
     def get_answer(self, session_data, question):
         answer = session_data.get(question)
         answers_map = schemas.check_your_answers_options_map.get(question)
         return answers_map[answer] if answers_map else answer
 
-    def get_change_url(self, session_id, question, page_name):
-        if question == "park_home":
-            return reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=page_name))
+    def get_change_url(self, session_id, page_name):
         return reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name))
 
     def handle_saved_answers(self, request, session_id, page_name, answers, is_change_page):
@@ -890,24 +888,12 @@ class SchemesView(PageView):
     def build_extra_context(self, request, session_id, *args, **kwargs):
         session_data = interface.api.session.get_session(session_id)
         eligible_schemes = eligibility.calculate_eligibility(session_data)
-        save_answer(session_id, "schemes", {"schemes": eligible_schemes})
+        save_answer(session_id, schemes_page, {schemes_field: eligible_schemes})
         eligible_schemes = tuple(schemas.schemes_map[scheme] for scheme in eligible_schemes if not scheme == "ECO4")
         supplier_name = SupplierConverter(session_id).get_supplier_on_general_pages()
 
         is_in_park_home = session_data.get(park_home_field, field_no) == field_yes
         is_social_housing = session_data.get(own_property_field) == own_property_field_social_housing
-
-        # TODO PC-1191: Edge case whereby user on social housing route goes back on "Check your answers" page and
-        #  changes answer to "Yes I own my own home". Overriding eligibility for "GBIS" ensures user sees the
-        #  eligibility page. Default answers for logic below will further ensure user sees contribution information.
-        if (
-            (not is_in_park_home)
-            and (not is_social_housing)
-            and session_data.get(council_tax_band_field) is None
-            and session_data.get(household_income_field) is None
-            and session_data.get(benefits_field) is None
-        ):
-            eligible_schemes = ("GBIS",)
 
         is_solid_walls = session_data.get(wall_type_field) in [
             wall_type_field_solid,
@@ -1036,21 +1022,27 @@ class ContactDetailsView(PageView):
 
 @register_page(confirm_and_submit_page)
 class ConfirmSubmitView(PageView):
-    # def get_extra_context(self, request, session_id, *args, **kwargs):
-    #     session_data = interface.api.session.get_session(session_id)
-    #     summary_lines = tuple(
-    #         {
-    #             "question": schemas.confirm_sumbit_map[question],
-    #             "answer": session_data.get(question),
-    #             "change_url": reverse(
-    #               "frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name)
-    #             ),
-    #         }
-    #         for page_name, questions in schemas.details_pages.items()
-    #         for question in questions
-    #     )
-    #     supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
-    #     return {"summary_lines": summary_lines, "supplier": supplier}
+    def build_extra_context(self, request, session_id, *args, **kwargs):
+        session_data = interface.api.session.get_session(session_id)
+        summary_lines = tuple(
+            {
+                "question": schemas.confirm_sumbit_map[question],
+                "answer": session_data.get(question),
+                "change_url": self.get_change_url(session_id, page_name),
+            }
+            for page_name, question in self.get_confirm_submit_questions(session_data)
+        )
+        supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
+        return {"summary_lines": summary_lines, "supplier": supplier}
+
+    def get_confirm_submit_questions(self, session_data):
+        for page_name in calculate_journey(session_data, from_page=schemes_page, to_page=confirm_and_submit_page):
+            if page_name in schemas.page_display_questions:
+                for question in schemas.page_display_questions[page_name]:
+                    yield page_name, question
+
+    def get_change_url(self, session_id, page_name):
+        return reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=page_name))
 
     def handle_saved_answers(self, request, session_id, page_name, answers, is_change_page):
         supplier_redirect = unavailable_supplier_redirect(session_id)

@@ -40,14 +40,16 @@ def calculate_journey(answers, to_page, from_page=None):
             return list(journey)
 
         if current_page == unknown_page:
-            raise CouldNotCalculateJourneyException
+            raise CouldNotCalculateJourneyException(from_page, to_page, list(journey)[:-1])
 
         next_page = get_next_page(current_page, answers)
 
         journey.append(next_page)
 
-    raise CouldNotCalculateJourneyException
+    raise CouldNotCalculateJourneyException(from_page, to_page, list(journey))
 
 
 class CouldNotCalculateJourneyException(Exception):
-    pass
+    def __init__(self, from_page, to_page, partial_journey):
+        super().__init__(f"Could not calculate a journey from {from_page} to {to_page}. Route tried: {partial_journey}")
+        self.partial_journey = partial_journey
