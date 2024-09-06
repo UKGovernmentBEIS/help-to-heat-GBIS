@@ -18,7 +18,7 @@
           {{macros.radios('rrn', rrn_options, data, errors)}}
 
         <p>
-          <a href="{{url('frontdoor:page', session_id=session_id, page_name='address-manual')}}" class="govuk-link">{{_("I cannot find my address. I want to enter it manually")}}</a>
+          <a href="{{ manual_url }}" class="govuk-link">{{_("I cannot find my address. I want to enter it manually")}}</a>
         </p>
 
       </fieldset>
