@@ -508,7 +508,7 @@ class PageView(utils.MethodDispatcher):
                 except CouldNotCalculateJourneyException:
                     # if not, as a failsafe send them to the previous page in change state
                     # this is a reasonably unsurprising action to the user, it is the previous page
-                    # TODO PC-1221: review further as part of PC-1311
+                    # TODO PC-1311: review further
                     prev_page_name = get_prev_page(page_name, answers)
                     return reverse(
                         "frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=prev_page_name)
