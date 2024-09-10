@@ -46,8 +46,7 @@ owner_types = owner_occupier, tenant, landlord, social_housing
 house = "House"
 bungalow = "Bungalow"
 apartment_flat_or_maisonette = "Apartment, flat or maisonette"
-park_home = "Park home"
-property_types = house, bungalow, apartment_flat_or_maisonette, park_home
+property_types = house, bungalow, apartment_flat_or_maisonette
 
 # Band (Council Tax and EPC)
 
@@ -103,7 +102,14 @@ def _get_property_type_options(scenario):
     is_park_home = scenario.get("Park home?")
     if is_park_home is None:
         return property_types
-    return (park_home,) if is_park_home else (house, bungalow, apartment_flat_or_maisonette)
+    return (house, bungalow, apartment_flat_or_maisonette)
+
+
+def _get_park_home_options(scenario):
+    is_park_home = scenario.get("Park home?")
+    if is_park_home is None:
+        return yes_no
+    return (yes,) if is_park_home else (no,)
 
 
 def _get_park_home_main_residence_options(scenario):
@@ -177,6 +183,7 @@ def _assert_eligibility(scenario, expected_eligibility):
         _get_country_options(scenario),
         _get_own_property_options(scenario),
         _get_property_type_options(scenario),
+        _get_park_home_options(scenario),
         _get_park_home_main_residence_options(scenario),
         _get_epc_rating_and_acceptance_options(scenario),
         _get_benefits_options(scenario),
@@ -186,6 +193,7 @@ def _assert_eligibility(scenario, expected_eligibility):
         country,
         own_property,
         property_type,
+        park_home,
         park_home_main_residence,
         (epc_rating, accept_suggested_epc),
         benefits,
@@ -197,6 +205,7 @@ def _assert_eligibility(scenario, expected_eligibility):
                     "country": country,
                     "own_property": own_property,
                     "property_type": property_type,
+                    "park_home": park_home,
                     "park_home_main_residence": park_home_main_residence,
                     "council_tax_band": council_tax_band,
                     "epc_rating": epc_rating,

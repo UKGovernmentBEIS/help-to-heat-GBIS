@@ -1,3 +1,23 @@
+from help_to_heat.frontdoor.consts import (
+    benefits_field,
+    council_tax_band_field,
+    country_field,
+    country_field_england,
+    country_field_scotland,
+    country_field_wales,
+    epc_accept_suggested_epc_field,
+    epc_rating_field,
+    epc_rating_field_not_found,
+    field_no,
+    field_yes,
+    household_income_field,
+    household_income_field_less_than_threshold,
+    own_property_field,
+    own_property_field_social_housing,
+    park_home_field,
+    park_home_main_residence_field,
+)
+
 gbis = "GBIS"
 eco4 = "ECO4"
 
@@ -7,43 +27,43 @@ eligible_for_gbis_and_eco4 = (gbis, eco4)
 
 
 def _is_eligible_council_tax_band(country, council_tax_band):
-    if country == "England":
+    if country == country_field_england:
         return council_tax_band in ("A", "B", "C", "D")
-    if country in ("Scotland", "Wales"):
+    if country in (country_field_scotland, country_field_wales):
         return council_tax_band in ("A", "B", "C", "D", "E")
     return False
 
 
 def calculate_eligibility(session_data):
-    country = session_data.get("country")
-    own_property = session_data.get("own_property")
-    property_type = session_data.get("property_type")
-    park_home_main_residence = session_data.get("park_home_main_residence", "No")
-    council_tax_band = session_data.get("council_tax_band")
-    epc_rating = session_data.get("epc_rating", "Not found")
-    accept_suggested_epc = session_data.get("accept_suggested_epc")
-    benefits = session_data.get("benefits")
-    household_income = session_data.get("household_income")
+    country = session_data.get(country_field)
+    own_property = session_data.get(own_property_field)
+    park_home = session_data.get(park_home_field)
+    park_home_main_residence = session_data.get(park_home_main_residence_field, field_no)
+    council_tax_band = session_data.get(council_tax_band_field)
+    epc_rating = session_data.get(epc_rating_field, epc_rating_field_not_found)
+    accept_suggested_epc = session_data.get(epc_accept_suggested_epc_field)
+    benefits = session_data.get(benefits_field)
+    household_income = session_data.get(household_income_field)
 
-    if country not in ("England", "Scotland", "Wales"):
+    if country not in (country_field_england, country_field_scotland, country_field_wales):
         return not_eligible
 
-    if epc_rating in ("A", "B", "C") and accept_suggested_epc == "Yes":
+    if epc_rating in ("A", "B", "C") and accept_suggested_epc == field_yes:
         return not_eligible
 
-    if own_property == "No, I am a social housing tenant":
+    if own_property == own_property_field_social_housing:
         return eligible_for_gbis_and_eco4
 
-    if property_type == "Park home" and park_home_main_residence == "No":
+    if park_home == field_yes and park_home_main_residence == field_no:
         return not_eligible
 
-    if benefits == "Yes":
+    if benefits == field_yes:
         return eligible_for_gbis_and_eco4
 
-    if household_income == "Less than £31,000 a year":
+    if household_income == household_income_field_less_than_threshold:
         return eligible_for_gbis_and_eco4
 
-    if property_type == "Park home":
+    if park_home == field_yes:
         return eligible_for_gbis
 
     if _is_eligible_council_tax_band(country, council_tax_band):

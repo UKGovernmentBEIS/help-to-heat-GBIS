@@ -3,7 +3,7 @@
 <title>{{_("Holding Page - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
 {% endblock %}
 {% block content %}
-<a href="{% if previous_path %}{{ previous_path }}{% else %}{{"https://www.gov.uk/apply-great-british-insulation-scheme"}}{% endif %}"
+<a href="{% if previous_path %}{{ previous_path }}{% else %}{{govuk_url}}{% endif %}"
     class="govuk-back-link">{{_("Back")}}</a>
 <div class="govuk-grid-row">
     <div class="govuk-grid-column-two-thirds">
