@@ -496,8 +496,23 @@ class PageView(utils.MethodDispatcher):
                 return reverse("frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=prev_page_name))
             else:
                 assert page_name in schemas.change_page_lookup
-                prev_page_name = schemas.change_page_lookup[page_name]
-                return reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=prev_page_name))
+                change_page_name = schemas.change_page_lookup[page_name]
+                start_of_journey_page = schemas.change_page_start_of_journey_lookup[change_page_name]
+
+                try:
+                    # it is possible the user has changed answers that mean they no longer complete the flow
+                    # check whether their answers can lead to the summary page
+                    calculate_journey(answers, from_page=start_of_journey_page, to_page=change_page_name)
+                    prev_page_name = schemas.change_page_lookup[page_name]
+                    return reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=prev_page_name))
+                except CouldNotCalculateJourneyException:
+                    # if not, as a failsafe send them to the previous page in change state
+                    # this is a reasonably unsurprising action to the user, it is the previous page
+                    # TODO PC-1221: review further as part of PC-1311
+                    prev_page_name = get_prev_page(page_name, answers)
+                    return reverse(
+                        "frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=prev_page_name)
+                    )
 
         if page_name in schemas.back_button_overrides:
             return page_name_to_url(session_id, schemas.back_button_overrides[page_name])
