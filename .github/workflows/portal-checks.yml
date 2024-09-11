@@ -22,17 +22,6 @@ jobs:
     steps:
       - uses: actions/checkout@v3
 
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v3
-        with:
-          python-version: 3.11
-
-      - name: Install Dependencies
-        run: |
-          pip install poetry
-          poetry config virtualenvs.create false
-          poetry install --with dev
-
       - name: Run Python Code Checks
         run: |
           make check-python-code
