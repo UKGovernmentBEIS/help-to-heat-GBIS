@@ -538,52 +538,18 @@ class EPC(Entity):
         return data
 
     def get_address_and_epc_rrn(self, building_name_or_number, postcode):
-        data = self.__try_with_authentication(lambda api: api.get_address_and_rrn(building_name_or_number, postcode))
+        data = self.__try_connection(lambda api: api.get_address_and_rrn(building_name_or_number, postcode))
         address_and_epc_details = data["data"]["assessments"]
         return address_and_epc_details
 
     def get_epc_details(self, rrn):
-        return self.__try_with_authentication(lambda api: api.get_epc_details(rrn))
+        return self.__try_connection(lambda api: api.get_epc_details(rrn))
 
-    def __try_with_authentication(self, callback):
+    def __try_connection(self, callback):
         try:
-            token = self.__get_access_token()
-            return callback(EPCApi(token))
+            return callback(EPCApi())
         except requests.exceptions.RequestException as e:
-            status_code = e.response.status_code
-            if status_code == HTTPStatus.UNAUTHORIZED:
-                new_token = self.__update_access_token()
-                return callback(EPCApi(new_token))
-            else:
-                raise e
-
-    def __get_access_token(self):
-        token = self.__retrieve_token()
-        if token is not None:
-            return token
-        else:
-            token = self.__update_access_token()
-            return token
-
-    def __update_access_token(self):
-        access_token = EPCApi(None).get_access_token()
-        self.__save_token(access_token)
-        return access_token
-
-    def __retrieve_token(self):
-        token = models.AccessToken.objects.first()
-        if token is not None:
-            return token.access_token
-        else:
-            return None
-
-    def __save_token(self, new_token):
-        saved_token = models.AccessToken.objects.first()
-        if saved_token is not None:
-            saved_token.access_token = new_token
-        else:
-            saved_token = models.AccessToken(access_token=new_token)
-        saved_token.save()
+            raise e
 
 
 class Feedback(Entity):
