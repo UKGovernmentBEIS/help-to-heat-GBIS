@@ -11,7 +11,7 @@ class EPCApi:
     def _basic_auth_header(self):
         return {
             'Accept': 'application/json',
-            'Authorization': f'Basic {settings.OPEN_EPC_API_KEY}'
+            'Authorization': f'Basic {settings.OPEN_EPC_API_TOKEN}'
         }
 
     def get_address_and_lmk(self, building, postcode):

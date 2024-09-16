@@ -253,7 +253,7 @@ LOGGING = {
 }
 
 OS_API_KEY = env.str("OS_API_KEY")
-OPEN_EPC_API_KEY=env.str("OPEN_EPC_API_KEY")
+OPEN_EPC_API_TOKEN=env.str("OPEN_EPC_API_TOKEN")
 OPEN_EPC_API_BASE_URL=env.str("OPEN_EPC_API_BASE_URL")
 
 TOTP_ISSUER = "Help to Heat Supplier Portal"

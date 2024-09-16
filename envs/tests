@@ -18,6 +18,6 @@ CONTACT_EMAIL="test@example.com"
 FROM_EMAIL="test@example.com"
 OS_API_KEY=["f4k3k3y","4n0th3r0n3"]
 OPEN_EPC_API_BASE_URL="https://epc.opendatacommunities.org/api/v1/domestic/search"
-OPEN_EPC_API_KEY="f4k3k3y"
+OPEN_EPC_API_TOKEN="f4k3k3y"
 SUPPRESS_COOKIE_BANNER=True
 SUPPRESS_LANGUAGE_TOGGLE=True
