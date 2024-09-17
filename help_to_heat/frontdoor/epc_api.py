@@ -9,10 +9,7 @@ logger = logging.getLogger(__name__)
 
 class EPCApi:
     def _basic_auth_header(self):
-        return {
-            'Accept': 'application/json',
-            'Authorization': f'Basic {settings.OPEN_EPC_API_TOKEN}'
-        }
+        return {"Accept": "application/json", "Authorization": f"Basic {settings.OPEN_EPC_API_TOKEN}"}
 
     def get_address_and_lmk(self, building, postcode):
         base_url = settings.OPEN_EPC_API_BASE_URL
