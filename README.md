@@ -4,7 +4,7 @@ Formerly known as "Help to Heat".
 ## Initial Setup
 1. From the project root, run `cp envs/web.template envs/web`
 2. Populate the OS API key into the OS_API_KEY variable in `envs/web`. The key can be found in Keeper. Please only use a single value (i.e. `["my_key_here"]`), rather than all of the keys that are stored in Keeper, in order to avoid needing to rotate all of the keys if your local environment is accidentally leaked.
-3. Get your own Open EPC API token by signing up on the [Open EPC website](https://epc.opendatacommunities.org/login), and getting the token from the [domestic EPC docs page](https://epc.opendatacommunities.org/docs/api/domestic#:~:text=publicly%20accessible%20website.-,Authorization%3A%20Basic,-%3Cencoded%2Dapi%2Dkey)
+3. Populate the Open EPC API token into the OPEN_EPC_API_TOKEN variable in `envs/web`. This key can be found in keeper.
 ### (Optional) Poetry Setup 
 If you want to be able to make changes to the dependency list using Poetry, or install the dependencies locally (so you can click into them in your IDE, or use autocomplete) perform these steps:
 1. [Install Poetry](https://python-poetry.org/docs/) on your machine
