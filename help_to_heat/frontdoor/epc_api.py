@@ -27,4 +27,6 @@ class EPCApi:
         headers = self._basic_auth_header()
         response = requests.get(url, headers=headers)
         response.raise_for_status()
+        if len(response.content) == 0:
+            return None
         return response.json()

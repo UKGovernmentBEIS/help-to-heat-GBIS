@@ -803,7 +803,7 @@ class SessionSchema(Schema):
         validate=validate.Regexp(postcode_regex_collection, error=_("Please enter a valid UK postcode"))
     )
     uprn = fields.String()
-    rrn = fields.String()
+    lmk = fields.String()
     epc_details = fields.Dict()
     address_and_lmk_details = fields.List(fields.Dict)
     property_main_heat_source = fields.String()

@@ -539,8 +539,8 @@ class EPC(Entity):
         address_and_epc_details = data["rows"]
         return address_and_epc_details
 
-    def get_epc_details(self, rrn):
-        return self.__try_connection(lambda api: api.get_epc_details(rrn))
+    def get_epc_details(self, lmk):
+        return self.__try_connection(lambda api: api.get_epc_details(lmk))
 
     def __try_connection(self, callback):
         try:
