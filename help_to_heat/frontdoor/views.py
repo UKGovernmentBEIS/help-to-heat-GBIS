@@ -675,7 +675,17 @@ class AddressSelectView(PageView):
             field_yes if duplicate_referral_checker.is_referral_a_recent_duplicate() else field_no
         )
 
+        answers = interface.api.session.get_session(session_id)
+        country = answers.get(country_field)
+
         data[epc_found_field] = field_no
+
+        if country == country_field_scotland and uprn is not None:
+            epc = interface.api.epc.get_epc_scotland(uprn)
+            if epc != {}:
+                epc_details = {"currentEnergyEfficiencyBand": epc.get("rating"), "lodgementDate": epc.get("date")}
+                data[epc_details_field] = epc_details
+                data[epc_found_field] = field_yes
 
         return data
 
@@ -753,36 +763,19 @@ class CouncilTaxBandView(PageView):
 class EpcView(PageView):
     def build_extra_context(self, request, session_id, page_name, data, is_change_page):
         session_data = interface.api.session.get_session(session_id)
-        country = session_data.get(country_field)
 
-        if country == country_field_scotland:
-            uprn = session_data.get(uprn_field)
-            address = session_data.get(address_field)
-            epc = interface.api.epc.get_epc_scotland(uprn) if uprn else {}
+        address = session_data.get(address_field)
+        epc = session_data.get(epc_details_field)
 
-            context = {
-                "epc_rating": epc.get("rating"),
-                "epc_date": epc.get("date"),
-                "epc_display_options": schemas.epc_display_options_map,
-                "address": address,
-            }
+        epc_band = epc.get("currentEnergyEfficiencyBand")
 
-            return context
-        else:
-            rrn = session_data.get(rrn_field)
-            address = session_data.get(address_field)
-            context = {}
-            epc = session_data.get(epc_details_field) if rrn else {}
-
-            epc_band = epc.get("currentEnergyEfficiencyBand")
-
-            context = {
-                "epc_rating": epc_band.upper() if epc_band else "",
-                "epc_date": epc.get("lodgementDate"),
-                "epc_display_options": schemas.epc_display_options_map,
-                "address": address,
-            }
-            return context
+        context = {
+            "epc_rating": epc_band.upper() if epc_band else "",
+            "epc_date": epc.get("lodgementDate"),
+            "epc_display_options": schemas.epc_display_options_map,
+            "address": address,
+        }
+        return context
 
     def save_post_data(self, data, session_id, page_name):
         accept_suggested_epc = data.get(epc_accept_suggested_epc_field)

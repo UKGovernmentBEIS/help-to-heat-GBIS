@@ -530,12 +530,9 @@ class EPC(Entity):
         try:
             epc = portal.models.ScottishEpcRating.objects.get(uprn=uprn)
         except portal.models.ScottishEpcRating.DoesNotExist:
-            epc = None
-        if epc:
-            data = {"uprn": epc.uprn, "rating": epc.rating, "date": epc.date}
-        else:
-            data = {}
-        return data
+            return {}
+
+        return {"uprn": epc.uprn, "rating": epc.rating, "date": epc.date}
 
     def get_address_and_epc_rrn(self, building_name_or_number, postcode):
         data = self.__try_connection(lambda api: api.get_address_and_rrn(building_name_or_number, postcode))
