@@ -95,7 +95,7 @@ def test_get_epc_unauthorized_failure():
 @utils.mock_os_api
 def test_get_epc_details_not_found_failure():
     try:
-        interface.api.epc.get_epc_details("1111-1111-1111-1111-1111")
+        interface.api.epc.get_epc_details("1111111111111111111111111111111111")
         raise "Expected call to throw"
     except requests.exceptions.RequestException as e:
         assert e.response.status_code == HTTPStatus.NOT_FOUND
@@ -105,7 +105,7 @@ def test_get_epc_details_not_found_failure():
 @utils.mock_os_api
 def test_get_epc_details_unauthorized_failure():
     try:
-        interface.api.epc.get_epc_details("1111-1111-1111-1111-1111")
+        interface.api.epc.get_epc_details("1111111111111111111111111111111111")
         raise "Expected call to throw"
     except requests.exceptions.RequestException as e:
         assert e.response.status_code == HTTPStatus.UNAUTHORIZED
