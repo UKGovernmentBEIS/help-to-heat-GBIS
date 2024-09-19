@@ -1,5 +1,7 @@
 import logging
 import uuid
+from datetime import datetime
+from dateutil.relativedelta import relativedelta
 
 from django.conf import settings
 from django.http import Http404
@@ -644,10 +646,15 @@ class EpcSelectView(PageView):
 @register_page(address_select_page)
 class AddressSelectView(PageView):
     def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+        session_data = interface.api.session.get_session(session_id)
+        country = session_data.get(country_field)
+
         data = interface.api.session.get_answer(session_id, address_page)
         building_name_or_number = data[address_building_name_or_number_field]
         postcode = data[address_postcode_field]
         addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
+        current_month_start = datetime.now().replace(day=1).strftime('%d/%m/%Y')
+        next_month_start = (datetime.now() + relativedelta(months=+1)).replace(day=1).strftime('%d/%m/%Y')
         uprn_options = tuple(
             {
                 "value": a["uprn"],
@@ -660,6 +667,9 @@ class AddressSelectView(PageView):
         return {
             "uprn_options": uprn_options,
             "manual_url": page_name_to_url(session_id, address_select_manual_page, is_change_page),
+            "current_month_start": current_month_start,
+            "next_month_start": next_month_start,
+            "country": country
         }
 
     def save_post_data(self, data, session_id, page_name):
@@ -764,15 +774,25 @@ class EpcView(PageView):
         session_data = interface.api.session.get_session(session_id)
 
         address = session_data.get(address_field)
+        country = session_data.get(country_field)
         epc = session_data.get(epc_details_field)
 
         epc_band = epc.get("current-energy-rating")
 
+        epc_date = datetime.strptime(epc.get("lodgement-date"), '%Y-%m-%d').strftime('%d/%m/%Y')
+
+        current_month_start = datetime.now().replace(day=1).strftime('%d/%m/%Y')
+
+        next_month_start = (datetime.now() + relativedelta(months=+1)).replace(day=1).strftime('%d/%m/%Y')
+
         context = {
             "epc_rating": epc_band.upper() if epc_band else "",
-            "epc_date": epc.get("lodgement-date"),
+            "epc_date": epc_date,
+            "current_month_start": current_month_start,
+            "next_month_start": next_month_start,
             "epc_display_options": schemas.epc_display_options_map,
             "address": address,
+            "country": country,
         }
         return context
 

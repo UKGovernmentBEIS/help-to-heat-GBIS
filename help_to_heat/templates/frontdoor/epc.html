@@ -12,7 +12,18 @@
   <h1 class="govuk-heading-l">{{_("We found an Energy Performance Certificate that might be yours")}}</h1>
 
   <p class="govuk-body">{{_("This certificate may be registered to your property or one of the properties nearby that shares part of your address.")}}</p>
-
+  {%  if country == "England" or country == "Wales" %}
+  <details class="govuk-details">
+    <summary class="govuk-details__summary">
+      <span class="govuk-details__summary-text">
+        {{_("What if I have had a new EPC issued recently?") }}
+      </span>
+    </summary>
+    <div class="govuk-details__text">
+      {{_("If your property has had a new EPC issued since %(current_month_start)s, we may not be able to find it in our database because it is only updated monthly. If you do not recognise the EPC below as your most recent one, please return to this service after %(next_month_start)s when we expect the database to have been updated. You can continue with your old EPC but the energy supplier you have selected may not be able to help based on an out-of-date EPC") % { "current_month_start": current_month_start, "next_month_start": next_month_start }}}
+    </div>
+  </details>
+  {% endif %}
   <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title"
     data-module="govuk-notification-banner">
     <div class="govuk-notification-banner__header">
@@ -31,6 +42,12 @@
       
       {% if epc_rating %}
         <p class="govuk-body">{{ epc_rating.upper() }}</p>
+      {% endif %}
+      
+      <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">{{_("Date of issue")}}</p>
+      
+      {% if epc_date %}
+        <p class="govuk-body">{{ epc_date.format() }}</p>
       {% endif %}
       
     </div>
