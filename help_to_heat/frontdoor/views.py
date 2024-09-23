@@ -327,12 +327,12 @@ def reset_epc_details(session_id):
         session_id,
         "epc-select",
         {
-            "rrn": "",
-            "epc_details": {},
-            "uprn": "",
-            "property_main_heat_source": "",
-            "epc_rating": epc_rating_field_not_found,
-            "accept_suggested_epc": epc_accept_suggested_epc_field_not_found,
+            lmk_field: "",
+            epc_details_field: {},
+            uprn_field: "",
+            property_main_heat_source_field: "",
+            epc_rating_field: epc_rating_field_not_found,
+            epc_accept_suggested_epc_field: epc_accept_suggested_epc_field_not_found,
             "epc_date": "",
         },
     )
@@ -606,10 +606,11 @@ class EpcSelectView(PageView):
         }
 
     def save_post_data(self, data, session_id, page_name):
-        rrn = data.get(rrn_field)
+        lmk = data.get(lmk_field)
 
         try:
-            epc = interface.api.epc.get_epc_details(rrn)
+            epc = interface.api.epc.get_epc_details(lmk)
+            epc_details = epc["rows"][0]
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
             reset_epc_details(session_id)
@@ -617,14 +618,13 @@ class EpcSelectView(PageView):
             return data
 
         data[epc_select_choice_field] = epc_select_choice_field_select_epc
-        address = self.format_address(epc["data"]["assessment"]["address"])
-        epc_details = epc["data"]["assessment"]
 
         uprn = epc_details.get("uprn")
-        heat_source = epc_details.get("mainHeatingDescription")
+        address = epc_details.get("address")
+        heat_source = epc_details.get("mainheat-description")
 
         epc_data = {
-            rrn_field: rrn,
+            lmk_field: lmk,
             address_field: address,
             epc_details_field: epc_details,
             uprn_field: uprn if uprn is not None else "",
@@ -682,7 +682,7 @@ class AddressSelectView(PageView):
         if country == country_field_scotland and uprn is not None:
             epc = interface.api.epc.get_epc_scotland(uprn)
             if epc != {}:
-                epc_details = {"currentEnergyEfficiencyBand": epc.get("rating"), "lodgementDate": epc.get("date")}
+                epc_details = {"current-energy-rating": epc.get("rating"), "lodgement-date": epc.get("date")}
                 data[epc_details_field] = epc_details
                 data[epc_found_field] = field_yes
 
@@ -766,11 +766,11 @@ class EpcView(PageView):
         address = session_data.get(address_field)
         epc = session_data.get(epc_details_field)
 
-        epc_band = epc.get("currentEnergyEfficiencyBand")
+        epc_band = epc.get("current-energy-rating")
 
         context = {
             "epc_rating": epc_band.upper() if epc_band else "",
-            "epc_date": epc.get("lodgementDate"),
+            "epc_date": epc.get("lodgement-date"),
             "epc_display_options": schemas.epc_display_options_map,
             "address": address,
         }

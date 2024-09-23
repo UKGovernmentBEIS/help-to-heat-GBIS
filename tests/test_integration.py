@@ -37,7 +37,7 @@ def test_csv():
 
     rows = list(csv.DictReader(lines))
     data = rows[0]
-    assert data["epc_date"] == "2020-02-29"
+    assert data["epc_date"] == "2010-07-23"
     assert data["submission_date"] == "2022-07-01"
 
     before_submission_bst = datetime(2022, 6, 30, 23, 59, 59) + timedelta(hours=1)
