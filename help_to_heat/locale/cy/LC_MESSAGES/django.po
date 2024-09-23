@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-09-23 13:51+0000\n"
+"POT-Creation-Date: 2024-09-23 14:33+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -610,51 +610,51 @@ msgstr ""
 
 #: help_to_heat/frontdoor/views.py:241
 msgid "January"
-msgstr ""
+msgstr "Ionawr"
 
 #: help_to_heat/frontdoor/views.py:242
 msgid "February"
-msgstr ""
+msgstr "Chwefror"
 
 #: help_to_heat/frontdoor/views.py:243
 msgid "March"
-msgstr ""
+msgstr "Mawrth"
 
 #: help_to_heat/frontdoor/views.py:244
 msgid "April"
-msgstr ""
+msgstr "Ebrill"
 
 #: help_to_heat/frontdoor/views.py:245
 msgid "May"
-msgstr ""
+msgstr "Mai"
 
 #: help_to_heat/frontdoor/views.py:246
 msgid "June"
-msgstr ""
+msgstr "Mehefin"
 
 #: help_to_heat/frontdoor/views.py:247
 msgid "July"
-msgstr ""
+msgstr "Gorffennaf"
 
 #: help_to_heat/frontdoor/views.py:248
 msgid "August"
-msgstr ""
+msgstr "Awst"
 
 #: help_to_heat/frontdoor/views.py:249
 msgid "September"
-msgstr ""
+msgstr "Medi"
 
 #: help_to_heat/frontdoor/views.py:250
 msgid "October"
-msgstr ""
+msgstr "Hydref"
 
 #: help_to_heat/frontdoor/views.py:251
 msgid "November"
-msgstr ""
+msgstr "Tachwedd"
 
 #: help_to_heat/frontdoor/views.py:252
 msgid "December"
-msgstr ""
+msgstr "Rhagfyr"
 
 #: help_to_heat/templates/allauth/account/base.html:110
 #: help_to_heat/templates/frontdoor/base.html:189
@@ -955,18 +955,29 @@ msgstr "Dwi'n methu gweld fy nghyfeiriad i. Hoffwn ei roi fy hunan."
 #: help_to_heat/templates/frontdoor/epc.html:19
 msgid "What if I have had a new EPC issued recently?"
 msgstr ""
+"Beth os ydw i wedi cael Tystysgrif Perfformiad Ynni newydd yn ddiweddar?"
 
 #: help_to_heat/templates/frontdoor/address-select.html:35
 #, python-format
 msgid ""
 "If your property has had a new EPC issued since %(current_month_start)s, we "
 "may not be able to find it in our database because it is only updated "
-"monthly. If you do not recognise the EPC below as your most recent one, "
-"please return to this service after %(next_month_start)s when we expect the "
-"database to have been updated. You can continue without your EPC having been "
-"found by this service, but the energy supplier you have selected may not be "
-"able to help if they do not have your new EPC."
-msgstr ""
+"monthly. Please return to this service after %(next_month_start)s when we "
+"expect the database to have been updated."
+msgstr "Os oes Tystysgrif Perfformiad Ynni newydd wedi cael ei chyhoeddi ar gyfer eich "
+"eiddo ers %(current_month_start)s, efallai na fyddwn yn gallu dod o hyd iddi yn ein "
+"cronfa ddata gan mai dim ond yn fisol y caiff ei diweddaru. Dewch yn ôl at y "
+"gwasanaeth hwn ar ôl %(next_month_start)s. Disgwyliwn y bydd y gronfa ddata "
+"wedi cael ei diweddaru erbyn hynny."
+
+#: help_to_heat/templates/frontdoor/address-select.html:37
+msgid ""
+"You can continue without your EPC having been found by this service, but the "
+"energy supplier you have selected may not be able to help if they do not "
+"have your new EPC."
+msgstr "Gallwch barhau heb i’r gwasanaeth hwn ddod o hyd i’ch Tystysgrif Perfformiad Ynni, "
+"ond efallai na fydd y cyflenwr ynni rydych chi wedi’i ddewis yn gallu helpu heb gael "
+"eich tystysgrif newydd."
 
 #: help_to_heat/templates/frontdoor/address.html:5
 msgid ""
@@ -1555,28 +1566,38 @@ msgid ""
 "may not be able to find it in our database because it is only updated "
 "monthly. If you do not recognise the EPC below as your most recent one, "
 "please return to this service after %(next_month_start)s when we expect the "
-"database to have been updated. You can continue with your old EPC but the "
-"energy supplier you have selected may not be able to help based on an out-of-"
-"date EPC"
-msgstr ""
+"database to have been updated."
+msgstr "Os oes Tystysgrif Perfformiad Ynni newydd wedi cael ei chyhoeddi ar gyfer eich "
+"eiddo ers %(current_month_start)s, efallai na fyddwn yn gallu dod o hyd iddi yn ein "
+"cronfa ddata gan mai dim ond yn fisol y caiff ei diweddaru. Os nad y Dystysgrif "
+"Perfformiad Ynni isod yw’ch un ddiweddaraf, dewch yn ôl at y gwasanaeth hwn ar ôl "
+"%(next_month_start)s. Disgwyliwn y bydd y gronfa ddata wedi cael ei diweddaru "
+"erbyn hynny."
 
-#: help_to_heat/templates/frontdoor/epc.html:31
+#: help_to_heat/templates/frontdoor/epc.html:25
+msgid ""
+"You can continue with your old EPC but the energy supplier you have selected "
+"may not be able to help based on an out-of-date EPC"
+msgstr "Gallwch barhau â’ch hen Dystysgrif Perfformiad Ynni, ond efallai na fydd y cyflenwr "
+"ynni rydych chi wedi’i ddewis yn gallu helpu ar sail hen dystysgrif."
+
+#: help_to_heat/templates/frontdoor/epc.html:33
 msgid "Certificate"
 msgstr "Tystysgrif"
 
-#: help_to_heat/templates/frontdoor/epc.html:36
+#: help_to_heat/templates/frontdoor/epc.html:38
 msgid "Registered address"
 msgstr "Cyfeiriad cofrestredig"
 
-#: help_to_heat/templates/frontdoor/epc.html:41
+#: help_to_heat/templates/frontdoor/epc.html:43
 msgid "EPC rating"
 msgstr "Cyfraddiad EPC "
 
-#: help_to_heat/templates/frontdoor/epc.html:47
+#: help_to_heat/templates/frontdoor/epc.html:49
 msgid "Date of issue"
 msgstr ""
 
-#: help_to_heat/templates/frontdoor/epc.html:59
+#: help_to_heat/templates/frontdoor/epc.html:61
 msgid "Is this your EPC?"
 msgstr "Ai eich EPC chi yw hon?"
 
