@@ -1,8 +1,8 @@
 import logging
 import uuid
 from datetime import datetime
-from dateutil.relativedelta import relativedelta
 
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.http import Http404
 from django.shortcuts import redirect, render
@@ -235,6 +235,21 @@ missing_item_errors = {
         "Please confirm that you understand you may be required to contribute towards the cost of installing insulation"
     ),
 }
+
+month_names = [
+    _("January"),
+    _("February"),
+    _("March"),
+    _("April"),
+    _("May"),
+    _("June"),
+    _("July"),
+    _("August"),
+    _("September"),
+    _("October"),
+    _("November"),
+    _("December"),
+]
 
 # to be updated when we get full list of excluded suppliers
 converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
@@ -653,8 +668,15 @@ class AddressSelectView(PageView):
         building_name_or_number = data[address_building_name_or_number_field]
         postcode = data[address_postcode_field]
         addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
-        current_month_start = datetime.now().replace(day=1).strftime('%d/%m/%Y')
-        next_month_start = (datetime.now() + relativedelta(months=+1)).replace(day=1).strftime('%d/%m/%Y')
+
+        current_month_start = datetime.now().replace(day=1)
+        month_name = month_names[current_month_start.month - 1]
+        current_month_start = current_month_start.strftime("%-d") + " " + month_name
+
+        next_month_start = (datetime.now() + relativedelta(months=+1)).replace(day=1)
+        month_name = month_names[next_month_start.month - 1]
+        next_month_start = next_month_start.strftime("%-d") + " " + month_name
+
         uprn_options = tuple(
             {
                 "value": a["uprn"],
@@ -669,7 +691,7 @@ class AddressSelectView(PageView):
             "manual_url": page_name_to_url(session_id, address_select_manual_page, is_change_page),
             "current_month_start": current_month_start,
             "next_month_start": next_month_start,
-            "country": country
+            "country": country,
         }
 
     def save_post_data(self, data, session_id, page_name):
@@ -778,12 +800,20 @@ class EpcView(PageView):
         epc = session_data.get(epc_details_field)
 
         epc_band = epc.get("current-energy-rating")
+        try:
+            epc_date = datetime.strptime(epc.get("lodgement-date"), "%Y-%m-%d")
+            month_name = month_names[epc_date.month - 1]
+            epc_date = epc_date.strftime("%-d") + " " + month_name + " " + epc_date.strftime("%Y")
+        except ValueError:
+            epc_date = epc.get("lodgement-date")
 
-        epc_date = datetime.strptime(epc.get("lodgement-date"), '%Y-%m-%d').strftime('%d/%m/%Y')
+        current_month_start = datetime.now().replace(day=1)
+        month_name = month_names[current_month_start.month - 1]
+        current_month_start = current_month_start.strftime("%-d") + " " + month_name
 
-        current_month_start = datetime.now().replace(day=1).strftime('%d/%m/%Y')
-
-        next_month_start = (datetime.now() + relativedelta(months=+1)).replace(day=1).strftime('%d/%m/%Y')
+        next_month_start = (datetime.now() + relativedelta(months=+1)).replace(day=1)
+        month_name = month_names[next_month_start.month - 1]
+        next_month_start = next_month_start.strftime("%-d") + " " + month_name
 
         context = {
             "epc_rating": epc_band.upper() if epc_band else "",
