@@ -803,12 +803,6 @@ class EpcView(PageView):
 
         epc_band = epc.get("current-energy-rating")
         epc_date = epc.get("lodgement-date")
-        try:
-            working_epc_date = datetime.strptime(epc_date, "%Y-%m-%d")
-            month_name = month_names[working_epc_date.month - 1]
-            gds_epc_date = working_epc_date.strftime("%-d") + " " + month_name + " " + working_epc_date.strftime("%Y")
-        except ValueError:
-            gds_epc_date = epc_date
 
         current_month_start = datetime.now().replace(day=1)
         month_name = month_names[current_month_start.month - 1]
@@ -820,7 +814,6 @@ class EpcView(PageView):
 
         context = {
             "epc_rating": epc_band.upper() if epc_band else "",
-            "gds_epc_date": gds_epc_date,
             "epc_date": epc_date,
             "current_month_start": current_month_start,
             "next_month_start": next_month_start,
