@@ -804,9 +804,9 @@ class EpcView(PageView):
         epc_band = epc.get("current-energy-rating")
         epc_date = epc.get("lodgement-date")
         try:
-            epc_date = datetime.strptime(epc_date, "%Y-%m-%d")
-            month_name = month_names[epc_date.month - 1]
-            gds_epc_date = epc_date.strftime("%-d") + " " + month_name + " " + epc_date.strftime("%Y")
+            working_epc_date = datetime.strptime(epc_date, "%Y-%m-%d")
+            month_name = month_names[working_epc_date.month - 1]
+            gds_epc_date = working_epc_date.strftime("%-d") + " " + month_name + " " + working_epc_date.strftime("%Y")
         except ValueError:
             gds_epc_date = epc_date
 
