@@ -805,7 +805,7 @@ class SessionSchema(Schema):
     uprn = fields.String()
     rrn = fields.String()
     epc_details = fields.Dict()
-    address_and_rrn_details = fields.List(fields.Dict)
+    address_and_lmk_details = fields.List(fields.Dict)
     property_main_heat_source = fields.String()
     address = fields.String(validate=validate.Length(max=512))
     council_tax_band = fields.String(validate=validate.OneOf(welsh_council_tax_band_options))

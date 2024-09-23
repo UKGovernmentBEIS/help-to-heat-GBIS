@@ -24,7 +24,7 @@ eligible_council_tax = {
 
 
 def _add_epc():
-    assert interface.api.epc.get_address_and_epc_rrn("22", "FL23 4JA")
+    assert interface.api.epc.get_address_and_epc_lmk("22", "FL23 4JA")
     assert interface.api.epc.get_epc_details("2222-2222-2222-2222-2222")
 
 
@@ -83,12 +83,12 @@ def _do_test(country, council_tax_band, epc_rating):
     page = form.submit().follow()
 
     form = page.get_form()
-    form["rrn"] = "2222-2222-2222-2222-2222"
+    form["lmk"] = "222222222222222222222222222222222"
 
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="epc-select")
-    assert data["rrn"] == "2222-2222-2222-2222-2222"
+    assert data["lmk"] == "222222222222222222222222222222222"
     assert data["address"] == "22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA"
 
     assert page.has_one("h1:contains('What is the council tax band of your property?')")

@@ -14,7 +14,7 @@ from help_to_heat import portal, utils
 from ..portal import email_handler
 from . import eligibility, interface, schemas
 from .consts import (
-    address_all_address_and_rnn_details_field,
+    address_all_address_and_lmk_details_field,
     address_building_name_or_number_field,
     address_choice_field,
     address_choice_field_enter_manually,
@@ -76,6 +76,7 @@ from .consts import (
     household_income_field,
     household_income_field_more_than_threshold,
     household_income_page,
+    lmk_field,
     loft_access_field,
     loft_access_field_yes,
     loft_access_page,
@@ -107,7 +108,6 @@ from .consts import (
     property_type_page,
     referral_already_submitted_field,
     referral_already_submitted_page,
-    rrn_field,
     schemes_contribution_acknowledgement_field,
     schemes_field,
     schemes_page,
@@ -155,7 +155,7 @@ page_compulsory_field_map = {
     park_home_page: (park_home_field,),
     park_home_main_residence_page: (park_home_main_residence_field,),
     address_page: (address_building_name_or_number_field, address_postcode_field),
-    epc_select_page: (rrn_field,),
+    epc_select_page: (lmk_field,),
     address_select_page: (uprn_field,),
     address_manual_page: (
         address_manual_address_line_1_field,
@@ -199,7 +199,7 @@ missing_item_errors = {
     address_manual_address_line_1_field: _("Enter Address line 1"),
     address_postcode_field: _("Enter a postcode"),
     uprn_field: _("Select your address"),
-    rrn_field: _("Select your address"),
+    lmk_field: _("Select your address"),
     address_manual_town_or_city_field: _("Enter your Town or city"),
     referral_already_submitted_field: _("Please confirm that you want to submit another referral"),
     council_tax_band_field: _("Enter the Council Tax Band of the property"),
@@ -568,8 +568,8 @@ class AddressView(PageView):
         try:
             data[address_choice_field] = address_choice_field_write_address
             if country != country_field_scotland:
-                address_and_rrn_details = interface.api.epc.get_address_and_epc_rrn(building_name_or_number, postcode)
-                data[address_all_address_and_rnn_details_field] = address_and_rrn_details
+                address_and_lmk_details = interface.api.epc.get_address_and_epc_lmk(building_name_or_number, postcode)
+                data[address_all_address_and_lmk_details_field] = address_and_lmk_details
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
             data[address_choice_field] = address_choice_field_epc_api_fail
@@ -581,11 +581,10 @@ class AddressView(PageView):
 class EpcSelectView(PageView):
     def format_address(self, address):
         address_parts = [
-            address["addressLine1"],
-            address["addressLine2"],
-            address["addressLine3"],
-            address["addressLine4"],
-            address["town"],
+            address["address1"],
+            address["address2"],
+            address["address3"],
+            address["posttown"],
             address["postcode"],
         ]
         non_empty_address_parts = filter(None, address_parts)
@@ -593,16 +592,16 @@ class EpcSelectView(PageView):
 
     def build_extra_context(self, request, session_id, page_name, data, is_change_page):
         data = interface.api.session.get_answer(session_id, address_page)
-        address_and_rrn_details = data.get(address_all_address_and_rnn_details_field, [])
-        rrn_options = tuple(
+        address_and_rrn_details = data.get(address_all_address_and_lmk_details_field, [])
+        lmk_options = tuple(
             {
-                "value": a["epcRrn"],
-                "label": self.format_address(a["address"]),
+                "value": a["lmk-key"],
+                "label": self.format_address(a),
             }
             for a in address_and_rrn_details
         )
         return {
-            "rrn_options": rrn_options,
+            "lmk_options": lmk_options,
             "manual_url": page_name_to_url(session_id, epc_select_manual_page, is_change_page),
         }
 

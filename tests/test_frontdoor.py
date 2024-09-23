@@ -127,11 +127,11 @@ def _answer_house_questions(
     page = form.submit().follow()
 
     form = page.get_form()
-    form["rrn"] = "2222-2222-2222-2222-2222"
+    form["lmk"] = "222222222222222222222222222222222"
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="epc-select")
-    assert data["rrn"] == "2222-2222-2222-2222-2222"
+    assert data["lmk"] == "222222222222222222222222222222222"
     assert data["address"] == "22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA"
 
     if not park_home:
@@ -633,11 +633,11 @@ def test_no_benefits_flow():
     page = form.submit().follow()
 
     form = page.get_form()
-    form["rrn"] = "2222-2222-2222-2222-2222"
+    form["lmk"] = "222222222222222222222222222222222"
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="epc-select")
-    assert data["rrn"] == "2222-2222-2222-2222-2222"
+    assert data["lmk"] == "222222222222222222222222222222222"
     assert data["address"] == "22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA"
 
     assert page.has_one("h1:contains('What is the council tax band of your property?')")
@@ -969,11 +969,11 @@ def test_eligibility():
     page = form.submit().follow()
 
     form = page.get_form()
-    form["rrn"] = "2222-2222-2222-2222-2222"
+    form["lmk"] = "222222222222222222222222222222222"
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="epc-select")
-    assert data["rrn"] == "2222-2222-2222-2222-2222"
+    assert data["lmk"] == "222222222222222222222222222222222"
     assert data["address"] == "22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA"
 
     assert page.has_one("h1:contains('What is the council tax band of your property?')")
@@ -1515,11 +1515,11 @@ def test_on_check_page_back_button_goes_to_correct_location(has_loft_insulation)
     page = form.submit().follow()
 
     form = page.get_form()
-    form["rrn"] = "2222-2222-2222-2222-2222"
+    form["lmk"] = "222222222222222222222222222222222"
     page = form.submit().follow()
 
     data = interface.api.session.get_answer(session_id, page_name="epc-select")
-    assert data["rrn"] == "2222-2222-2222-2222-2222"
+    assert data["lmk"] == "222222222222222222222222222222222"
     assert data["address"] == "22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA"
 
     assert page.has_one("h1:contains('What is the council tax band of your property?')")
@@ -1821,7 +1821,7 @@ def test_on_submitting_a_recent_uprn_twice_the_referral_already_submitted_page_i
     page = form.submit().follow()
 
     form = page.get_form()
-    form["rrn"] = "2222-2222-2222-2222-2222"
+    form["lmk"] = "222222222222222222222222222222222"
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('A referral has already been submitted')")
@@ -1867,7 +1867,7 @@ def test_on_submitting_a_uprn_which_does_not_have_recent_duplicate_already_submi
     page = form.submit().follow()
 
     form = page.get_form()
-    form["rrn"] = "2222-2222-2222-2222-2222"
+    form["lmk"] = "222222222222222222222222222222222"
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('What is the council tax band of your property?')")
@@ -1910,7 +1910,7 @@ def test_on_submitting_a_recent_uprn_twice_to_different_suppliers_the_referral_a
     page = form.submit().follow()
 
     form = page.get_form()
-    form["rrn"] = "2222-2222-2222-2222-2222"
+    form["lmk"] = "222222222222222222222222222222222"
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('A referral has already been submitted')")
