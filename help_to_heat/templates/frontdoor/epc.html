@@ -12,7 +12,7 @@
   <h1 class="govuk-heading-l">{{_("We found an Energy Performance Certificate that might be yours")}}</h1>
 
   <p class="govuk-body">{{_("This certificate may be registered to your property or one of the properties nearby that shares part of your address.")}}</p>
-  {%  if country == "England" or country == "Wales" %}
+  {%  if show_epc_update_details %}
   <details class="govuk-details">
     <summary class="govuk-details__summary">
       <span class="govuk-details__summary-text">
@@ -46,8 +46,8 @@
       
       <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">{{_("Date of issue")}}</p>
       
-      {% if epc_date %}
-        <p class="govuk-body">{{ epc_date.format() }}</p>
+      {% if gds_epc_date %}
+        <p class="govuk-body">{{ gds_epc_date }}</p>
       {% endif %}
       
     </div>

@@ -24,7 +24,7 @@
         <p>
           <a href="{{ manual_url }}" class="govuk-link">{{_("I cannot find my address. I want to enter it manually")}}</a>
         </p>
-        {%  if country == "England" or country == "Wales" %}
+        {%  if show_epc_update_details %}
         <details class="govuk-details">
           <summary class="govuk-details__summary">
             <span class="govuk-details__summary-text">

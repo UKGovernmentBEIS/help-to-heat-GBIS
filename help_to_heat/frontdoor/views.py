@@ -52,6 +52,7 @@ from .consts import (
     council_tax_band_field,
     council_tax_band_page,
     country_field,
+    country_field_england,
     country_field_scotland,
     country_field_wales,
     country_page,
@@ -662,7 +663,7 @@ class EpcSelectView(PageView):
 class AddressSelectView(PageView):
     def build_extra_context(self, request, session_id, page_name, data, is_change_page):
         session_data = interface.api.session.get_session(session_id)
-        country = session_data.get(country_field)
+        show_epc_update_details = session_data.get(country_field) in [country_field_wales, country_field_england]
 
         data = interface.api.session.get_answer(session_id, address_page)
         building_name_or_number = data[address_building_name_or_number_field]
@@ -691,7 +692,7 @@ class AddressSelectView(PageView):
             "manual_url": page_name_to_url(session_id, address_select_manual_page, is_change_page),
             "current_month_start": current_month_start,
             "next_month_start": next_month_start,
-            "country": country,
+            "show_epc_update_details": show_epc_update_details,
         }
 
     def save_post_data(self, data, session_id, page_name):
@@ -796,16 +797,18 @@ class EpcView(PageView):
         session_data = interface.api.session.get_session(session_id)
 
         address = session_data.get(address_field)
-        country = session_data.get(country_field)
+        show_epc_update_details = session_data.get(country_field) in [country_field_wales, country_field_england]
+
         epc = session_data.get(epc_details_field)
 
         epc_band = epc.get("current-energy-rating")
+        epc_date = epc.get("lodgement-date")
         try:
-            epc_date = datetime.strptime(epc.get("lodgement-date"), "%Y-%m-%d")
+            epc_date = datetime.strptime(epc_date, "%Y-%m-%d")
             month_name = month_names[epc_date.month - 1]
-            epc_date = epc_date.strftime("%-d") + " " + month_name + " " + epc_date.strftime("%Y")
+            gds_epc_date = epc_date.strftime("%-d") + " " + month_name + " " + epc_date.strftime("%Y")
         except ValueError:
-            epc_date = epc.get("lodgement-date")
+            gds_epc_date = epc_date
 
         current_month_start = datetime.now().replace(day=1)
         month_name = month_names[current_month_start.month - 1]
@@ -817,12 +820,13 @@ class EpcView(PageView):
 
         context = {
             "epc_rating": epc_band.upper() if epc_band else "",
+            "gds_epc_date": gds_epc_date,
             "epc_date": epc_date,
             "current_month_start": current_month_start,
             "next_month_start": next_month_start,
             "epc_display_options": schemas.epc_display_options_map,
             "address": address,
-            "country": country,
+            "show_EPC_update_details": show_epc_update_details,
         }
         return context
 
