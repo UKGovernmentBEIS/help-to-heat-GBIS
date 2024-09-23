@@ -11,12 +11,14 @@ class EPCApi:
     def _basic_auth_header(self):
         return {"Accept": "application/json", "Authorization": f"Basic {settings.OPEN_EPC_API_TOKEN}"}
 
-    def get_address_and_lmk(self, building, postcode):
+    # see help_to_heat/frontdoor/mock_epc_api_data/sample_search_response.json for example format
+    def search_epc_details(self, building, postcode):
         base_url = settings.OPEN_EPC_API_BASE_URL
         params = urllib.parse.urlencode({"postcode": postcode, "address": building})
         url = f"{base_url}/search?{params}"
         return self.__api_call(url)
 
+    # see help_to_heat/frontdoor/mock_epc_api_data/sample_epc_response.json for example format
     def get_epc_details(self, lmk):
         base_url = settings.OPEN_EPC_API_BASE_URL
         lmk_for_path = urllib.parse.quote(lmk)

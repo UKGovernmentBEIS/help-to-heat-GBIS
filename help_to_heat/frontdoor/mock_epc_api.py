@@ -17,23 +17,23 @@ def load_test_reponse(file_name):
 
 
 class MockEPCApi:
-    def get_address_and_lmk(self, building, postcode):
-        return load_test_reponse("sample_address_and_lmk_response.json")
+    def search_epc_details(self, building, postcode):
+        return load_test_reponse("sample_search_response.json")
 
     def get_epc_details(self, rrn):
         return load_test_reponse("sample_epc_response.json")
 
 
 class MockEPCApiWithEPCC:
-    def get_address_and_lmk(self, building, postcode):
-        return load_test_reponse("sample_address_and_lmk_response.json")
+    def search_epc_details(self, building, postcode):
+        return load_test_reponse("sample_search_response.json")
 
     def get_epc_details(self, rrn):
         return load_test_reponse("sample_epc_response_with_epc_c.json")
 
 
 class MockUnauthorizedEPCApi(MockEPCApi):
-    def get_address_and_lmk(self, building, postcode):
+    def search_epc_details(self, building, postcode):
         raise UnauthorizedRequestException()
 
     def get_epc_details(self, rrn):
@@ -41,7 +41,7 @@ class MockUnauthorizedEPCApi(MockEPCApi):
 
 
 class MockNotFoundEPCApi(MockEPCApi):
-    def get_address_and_lmk(self, building, postcode):
+    def search_epc_details(self, building, postcode):
         raise NotFoundRequestException()
 
     def get_epc_details(self, rrn):

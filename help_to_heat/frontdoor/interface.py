@@ -535,7 +535,7 @@ class EPC(Entity):
         return {"uprn": epc.uprn, "rating": epc.rating, "date": epc.date}
 
     def get_address_and_epc_lmk(self, building_name_or_number, postcode):
-        data = self.__try_connection(lambda api: api.get_address_and_lmk(building_name_or_number, postcode))
+        data = self.__try_connection(lambda api: api.search_epc_details(building_name_or_number, postcode))
         address_and_epc_details = data["rows"]
         return address_and_epc_details
 
