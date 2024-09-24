@@ -669,14 +669,10 @@ class AddressSelectView(PageView):
         building_name_or_number = data[address_building_name_or_number_field]
         postcode = data[address_postcode_field]
         addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
+        now = datetime.now()
+        current_month = month_names[now.month - 1]
 
-        current_month_start = datetime.now().replace(day=1)
-        month_name = month_names[current_month_start.month - 1]
-        current_month_start = current_month_start.strftime("%-d") + " " + month_name
-
-        next_month_start = (datetime.now() + relativedelta(months=+1)).replace(day=1)
-        month_name = month_names[next_month_start.month - 1]
-        next_month_start = next_month_start.strftime("%-d") + " " + month_name
+        next_month = month_names[(now + relativedelta(months=+1)) - 1]
 
         uprn_options = tuple(
             {
@@ -690,8 +686,8 @@ class AddressSelectView(PageView):
         return {
             "uprn_options": uprn_options,
             "manual_url": page_name_to_url(session_id, address_select_manual_page, is_change_page),
-            "current_month_start": current_month_start,
-            "next_month_start": next_month_start,
+            "current_month": current_month,
+            "next_month": next_month,
             "show_epc_update_details": show_epc_update_details,
         }
 
@@ -804,19 +800,16 @@ class EpcView(PageView):
         epc_band = epc.get("current-energy-rating")
         epc_date = epc.get("lodgement-date")
 
-        current_month_start = datetime.now().replace(day=1)
-        month_name = month_names[current_month_start.month - 1]
-        current_month_start = current_month_start.strftime("%-d") + " " + month_name
+        now = datetime.now()
+        current_month = month_names[now.month - 1]
 
-        next_month_start = (datetime.now() + relativedelta(months=+1)).replace(day=1)
-        month_name = month_names[next_month_start.month - 1]
-        next_month_start = next_month_start.strftime("%-d") + " " + month_name
+        next_month = month_names[(now + relativedelta(months=+1)) - 1]
 
         context = {
             "epc_rating": epc_band.upper() if epc_band else "",
             "epc_date": epc_date,
-            "current_month_start": current_month_start,
-            "next_month_start": next_month_start,
+            "current_month": current_month,
+            "next_month": next_month,
             "epc_display_options": schemas.epc_display_options_map,
             "address": address,
             "show_EPC_update_details": show_epc_update_details,
