@@ -535,15 +535,14 @@ class EPC(Entity):
         return {"uprn": epc.uprn, "rating": epc.rating, "date": epc.date}
 
     def get_address_and_epc_lmk(self, building_name_or_number, postcode):
-        data = self.__call_with_epc_api(lambda api: api.search_epc_details(building_name_or_number, postcode))
+        epc_api = EPCApi()
+        data = epc_api.search_epc_details(building_name_or_number, postcode)
         address_and_epc_details = data["rows"]
         return address_and_epc_details
 
     def get_epc_details(self, lmk):
-        return self.__call_with_epc_api(lambda api: api.get_epc_details(lmk))
-
-    def __call_with_epc_api(self, callback):
-        return callback(EPCApi())
+        epc_api = EPCApi()
+        return epc_api.get_epc_details(lmk)
 
 
 class Feedback(Entity):
