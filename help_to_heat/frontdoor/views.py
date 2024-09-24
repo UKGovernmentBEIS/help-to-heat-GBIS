@@ -805,7 +805,7 @@ class EpcView(PageView):
             "next_month": next_month,
             "epc_display_options": schemas.epc_display_options_map,
             "address": address,
-            "show_EPC_update_details": show_epc_update_details,
+            "show_epc_update_details": show_epc_update_details,
         }
         return context
 
