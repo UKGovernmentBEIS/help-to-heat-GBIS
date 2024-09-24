@@ -6,8 +6,10 @@ import inspect
 import secrets
 import types
 import uuid
+from datetime import datetime
 
 import marshmallow
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.db import models
 from django.http import HttpResponseNotAllowed
@@ -229,3 +231,10 @@ def make_totp_secret(user_id, key, length=32):
     encoded_secret = base64.b32encode(digest)
     summary = encoded_secret[:32].decode("ascii")
     return summary
+
+
+def get_current_and_next_month_names(month_names):
+    now = datetime.now()
+    current_month = month_names[now.month - 1]
+    next_month = month_names[(now + relativedelta(months=+1)).month - 1]
+    return current_month, next_month

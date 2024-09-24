@@ -24,7 +24,20 @@
         <p>
           <a href="{{ manual_url }}" class="govuk-link">{{_("I cannot find my address. I want to enter it manually")}}</a>
         </p>
-
+        {%  if show_epc_update_details %}
+        <details class="govuk-details">
+          <summary class="govuk-details__summary">
+            <span class="govuk-details__summary-text">
+              {{_("What if I have had a new EPC issued recently?") }}
+            </span>
+          </summary>
+          <div class="govuk-details__text">
+            {{_("If your property has had a new EPC issued since 1 %(current_month)s, we may not be able to find it in our database because it is only updated monthly. Please return to this service after 1 %(next_month)s when we expect the database to have been updated.") % { "current_month": current_month, "next_month": next_month }}}
+            <br>
+            {{_("You can continue without your EPC having been found by this service, but the energy supplier you have selected may not be able to help if they do not have your new EPC.")}}
+          </div>
+        </details>
+        {% endif %}
       </fieldset>
     </div>
   {% endcall %}

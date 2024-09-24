@@ -134,7 +134,7 @@ def get_otp(secret):
 def create_referral(session_id, data=None, supplier="British Gas", creation_timestamp=timezone.now()):
     if data is None:
         data = {
-            "rrn": "2222-2222-2222-2222-2222",
+            "lmk": "222222222222222222222222222222222",
             "loft": "No, I do not have a loft or my loft has been converted into a room",
             "uprn": "001234567890",
             "email": "example@example.com",

@@ -14,7 +14,7 @@ from help_to_heat import portal, utils
 from ..portal import email_handler
 from . import eligibility, interface, schemas
 from .consts import (
-    address_all_address_and_rnn_details_field,
+    address_all_address_and_lmk_details_field,
     address_building_name_or_number_field,
     address_choice_field,
     address_choice_field_enter_manually,
@@ -50,6 +50,7 @@ from .consts import (
     council_tax_band_field,
     council_tax_band_page,
     country_field,
+    country_field_england,
     country_field_scotland,
     country_field_wales,
     country_page,
@@ -76,6 +77,7 @@ from .consts import (
     household_income_field,
     household_income_field_more_than_threshold,
     household_income_page,
+    lmk_field,
     loft_access_field,
     loft_access_field_yes,
     loft_access_page,
@@ -107,7 +109,6 @@ from .consts import (
     property_type_page,
     referral_already_submitted_field,
     referral_already_submitted_page,
-    rrn_field,
     schemes_contribution_acknowledgement_field,
     schemes_field,
     schemes_page,
@@ -155,7 +156,7 @@ page_compulsory_field_map = {
     park_home_page: (park_home_field,),
     park_home_main_residence_page: (park_home_main_residence_field,),
     address_page: (address_building_name_or_number_field, address_postcode_field),
-    epc_select_page: (rrn_field,),
+    epc_select_page: (lmk_field,),
     address_select_page: (uprn_field,),
     address_manual_page: (
         address_manual_address_line_1_field,
@@ -199,7 +200,7 @@ missing_item_errors = {
     address_manual_address_line_1_field: _("Enter Address line 1"),
     address_postcode_field: _("Enter a postcode"),
     uprn_field: _("Select your address"),
-    rrn_field: _("Select your address"),
+    lmk_field: _("Select your address"),
     address_manual_town_or_city_field: _("Enter your Town or city"),
     referral_already_submitted_field: _("Please confirm that you want to submit another referral"),
     council_tax_band_field: _("Enter the Council Tax Band of the property"),
@@ -233,6 +234,21 @@ missing_item_errors = {
         "Please confirm that you understand you may be required to contribute towards the cost of installing insulation"
     ),
 }
+
+month_names = [
+    _("January"),
+    _("February"),
+    _("March"),
+    _("April"),
+    _("May"),
+    _("June"),
+    _("July"),
+    _("August"),
+    _("September"),
+    _("October"),
+    _("November"),
+    _("December"),
+]
 
 # to be updated when we get full list of excluded suppliers
 converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
@@ -327,12 +343,12 @@ def reset_epc_details(session_id):
         session_id,
         "epc-select",
         {
-            "rrn": "",
-            "epc_details": {},
-            "uprn": "",
-            "property_main_heat_source": "",
-            "epc_rating": epc_rating_field_not_found,
-            "accept_suggested_epc": epc_accept_suggested_epc_field_not_found,
+            lmk_field: "",
+            epc_details_field: {},
+            uprn_field: "",
+            property_main_heat_source_field: "",
+            epc_rating_field: epc_rating_field_not_found,
+            epc_accept_suggested_epc_field: epc_accept_suggested_epc_field_not_found,
             "epc_date": "",
         },
     )
@@ -568,8 +584,8 @@ class AddressView(PageView):
         try:
             data[address_choice_field] = address_choice_field_write_address
             if country != country_field_scotland:
-                address_and_rrn_details = interface.api.epc.get_address_and_epc_rrn(building_name_or_number, postcode)
-                data[address_all_address_and_rnn_details_field] = address_and_rrn_details
+                address_and_lmk_details = interface.api.epc.get_address_and_epc_lmk(building_name_or_number, postcode)
+                data[address_all_address_and_lmk_details_field] = address_and_lmk_details
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
             data[address_choice_field] = address_choice_field_epc_api_fail
@@ -581,11 +597,10 @@ class AddressView(PageView):
 class EpcSelectView(PageView):
     def format_address(self, address):
         address_parts = [
-            address["addressLine1"],
-            address["addressLine2"],
-            address["addressLine3"],
-            address["addressLine4"],
-            address["town"],
+            address["address1"],
+            address["address2"],
+            address["address3"],
+            address["posttown"],
             address["postcode"],
         ]
         non_empty_address_parts = filter(None, address_parts)
@@ -593,24 +608,25 @@ class EpcSelectView(PageView):
 
     def build_extra_context(self, request, session_id, page_name, data, is_change_page):
         data = interface.api.session.get_answer(session_id, address_page)
-        address_and_rrn_details = data.get(address_all_address_and_rnn_details_field, [])
-        rrn_options = tuple(
+        address_and_rrn_details = data.get(address_all_address_and_lmk_details_field, [])
+        lmk_options = tuple(
             {
-                "value": a["epcRrn"],
-                "label": self.format_address(a["address"]),
+                "value": a["lmk-key"],
+                "label": self.format_address(a),
             }
             for a in address_and_rrn_details
         )
         return {
-            "rrn_options": rrn_options,
+            "lmk_options": lmk_options,
             "manual_url": page_name_to_url(session_id, epc_select_manual_page, is_change_page),
         }
 
     def save_post_data(self, data, session_id, page_name):
-        rrn = data.get(rrn_field)
+        lmk = data.get(lmk_field)
 
         try:
-            epc = interface.api.epc.get_epc_details(rrn)
+            epc = interface.api.epc.get_epc_details(lmk)
+            epc_details = epc["rows"][0]
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
             reset_epc_details(session_id)
@@ -618,14 +634,13 @@ class EpcSelectView(PageView):
             return data
 
         data[epc_select_choice_field] = epc_select_choice_field_select_epc
-        address = self.format_address(epc["data"]["assessment"]["address"])
-        epc_details = epc["data"]["assessment"]
 
         uprn = epc_details.get("uprn")
-        heat_source = epc_details.get("mainHeatingDescription")
+        address = epc_details.get("address")
+        heat_source = epc_details.get("mainheat-description")
 
         epc_data = {
-            rrn_field: rrn,
+            lmk_field: lmk,
             address_field: address,
             epc_details_field: epc_details,
             uprn_field: uprn if uprn is not None else "",
@@ -645,10 +660,16 @@ class EpcSelectView(PageView):
 @register_page(address_select_page)
 class AddressSelectView(PageView):
     def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+        session_data = interface.api.session.get_session(session_id)
+        show_epc_update_details = session_data.get(country_field) in [country_field_wales, country_field_england]
+
         data = interface.api.session.get_answer(session_id, address_page)
         building_name_or_number = data[address_building_name_or_number_field]
         postcode = data[address_postcode_field]
         addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
+
+        current_month, next_month = utils.get_current_and_next_month_names(month_names)
+
         uprn_options = tuple(
             {
                 "value": a["uprn"],
@@ -661,6 +682,9 @@ class AddressSelectView(PageView):
         return {
             "uprn_options": uprn_options,
             "manual_url": page_name_to_url(session_id, address_select_manual_page, is_change_page),
+            "current_month": current_month,
+            "next_month": next_month,
+            "show_epc_update_details": show_epc_update_details,
         }
 
     def save_post_data(self, data, session_id, page_name):
@@ -683,7 +707,7 @@ class AddressSelectView(PageView):
         if country == country_field_scotland and uprn is not None:
             epc = interface.api.epc.get_epc_scotland(uprn)
             if epc != {}:
-                epc_details = {"currentEnergyEfficiencyBand": epc.get("rating"), "lodgementDate": epc.get("date")}
+                epc_details = {"current-energy-rating": epc.get("rating"), "lodgement-date": epc.get("date")}
                 data[epc_details_field] = epc_details
                 data[epc_found_field] = field_yes
 
@@ -765,15 +789,23 @@ class EpcView(PageView):
         session_data = interface.api.session.get_session(session_id)
 
         address = session_data.get(address_field)
+        show_epc_update_details = session_data.get(country_field) in [country_field_wales, country_field_england]
+
         epc = session_data.get(epc_details_field)
 
-        epc_band = epc.get("currentEnergyEfficiencyBand")
+        epc_band = epc.get("current-energy-rating")
+        epc_date = epc.get("lodgement-date")
+
+        current_month, next_month = utils.get_current_and_next_month_names(month_names)
 
         context = {
             "epc_rating": epc_band.upper() if epc_band else "",
-            "epc_date": epc.get("lodgementDate"),
+            "epc_date": epc_date,
+            "current_month": current_month,
+            "next_month": next_month,
             "epc_display_options": schemas.epc_display_options_map,
             "address": address,
+            "show_epc_update_details": show_epc_update_details,
         }
         return context
 
