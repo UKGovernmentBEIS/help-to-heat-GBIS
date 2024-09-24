@@ -1,8 +1,6 @@
 import logging
 import uuid
-from datetime import datetime
 
-from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.http import Http404
 from django.shortcuts import redirect, render
@@ -669,10 +667,8 @@ class AddressSelectView(PageView):
         building_name_or_number = data[address_building_name_or_number_field]
         postcode = data[address_postcode_field]
         addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
-        now = datetime.now()
-        current_month = month_names[now.month - 1]
 
-        next_month = month_names[(now + relativedelta(months=+1)) - 1]
+        current_month, next_month = utils.get_current_and_next_month_names(month_names)
 
         uprn_options = tuple(
             {
@@ -800,10 +796,7 @@ class EpcView(PageView):
         epc_band = epc.get("current-energy-rating")
         epc_date = epc.get("lodgement-date")
 
-        now = datetime.now()
-        current_month = month_names[now.month - 1]
-
-        next_month = month_names[(now + relativedelta(months=+1)) - 1]
+        current_month, next_month = utils.get_current_and_next_month_names(month_names)
 
         context = {
             "epc_rating": epc_band.upper() if epc_band else "",
