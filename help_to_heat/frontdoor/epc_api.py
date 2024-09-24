@@ -8,35 +8,27 @@ logger = logging.getLogger(__name__)
 
 
 class EPCApi:
-    def __init__(self, token):
-        self.token = token
+    def _basic_auth_header(self):
+        return {"Accept": "application/json", "Authorization": f"Basic {settings.OPEN_EPC_API_TOKEN}"}
 
-    def get_access_token(self):
-        client_id = settings.EPC_API_CLIENT_ID
-        client_secret = settings.EPC_API_CLIENT_SECRET
-        base_url = settings.EPC_API_BASE_URL
-        token_url = f"{base_url}/auth/oauth/token"
-
-        payload = {"grant_type": "client_credentials", "client_id": client_id, "client_secret": client_secret}
-
-        response = requests.post(token_url, data=payload)
-        response.raise_for_status()
-        return response.json().get("access_token")
-
-    def get_address_and_rrn(self, building, postcode):
-        base_url = settings.EPC_API_BASE_URL
-        params = urllib.parse.urlencode({"postcode": postcode, "buildingNameOrNumber": building})
-        url = f"{base_url}/api/assessments/domestic-epcs/search?{params}"
+    # see help_to_heat/frontdoor/mock_epc_api_data/sample_search_response.json for example format
+    def search_epc_details(self, building, postcode):
+        base_url = settings.OPEN_EPC_API_BASE_URL
+        params = urllib.parse.urlencode({"postcode": postcode, "address": building})
+        url = f"{base_url}/search?{params}"
         return self.__api_call(url)
 
-    def get_epc_details(self, rrn):
-        base_url = settings.EPC_API_BASE_URL
-        rrn_for_path = urllib.parse.quote(rrn)
-        url = f"{base_url}/api/ecoplus/assessments/{rrn_for_path}"
+    # see help_to_heat/frontdoor/mock_epc_api_data/sample_epc_response.json for example format
+    def get_epc_details(self, lmk):
+        base_url = settings.OPEN_EPC_API_BASE_URL
+        lmk_for_path = urllib.parse.quote(lmk)
+        url = f"{base_url}/certificate/{lmk_for_path}"
         return self.__api_call(url)
 
     def __api_call(self, url):
-        headers = {"Authorization": f"Bearer {self.token}"}
+        headers = self._basic_auth_header()
         response = requests.get(url, headers=headers)
         response.raise_for_status()
+        if len(response.content) == 0:
+            return None
         return response.json()
