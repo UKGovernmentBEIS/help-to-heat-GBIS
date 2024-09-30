@@ -375,6 +375,13 @@ class PageView(utils.MethodDispatcher):
         if data_with_get_answers != data:
             save_answer(session_id, page_name, data_with_get_answers)
 
+        if page_name not in schemas.routing_overrides:
+            try:
+                # ensure the user has answers to complete the journey to this page
+                calculate_journey(answers, to_page=page_name)
+            except CouldNotCalculateJourneyException:
+                return redirect("/sorry-journey")
+
         prev_page_url = self._get_prev_page_url(request, session_id, page_name, is_change_page)
 
         # Once a user has created a referral, they can no longer access their old session
@@ -534,8 +541,8 @@ class PageView(utils.MethodDispatcher):
                         "frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=prev_page_name)
                     )
 
-        if page_name in schemas.back_button_overrides:
-            return page_name_to_url(session_id, schemas.back_button_overrides[page_name])
+        if page_name in schemas.routing_overrides:
+            return page_name_to_url(session_id, schemas.routing_overrides[page_name]["prev_page"])
 
         return page_name_to_url(session_id, get_prev_page(page_name, answers))
 
