@@ -379,7 +379,8 @@ class PageView(utils.MethodDispatcher):
             try:
                 # ensure the user has answers to complete the journey to this page
                 calculate_journey(answers, to_page=page_name)
-            except CouldNotCalculateJourneyException:
+            except CouldNotCalculateJourneyException as e:
+                logger.exception(e)
                 return redirect("/sorry-journey")
 
         prev_page_url = self._get_prev_page_url(request, session_id, page_name, is_change_page)
