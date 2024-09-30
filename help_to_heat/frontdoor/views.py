@@ -297,6 +297,10 @@ def sorry_page_view(request):
     return render(request, template_name="frontdoor/sorry-unavailable.html")
 
 
+def sorry_journey_page_view(request):
+    return render(request, template_name="frontdoor/sorry-journey.html")
+
+
 def not_found_page_view(request, exception):
     return render(request, template_name="frontdoor/not-found.html")
 
