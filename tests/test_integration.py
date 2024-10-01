@@ -33,7 +33,7 @@ def test_csv():
     text = csv_page.content.decode("utf-8")
     lines = text.splitlines()
     assert len(lines) == 2
-    assert len(lines[0].split(",")) == 33, len(lines[0].split(","))
+    assert len(lines[0].split(",")) == 86, len(lines[0].split(","))
 
     rows = list(csv.DictReader(lines))
     data = rows[0]
@@ -57,3 +57,21 @@ def test_referral_created_at():
 
     assert data["referral_created_at"] >= str(before_referral_created)
     assert data["referral_created_at"] <= str(after_referral_created)
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_csv_has_epc_details():
+    _do_happy_flow(supplier="Utilita")
+
+    client = utils.get_client()
+    page = utils.login_as_team_leader(client, supplier="Utilita")
+
+    csv_page = page.click(contains="Download latest leads", index=0)
+
+    text = csv_page.content.decode("utf-8")
+    lines = text.splitlines()
+
+    rows = list(csv.DictReader(lines))
+    data = rows[0]
+    assert data["current_energy_efficiency"] == "8"
+    assert data["potential_energy_efficiency"] == "35"
