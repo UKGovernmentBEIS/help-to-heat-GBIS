@@ -102,7 +102,6 @@ from .consts import (
     park_home_main_residence_page,
     park_home_page,
     property_ineligible_page,
-    property_main_heat_source_field,
     property_subtype_field,
     property_subtype_page,
     property_type_field,
@@ -347,7 +346,6 @@ def reset_epc_details(session_id):
             lmk_field: "",
             epc_details_field: {},
             uprn_field: "",
-            property_main_heat_source_field: "",
             epc_rating_field: epc_rating_field_not_found,
             epc_accept_suggested_epc_field: epc_accept_suggested_epc_field_not_found,
             "epc_date": "",
@@ -640,7 +638,6 @@ class EpcSelectView(PageView):
 
         uprn = epc_details.get("uprn")
         address = epc_details.get("address")
-        heat_source = epc_details.get("mainheat-description")
 
         epc_data = {
             lmk_field: lmk,
@@ -648,7 +645,6 @@ class EpcSelectView(PageView):
             epc_details_field: epc_details,
             recommendations_field: recommendations,
             uprn_field: uprn if uprn is not None else "",
-            property_main_heat_source_field: heat_source if heat_source is not None else "",
         }
 
         data = {**data, **epc_data}

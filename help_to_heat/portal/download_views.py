@@ -12,7 +12,9 @@ from django.views.decorators.http import require_http_methods
 from help_to_heat.frontdoor import models as frontdoor_models
 from help_to_heat.frontdoor.consts import (
     epc_details_field,
-    property_type_field, recommendations_field,
+    property_main_heat_source_field,
+    property_type_field,
+    recommendations_field,
 )
 from help_to_heat.frontdoor.eligibility import calculate_eligibility
 from help_to_heat.portal import decorators
@@ -90,7 +92,6 @@ referral_column_headings = (
     "epc_walls_description",
     "walls_energy_efficiency",
     "walls_environmental_efficiency",
-    "main_heating_description",
     "main_heating_energy_efficiency",
     "main_heating_environmental_efficiency",
     "secondary_heating_description",
@@ -168,7 +169,6 @@ referral_column_headings_no_pii = (
     "epc_walls_description",
     "walls_energy_efficiency",
     "walls_environmental_efficiency",
-    "main_heating_description",
     "main_heating_energy_efficiency",
     "main_heating_environmental_efficiency",
     "secondary_heating_description",
@@ -410,9 +410,15 @@ def add_extra_row_data(referral, exclude_pii=False):
 
     epc_data = row.get(epc_details_field) or {}
 
+    # main heat source used to come from a specific field in the user data
+    # now it is sent via the epc details object
+    # use the legacy field if available, else draw from EPC
+    property_main_heat_source = row.get(property_main_heat_source_field) or epc_data.get("mainheat-description")
+
     # add epc data
     row = {
         **row,
+        "property_main_heat_source": property_main_heat_source,
         "epc_property_type": epc_data.get("property-type"),
         "potential_energy_rating": epc_data.get("potential-energy-rating"),
         "current_energy_efficiency": epc_data.get("current-energy-efficiency"),
@@ -450,7 +456,6 @@ def add_extra_row_data(referral, exclude_pii=False):
         "epc_roof_description": epc_data.get("roof-description"),
         "roof_energy_efficiency": epc_data.get("roof-energy-eff"),
         "roof_environmental_efficiency": epc_data.get("roof-env-eff"),
-        "main_heating_description": epc_data.get("mainheat-description"),
         "main_heating_energy_efficiency": epc_data.get("mainheat-energy-eff"),
         "main_heating_environmental_efficiency": epc_data.get("mainheat-env-eff"),
         "lighting_description": epc_data.get("lighting-description"),
@@ -476,7 +481,10 @@ def add_extra_row_data(referral, exclude_pii=False):
     # get and concatenate recommendations
     recommendations = row.get(recommendations_field) or []
 
-    recommendations_string = ". ".join(f"{recommendation.get('improvement-item')}: {recommendation.get('improvement-summary-text')}" for recommendation in recommendations)
+    recommendations_string = ". ".join(
+        f"{recommendation.get('improvement-item')}: {recommendation.get('improvement-summary-text')}"
+        for recommendation in recommendations
+    )
 
     row["improvements"] = recommendations_string
 
