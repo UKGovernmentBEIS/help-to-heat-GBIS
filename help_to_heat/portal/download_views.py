@@ -12,7 +12,7 @@ from django.views.decorators.http import require_http_methods
 from help_to_heat.frontdoor import models as frontdoor_models
 from help_to_heat.frontdoor.consts import (
     epc_details_field,
-    property_type_field,
+    property_type_field, recommendations_field,
 )
 from help_to_heat.frontdoor.eligibility import calculate_eligibility
 from help_to_heat.portal import decorators
@@ -472,6 +472,13 @@ def add_extra_row_data(referral, exclude_pii=False):
             "address_line_2": epc_data.get("address2"),
             "address_line_3": epc_data.get("address3"),
         }
+
+    # get and concatenate recommendations
+    recommendations = row.get(recommendations_field) or []
+
+    recommendations_string = ". ".join(f"{recommendation.get('improvement-item')}: {recommendation.get('improvement-summary-text')}" for recommendation in recommendations)
+
+    row["improvements"] = recommendations_string
 
     return row
 
