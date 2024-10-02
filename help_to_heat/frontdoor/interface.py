@@ -544,6 +544,10 @@ class EPC(Entity):
         epc_api = EPCApi()
         return epc_api.get_epc_details(lmk)
 
+    def get_epc_recommendations(self, lmk):
+        epc_api = EPCApi()
+        return epc_api.get_epc_recommendations(lmk)
+
 
 class Feedback(Entity):
     @with_schema(load=FeedbackSchema, dump=SuccessSchema)

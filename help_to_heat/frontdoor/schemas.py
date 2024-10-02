@@ -805,6 +805,7 @@ class SessionSchema(Schema):
     uprn = fields.String()
     lmk = fields.String()
     epc_details = fields.Dict()
+    recommendations = fields.List(fields.Dict())
     address_and_lmk_details = fields.List(fields.Dict)
     property_main_heat_source = fields.String()
     address = fields.String(validate=validate.Length(max=512))

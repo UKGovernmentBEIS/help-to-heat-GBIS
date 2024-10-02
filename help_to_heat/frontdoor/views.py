@@ -107,6 +107,7 @@ from .consts import (
     property_subtype_page,
     property_type_field,
     property_type_page,
+    recommendations_field,
     referral_already_submitted_field,
     referral_already_submitted_page,
     schemes_contribution_acknowledgement_field,
@@ -625,8 +626,10 @@ class EpcSelectView(PageView):
         lmk = data.get(lmk_field)
 
         try:
-            epc = interface.api.epc.get_epc_details(lmk)
-            epc_details = epc["rows"][0]
+            epc_response = interface.api.epc.get_epc_details(lmk)
+            epc_details = epc_response["rows"][0]
+            recommendations_response = interface.api.epc.get_epc_recommendations(lmk)
+            recommendations = recommendations_response["rows"]
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
             reset_epc_details(session_id)
@@ -643,6 +646,7 @@ class EpcSelectView(PageView):
             lmk_field: lmk,
             address_field: address,
             epc_details_field: epc_details,
+            recommendations_field: recommendations,
             uprn_field: uprn if uprn is not None else "",
             property_main_heat_source_field: heat_source if heat_source is not None else "",
         }

@@ -171,6 +171,7 @@ epc_found_field = "epc_found"
 lmk_field = "lmk"
 address_field = "address"
 epc_details_field = "epc_details"
+recommendations_field = "recommendations"
 uprn_field = "uprn"
 property_main_heat_source_field = "property_main_heat_source"
 
