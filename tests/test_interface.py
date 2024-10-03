@@ -67,7 +67,7 @@ def test_get_address():
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_get_epc():
     assert interface.api.epc.get_address_and_epc_lmk("22", "FL23 4JA")
-    found_epc = interface.api.epc.get_epc_details("1111111111111111111111111111111111")
+    found_epc, _ = interface.api.epc.get_epc("1111111111111111111111111111111111")
     assert found_epc["rows"][0].get("current-energy-rating").upper() == "G"
 
 
@@ -95,7 +95,7 @@ def test_get_epc_unauthorized_failure():
 @utils.mock_os_api
 def test_get_epc_details_not_found_failure():
     try:
-        interface.api.epc.get_epc_details("1111111111111111111111111111111111")
+        interface.api.epc.get_epc("1111111111111111111111111111111111")
         raise "Expected call to throw"
     except requests.exceptions.RequestException as e:
         assert e.response.status_code == HTTPStatus.NOT_FOUND
@@ -105,7 +105,7 @@ def test_get_epc_details_not_found_failure():
 @utils.mock_os_api
 def test_get_epc_details_unauthorized_failure():
     try:
-        interface.api.epc.get_epc_details("1111111111111111111111111111111111")
+        interface.api.epc.get_epc("1111111111111111111111111111111111")
         raise "Expected call to throw"
     except requests.exceptions.RequestException as e:
         assert e.response.status_code == HTTPStatus.UNAUTHORIZED
