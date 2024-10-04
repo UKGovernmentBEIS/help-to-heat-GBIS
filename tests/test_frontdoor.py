@@ -1917,6 +1917,20 @@ def test_on_submitting_a_recent_uprn_twice_to_different_suppliers_the_referral_a
     assert page.has_text("The information you have submitted matches a referral made to another energy supplier")
 
 
+def test_on_skipping_to_supplier_page_on_country_page_the_sorry_journey_page_is_shown():
+    client = utils.get_client()
+    page = client.get("/start")
+    page = page.follow()
+
+    session_id = page.path.split("/")[1]
+
+    page = client.get(f"{session_id}/supplier")
+    page = page.follow().follow()
+
+    assert page.has_one("h1:contains('Page not found')")
+    assert page.has_text("You're not able to see this page.")
+
+
 def _setup_client_and_page():
     client = utils.get_client()
     page = client.get("/start")
