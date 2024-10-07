@@ -540,9 +540,11 @@ class EPC(Entity):
         address_and_epc_details = data["rows"]
         return address_and_epc_details
 
-    def get_epc_details(self, lmk):
+    def get_epc(self, lmk):
         epc_api = EPCApi()
-        return epc_api.get_epc_details(lmk)
+        epc_details = epc_api.get_epc_details(lmk)
+        epc_recommendations = epc_api.get_epc_recommendations(lmk)
+        return epc_details, epc_recommendations
 
 
 class Feedback(Entity):

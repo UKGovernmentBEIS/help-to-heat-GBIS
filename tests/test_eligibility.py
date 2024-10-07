@@ -25,7 +25,7 @@ eligible_council_tax = {
 
 def _add_epc():
     assert interface.api.epc.get_address_and_epc_lmk("22", "FL23 4JA")
-    assert interface.api.epc.get_epc_details("2222-2222-2222-2222-2222")
+    assert interface.api.epc.get_epc("2222-2222-2222-2222-2222")
 
 
 def _make_check_page(session_id):
