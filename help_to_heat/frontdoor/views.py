@@ -102,11 +102,11 @@ from .consts import (
     park_home_main_residence_page,
     park_home_page,
     property_ineligible_page,
-    property_main_heat_source_field,
     property_subtype_field,
     property_subtype_page,
     property_type_field,
     property_type_page,
+    recommendations_field,
     referral_already_submitted_field,
     referral_already_submitted_page,
     schemes_contribution_acknowledgement_field,
@@ -297,6 +297,10 @@ def sorry_page_view(request):
     return render(request, template_name="frontdoor/sorry-unavailable.html")
 
 
+def sorry_journey_page_view(request):
+    return render(request, template_name="frontdoor/sorry-journey.html")
+
+
 def not_found_page_view(request, exception):
     return render(request, template_name="frontdoor/not-found.html")
 
@@ -346,7 +350,6 @@ def reset_epc_details(session_id):
             lmk_field: "",
             epc_details_field: {},
             uprn_field: "",
-            property_main_heat_source_field: "",
             epc_rating_field: epc_rating_field_not_found,
             epc_accept_suggested_epc_field: epc_accept_suggested_epc_field_not_found,
             "epc_date": "",
@@ -370,6 +373,14 @@ class PageView(utils.MethodDispatcher):
         # only save an answer on get if new answers were given
         if data_with_get_answers != data:
             save_answer(session_id, page_name, data_with_get_answers)
+
+        if page_name not in schemas.routing_overrides:
+            try:
+                # ensure the user has answers to complete the journey to this page
+                calculate_journey(answers, to_page=page_name)
+            except CouldNotCalculateJourneyException as e:
+                logger.exception(e)
+                return redirect("/sorry-journey")
 
         prev_page_url = self._get_prev_page_url(request, session_id, page_name, is_change_page)
 
@@ -530,8 +541,8 @@ class PageView(utils.MethodDispatcher):
                         "frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=prev_page_name)
                     )
 
-        if page_name in schemas.back_button_overrides:
-            return page_name_to_url(session_id, schemas.back_button_overrides[page_name])
+        if page_name in schemas.routing_overrides:
+            return page_name_to_url(session_id, schemas.routing_overrides[page_name]["prev_page"])
 
         return page_name_to_url(session_id, get_prev_page(page_name, answers))
 
@@ -625,8 +636,9 @@ class EpcSelectView(PageView):
         lmk = data.get(lmk_field)
 
         try:
-            epc = interface.api.epc.get_epc_details(lmk)
-            epc_details = epc["rows"][0]
+            epc_details_response, epc_recommendations_response = interface.api.epc.get_epc(lmk)
+            epc_details = epc_details_response["rows"][0]
+            recommendations = epc_recommendations_response["rows"]
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
             reset_epc_details(session_id)
@@ -637,14 +649,13 @@ class EpcSelectView(PageView):
 
         uprn = epc_details.get("uprn")
         address = epc_details.get("address")
-        heat_source = epc_details.get("mainheat-description")
 
         epc_data = {
             lmk_field: lmk,
             address_field: address,
             epc_details_field: epc_details,
+            recommendations_field: recommendations,
             uprn_field: uprn if uprn is not None else "",
-            property_main_heat_source_field: heat_source if heat_source is not None else "",
         }
 
         data = {**data, **epc_data}

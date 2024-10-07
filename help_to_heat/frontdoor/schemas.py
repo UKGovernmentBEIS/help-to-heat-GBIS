@@ -195,10 +195,13 @@ page_display_questions = {
     ),
 }
 
-back_button_overrides = {
-    address_manual_page: address_page,
-    epc_select_manual_page: epc_select_page,
-    address_select_manual_page: address_select_page,
+# which pages should ignore routing checks
+# the code will not check if the user's route allows them to see these pages
+# a prev page url should be provided to allow the back link to work
+routing_overrides = {
+    address_manual_page: {"prev_page": address_page},
+    epc_select_manual_page: {"prev_page": epc_select_page},
+    address_select_manual_page: {"prev_page": address_select_page},
 }
 
 # which change page to send back to
@@ -805,8 +808,8 @@ class SessionSchema(Schema):
     uprn = fields.String()
     lmk = fields.String()
     epc_details = fields.Dict()
+    recommendations = fields.List(fields.Dict())
     address_and_lmk_details = fields.List(fields.Dict)
-    property_main_heat_source = fields.String()
     address = fields.String(validate=validate.Length(max=512))
     council_tax_band = fields.String(validate=validate.OneOf(welsh_council_tax_band_options))
     accept_suggested_epc = fields.String(

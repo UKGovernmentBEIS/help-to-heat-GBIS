@@ -171,8 +171,9 @@ epc_found_field = "epc_found"
 lmk_field = "lmk"
 address_field = "address"
 epc_details_field = "epc_details"
+recommendations_field = "recommendations"
 uprn_field = "uprn"
-property_main_heat_source_field = "property_main_heat_source"
+property_main_heat_source_field = "property_main_heat_source"  # deprecated, superseded by info in epc_details
 
 council_tax_band_field = "council_tax_band"
 council_tax_band_field_a = "A"
