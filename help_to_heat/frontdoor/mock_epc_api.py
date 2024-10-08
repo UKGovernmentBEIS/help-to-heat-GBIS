@@ -23,6 +23,9 @@ class MockEPCApi:
     def get_epc_details(self, rrn):
         return load_test_reponse("sample_epc_response.json")
 
+    def get_epc_recommendations(self, lmk_key):
+        return load_test_reponse("sample_epc_recommendations_response.json")
+
 
 class MockEPCApiWithEPCC:
     def search_epc_details(self, building, postcode):
@@ -30,6 +33,9 @@ class MockEPCApiWithEPCC:
 
     def get_epc_details(self, rrn):
         return load_test_reponse("sample_epc_response_with_epc_c.json")
+
+    def get_epc_recommendations(self, lmk_key):
+        return load_test_reponse("sample_epc_recommendations_response.json")
 
 
 class MockUnauthorizedEPCApi(MockEPCApi):
@@ -39,12 +45,18 @@ class MockUnauthorizedEPCApi(MockEPCApi):
     def get_epc_details(self, rrn):
         raise UnauthorizedRequestException()
 
+    def get_epc_recommendations(self, lmk_key):
+        raise UnauthorizedRequestException()
+
 
 class MockNotFoundEPCApi(MockEPCApi):
     def search_epc_details(self, building, postcode):
         raise NotFoundRequestException()
 
     def get_epc_details(self, rrn):
+        raise NotFoundRequestException()
+
+    def get_epc_recommendations(self, lmk_key):
         raise NotFoundRequestException()
 
 

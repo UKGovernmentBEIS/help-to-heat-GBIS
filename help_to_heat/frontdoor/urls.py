@@ -7,6 +7,7 @@ frontdoor_patterns = [
     path("start", views.start_view, name="start"),
     path("thankyou", views.holding_page_view, name="holding-page"),
     path("sorry", views.sorry_page_view, name="sorry-unavailable"),
+    path("sorry-journey", views.sorry_journey_page_view, name="sorry-journey"),
     path("dataLayer.js", views.data_layer_js_view, name="data-layer-js"),
     path("cookies/", views.cookies_view, name="cookies"),
     path("privacy-policy/", views.privacy_policy_view, name="privacy-policy"),

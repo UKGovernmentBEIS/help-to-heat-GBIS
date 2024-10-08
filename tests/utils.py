@@ -168,7 +168,6 @@ def create_referral(session_id, data=None, supplier="British Gas", creation_time
             "accept_suggested_epc": "Not found",
             "user_selected_supplier": "British Gas",
             "building_name_or_number": "10",
-            "property_main_heat_source": "",
         }
     supplier = portal.models.Supplier.objects.get(name=data["supplier"])
     referral = portal.models.Referral.objects.create(session_id=session_id, data=data, supplier=supplier)

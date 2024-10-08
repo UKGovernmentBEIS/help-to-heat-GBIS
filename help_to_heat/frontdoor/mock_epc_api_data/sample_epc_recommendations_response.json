@@ -1,0 +1,76 @@
+{
+  "column-names": [
+    "lmk-key",
+    "improvement-item",
+    "improvement-summary-text",
+    "improvement-descr-text",
+    "improvement-id",
+    "improvement-id-text",
+    "indicative-cost"
+  ],
+  "rows": [
+    {
+      "lmk-key": "222222222222222222222222222222222",
+      "improvement-item": "1",
+      "improvement-summary-text": "Increase loft insulation to 270 mm",
+      "improvement-descr-text": "Increase loft insulation to 270 mm",
+      "improvement-id": "5.0",
+      "improvement-id-text": "",
+      "indicative-cost": "£100 - £350"
+    },
+    {
+      "lmk-key": "222222222222222222222222222222222",
+      "improvement-item": "2",
+      "improvement-summary-text": "Floor insulation",
+      "improvement-descr-text": "Floor insulation",
+      "improvement-id": "47.0",
+      "improvement-id-text": "",
+      "indicative-cost": "£800 - £1,200"
+    },
+    {
+      "lmk-key": "222222222222222222222222222222222",
+      "improvement-item": "3",
+      "improvement-summary-text": "Low energy lighting for all fixed outlets",
+      "improvement-descr-text": "Low energy lighting",
+      "improvement-id": "35.0",
+      "improvement-id-text": "",
+      "indicative-cost": "£45"
+    },
+    {
+      "lmk-key": "222222222222222222222222222222222",
+      "improvement-item": "4",
+      "improvement-summary-text": "Heating controls (thermostatic radiator valves)",
+      "improvement-descr-text": "Heating controls (TRVs)",
+      "improvement-id": "13.0",
+      "improvement-id-text": "",
+      "indicative-cost": "£350 - £450"
+    },
+    {
+      "lmk-key": "222222222222222222222222222222222",
+      "improvement-item": "5",
+      "improvement-summary-text": "Replace boiler with new condensing boiler",
+      "improvement-descr-text": "Condensing boiler",
+      "improvement-id": "20.0",
+      "improvement-id-text": "",
+      "indicative-cost": "£2,200 - £3,000"
+    },
+    {
+      "lmk-key": "222222222222222222222222222222222",
+      "improvement-item": "6",
+      "improvement-summary-text": "Solar water heating",
+      "improvement-descr-text": "Solar water heating",
+      "improvement-id": "19.0",
+      "improvement-id-text": "",
+      "indicative-cost": "£4,000 - £6,000"
+    },
+    {
+      "lmk-key": "222222222222222222222222222222222",
+      "improvement-item": "7",
+      "improvement-summary-text": "Solar photovoltaic panels, 2.5 kWp",
+      "improvement-descr-text": "Solar photovoltaic panels",
+      "improvement-id": "34.0",
+      "improvement-id-text": "",
+      "indicative-cost": "£9,000 - £14,000"
+    }
+  ]
+}
