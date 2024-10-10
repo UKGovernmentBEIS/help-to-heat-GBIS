@@ -46,6 +46,10 @@
         <p class="govuk-body">{{ epc_rating.upper() }}</p>
       {% endif %}
       
+      <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">{{_("Date of issue")}}</p>
+
+      <p class="govuk-body">{{ gds_epc_date }}</p>
+
     </div>
   </div>
   <div class="govuk-form-group {% if errors %}govuk-form-group--error{% endif %}">
