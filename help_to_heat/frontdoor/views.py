@@ -1,5 +1,6 @@
 import logging
 import uuid
+from datetime import datetime
 
 from django.conf import settings
 from django.http import Http404
@@ -807,10 +808,18 @@ class EpcView(PageView):
         epc_band = epc.get("current-energy-rating")
         epc_date = epc.get("lodgement-date")
 
+        try:
+            working_epc_date = datetime.strptime(epc_date, "%Y-%m-%d")
+            month_name = month_names[working_epc_date.month - 1]
+            gds_epc_date = f"{working_epc_date.strftime('%-d')} {month_name} {working_epc_date.strftime('%Y')}"
+        except ValueError:
+            gds_epc_date = epc_date
+
         current_month, next_month = utils.get_current_and_next_month_names(month_names)
 
         context = {
             "epc_rating": epc_band.upper() if epc_band else "",
+            "gds_epc_date": gds_epc_date,
             "epc_date": epc_date,
             "current_month": current_month,
             "next_month": next_month,
