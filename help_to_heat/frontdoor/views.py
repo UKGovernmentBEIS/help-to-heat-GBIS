@@ -628,9 +628,18 @@ class EpcSelectView(PageView):
             }
             for a in address_and_rrn_details
         )
+
+        fallback_option = {
+            "value": "enter-manually",
+            "label": _("Enter address manually")
+            if len(lmk_options) == 0
+            else _("I cannot find my address, I want to enter it manually"),
+        }
+
         return {
             "lmk_options": lmk_options,
             "manual_url": page_name_to_url(session_id, epc_select_manual_page, is_change_page),
+            "fallback_option": fallback_option,
         }
 
     def save_post_data(self, data, session_id, page_name):
@@ -691,12 +700,21 @@ class AddressSelectView(PageView):
             }
             for a in addresses
         )
+
+        fallback_option = {
+            "value": "enter-manually",
+            "label": _("Enter address manually")
+            if len(uprn_options) == 0
+            else _("I cannot find my address, I want to enter it manually"),
+        }
+
         return {
             "uprn_options": uprn_options,
             "manual_url": page_name_to_url(session_id, address_select_manual_page, is_change_page),
             "current_month": current_month,
             "next_month": next_month,
             "show_epc_update_details": show_epc_update_details,
+            "fallback_option": fallback_option,
         }
 
     def save_post_data(self, data, session_id, page_name):

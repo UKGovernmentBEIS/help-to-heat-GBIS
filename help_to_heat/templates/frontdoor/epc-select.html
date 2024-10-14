@@ -14,8 +14,12 @@
             {{_("Select your address")}}
           </h1>
         </legend>
+      
+        {% if not lmk_options %}
+          <p class="govuk-body">{{_("No addresses found")}}</p>
+        {% endif %}
 
-          {{macros.radios('lmk', lmk_options, data, errors)}}
+        {{macros.radios('lmk', lmk_options, data, errors, fallback_option)}}
 
         <p>
           <a href="{{ manual_url }}" class="govuk-link">{{_("I cannot find my address. I want to enter it manually")}}</a>
