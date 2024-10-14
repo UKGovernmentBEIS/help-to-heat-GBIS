@@ -645,6 +645,10 @@ class EpcSelectView(PageView):
     def save_post_data(self, data, session_id, page_name):
         lmk = data.get(lmk_field)
 
+        if lmk == "enter-manually":
+            data[epc_select_choice_field] = epc_select_choice_field_enter_manually
+            return data
+
         try:
             epc_details_response, epc_recommendations_response = interface.api.epc.get_epc(lmk)
             epc_details = epc_details_response["rows"][0]
@@ -718,9 +722,14 @@ class AddressSelectView(PageView):
         }
 
     def save_post_data(self, data, session_id, page_name):
+        uprn = data.get(uprn_field)
+
+        if uprn == "enter-manually":
+            data[address_select_choice_field] = address_select_choice_field_enter_manually
+            return data
+
         data[address_select_choice_field] = address_select_choice_field_select_address
 
-        uprn = data.get(uprn_field)
         address_data = interface.api.address.get_address(uprn)
         data[address_field] = address_data["address"]
 
