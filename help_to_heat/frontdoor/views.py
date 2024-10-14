@@ -803,10 +803,6 @@ class AddressManualView(PageView):
 
         if page_name == address_manual_page:
             data[address_choice_field] = address_choice_field_enter_manually
-        if page_name == epc_select_manual_page:
-            data[epc_select_choice_field] = epc_select_choice_field_enter_manually
-        if page_name == address_select_manual_page:
-            data[address_select_choice_field] = address_select_choice_field_enter_manually
 
         return data
 

@@ -20,11 +20,6 @@
         {% endif %}
 
         {{macros.radios('lmk', lmk_options, data, errors, fallback_option)}}
-
-        <p>
-          <a href="{{ manual_url }}" class="govuk-link">{{_("I cannot find my address. I want to enter it manually")}}</a>
-        </p>
-
       </fieldset>
     </div>
   {% endcall %}
