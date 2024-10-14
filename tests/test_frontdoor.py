@@ -721,7 +721,10 @@ def test_no_address():
     page = form.submit().follow()
 
     assert page.has_text("No addresses found")
-    page = page.click(contains="I want to enter it manually")
+    form = page.get_form()
+    form["uprn"] = "enter-manually"
+    page = form.submit().follow()
+
     form = page.get_form()
     assert form["postcode"] == "FL23 4JA"
 
@@ -881,55 +884,6 @@ def test_epc_lookup_failure():
     assert referral.data["first_name"] == "Freddy"
     assert referral.data["benefits"] == "Yes"
     referral.delete()
-
-
-@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", EmptyOSApi)
-def test_no_epc():
-    client = utils.get_client()
-    page = client.get("/start")
-    assert page.status_code == 302
-    page = page.follow()
-
-    assert page.status_code == 200
-    session_id = page.path.split("/")[1]
-    assert uuid.UUID(session_id)
-
-    _check_page = _make_check_page(session_id)
-
-    form = page.get_form()
-    form["country"] = "England"
-    page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
-    page = _check_page(page, "supplier", "supplier", "Utilita")
-
-    assert page.has_text("Do you own the property?")
-    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
-
-    assert page.has_text("Do you live in a park home")
-    page = _check_page(page, "park-home", "park_home", "No")
-
-    form = page.get_form()
-    form["building_name_or_number"] = "22"
-    form["postcode"] = "FL23 4JA"
-    page = form.submit().follow()
-
-    assert page.has_text("No addresses found")
-    page = page.click(contains="I want to enter it manually")
-    form = page.get_form()
-    # TODO: find out if we should still be forwarding this part through, and if so fix it so we are
-    assert form["address_line_1"] == ""
-    assert form["postcode"] == "FL23 4JA"
-
-    # TODO: won't need to set this if it's passed through from the lookup (see above)
-    form["address_line_1"] = "22 Acacia Avenue"
-    form["town_or_city"] = "Metropolis"
-
-    page = form.submit().follow()
-
-    assert page.has_one("h1:contains('What is the council tax band of your property?')")
-    page = _check_page(page, "council-tax-band", "council_tax_band", "B")
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
@@ -1986,6 +1940,79 @@ def test_on_skipping_to_supplier_page_on_country_page_the_sorry_journey_page_is_
 
     assert page.has_one("h1:contains('Page not found')")
     assert page.has_text("You're not able to see this page.")
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_on_epc_select_page_enter_manually_can_be_selected():
+    client = utils.get_client()
+    page = client.get("/start")
+    page = page.follow()
+
+    session_id = page.path.split("/")[1]
+
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Octopus Energy"
+    page = form.submit().follow()
+
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    page = _check_page(page, "park-home", "park_home", "No")
+
+    form = page.get_form()
+    form["building_name_or_number"] = "10"
+    form["postcode"] = "SW1A 2AA"
+    page = form.submit().follow()
+
+    assert page.has_one("label:contains('I cannot find my address, I want to enter it manually')")
+
+    form = page.get_form()
+    form["lmk"] = "enter-manually"
+    page = form.submit().follow()
+
+    assert page.has_one('h1:contains("What is the property\'s address?")')
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", EmptyOSApi)
+def test_on_epc_select_page_manual_text_changes_if_no_addresses_found():
+    client = utils.get_client()
+    page = client.get("/start")
+    page = page.follow()
+
+    session_id = page.path.split("/")[1]
+
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Octopus Energy"
+    page = form.submit().follow()
+
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    page = _check_page(page, "park-home", "park_home", "No")
+
+    form = page.get_form()
+    form["building_name_or_number"] = "10"
+    form["postcode"] = "SW1A 2AA"
+    page = form.submit().follow()
+
+    assert page.has_one("label:contains('Enter address manually')")
+
+    form = page.get_form()
+    form["uprn"] = "enter-manually"
+    page = form.submit().follow()
+
+    assert page.has_one('h1:contains("What is the property\'s address?")')
 
 
 def _setup_client_and_page():
