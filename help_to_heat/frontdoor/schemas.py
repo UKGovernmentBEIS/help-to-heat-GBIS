@@ -1,4 +1,4 @@
-import phonenumbers
+import phonenumbers, re
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from marshmallow import Schema, ValidationError, fields, validate, validates
@@ -779,8 +779,12 @@ service_usage_multichoice_options = (
 
 
 postcode_regex_collection = (
-    # allow both upper and lower cases, no or multiple spaces in between outward and inward code
-    r"^\s*[a-zA-Z]{1,2}\d[\da-zA-Z]?(\s*\d[a-zA-Z]{2})*\s*$"
+    r"^[A-Z]\d\d[A-Z]{2}$",  # ANNAA
+    r"^[A-Z]\d\d\d[A-Z]{2}$",  # ANNNAA
+    r"^[A-Z]{2}\d\d[A-Z]{2}$",  # AANNAA
+    r"^[A-Z]{2}\d\d\d[A-Z]{2}$",  # AANNNAA
+    r"^[A-Z]\d[A-Z]\d[A-Z]{2}$",  # ANANAA
+    r"^[A-Z]{2}\d[A-Z]\d[A-Z]{2}$",  # AANANAA
 )
 
 
@@ -802,9 +806,7 @@ class SessionSchema(Schema):
     building_name_or_number = fields.String(validate=validate.Length(max=128))
     town_or_city = fields.String(validate=validate.Length(max=128))
     county = fields.String(validate=validate.Length(max=128))
-    postcode = fields.String(
-        validate=validate.Regexp(postcode_regex_collection, error=_("Please enter a valid UK postcode"))
-    )
+    postcode = fields.String()
     uprn = fields.String()
     lmk = fields.String()
     epc_details = fields.Dict()
@@ -852,6 +854,20 @@ class SessionSchema(Schema):
     uprn_is_duplicate = fields.String()
     epc_found = fields.String()
     epc_rating_is_eligible = fields.String()
+
+    @validates("postcode")
+    def validate_postcode(self, value):
+        if value:
+            value = value.upper().replace(" ", "")
+            valid_postcode = False
+
+            for valid_pattern in postcode_regex_collection:
+                if re.match(valid_pattern, value):
+                    valid_postcode = True
+                    break
+
+            if not valid_postcode:
+                raise ValidationError([_("Please enter a valid UK postcode")])
 
     @validates("email")
     def validate_email(self, value):
