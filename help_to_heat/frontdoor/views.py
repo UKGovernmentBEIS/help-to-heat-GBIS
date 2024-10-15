@@ -79,6 +79,7 @@ from .consts import (
     household_income_field_more_than_threshold,
     household_income_page,
     lmk_field,
+    lmk_field_enter_manually,
     loft_access_field,
     loft_access_field_yes,
     loft_access_page,
@@ -122,6 +123,7 @@ from .consts import (
     supplier_page,
     unknown_page,
     uprn_field,
+    uprn_field_enter_manually,
     user_selected_supplier_field,
     utility_warehouse_warning_page,
     utility_warehouse_warning_page_field,
@@ -630,7 +632,7 @@ class EpcSelectView(PageView):
         )
 
         fallback_option = {
-            "value": "enter-manually",
+            "value": lmk_field_enter_manually,
             "label": _("Enter address manually")
             if len(lmk_options) == 0
             else _("I cannot find my address, I want to enter it manually"),
@@ -645,7 +647,7 @@ class EpcSelectView(PageView):
     def save_post_data(self, data, session_id, page_name):
         lmk = data.get(lmk_field)
 
-        if lmk == "enter-manually":
+        if lmk == lmk_field_enter_manually:
             data[epc_select_choice_field] = epc_select_choice_field_enter_manually
             return data
 
@@ -706,7 +708,7 @@ class AddressSelectView(PageView):
         )
 
         fallback_option = {
-            "value": "enter-manually",
+            "value": uprn_field_enter_manually,
             "label": _("Enter address manually")
             if len(uprn_options) == 0
             else _("I cannot find my address, I want to enter it manually"),
@@ -724,7 +726,7 @@ class AddressSelectView(PageView):
     def save_post_data(self, data, session_id, page_name):
         uprn = data.get(uprn_field)
 
-        if uprn == "enter-manually":
+        if uprn == uprn_field_enter_manually:
             data[address_select_choice_field] = address_select_choice_field_enter_manually
             return data
 
