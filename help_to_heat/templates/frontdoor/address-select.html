@@ -14,12 +14,15 @@
             {{_("Select your address")}}
           </h1>
         </legend>
-      
-        {% if not uprn_options %}
-          <p class="govuk-body">{{_("No addresses found")}}</p>
-        {% endif %}
 
-        {{macros.radios('uprn', uprn_options, data, errors, fallback_option)}}
+        {% if uprn_options %}
+          {{macros.radios('uprn', uprn_options, data, errors, fallback_option)}}
+        {% else %}
+          <p class="govuk-body">{{_("No addresses found")}}</p>
+          <p>
+            <a href="{{ manual_url }}" class="govuk-link">{{_("Enter address manually")}}</a>
+          </p>
+        {% endif %}
 
         {% if show_epc_update_details %}
           <br>

@@ -721,10 +721,7 @@ def test_no_address():
     page = form.submit().follow()
 
     assert page.has_text("No addresses found")
-    form = page.get_form()
-    form["uprn"] = "enter-manually"
-    page = form.submit().follow()
-
+    page = page.click(contains="Enter address manually")
     form = page.get_form()
     assert form["postcode"] == "FL23 4JA"
 
@@ -1980,7 +1977,7 @@ def test_on_epc_select_page_enter_manually_can_be_selected():
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)
 @unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", EmptyOSApi)
-def test_on_epc_select_page_manual_text_changes_if_no_addresses_found():
+def test_on_epc_select_page_manual_link_is_shown_if_no_addresses_found():
     client = utils.get_client()
     page = client.get("/start")
     page = page.follow()
@@ -2006,11 +2003,9 @@ def test_on_epc_select_page_manual_text_changes_if_no_addresses_found():
     form["postcode"] = "SW1A 2AA"
     page = form.submit().follow()
 
-    assert page.has_one("label:contains('Enter address manually')")
+    assert page.has_one("a:contains('Enter address manually')")
 
-    form = page.get_form()
-    form["uprn"] = "enter-manually"
-    page = form.submit().follow()
+    page = page.click(contains="I want to enter it manually")
 
     assert page.has_one('h1:contains("What is the property\'s address?")')
 

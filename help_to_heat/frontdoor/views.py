@@ -631,12 +631,11 @@ class EpcSelectView(PageView):
             for a in address_and_rrn_details
         )
 
-        fallback_option = {
-            "value": lmk_field_enter_manually,
-            "label": _("Enter address manually")
-            if len(lmk_options) == 0
-            else _("I cannot find my address, I want to enter it manually"),
-        }
+        fallback_option = (
+            {"value": lmk_field_enter_manually, "label": _("I cannot find my address, I want to enter it manually")}
+            if len(lmk_options) > 0
+            else None
+        )
 
         return {
             "lmk_options": lmk_options,
@@ -707,12 +706,11 @@ class AddressSelectView(PageView):
             for a in addresses
         )
 
-        fallback_option = {
-            "value": uprn_field_enter_manually,
-            "label": _("Enter address manually")
-            if len(uprn_options) == 0
-            else _("I cannot find my address, I want to enter it manually"),
-        }
+        fallback_option = (
+            {"value": uprn_field_enter_manually, "label": _("I cannot find my address, I want to enter it manually")}
+            if len(uprn_options) > 0
+            else None
+        )
 
         return {
             "uprn_options": uprn_options,
@@ -805,6 +803,10 @@ class AddressManualView(PageView):
 
         if page_name == address_manual_page:
             data[address_choice_field] = address_choice_field_enter_manually
+        if page_name == epc_select_manual_page:
+            data[epc_select_choice_field] = epc_select_choice_field_enter_manually
+        if page_name == address_select_manual_page:
+            data[address_select_choice_field] = address_select_choice_field_enter_manually
 
         return data
 

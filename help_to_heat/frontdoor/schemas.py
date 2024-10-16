@@ -10,6 +10,7 @@ from help_to_heat.frontdoor.consts import (
     address_field,
     address_manual_page,
     address_page,
+    address_select_manual_page,
     address_select_page,
     benefits_field,
     benefits_page,
@@ -41,6 +42,7 @@ from help_to_heat.frontdoor.consts import (
     epc_ineligible_page,
     epc_page,
     epc_rating_field,
+    epc_select_manual_page,
     epc_select_page,
     field_dont_know,
     field_no,
@@ -200,6 +202,8 @@ page_display_questions = {
 # a prev page url should be provided to allow the back link to work
 routing_overrides = {
     address_manual_page: {"prev_page": address_page},
+    epc_select_manual_page: {"prev_page": epc_select_page},
+    address_select_manual_page: {"prev_page": address_select_page},
 }
 
 # which change page to send back to
