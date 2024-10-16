@@ -1,4 +1,6 @@
-import phonenumbers, re
+import re
+
+import phonenumbers
 from django.utils.translation import gettext_lazy as _
 from django.utils.translation import pgettext_lazy
 from marshmallow import Schema, ValidationError, fields, validate, validates
@@ -867,7 +869,7 @@ class SessionSchema(Schema):
                     break
 
             if not valid_postcode:
-                raise ValidationError([_("Please enter a valid UK postcode")])
+                raise ValidationError([_("Enter a valid UK postcode")])
 
     @validates("email")
     def validate_email(self, value):

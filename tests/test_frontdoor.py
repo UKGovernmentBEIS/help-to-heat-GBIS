@@ -1384,7 +1384,77 @@ def test_referral_not_providing_contact_number():
     referral.delete()
 
 
-def test_address_validation():
+@pytest.mark.parametrize(
+    "postcode", ["This isn't a postcode", "This is not a postcode", "AA11AAA", "1", "A", "A1", "L15", "L2A", "1111111"]
+)
+def test_postcode_validation_failure(postcode):
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
+    page = _check_page(page, "supplier", "supplier", "Utilita")
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    assert page.has_text("Do you live in a park home")
+    page = _check_page(page, "park-home", "park_home", "No")
+
+    form = page.get_form()
+    form["building_name_or_number"] = 1
+    form["postcode"] = postcode
+    page = form.submit()
+
+    assert page.has_text("Enter a valid UK postcode")
+
+
+@pytest.mark.parametrize("postcode", ["EC1A 1BB", "W1A 0AX", "M1 1AE", "B33 8TH", "CR2 6XH", "DN55 1PT"])
+def test_postcode_validation_success(postcode):
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
+    page = _check_page(page, "supplier", "supplier", "Utilita")
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    assert page.has_text("Do you live in a park home")
+    page = _check_page(page, "park-home", "park_home", "No")
+
+    form = page.get_form()
+    form["building_name_or_number"] = 1
+    form["postcode"] = postcode
+    page = form.submit().follow()
+
+    assert page.has_one('h1:contains("Select your address")')
+
+
+def test_address_length_validation():
     client = utils.get_client()
     page = client.get("/start")
     assert page.status_code == 302
@@ -1415,7 +1485,7 @@ def test_address_validation():
     page = form.submit()
 
     assert page.has_text("Longer than maximum length 128")
-    assert page.has_text("Please enter a valid UK postcode")
+    assert page.has_text("Enter a valid UK postcode")
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
