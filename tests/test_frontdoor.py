@@ -1385,9 +1385,26 @@ def test_referral_not_providing_contact_number():
 
 
 @pytest.mark.parametrize(
-    "postcode", ["This isn't a postcode", "This is not a postcode", "AA11AAA", "1", "A", "A1", "L15", "L2A", "1111111"]
+    ("postcode", "valid"),
+    [
+        ("This isn't a postcode", False),
+        ("This is not a postcode", False),
+        ("AA11AAA", False),
+        ("1", False),
+        ("A", False),
+        ("A1", False),
+        ("L15", False),
+        ("L2A", False),
+        ("1111111", False),
+        ("EC1A 1BB", True),
+        ("W1A 0AX", True),
+        ("M1 1AE", True),
+        ("B33 8TH", True),
+        ("CR2 6XH", True),
+        ("DN55 1PT", True),
+    ],
 )
-def test_postcode_validation_failure(postcode):
+def test_postcode_validation(postcode, valid):
     client = utils.get_client()
     page = client.get("/start")
     assert page.status_code == 302
@@ -1415,43 +1432,13 @@ def test_postcode_validation_failure(postcode):
     form = page.get_form()
     form["building_name_or_number"] = 1
     form["postcode"] = postcode
-    page = form.submit()
 
-    assert page.has_text("Enter a valid UK postcode")
-
-
-@pytest.mark.parametrize("postcode", ["EC1A 1BB", "W1A 0AX", "M1 1AE", "B33 8TH", "CR2 6XH", "DN55 1PT"])
-def test_postcode_validation_success(postcode):
-    client = utils.get_client()
-    page = client.get("/start")
-    assert page.status_code == 302
-    page = page.follow()
-
-    assert page.status_code == 200
-    session_id = page.path.split("/")[1]
-    assert uuid.UUID(session_id)
-
-    _check_page = _make_check_page(session_id)
-
-    form = page.get_form()
-    form["country"] = "England"
-    page = form.submit().follow()
-
-    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
-    page = _check_page(page, "supplier", "supplier", "Utilita")
-
-    assert page.has_text("Do you own the property?")
-    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
-
-    assert page.has_text("Do you live in a park home")
-    page = _check_page(page, "park-home", "park_home", "No")
-
-    form = page.get_form()
-    form["building_name_or_number"] = 1
-    form["postcode"] = postcode
-    page = form.submit().follow()
-
-    assert page.has_one('h1:contains("Select your address")')
+    if valid:
+        page = form.submit().follow()
+        assert page.has_one('h1:contains("Select your address")')
+    else:
+        page = form.submit()
+        assert page.has_text("Enter a valid UK postcode")
 
 
 def test_address_length_validation():
