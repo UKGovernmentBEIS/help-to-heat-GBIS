@@ -780,7 +780,7 @@ service_usage_multichoice_options = (
 )
 
 
-postcode_regex_collection = (
+valid_postcode_regex_patterns = (
     r"^[A-Z]\d\d[A-Z]{2}$",  # ANNAA
     r"^[A-Z]\d\d\d[A-Z]{2}$",  # ANNNAA
     r"^[A-Z]{2}\d\d[A-Z]{2}$",  # AANNAA
@@ -860,15 +860,8 @@ class SessionSchema(Schema):
     @validates("postcode")
     def validate_postcode(self, value):
         if value:
-            value = value.upper().replace(" ", "")
-            valid_postcode = False
-
-            for valid_pattern in postcode_regex_collection:
-                if re.match(valid_pattern, value):
-                    valid_postcode = True
-                    break
-
-            if not valid_postcode:
+            standardised_value = re.sub(r'\s', '', value).upper()
+            if not any(re.match(pattern, standardised_value) for pattern in valid_postcode_regex_patterns):
                 raise ValidationError([_("Enter a valid UK postcode")])
 
     @validates("email")
