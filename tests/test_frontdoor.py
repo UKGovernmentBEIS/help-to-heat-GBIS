@@ -2005,7 +2005,7 @@ def test_on_epc_select_page_manual_link_is_shown_if_no_addresses_found():
 
     assert page.has_one("a:contains('Enter address manually')")
 
-    page = page.click(contains="I want to enter it manually")
+    page = page.click(contains="Enter address manually")
 
     assert page.has_one('h1:contains("What is the property\'s address?")')
 
