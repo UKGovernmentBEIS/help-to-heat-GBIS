@@ -213,5 +213,5 @@ class ScottishEpcRating(utils.TimeStampedModel):
     mechanical_ventilation = models.CharField(max_length=64, null=True)
     construction_age_band = models.CharField(max_length=16, null=True)
     tenure = models.CharField(max_length=64, null=True)
-    improvements = models.TextField(max_length=1024, null=True)
-    alternative_improvements = models.TextField(max_length=1024, null=True)
+    improvements = models.TextField(null=True)
+    alternative_improvements = models.TextField(null=True)
