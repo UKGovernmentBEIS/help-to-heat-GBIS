@@ -860,7 +860,7 @@ class SessionSchema(Schema):
     @validates("postcode")
     def validate_postcode(self, value):
         if value:
-            standardised_value = re.sub(r'\s', '', value).upper()
+            standardised_value = re.sub(r"\s", "", value).upper()
             if not any(re.match(pattern, standardised_value) for pattern in valid_postcode_regex_patterns):
                 raise ValidationError([_("Enter a valid UK postcode")])
 

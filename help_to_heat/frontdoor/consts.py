@@ -169,10 +169,12 @@ address_manual_postcode_field = "postcode"
 duplicate_uprn_field = "uprn_is_duplicate"
 epc_found_field = "epc_found"
 lmk_field = "lmk"
+lmk_field_enter_manually = "enter-manually"
 address_field = "address"
 epc_details_field = "epc_details"
 recommendations_field = "recommendations"
 uprn_field = "uprn"
+uprn_field_enter_manually = "enter-manually"
 property_main_heat_source_field = "property_main_heat_source"  # deprecated, superseded by info in epc_details
 
 council_tax_band_field = "council_tax_band"

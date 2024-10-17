@@ -79,6 +79,7 @@ from .consts import (
     household_income_field_more_than_threshold,
     household_income_page,
     lmk_field,
+    lmk_field_enter_manually,
     loft_access_field,
     loft_access_field_yes,
     loft_access_page,
@@ -122,6 +123,7 @@ from .consts import (
     supplier_page,
     unknown_page,
     uprn_field,
+    uprn_field_enter_manually,
     user_selected_supplier_field,
     utility_warehouse_warning_page,
     utility_warehouse_warning_page_field,
@@ -200,8 +202,8 @@ missing_item_errors = {
     address_building_name_or_number_field: _("Enter building name or number"),
     address_manual_address_line_1_field: _("Enter Address line 1"),
     address_postcode_field: _("Enter a postcode"),
-    uprn_field: _("Select your address"),
-    lmk_field: _("Select your address"),
+    uprn_field: _("Select your address, or I can't find my address if your address is not listed"),
+    lmk_field: _("Select your address, or I can't find my address if your address is not listed"),
     address_manual_town_or_city_field: _("Enter your Town or city"),
     referral_already_submitted_field: _("Please confirm that you want to submit another referral"),
     council_tax_band_field: _("Enter the Council Tax Band of the property"),
@@ -628,13 +630,25 @@ class EpcSelectView(PageView):
             }
             for a in address_and_rrn_details
         )
+
+        fallback_option = (
+            {"value": lmk_field_enter_manually, "label": _("I cannot find my address, I want to enter it manually")}
+            if len(lmk_options) > 0
+            else None
+        )
+
         return {
             "lmk_options": lmk_options,
             "manual_url": page_name_to_url(session_id, epc_select_manual_page, is_change_page),
+            "fallback_option": fallback_option,
         }
 
     def save_post_data(self, data, session_id, page_name):
         lmk = data.get(lmk_field)
+
+        if lmk == lmk_field_enter_manually:
+            data[epc_select_choice_field] = epc_select_choice_field_enter_manually
+            return data
 
         try:
             epc_details_response, epc_recommendations_response = interface.api.epc.get_epc(lmk)
@@ -691,18 +705,31 @@ class AddressSelectView(PageView):
             }
             for a in addresses
         )
+
+        fallback_option = (
+            {"value": uprn_field_enter_manually, "label": _("I cannot find my address, I want to enter it manually")}
+            if len(uprn_options) > 0
+            else None
+        )
+
         return {
             "uprn_options": uprn_options,
             "manual_url": page_name_to_url(session_id, address_select_manual_page, is_change_page),
             "current_month": current_month,
             "next_month": next_month,
             "show_epc_update_details": show_epc_update_details,
+            "fallback_option": fallback_option,
         }
 
     def save_post_data(self, data, session_id, page_name):
+        uprn = data.get(uprn_field)
+
+        if uprn == uprn_field_enter_manually:
+            data[address_select_choice_field] = address_select_choice_field_enter_manually
+            return data
+
         data[address_select_choice_field] = address_select_choice_field_select_address
 
-        uprn = data.get(uprn_field)
         address_data = interface.api.address.get_address(uprn)
         data[address_field] = address_data["address"]
 
