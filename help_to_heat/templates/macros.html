@@ -20,7 +20,7 @@
 </div>
 {%- endmacro%}
 
-{% macro radios(name, options, data, errors) -%}
+{% macro radios(name, options, data, errors, fallback_option=None) -%}
 {% if errors.get(name) %}
 <p id="question-{{name}}-error" class="govuk-error-message">
   <span class="govuk-visually-hidden">Error:</span> {{errors.get(name)}}
@@ -28,28 +28,42 @@
 {% endif %}
 <div id="question-{{name}}" class="govuk-radios" data-module="govuk-radios">
   {% for option in options %}
-  {% if option is string %}
-  {% set value, label = option, option %}
-  {% elif option is mapping %}
-  {% set value, label = option.value, option.label %}
-  {% else %}
-  {% set value, label = option %}
-  {% endif %}
-  <div class="govuk-radios__item">
-    <input class="govuk-radios__input" id="{{name}}-option-{{slugify(value)}}" name="{{name}}" type="radio"
-      value="{{value}}" {{is_checked(data, name, value)}} aria-describedby="{{name}}-option-{{slugify(value)}}">
-    <label class="govuk-label govuk-radios__label" for="{{name}}-option-{{slugify(value)}}" id="{{name}}-option-{{slugify(value)}}">
-      {{label}}
-    </label>
-    {% if option is mapping %}
-    {% if option.hint %}
-    <div id="{{name}}-option-{{slugify(value)}}-hint" class="govuk-hint govuk-radios__hint">
-      {{option.hint}}
+    {% if option is string %}
+      {% set value, label = option, option %}
+    {% elif option is mapping %}
+      {% set value, label = option.value, option.label %}
+    {% else %}
+      {% set value, label = option %}
+    {% endif %}
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="{{name}}-option-{{slugify(value)}}" name="{{name}}" type="radio"
+        value="{{value}}" {{is_checked(data, name, value)}} aria-describedby="{{name}}-option-{{slugify(value)}}">
+      <label class="govuk-label govuk-radios__label" for="{{name}}-option-{{slugify(value)}}" id="{{name}}-option-{{slugify(value)}}">
+        {{label}}
+      </label>
+      {% if option is mapping %}
+        {% if option.hint %}
+          <div id="{{name}}-option-{{slugify(value)}}-hint" class="govuk-hint govuk-radios__hint">
+            {{option.hint}}
+          </div>
+        {% endif %}
+      {% endif %}
     </div>
-    {% endif %}
-    {% endif %}
-  </div>
   {% endfor %}
+  {% if fallback_option is not none %}
+    {% set value, label = fallback_option.value, fallback_option.label %}
+    {% if options|length > 0 %}
+      <br>
+      <p class="govuk-body">or</p>
+    {% endif %} 
+    <div class="govuk-radios__item">
+      <input class="govuk-radios__input" id="{{name}}-option-{{slugify(value)}}" name="{{name}}" type="radio"
+        value="{{value}}" {{is_checked(data, name, value)}} aria-describedby="{{name}}-option-{{slugify(value)}}">
+      <label class="govuk-label govuk-radios__label" for="{{name}}-option-{{slugify(value)}}" id="{{name}}-option-{{slugify(value)}}">
+        {{label}}
+      </label>
+    </div>
+  {% endif %}
 </div>
 {%- endmacro%}
 
