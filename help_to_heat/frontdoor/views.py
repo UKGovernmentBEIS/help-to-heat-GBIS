@@ -866,6 +866,27 @@ class EpcView(PageView):
         return data
 
 
+@register_page(no_epc_page)
+class NoEpcView(PageView):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+        country = data.get(country_field)
+
+        current_month, next_month = utils.get_current_and_next_month_names(month_names)
+        current_quarter_month, next_quarter_month = utils.get_current_and_next_quarter_month_names(month_names)
+
+        show_month_wording = country in [country_field_england, country_field_wales]
+
+        return {
+            "current_month": current_month, "next_month": next_month,
+            "current_quarter_month": current_quarter_month, "next_quarter_month": next_quarter_month,
+            "show_month_wording": show_month_wording
+        }
+
+    def save_post_data(self, data, session_id, page_name):
+        data[no_epc_field] = field_yes
+        return data
+
+
 @register_page(benefits_page)
 class BenefitsView(PageView):
     def build_extra_context(self, request, session_id, *args, **kwargs):
