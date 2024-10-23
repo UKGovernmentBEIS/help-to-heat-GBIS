@@ -66,6 +66,7 @@ from help_to_heat.frontdoor.consts import (
     loft_insulation_field_no_loft,
     loft_insulation_page,
     loft_page,
+    no_epc_page,
     northern_ireland_ineligible_page,
     number_of_bedrooms_field,
     number_of_bedrooms_field_one,
@@ -223,6 +224,7 @@ change_page_lookup = {
     referral_already_submitted_page: summary_page,
     council_tax_band_page: summary_page,
     epc_page: summary_page,
+    no_epc_page: summary_page,
     benefits_page: summary_page,
     household_income_page: summary_page,
     property_type_page: summary_page,
@@ -250,6 +252,7 @@ change_page_override_pages = [
     referral_already_submitted_page,
     council_tax_band_page,
     epc_page,
+    no_epc_page,
     northern_ireland_ineligible_page,
     park_home_ineligible_page,
     epc_ineligible_page,
@@ -821,6 +824,7 @@ class SessionSchema(Schema):
     )
     epc_rating = fields.String(validate=validate.OneOf(epc_rating_options))
     epc_date = fields.String()
+    confirm_no_epc = fields.String()
     benefits = fields.String(validate=validate.OneOf(tuple(item["value"] for item in yes_no_options_map)))
     household_income = fields.String(
         validate=validate.OneOf(tuple(item["value"] for item in household_income_options_map))

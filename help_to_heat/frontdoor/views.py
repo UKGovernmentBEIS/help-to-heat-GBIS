@@ -91,6 +91,8 @@ from .consts import (
     loft_insulation_field_more_than_threshold,
     loft_insulation_page,
     loft_page,
+    no_epc_field,
+    no_epc_page,
     northern_ireland_ineligible_page,
     number_of_bedrooms_field,
     number_of_bedrooms_page,
@@ -869,7 +871,9 @@ class EpcView(PageView):
 @register_page(no_epc_page)
 class NoEpcView(PageView):
     def build_extra_context(self, request, session_id, page_name, data, is_change_page):
-        country = data.get(country_field)
+        session_data = interface.api.session.get_session(session_id)
+
+        country = session_data.get(country_field)
 
         current_month, next_month = utils.get_current_and_next_month_names(month_names)
         current_quarter_month, next_quarter_month = utils.get_current_and_next_quarter_month_names(month_names)
@@ -877,9 +881,11 @@ class NoEpcView(PageView):
         show_month_wording = country in [country_field_england, country_field_wales]
 
         return {
-            "current_month": current_month, "next_month": next_month,
-            "current_quarter_month": current_quarter_month, "next_quarter_month": next_quarter_month,
-            "show_month_wording": show_month_wording
+            "current_month": current_month,
+            "next_month": next_month,
+            "current_quarter_month": current_quarter_month,
+            "next_quarter_month": next_quarter_month,
+            "show_month_wording": show_month_wording,
         }
 
     def save_post_data(self, data, session_id, page_name):

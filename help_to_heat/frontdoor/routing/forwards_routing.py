@@ -48,6 +48,8 @@ from help_to_heat.frontdoor.consts import (
     loft_insulation_field,
     loft_insulation_page,
     loft_page,
+    no_epc_field,
+    no_epc_page,
     northern_ireland_ineligible_page,
     number_of_bedrooms_field,
     number_of_bedrooms_page,
@@ -181,6 +183,9 @@ def get_next_page(current_page, answers):
 
     if current_page == epc_page:
         return _epc_next_page(answers)
+
+    if current_page == no_epc_page:
+        return _no_epc_next_page(answers)
 
     if current_page == benefits_page:
         return _benefits_next_page(answers)
@@ -405,13 +410,25 @@ def _council_tax_band_next_page(answers):
     return _post_council_tax_band_next_page(answers)
 
 
-# confirms epc if it was found
+# confirms epc if it was found, or send to no epc
 def _post_council_tax_band_next_page(answers):
     epc_found = answers.get(epc_found_field)
+    address_choice = answers.get(address_choice_field)
+    epc_select_choice = answers.get(epc_select_choice_field)
+    address_select_choice = answers.get(address_select_choice_field)
     if epc_found == field_yes:
         return epc_page
     if epc_found == field_no:
-        return _post_epc_next_page(answers)
+        # if they entered an address manually, don't show the no epc page as an epc wasn't searched for
+        # note that there are 3 address select pages so 3 places where the user can opt to enter manually
+        if (
+            address_choice == address_choice_field_enter_manually
+            or epc_select_choice == epc_select_choice_field_enter_manually
+            or address_select_choice == address_choice_field_enter_manually
+        ):
+            return _post_epc_next_page(answers)
+
+        return no_epc_page
 
     return _unknown_response
 
@@ -423,6 +440,11 @@ def _epc_next_page(answers):
         return epc_ineligible_page
     else:
         return _post_epc_next_page(answers)
+
+
+@_requires_answer(no_epc_field)
+def _no_epc_next_page(answers):
+    return _post_epc_next_page(answers)
 
 
 # ask circumstances questions, depending on flow

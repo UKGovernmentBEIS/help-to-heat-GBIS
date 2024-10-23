@@ -238,3 +238,13 @@ def get_current_and_next_month_names(month_names):
     current_month = month_names[now.month - 1]
     next_month = month_names[(now + relativedelta(months=+1)).month - 1]
     return current_month, next_month
+
+
+# Q1 january -> april
+# Q2 april -> july
+# Q3 july -> october
+# Q4 october -> january
+# we update the month names manually on each scottish data dump
+# this is to tell the user the month of the last dump, and expected month of next dump
+def get_current_and_next_quarter_month_names(month_names):
+    return month_names[6], month_names[9]
