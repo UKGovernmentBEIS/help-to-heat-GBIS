@@ -253,6 +253,14 @@ month_names = [
     _("December"),
 ]
 
+property_types = {
+    "FLAT": _("Flat"),
+    "BUNGALOW": _("Bungalow"),
+    "HOUSE": _("House"),
+    "MAISONETTE": _("Maisonette"),
+    "PARK HOME": _("Park home"),
+}
+
 # to be updated when we get full list of excluded suppliers
 converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
 unavailable_suppliers = []
@@ -835,13 +843,22 @@ class EpcView(PageView):
         epc_band = epc.get("current-energy-rating")
         epc_date = epc.get("lodgement-date")
 
+        epc_property_type = epc.get("property-type")
+        epc_property_type_upper = epc_property_type.upper()
+
+        if epc_property_type_upper in property_types:
+            property_type = property_types[epc_property_type_upper]
+        else:
+            logger.error(f"Unrecognised Property Type: {epc_property_type}")
+            property_type = epc_property_type
+
         try:
             working_epc_date = datetime.strptime(epc_date, "%Y-%m-%d")
             month_name = month_names[working_epc_date.month - 1]
             gds_epc_date = f"{working_epc_date.strftime('%-d')} {month_name} {working_epc_date.strftime('%Y')}"
         except ValueError as e:
             logger.error(e)
-            gds_epc_date = ""
+            gds_epc_date = None
 
         current_month, next_month = utils.get_current_and_next_month_names(month_names)
 
@@ -851,6 +868,7 @@ class EpcView(PageView):
             "epc_date": epc_date,
             "current_month": current_month,
             "next_month": next_month,
+            "property_type": property_type,
             "epc_display_options": schemas.epc_display_options_map,
             "address": address,
             "show_epc_update_details": show_epc_update_details,
