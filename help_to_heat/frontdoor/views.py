@@ -253,6 +253,14 @@ month_names = [
     _("December"),
 ]
 
+property_types = {
+    "Flat": _("Flat"),
+    "Bungalow": _("Bungalow"),
+    "House": _("House"),
+    "Maisonette": _("Maisonette"),
+    "Park home": _("Park home"),
+}
+
 # to be updated when we get full list of excluded suppliers
 converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
 unavailable_suppliers = []
@@ -835,6 +843,14 @@ class EpcView(PageView):
         epc_band = epc.get("current-energy-rating")
         epc_date = epc.get("lodgement-date")
 
+        epc_property_type = epc.get("property-type")
+
+        if epc_property_type in property_types:
+            property_type = property_types[epc_property_type]
+        else:
+            logger.error(f"Unrecognised Property Type: {epc_property_type}")
+            property_type = ""
+
         try:
             working_epc_date = datetime.strptime(epc_date, "%Y-%m-%d")
             month_name = month_names[working_epc_date.month - 1]
@@ -851,6 +867,7 @@ class EpcView(PageView):
             "epc_date": epc_date,
             "current_month": current_month,
             "next_month": next_month,
+            "property_type": property_type,
             "epc_display_options": schemas.epc_display_options_map,
             "address": address,
             "show_epc_update_details": show_epc_update_details,
