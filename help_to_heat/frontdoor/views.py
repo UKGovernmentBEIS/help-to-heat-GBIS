@@ -256,11 +256,11 @@ month_names = [
 ]
 
 property_types = {
-    "Flat": _("Flat"),
-    "Bungalow": _("Bungalow"),
-    "House": _("House"),
-    "Maisonette": _("Maisonette"),
-    "Park home": _("Park home"),
+    "FLAT": _("Flat"),
+    "BUNGALOW": _("Bungalow"),
+    "HOUSE": _("House"),
+    "MAISONETTE": _("Maisonette"),
+    "PARK HOME": _("Park home"),
 }
 
 # to be updated when we get full list of excluded suppliers
@@ -840,7 +840,7 @@ class EpcView(PageView):
         epc_band = epc.get("current-energy-rating")
         epc_date = epc.get("lodgement-date")
 
-        epc_property_type = epc.get("property-type")
+        epc_property_type = epc.get("property-type").upper()
 
         if epc_property_type in property_types:
             property_type = property_types[epc_property_type]
