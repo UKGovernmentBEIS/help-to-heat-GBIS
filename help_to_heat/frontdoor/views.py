@@ -843,13 +843,14 @@ class EpcView(PageView):
         epc_band = epc.get("current-energy-rating")
         epc_date = epc.get("lodgement-date")
 
-        epc_property_type = epc.get("property-type").upper()
+        epc_property_type = epc.get("property-type")
+        epc_property_type_upper = epc_property_type.upper()
 
-        if epc_property_type in property_types:
-            property_type = property_types[epc_property_type]
+        if epc_property_type_upper in property_types:
+            property_type = property_types[epc_property_type_upper]
         else:
             logger.error(f"Unrecognised Property Type: {epc_property_type}")
-            property_type = None
+            property_type = epc_property_type
 
         try:
             working_epc_date = datetime.strptime(epc_date, "%Y-%m-%d")
