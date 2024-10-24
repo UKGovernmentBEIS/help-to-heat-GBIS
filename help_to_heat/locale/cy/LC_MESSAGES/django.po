@@ -657,7 +657,7 @@ msgstr "Tachwedd"
 msgid "December"
 msgstr "Rhagfyr"
 
-#: help_to_heat/frontdoor/views.py:637 help_to_heat/frontdoor/views.py:712
+#: help_to_heat/frontdoor/views.py:637 help_to_heat/frontdoor/views.py:707
 msgid "I cannot find my address, I want to enter it manually"
 msgstr "Dwi'n methu gweld fy nghyfeiriad i. Hoffwn ei roi fy hunan."
 
@@ -962,37 +962,6 @@ msgstr "Heb ddod o hyd i unrhyw gyfeiriadau"
 #: help_to_heat/templates/frontdoor/epc-select.html:23
 msgid "Enter address manually"
 msgstr "Rhowch y cyfeiriad eich hunan"
-
-#: help_to_heat/templates/frontdoor/address-select.html:32
-#: help_to_heat/templates/frontdoor/epc.html:19
-msgid "What if I have had a new EPC issued recently?"
-msgstr ""
-"Beth os ydw i wedi cael Tystysgrif Perfformiad Ynni newydd yn ddiweddar?"
-
-#: help_to_heat/templates/frontdoor/address-select.html:36
-#: help_to_heat/templates/frontdoor/no-epc.html:22
-#, python-format
-msgid ""
-"If your property has had a new EPC issued since 1 %(current_month)s, we may "
-"not be able to find it in our database because it is only updated monthly. "
-"Please return to this service after 1 %(next_month)s when we expect the "
-"database to have been updated."
-msgstr ""
-"Os oes Tystysgrif Perfformiad Ynni newydd wedi cael ei chyhoeddi ar gyfer "
-"eich eiddo ers 1 %(current_month)s, efallai na fyddwn yn gallu dod o hyd "
-"iddi yn ein cronfa ddata gan mai dim ond yn fisol y caiff ei diweddaru. "
-"Dewch yn ôl at y gwasanaeth hwn ar ôl 1 %(next_month)s. Disgwyliwn y bydd y "
-"gronfa ddata wedi cael ei diweddaru erbyn hynny."
-
-#: help_to_heat/templates/frontdoor/address-select.html:38
-msgid ""
-"You can continue without your EPC having been found by this service, but the "
-"energy supplier you have selected may not be able to help if they do not "
-"have your new EPC."
-msgstr ""
-"Gallwch barhau heb i’r gwasanaeth hwn ddod o hyd i’ch Tystysgrif Perfformiad "
-"Ynni, ond efallai na fydd y cyflenwr ynni rydych chi wedi’i ddewis yn gallu "
-"helpu heb gael eich tystysgrif newydd."
 
 #: help_to_heat/templates/frontdoor/address.html:5
 msgid ""
@@ -1570,6 +1539,11 @@ msgstr ""
 "Fe allai'r dystysgrif yma fod wedi'i chofrestru ar gyfer eich eiddo chi neu "
 "un o'r eiddo cyfagos sy'n rhannu rhan o'ch cyfeiriad."
 
+#: help_to_heat/templates/frontdoor/epc.html:19
+msgid "What if I have had a new EPC issued recently?"
+msgstr ""
+"Beth os ydw i wedi cael Tystysgrif Perfformiad Ynni newydd yn ddiweddar?"
+
 #: help_to_heat/templates/frontdoor/epc.html:23
 #, python-format
 msgid ""
@@ -2092,6 +2066,20 @@ msgstr "bod EPC wedi’i rhoi i'ch eiddo yn y chwarter diwethaf"
 #: help_to_heat/templates/frontdoor/no-epc.html:19
 msgid "your property has not previously been issued an EPC"
 msgstr "nad oes EPC wedi’i rhoi i’ch eiddo o'r blaen"
+
+#: help_to_heat/templates/frontdoor/no-epc.html:22
+#, python-format
+msgid ""
+"If your property has had a new EPC issued since 1 %(current_month)s, we may "
+"not be able to find it in our database because it is only updated monthly. "
+"Please return to this service after 1 %(next_month)s when we expect the "
+"database to have been updated."
+msgstr ""
+"Os oes Tystysgrif Perfformiad Ynni newydd wedi cael ei chyhoeddi ar gyfer "
+"eich eiddo ers 1 %(current_month)s, efallai na fyddwn yn gallu dod o hyd "
+"iddi yn ein cronfa ddata gan mai dim ond yn fisol y caiff ei diweddaru. "
+"Dewch yn ôl at y gwasanaeth hwn ar ôl 1 %(next_month)s. Disgwyliwn y bydd y "
+"gronfa ddata wedi cael ei diweddaru erbyn hynny."
 
 #: help_to_heat/templates/frontdoor/no-epc.html:24
 #, python-format
@@ -3576,3 +3564,12 @@ msgstr "Darganfyddwch a allwch chi gael cymorth gan eich cyngor lleol drwy'r "
 #: help_to_heat/templates/macros.html:141
 msgid "Household Support Fund"
 msgstr "Gronfa Cymorth i Aelwydydd"
+
+#~ msgid ""
+#~ "You can continue without your EPC having been found by this service, but "
+#~ "the energy supplier you have selected may not be able to help if they do "
+#~ "not have your new EPC."
+#~ msgstr ""
+#~ "Gallwch barhau heb i’r gwasanaeth hwn ddod o hyd i’ch Tystysgrif "
+#~ "Perfformiad Ynni, ond efallai na fydd y cyflenwr ynni rydych chi wedi’i "
+#~ "ddewis yn gallu helpu heb gael eich tystysgrif newydd."

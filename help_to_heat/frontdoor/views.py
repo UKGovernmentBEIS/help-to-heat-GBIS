@@ -688,15 +688,10 @@ class EpcSelectView(PageView):
 @register_page(address_select_page)
 class AddressSelectView(PageView):
     def build_extra_context(self, request, session_id, page_name, data, is_change_page):
-        session_data = interface.api.session.get_session(session_id)
-        show_epc_update_details = session_data.get(country_field) in [country_field_wales, country_field_england]
-
         data = interface.api.session.get_answer(session_id, address_page)
         building_name_or_number = data[address_building_name_or_number_field]
         postcode = data[address_postcode_field]
         addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
-
-        current_month, next_month = utils.get_current_and_next_month_names(month_names)
 
         uprn_options = tuple(
             {
@@ -717,9 +712,6 @@ class AddressSelectView(PageView):
         return {
             "uprn_options": uprn_options,
             "manual_url": page_name_to_url(session_id, address_select_manual_page, is_change_page),
-            "current_month": current_month,
-            "next_month": next_month,
-            "show_epc_update_details": show_epc_update_details,
             "fallback_option": fallback_option,
         }
 
