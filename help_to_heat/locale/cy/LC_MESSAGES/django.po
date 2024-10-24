@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2024-10-28 11:35+0000\n"
+"POT-Creation-Date: 2024-10-31 09:36+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -65,6 +65,7 @@ msgid "Annual household income"
 msgstr "Incwm blynyddol yr aelwyd"
 
 #: help_to_heat/frontdoor/schemas.py:153 help_to_heat/frontdoor/schemas.py:154
+#: help_to_heat/templates/frontdoor/epc.html:49
 msgid "Property type"
 msgstr "Math o eiddo"
 
@@ -206,10 +207,12 @@ msgid "£31,000 or more a year"
 msgstr "£31,000 y flwyddyn neu ragor"
 
 #: help_to_heat/frontdoor/schemas.py:398 help_to_heat/frontdoor/schemas.py:437
+#: help_to_heat/frontdoor/views.py:261
 msgid "House"
 msgstr "Tŷ"
 
 #: help_to_heat/frontdoor/schemas.py:402 help_to_heat/frontdoor/schemas.py:438
+#: help_to_heat/frontdoor/views.py:260
 msgid "Bungalow"
 msgstr "Byngalo"
 
@@ -229,9 +232,9 @@ msgstr "fyngalo"
 msgid "apartment, flat or maisonette"
 msgstr "randy, fflat neu fflat ddeulawr"
 
-#: help_to_heat/frontdoor/schemas.py:440
+#: help_to_heat/frontdoor/schemas.py:440 help_to_heat/frontdoor/views.py:263
 msgid "Park home"
-msgstr ""
+msgstr "Cartref mewn parc"
 
 #: help_to_heat/frontdoor/schemas.py:443 help_to_heat/frontdoor/schemas.py:510
 #: help_to_heat/frontdoor/schemas.py:532
@@ -657,7 +660,15 @@ msgstr "Tachwedd"
 msgid "December"
 msgstr "Rhagfyr"
 
-#: help_to_heat/frontdoor/views.py:637 help_to_heat/frontdoor/views.py:707
+#: help_to_heat/frontdoor/views.py:259
+msgid "Flat"
+msgstr "Fflat"
+
+#: help_to_heat/frontdoor/views.py:262
+msgid "Maisonette"
+msgstr "Fflat deulawr"
+
+#: help_to_heat/frontdoor/views.py:645 help_to_heat/frontdoor/views.py:715
 msgid "I cannot find my address, I want to enter it manually"
 msgstr "Dwi'n methu gweld fy nghyfeiriad i. Hoffwn ei roi fy hunan."
 
@@ -1592,15 +1603,15 @@ msgstr "Tystysgrif"
 msgid "Registered address"
 msgstr "Cyfeiriad cofrestredig"
 
-#: help_to_heat/templates/frontdoor/epc.html:46
+#: help_to_heat/templates/frontdoor/epc.html:54
 msgid "EPC rating"
 msgstr "Cyfraddiad EPC "
 
-#: help_to_heat/templates/frontdoor/epc.html:53
+#: help_to_heat/templates/frontdoor/epc.html:61
 msgid "Date of issue"
 msgstr "Dyddiad Rhoi"
 
-#: help_to_heat/templates/frontdoor/epc.html:63
+#: help_to_heat/templates/frontdoor/epc.html:71
 msgid "Is this your EPC?"
 msgstr "Ai eich EPC chi yw hon?"
 

@@ -42,7 +42,15 @@
       {% for part in address.split(',') %}
         <p class="govuk-body govuk-!-margin-bottom-1">{{ part.strip() }}</p>
       {% endfor %}
-
+    
+      <br>
+    
+      {% if property_type %}
+        <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">{{_("Property type")}}</p>
+  
+        <p class="govuk-body">{{ property_type }}</p>
+      {% endif %}
+    
       <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">{{_("EPC rating")}}</p>
       
       {% if epc_rating %}
