@@ -846,7 +846,7 @@ class EpcView(PageView):
             property_type = property_types[epc_property_type]
         else:
             logger.error(f"Unrecognised Property Type: {epc_property_type}")
-            property_type = ""
+            property_type = None
 
         try:
             working_epc_date = datetime.strptime(epc_date, "%Y-%m-%d")
@@ -854,7 +854,7 @@ class EpcView(PageView):
             gds_epc_date = f"{working_epc_date.strftime('%-d')} {month_name} {working_epc_date.strftime('%Y')}"
         except ValueError as e:
             logger.error(e)
-            gds_epc_date = ""
+            gds_epc_date = None
 
         current_month, next_month = utils.get_current_and_next_month_names(month_names)
         current_quarter_month, next_quarter_month = utils.get_current_and_next_quarter_month_names(month_names)
