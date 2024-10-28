@@ -478,15 +478,19 @@ def add_extra_row_data(referral, exclude_pii=False):
             "address_line_3": epc_data.get("address3"),
         }
 
-    # get and concatenate recommendations
-    recommendations = row.get(recommendations_field) or []
+    recommendations = row.get(recommendations_field)
 
-    recommendations_string = ". ".join(
-        f"{recommendation.get('improvement-item')}: {recommendation.get('improvement-summary-text')}"
-        for recommendation in recommendations
-    )
+    if recommendations:
+        # if in england, get and concatenate recommendations
+        recommendations_string = ". ".join(
+            f"{recommendation.get('improvement-item')}: {recommendation.get('improvement-summary-text')}"
+            for recommendation in recommendations
+        )
 
-    row["improvements"] = recommendations_string
+        row["improvements"] = recommendations_string
+    else:
+        # else in scotland this is not a different endpoint in scotland so this is drawn from EPC
+        row["improvements"] = epc_data.get("improvements")
 
     return row
 
