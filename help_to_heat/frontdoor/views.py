@@ -7,6 +7,7 @@ from django.http import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from marshmallow import ValidationError
 
@@ -840,13 +841,20 @@ class EpcView(PageView):
         epc_band = epc.get("current-energy-rating")
         epc_date = epc.get("lodgement-date")
 
-        epc_property_type = epc.get("property-type").upper()
+        epc_property_type = epc.get("property-type")
 
-        if epc_property_type in property_types:
-            property_type = property_types[epc_property_type]
+        if epc_property_type.upper() in property_types:
+            property_type = property_types[epc_property_type.upper()]
         else:
             logger.error(f"Unrecognised Property Type: {epc_property_type}")
-            property_type = None
+
+            language = get_language()
+            if language == "en":
+                # if in english, display the property type anyway
+                property_type = epc_property_type
+            else:
+                # else if in welsh, display nothing as there's no translation
+                property_type = None
 
         try:
             working_epc_date = datetime.strptime(epc_date, "%Y-%m-%d")
