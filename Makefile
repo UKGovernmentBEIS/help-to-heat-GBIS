@@ -18,6 +18,10 @@ add-suppliers:
 check-python-code:
 	docker compose -f tests/docker-compose.yml build check-code-help-to-heat && docker compose -f tests/docker-compose.yml run --no-deps --rm check-code-help-to-heat
 
+.PHONY: check-python-code-ci
+check-python-code-ci:
+	docker compose -f tests/docker-compose.yml build check-code-help-to-heat && docker compose -f tests/docker-compose.yml run --no-deps --rm check-code-ci-help-to-heat
+
 .PHONY: check-migrations
 check-migrations:
 	docker compose build web

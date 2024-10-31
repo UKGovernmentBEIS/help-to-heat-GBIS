@@ -20,12 +20,17 @@ services:
       - "5432"
 
   check-code-help-to-heat:
-      build:
-        context: ../
-        dockerfile: ./docker/tests/Dockerfile
-      image: tests_help_to_heat
-      env_file:
-        - ../envs/tests
-      entrypoint: sh /check-code.sh
-      volumes:
-        - ../:/app/:z
+    build:
+      context: ../
+      dockerfile: ./docker/tests/Dockerfile
+    image: tests_help_to_heat
+    env_file:
+      - ../envs/tests
+    entrypoint: bash /check-code.sh
+    volumes:
+      - ../:/app/:z
+
+  check-code-ci-help-to-heat:
+    extends:
+      service: check-code-help-to-heat
+    entrypoint: bash /check-code.sh --check

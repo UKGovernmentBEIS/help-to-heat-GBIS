@@ -24,7 +24,7 @@ jobs:
 
       - name: Run Python Code Checks
         run: |
-          make check-python-code
+          make check-python-code-ci
 
       - uses: actions/checkout@v2
       - name: Slack Notification
