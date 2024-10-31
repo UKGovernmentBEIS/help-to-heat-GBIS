@@ -1,0 +1,30 @@
+{% extends "frontdoor/base.html" %}
+{% import "macros.html" as macros with context %}
+
+{% block title %}
+  <title>{{_("We could not find and Energy Performance Certificate for your property - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
+{% endblock %}
+
+{% block content %}
+  {% call macros.form_wrapper(prev_url) -%}
+    <h1 class="govuk-heading-l">{{_("We could not find an Energy Performance Certificate for your property")}}</h1>
+
+    <p class="govuk-body">{{_("This may be because:")}}</p>
+    <ul class="govuk-list govuk-list--bullet">
+      {% if show_month_wording %}
+        <li>{{ _("your property was issued an EPC within the last month") }}</li>
+      {% else %}
+        <li>{{ _("your property was issued an EPC within the last quarter") }}</li>
+      {% endif %}
+      <li>{{ _("your property has not previously been issued an EPC") }}</li>
+    </ul>
+    {% if show_month_wording %}
+      <p class="govuk-body">{{_("If your property has had a new EPC issued since 1 %(current_month)s, we may not be able to find it in our database because it is only updated monthly. Please return to this service after 1 %(next_month)s when we expect the database to have been updated.") % { "current_month": current_month, "next_month": next_month }}}</p>
+    {% else %}
+      <p class="govuk-body">{{_("If your property was issued an EPC since 1 %(current_quarter_month)s, we may not be able to find it in our database because it is updated quarterly. Please return to this service after 1 %(next_quarter_month)s when we expect the database to have been updated.") % { "current_quarter_month": current_quarter_month, "next_quarter_month": next_quarter_month }}}</p>
+    {% endif %}
+    <br>
+    <p class="govuk-body">{{_("You may continue using this service without an EPC.")}}</p>
+
+  {%- endcall %}
+{% endblock %}

@@ -91,6 +91,8 @@ from .consts import (
     loft_insulation_field_more_than_threshold,
     loft_insulation_page,
     loft_page,
+    no_epc_field,
+    no_epc_page,
     northern_ireland_ineligible_page,
     number_of_bedrooms_field,
     number_of_bedrooms_page,
@@ -686,15 +688,10 @@ class EpcSelectView(PageView):
 @register_page(address_select_page)
 class AddressSelectView(PageView):
     def build_extra_context(self, request, session_id, page_name, data, is_change_page):
-        session_data = interface.api.session.get_session(session_id)
-        show_epc_update_details = session_data.get(country_field) in [country_field_wales, country_field_england]
-
         data = interface.api.session.get_answer(session_id, address_page)
         building_name_or_number = data[address_building_name_or_number_field]
         postcode = data[address_postcode_field]
         addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
-
-        current_month, next_month = utils.get_current_and_next_month_names(month_names)
 
         uprn_options = tuple(
             {
@@ -715,9 +712,6 @@ class AddressSelectView(PageView):
         return {
             "uprn_options": uprn_options,
             "manual_url": page_name_to_url(session_id, address_select_manual_page, is_change_page),
-            "current_month": current_month,
-            "next_month": next_month,
-            "show_epc_update_details": show_epc_update_details,
             "fallback_option": fallback_option,
         }
 
@@ -863,6 +857,31 @@ class EpcView(PageView):
         data[epc_rating_is_eligible_field] = (
             field_no if (epc_rating in ("A", "B", "C")) and (accept_suggested_epc == field_yes) else field_yes
         )
+        return data
+
+
+@register_page(no_epc_page)
+class NoEpcView(PageView):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+        session_data = interface.api.session.get_session(session_id)
+
+        country = session_data.get(country_field)
+
+        current_month, next_month = utils.get_current_and_next_month_names(month_names)
+        current_quarter_month, next_quarter_month = utils.get_current_and_next_quarter_month_names(month_names)
+
+        show_month_wording = country in [country_field_england, country_field_wales]
+
+        return {
+            "current_month": current_month,
+            "next_month": next_month,
+            "current_quarter_month": current_quarter_month,
+            "next_quarter_month": next_quarter_month,
+            "show_month_wording": show_month_wording,
+        }
+
+    def save_post_data(self, data, session_id, page_name):
+        data[no_epc_field] = field_yes
         return data
 
 

@@ -46,6 +46,7 @@ from help_to_heat.frontdoor.consts import (
     loft_insulation_field_dont_know,
     loft_insulation_field_less_than_threshold,
     loft_insulation_field_more_than_threshold,
+    no_epc_field,
     number_of_bedrooms_field,
     number_of_bedrooms_field_one,
     number_of_bedrooms_field_studio,
@@ -378,6 +379,7 @@ def get_epc_answers(address_flow=None, duplicate_uprn=None, property_flow=None):
                 address_flow_write_address_epc_hit_select,
                 address_flow_write_address_scotland_select_epc,
             ]:
+                # if they would hit the epc page
                 yield {
                     **council_tax_band_answers,
                     epc_accept_suggested_epc_field: field_no,
@@ -394,7 +396,8 @@ def get_epc_answers(address_flow=None, duplicate_uprn=None, property_flow=None):
                     epc_rating_is_eligible_field: field_yes,
                 }
             else:
-                yield council_tax_band_answers
+                # else they would hit the no-epc page
+                yield {**council_tax_band_answers, no_epc_field: field_yes}
 
 
 def get_circumstances_answers(circumstances_flow=None, address_flow=None, duplicate_uprn=None, property_flow=None):

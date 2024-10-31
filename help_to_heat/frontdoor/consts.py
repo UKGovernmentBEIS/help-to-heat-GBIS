@@ -20,6 +20,7 @@ epc_select_manual_page = "epc-select-manual"
 address_select_manual_page = "address-select-manual"
 council_tax_band_page = "council-tax-band"
 epc_page = "epc"
+no_epc_page = "no-epc"
 epc_ineligible_page = "epc-ineligible"
 benefits_page = "benefits"
 household_income_page = "household-income"
@@ -58,6 +59,7 @@ all_pages = [
     address_select_manual_page,
     council_tax_band_page,
     epc_page,
+    no_epc_page,
     epc_ineligible_page,
     benefits_page,
     household_income_page,
@@ -204,6 +206,8 @@ epc_accept_suggested_epc_field_not_found = "Not found"
 epc_rating_field = "epc_rating"
 epc_rating_field_not_found = "Not found"
 epc_rating_is_eligible_field = "epc_rating_is_eligible"
+
+no_epc_field = "confirm_no_epc"
 
 benefits_field = "benefits"
 
