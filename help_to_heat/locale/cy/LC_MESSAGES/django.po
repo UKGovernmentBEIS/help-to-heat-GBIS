@@ -1544,7 +1544,7 @@ msgid "What if I have had a new EPC issued recently?"
 msgstr ""
 "Beth os ydw i wedi cael Tystysgrif Perfformiad Ynni newydd yn ddiweddar?"
 
-#: help_to_heat/templates/frontdoor/epc.html:23
+#: help_to_heat/templates/frontdoor/epc.html:24
 #, python-format
 msgid ""
 "If your property has had a new EPC issued since 1 %(current_month)s, we may "
@@ -1560,7 +1560,23 @@ msgstr ""
 "y gwasanaeth hwn ar ôl 1 %(next_month)s. Disgwyliwn y bydd y gronfa ddata "
 "wedi cael ei diweddaru erbyn hynny."
 
-#: help_to_heat/templates/frontdoor/epc.html:25
+#: help_to_heat/templates/frontdoor/epc.html:26
+#, python-format
+msgid ""
+"If your property has had a new EPC issued since 1 %(current_quarter_month)s, "
+"we may not be able to find it in our database because it is only updated "
+"quarterly. If you do not recognise the EPC below as your most recent one, "
+"please return to this service after 1 %(next_quarter_month)s when we expect "
+"the database to have been updated."
+msgstr ""
+"Os oes EPC newydd wedi'i rhoi i’ch eiddo chi ers 1 "
+"%(current_quarter_month)s, efallai na fyddwn yn gallu dod o hyd iddi yn ein "
+"cronfa ddata am mai dim ond bob chwarter y bydd honno’n cael ei diweddaru. "
+"Os nad ydych chi’n adnabod yr EPC isod fel eich un ddiweddaraf chi, dewch yn "
+"ôl i'r gwasanaeth yma ar ôl 1 %(next_quarter_month)s pan ydyn ni’n disgwyl y "
+"bydd y gronfa ddata wedi'i diweddaru."
+
+#: help_to_heat/templates/frontdoor/epc.html:29
 msgid ""
 "You can continue with your old EPC but the energy supplier you have selected "
 "may not be able to help based on an out-of-date EPC"
@@ -1568,23 +1584,23 @@ msgstr ""
 "Gallwch barhau â’ch hen Dystysgrif Perfformiad Ynni, ond efallai na fydd y "
 "cyflenwr ynni rydych chi wedi’i ddewis yn gallu helpu ar sail hen dystysgrif."
 
-#: help_to_heat/templates/frontdoor/epc.html:33
+#: help_to_heat/templates/frontdoor/epc.html:36
 msgid "Certificate"
 msgstr "Tystysgrif"
 
-#: help_to_heat/templates/frontdoor/epc.html:38
+#: help_to_heat/templates/frontdoor/epc.html:41
 msgid "Registered address"
 msgstr "Cyfeiriad cofrestredig"
 
-#: help_to_heat/templates/frontdoor/epc.html:43
+#: help_to_heat/templates/frontdoor/epc.html:46
 msgid "EPC rating"
 msgstr "Cyfraddiad EPC "
 
-#: help_to_heat/templates/frontdoor/epc.html:50
+#: help_to_heat/templates/frontdoor/epc.html:53
 msgid "Date of issue"
 msgstr "Dyddiad Rhoi"
 
-#: help_to_heat/templates/frontdoor/epc.html:60
+#: help_to_heat/templates/frontdoor/epc.html:63
 msgid "Is this your EPC?"
 msgstr "Ai eich EPC chi yw hon?"
 

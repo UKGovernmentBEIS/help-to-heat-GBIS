@@ -822,7 +822,10 @@ class EpcView(PageView):
         session_data = interface.api.session.get_session(session_id)
 
         address = session_data.get(address_field)
-        show_epc_update_details = session_data.get(country_field) in [country_field_wales, country_field_england]
+        show_monthly_epc_update_details = session_data.get(country_field) in [
+            country_field_wales,
+            country_field_england,
+        ]
 
         epc = session_data.get(epc_details_field)
 
@@ -838,6 +841,7 @@ class EpcView(PageView):
             gds_epc_date = ""
 
         current_month, next_month = utils.get_current_and_next_month_names(month_names)
+        current_quarter_month, next_quarter_month = utils.get_current_and_next_quarter_month_names(month_names)
 
         context = {
             "epc_rating": epc_band.upper() if epc_band else "",
@@ -845,9 +849,11 @@ class EpcView(PageView):
             "epc_date": epc_date,
             "current_month": current_month,
             "next_month": next_month,
+            "current_quarter_month": current_quarter_month,
+            "next_quarter_month": next_quarter_month,
             "epc_display_options": schemas.epc_display_options_map,
             "address": address,
-            "show_epc_update_details": show_epc_update_details,
+            "show_monthly_epc_update_details": show_monthly_epc_update_details,
         }
         return context
 
