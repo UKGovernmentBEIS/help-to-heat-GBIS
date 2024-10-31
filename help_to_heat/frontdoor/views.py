@@ -7,6 +7,7 @@ from django.http import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from marshmallow import ValidationError
 
@@ -254,6 +255,14 @@ month_names = [
     _("November"),
     _("December"),
 ]
+
+property_types = {
+    "FLAT": _("Flat"),
+    "BUNGALOW": _("Bungalow"),
+    "HOUSE": _("House"),
+    "MAISONETTE": _("Maisonette"),
+    "PARK HOME": _("Park home"),
+}
 
 # to be updated when we get full list of excluded suppliers
 converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
@@ -832,13 +841,28 @@ class EpcView(PageView):
         epc_band = epc.get("current-energy-rating")
         epc_date = epc.get("lodgement-date")
 
+        epc_property_type = epc.get("property-type")
+
+        if epc_property_type.upper() in property_types:
+            property_type = property_types[epc_property_type.upper()]
+        else:
+            logger.error(f"Unrecognised Property Type: {epc_property_type}")
+
+            language = get_language()
+            if language == "en":
+                # if in english, display the property type anyway
+                property_type = epc_property_type
+            else:
+                # else if in welsh, display nothing as there's no translation
+                property_type = None
+
         try:
             working_epc_date = datetime.strptime(epc_date, "%Y-%m-%d")
             month_name = month_names[working_epc_date.month - 1]
             gds_epc_date = f"{working_epc_date.strftime('%-d')} {month_name} {working_epc_date.strftime('%Y')}"
         except ValueError as e:
             logger.error(e)
-            gds_epc_date = ""
+            gds_epc_date = None
 
         current_month, next_month = utils.get_current_and_next_month_names(month_names)
         current_quarter_month, next_quarter_month = utils.get_current_and_next_quarter_month_names(month_names)
@@ -851,6 +875,7 @@ class EpcView(PageView):
             "next_month": next_month,
             "current_quarter_month": current_quarter_month,
             "next_quarter_month": next_quarter_month,
+            "property_type": property_type,
             "epc_display_options": schemas.epc_display_options_map,
             "address": address,
             "show_monthly_epc_update_details": show_monthly_epc_update_details,
