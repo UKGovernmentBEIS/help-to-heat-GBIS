@@ -867,6 +867,9 @@ class EpcView(PageView):
         current_month, next_month = utils.get_current_and_next_month_names(month_names)
         current_quarter_month, next_quarter_month = utils.get_current_and_next_quarter_month_names(month_names)
 
+
+
+
         context = {
             "epc_rating": epc_band.upper() if epc_band else "",
             "gds_epc_date": gds_epc_date,
