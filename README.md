@@ -24,7 +24,7 @@ Migrations are run automatically at startup, and suppliers are added automatical
 
 ## Checking code
 
-    make check-python-code
+    make format-python-code
 
 ## Deployment
 
