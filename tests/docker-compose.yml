@@ -19,13 +19,22 @@ services:
     expose:
       - "5432"
 
+  inspect-code-help-to-heat:
+    build:
+      context: ../
+      dockerfile: ./docker/tests/Dockerfile
+    image: tests_help_to_heat
+    env_file:
+      - ../envs/tests
+    volumes:
+      - ../:/app/:z
+
+  format-code-help-to-heat:
+    extends:
+      service: inspect-code-help-to-heat
+    entrypoint: bash /check-code.sh --format
+
   check-code-help-to-heat:
-      build:
-        context: ../
-        dockerfile: ./docker/tests/Dockerfile
-      image: tests_help_to_heat
-      env_file:
-        - ../envs/tests
-      entrypoint: sh /check-code.sh
-      volumes:
-        - ../:/app/:z
+    extends:
+      service: inspect-code-help-to-heat
+    entrypoint: bash /check-code.sh

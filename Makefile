@@ -14,6 +14,10 @@ add-suppliers:
 
 # -------------------------------------- Code Style  -------------------------------------
 
+.PHONY: format-python-code
+format-python-code:
+	docker compose -f tests/docker-compose.yml build format-code-help-to-heat && docker compose -f tests/docker-compose.yml run --no-deps --rm format-code-help-to-heat
+
 .PHONY: check-python-code
 check-python-code:
 	docker compose -f tests/docker-compose.yml build check-code-help-to-heat && docker compose -f tests/docker-compose.yml run --no-deps --rm check-code-help-to-heat
