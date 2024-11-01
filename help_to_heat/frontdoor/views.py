@@ -749,8 +749,7 @@ class AddressSelectView(PageView):
         if country == country_field_scotland and uprn is not None:
             epc = interface.api.epc.get_epc_scotland(uprn)
             if epc != {}:
-                epc_details = {"current-energy-rating": epc.get("rating"), "lodgement-date": epc.get("date")}
-                data[epc_details_field] = epc_details
+                data[epc_details_field] = epc
                 data[epc_found_field] = field_yes
 
         return data
