@@ -843,7 +843,9 @@ class EpcView(PageView):
 
         epc_property_type = epc.get("property-type")
 
-        if epc_property_type.upper() in property_types:
+        if epc_property_type is None:
+            property_type = None
+        elif epc_property_type.upper() in property_types:
             property_type = property_types[epc_property_type.upper()]
         else:
             logger.error(f"Unrecognised Property Type: {epc_property_type}")
