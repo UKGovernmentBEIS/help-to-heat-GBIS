@@ -525,14 +525,74 @@ class Address(Entity):
 
 
 class EPC(Entity):
-    @with_schema(load=GetScottishEPCSchema, dump=EPCSchema)
+    @with_schema(load=GetScottishEPCSchema)
     def get_epc_scotland(self, uprn):
         try:
             epc = portal.models.ScottishEpcRating.objects.get(uprn=uprn)
         except portal.models.ScottishEpcRating.DoesNotExist:
             return {}
 
-        return {"uprn": epc.uprn, "rating": epc.rating, "date": epc.date}
+        improvements = epc.improvements
+        alternative_improvements = epc.alternative_improvements
+        all_improvements = improvements + (
+            "|| Alternatives: " + alternative_improvements if alternative_improvements else ""
+        )
+
+        return {
+            # follows column names in help_to_heat/frontdoor/mock_epc_api_data/sample_epc_response.json
+            "uprn": epc.uprn,
+            "current-energy-rating": epc.rating,
+            "lodgement-date": epc.date,
+            "property-type": epc.property_type,
+            "address1": epc.address1,
+            "address2": epc.address2,
+            "address3": epc.address3,
+            "postcode": epc.postcode,
+            "building-reference-number": epc.building_reference_number,
+            "potential-energy-rating": epc.potential_rating,
+            "current-energy-efficiency": epc.current_energy_efficiency_rating,
+            "potential-energy-efficiency": epc.potential_energy_efficiency_rating,
+            "built-form": epc.built_form,
+            "inspection-date": epc.inspection_date,
+            "local-authority-label": epc.local_authority,
+            "constituency-label": epc.constituency,
+            "energy-consumption-current": epc.energy_consumption,
+            "energy-consumption-potential": epc.potential_energy_consumption,
+            "co2-emissions-current": epc.co2_emissions,
+            "co2-emiss-curr-per-floor-area": epc.co2_emissions_per_floor_area,
+            "co2-emissions-potential": epc.co2_emissions_potential,
+            "total-floor-area": epc.floor_area,
+            "floor-level": epc.floor_level,
+            "floor-height": epc.floor_height,
+            "energy-tariff": epc.energy_tariff,
+            "mains-gas-flag": epc.mains_gas,
+            "multi-glaze-proportion": epc.multiple_glazed_proportion,
+            "extension-count": epc.extension_count,
+            "number-habitable-rooms": epc.habitable_room_count,
+            "number-heated-rooms": epc.heated_room_count,
+            "floor-description": epc.floor_description,
+            "floor-energy-eff": epc.floor_energy_efficiency,
+            "windows-description": epc.windows_description,
+            "walls-description": epc.wall_description,
+            "walls-energy-eff": epc.wall_energy_efficiency,
+            "walls-env-eff": epc.wall_environmental_efficiency,
+            "mainheat-description": epc.main_heating_description,
+            "mainheat-energy-eff": epc.main_heating_energy_efficiency,
+            "mainheat-env-eff": epc.main_heating_environmental_efficiency,
+            "main-fuel": epc.main_heating_fuel_type,
+            "secondheat-description": epc.second_heating_description,
+            "sheating-energy-eff": epc.second_heating_energy_efficiency,
+            "roof-description": epc.roof_description,
+            "roof-energy-eff": epc.roof_energy_efficiency,
+            "roof-env-eff": epc.roof_environmental_efficiency,
+            "lighting-description": epc.lighting_description,
+            "lighting-energy-eff": epc.lighting_energy_efficiency,
+            "lighting-env-eff": epc.lighting_environmental_efficiency,
+            "mechanical-ventilation": epc.mechanical_ventilation,
+            "construction-age-band": epc.construction_age_band,
+            "tenure": epc.tenure,
+            "improvements": all_improvements,
+        }
 
     def get_address_and_epc_lmk(self, building_name_or_number, postcode):
         epc_api = EPCApi()

@@ -59,6 +59,7 @@ from help_to_heat.frontdoor.consts import (
     loft_insulation_field_more_than_threshold,
     loft_insulation_page,
     loft_page,
+    no_epc_page,
     northern_ireland_ineligible_page,
     number_of_bedrooms_field,
     number_of_bedrooms_field_one,
@@ -328,7 +329,7 @@ def test_epc_select_social_housing_next_page(choice, duplicate_uprn, expected_ne
 @pytest.mark.parametrize(
     "choice, duplicate_uprn, epc_found, expected_next_page",
     [
-        (address_select_choice_field_select_address, field_no, field_no, benefits_page),
+        (address_select_choice_field_select_address, field_no, field_no, no_epc_page),
         (address_select_choice_field_select_address, field_no, field_yes, epc_page),
         (address_select_choice_field_select_address, field_yes, field_no, referral_already_submitted_page),
         (address_select_choice_field_select_address, field_yes, field_yes, referral_already_submitted_page),
@@ -378,7 +379,7 @@ def test_address_select_not_park_home_next_page(choice, duplicate_uprn, epc_foun
 @pytest.mark.parametrize(
     "choice, duplicate_uprn, epc_found, expected_next_page",
     [
-        (address_select_choice_field_select_address, field_no, field_no, property_type_page),
+        (address_select_choice_field_select_address, field_no, field_no, no_epc_page),
         (address_select_choice_field_select_address, field_no, field_yes, epc_page),
         (address_select_choice_field_select_address, field_yes, field_no, referral_already_submitted_page),
         (address_select_choice_field_select_address, field_yes, field_yes, referral_already_submitted_page),
@@ -409,7 +410,12 @@ def test_address_select_social_housing_next_page(choice, duplicate_uprn, epc_fou
 )
 def test_address_manual_next_page(flow, expected_next_page):
     for flow_answers in get_property_flow_answers(flow):
-        answers = {**flow_answers, epc_found_field: field_no, duplicate_uprn_field: field_no}
+        answers = {
+            **flow_answers,
+            epc_found_field: field_no,
+            duplicate_uprn_field: field_no,
+            address_choice_field: address_choice_field_enter_manually,
+        }
         assert get_next_page(address_manual_page, answers) == expected_next_page
 
 
@@ -423,7 +429,12 @@ def test_address_manual_next_page(flow, expected_next_page):
 )
 def test_epc_select_manual_next_page(flow, expected_next_page):
     for flow_answers in get_property_flow_answers(flow):
-        answers = {**flow_answers, epc_found_field: field_no, duplicate_uprn_field: field_no}
+        answers = {
+            **flow_answers,
+            epc_found_field: field_no,
+            duplicate_uprn_field: field_no,
+            epc_select_choice_field: epc_select_choice_field_enter_manually,
+        }
         assert get_next_page(epc_select_manual_page, answers) == expected_next_page
 
 
@@ -437,18 +448,23 @@ def test_epc_select_manual_next_page(flow, expected_next_page):
 )
 def test_address_select_manual_next_page(flow, expected_next_page):
     for flow_answers in get_property_flow_answers(flow):
-        answers = {**flow_answers, epc_found_field: field_no, duplicate_uprn_field: field_no}
+        answers = {
+            **flow_answers,
+            epc_found_field: field_no,
+            duplicate_uprn_field: field_no,
+            address_select_choice_field: address_select_choice_field_enter_manually,
+        }
         assert get_next_page(address_select_manual_page, answers) == expected_next_page
 
 
 @pytest.mark.parametrize(
     "flow, epc_found, expected_next_page",
     [
-        (property_flow_park_home, field_no, benefits_page),
+        (property_flow_park_home, field_no, no_epc_page),
         (property_flow_park_home, field_yes, epc_page),
         (property_flow_main, field_no, council_tax_band_page),
         (property_flow_main, field_yes, council_tax_band_page),
-        (property_flow_social_housing, field_no, property_type_page),
+        (property_flow_social_housing, field_no, no_epc_page),
         (property_flow_social_housing, field_yes, epc_page),
     ],
 )
@@ -461,7 +477,7 @@ def test_referral_already_submitted_next_page(flow, epc_found, expected_next_pag
 @pytest.mark.parametrize(
     "epc_found, expected_next_page",
     [
-        (field_no, benefits_page),
+        (field_no, no_epc_page),
         (field_yes, epc_page),
     ],
 )

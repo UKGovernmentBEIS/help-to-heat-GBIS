@@ -443,7 +443,15 @@ def test_benefits_back_button_with_park_home_and_no_epc_should_return_to_address
     assert data["uprn"] == "100023336956"
     assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
 
+    assert page.has_one("h1:contains('We could not find an Energy Performance Certificate for your property')")
+    form = page.get_form()
+    page = form.submit().follow()
+
     assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
+
+    page = page.click(contains="Back")
+
+    assert page.has_one("h1:contains('We could not find an Energy Performance Certificate for your property')")
 
     page = page.click(contains="Back")
 
@@ -497,7 +505,15 @@ def test_benefits_back_button_with_park_home_and_scotland_should_return_to_addre
     assert data["uprn"] == "100023336956"
     assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
 
+    assert page.has_one("h1:contains('We could not find an Energy Performance Certificate for your property')")
+    form = page.get_form()
+    page = form.submit().follow()
+
     assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
+
+    page = page.click(contains="Back")
+
+    assert page.has_one("h1:contains('We could not find an Energy Performance Certificate for your property')")
 
     page = page.click(contains="Back")
 
@@ -546,7 +562,15 @@ def test_property_type_back_button_with_social_housing_and_no_epc_should_return_
     assert data["uprn"] == "100023336956"
     assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
 
+    assert page.has_one("h1:contains('We could not find an Energy Performance Certificate for your property')")
+    form = page.get_form()
+    page = form.submit().follow()
+
     assert page.has_one("h1:contains('What kind of property do you have?')")
+
+    page = page.click(contains="Back")
+
+    assert page.has_one("h1:contains('We could not find an Energy Performance Certificate for your property')")
 
     page = page.click(contains="Back")
 
@@ -594,7 +618,15 @@ def test_property_type_back_button_with_social_housing_and_scotland_should_retur
     assert data["uprn"] == "100023336956"
     assert data["address"] == "10, DOWNING STREET, LONDON, CITY OF WESTMINSTER, SW1A 2AA"
 
+    assert page.has_one("h1:contains('We could not find an Energy Performance Certificate for your property')")
+    form = page.get_form()
+    page = form.submit().follow()
+
     assert page.has_one("h1:contains('What kind of property do you have?')")
+
+    page = page.click(contains="Back")
+
+    assert page.has_one("h1:contains('We could not find an Energy Performance Certificate for your property')")
 
     page = page.click(contains="Back")
 
@@ -812,6 +844,10 @@ def test_epc_lookup_failure():
 
     assert page.has_one("h1:contains('What is the council tax band of your property?')")
     page = _check_page(page, "council-tax-band", "council_tax_band", "B")
+
+    assert page.has_one("h1:contains('We could not find an Energy Performance Certificate for your property')")
+    form = page.get_form()
+    page = form.submit().follow()
 
     assert page.has_one("h1:contains('Is anyone in your household receiving any of the following benefits?')")
     page = _check_page(page, "benefits", "benefits", "Yes")
@@ -2008,6 +2044,65 @@ def test_on_epc_select_page_manual_link_is_shown_if_no_addresses_found():
     page = page.click(contains="Enter address manually")
 
     assert page.has_one('h1:contains("What is the property\'s address?")')
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_epc_page_shows_epc_info():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Utilita"
+    page = form.submit().follow()
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    assert page.has_text("Do you live in a park home")
+    page = _check_page(page, "park-home", "park_home", "No")
+
+    form = page.get_form()
+    form["building_name_or_number"] = "22"
+    form["postcode"] = "FL23 4JA"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["lmk"] = "222222222222222222222222222222222"
+    page = form.submit().follow()
+
+    data = interface.api.session.get_answer(session_id, page_name="epc-select")
+    assert data["lmk"] == "222222222222222222222222222222222"
+    assert data["address"] == "22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA"
+
+    assert page.has_one("h1:contains('What is the council tax band of your property?')")
+    page = _check_page(page, "council-tax-band", "council_tax_band", "B")
+
+    assert page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
+    assert page.has_one("p:contains('Registered address')")
+    assert page.has_one("p:contains('22 Acacia Avenue')")
+    assert page.has_one("p:contains('Upper Wellgood')")
+    assert page.has_one("p:contains('Fulchester')")
+    assert page.has_one("p:contains('FL23 4JA')")
+
+    assert page.has_one("p:contains('Property type')")
+    assert page.has_one("p:contains('Maisonette')")
+
+    assert page.has_one("p:contains('EPC rating')")
+    assert page.has_one("p:contains('G')")
+
+    assert page.has_one("p:contains('Date of issue')")
+    assert page.has_one("p:contains('23 July 2010')")
 
 
 def _setup_client_and_page():
