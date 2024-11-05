@@ -7,6 +7,7 @@ from django.http import Http404
 from django.shortcuts import redirect, render
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.translation import get_language
 from django.utils.translation import gettext_lazy as _
 from marshmallow import ValidationError
 
@@ -91,6 +92,8 @@ from .consts import (
     loft_insulation_field_more_than_threshold,
     loft_insulation_page,
     loft_page,
+    no_epc_field,
+    no_epc_page,
     northern_ireland_ineligible_page,
     number_of_bedrooms_field,
     number_of_bedrooms_page,
@@ -252,6 +255,14 @@ month_names = [
     _("November"),
     _("December"),
 ]
+
+property_types = {
+    "FLAT": _("Flat"),
+    "BUNGALOW": _("Bungalow"),
+    "HOUSE": _("House"),
+    "MAISONETTE": _("Maisonette"),
+    "PARK HOME": _("Park home"),
+}
 
 # to be updated when we get full list of excluded suppliers
 converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
@@ -686,15 +697,10 @@ class EpcSelectView(PageView):
 @register_page(address_select_page)
 class AddressSelectView(PageView):
     def build_extra_context(self, request, session_id, page_name, data, is_change_page):
-        session_data = interface.api.session.get_session(session_id)
-        show_epc_update_details = session_data.get(country_field) in [country_field_wales, country_field_england]
-
         data = interface.api.session.get_answer(session_id, address_page)
         building_name_or_number = data[address_building_name_or_number_field]
         postcode = data[address_postcode_field]
         addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
-
-        current_month, next_month = utils.get_current_and_next_month_names(month_names)
 
         uprn_options = tuple(
             {
@@ -715,9 +721,6 @@ class AddressSelectView(PageView):
         return {
             "uprn_options": uprn_options,
             "manual_url": page_name_to_url(session_id, address_select_manual_page, is_change_page),
-            "current_month": current_month,
-            "next_month": next_month,
-            "show_epc_update_details": show_epc_update_details,
             "fallback_option": fallback_option,
         }
 
@@ -746,8 +749,7 @@ class AddressSelectView(PageView):
         if country == country_field_scotland and uprn is not None:
             epc = interface.api.epc.get_epc_scotland(uprn)
             if epc != {}:
-                epc_details = {"current-energy-rating": epc.get("rating"), "lodgement-date": epc.get("date")}
-                data[epc_details_field] = epc_details
+                data[epc_details_field] = epc
                 data[epc_found_field] = field_yes
 
         return data
@@ -828,12 +830,32 @@ class EpcView(PageView):
         session_data = interface.api.session.get_session(session_id)
 
         address = session_data.get(address_field)
-        show_epc_update_details = session_data.get(country_field) in [country_field_wales, country_field_england]
+        show_monthly_epc_update_details = session_data.get(country_field) in [
+            country_field_wales,
+            country_field_england,
+        ]
 
         epc = session_data.get(epc_details_field)
 
         epc_band = epc.get("current-energy-rating")
         epc_date = epc.get("lodgement-date")
+
+        epc_property_type = epc.get("property-type")
+
+        if epc_property_type is None:
+            property_type = None
+        elif epc_property_type.upper() in property_types:
+            property_type = property_types[epc_property_type.upper()]
+        else:
+            logger.error(f"Unrecognised Property Type: {epc_property_type}")
+
+            language = get_language()
+            if language == "en":
+                # if in english, display the property type anyway
+                property_type = epc_property_type
+            else:
+                # else if in welsh, display nothing as there's no translation
+                property_type = None
 
         try:
             working_epc_date = datetime.strptime(epc_date, "%Y-%m-%d")
@@ -841,9 +863,10 @@ class EpcView(PageView):
             gds_epc_date = f"{working_epc_date.strftime('%-d')} {month_name} {working_epc_date.strftime('%Y')}"
         except ValueError as e:
             logger.error(e)
-            gds_epc_date = ""
+            gds_epc_date = None
 
         current_month, next_month = utils.get_current_and_next_month_names(month_names)
+        current_quarter_month, next_quarter_month = utils.get_current_and_next_quarter_month_names(month_names)
 
         context = {
             "epc_rating": epc_band.upper() if epc_band else "",
@@ -851,9 +874,12 @@ class EpcView(PageView):
             "epc_date": epc_date,
             "current_month": current_month,
             "next_month": next_month,
+            "current_quarter_month": current_quarter_month,
+            "next_quarter_month": next_quarter_month,
+            "property_type": property_type,
             "epc_display_options": schemas.epc_display_options_map,
             "address": address,
-            "show_epc_update_details": show_epc_update_details,
+            "show_monthly_epc_update_details": show_monthly_epc_update_details,
         }
         return context
 
@@ -863,6 +889,31 @@ class EpcView(PageView):
         data[epc_rating_is_eligible_field] = (
             field_no if (epc_rating in ("A", "B", "C")) and (accept_suggested_epc == field_yes) else field_yes
         )
+        return data
+
+
+@register_page(no_epc_page)
+class NoEpcView(PageView):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+        session_data = interface.api.session.get_session(session_id)
+
+        country = session_data.get(country_field)
+
+        current_month, next_month = utils.get_current_and_next_month_names(month_names)
+        current_quarter_month, next_quarter_month = utils.get_current_and_next_quarter_month_names(month_names)
+
+        show_month_wording = country in [country_field_england, country_field_wales]
+
+        return {
+            "current_month": current_month,
+            "next_month": next_month,
+            "current_quarter_month": current_quarter_month,
+            "next_quarter_month": next_quarter_month,
+            "show_month_wording": show_month_wording,
+        }
+
+    def save_post_data(self, data, session_id, page_name):
+        data[no_epc_field] = field_yes
         return data
 
 

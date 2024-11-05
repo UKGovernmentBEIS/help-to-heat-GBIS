@@ -12,7 +12,7 @@
   <h1 class="govuk-heading-l">{{_("We found an Energy Performance Certificate that might be yours")}}</h1>
 
   <p class="govuk-body">{{_("This certificate may be registered to your property or one of the properties nearby that shares part of your address.")}}</p>
-  {%  if show_epc_update_details %}
+
   <details class="govuk-details">
     <summary class="govuk-details__summary">
       <span class="govuk-details__summary-text">
@@ -20,12 +20,15 @@
       </span>
     </summary>
     <div class="govuk-details__text">
-      {{_("If your property has had a new EPC issued since 1 %(current_month)s, we may not be able to find it in our database because it is only updated monthly. If you do not recognise the EPC below as your most recent one, please return to this service after 1 %(next_month)s when we expect the database to have been updated.") % { "current_month": current_month, "next_month": next_month }}}
+      {% if show_monthly_epc_update_details %}
+        {{_("If your property has had a new EPC issued since 1 %(current_month)s, we may not be able to find it in our database because it is only updated monthly. If you do not recognise the EPC below as your most recent one, please return to this service after 1 %(next_month)s when we expect the database to have been updated.") % { "current_month": current_month, "next_month": next_month }}}
+      {% else %}
+        {{_("If your property has had a new EPC issued since 1 %(current_quarter_month)s, we may not be able to find it in our database because it is only updated quarterly. If you do not recognise the EPC below as your most recent one, please return to this service after 1 %(next_quarter_month)s when we expect the database to have been updated.") % { "current_quarter_month": current_quarter_month, "next_quarter_month": next_quarter_month }}}
+      {% endif %}
       <br>
       {{_("You can continue with your old EPC but the energy supplier you have selected may not be able to help based on an out-of-date EPC")}}
     </div>
   </details>
-  {% endif %}
   <div class="govuk-notification-banner" role="region" aria-labelledby="govuk-notification-banner-title"
     data-module="govuk-notification-banner">
     <div class="govuk-notification-banner__header">
@@ -39,7 +42,15 @@
       {% for part in address.split(',') %}
         <p class="govuk-body govuk-!-margin-bottom-1">{{ part.strip() }}</p>
       {% endfor %}
-
+    
+      <br>
+    
+      {% if property_type %}
+        <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">{{_("Property type")}}</p>
+  
+        <p class="govuk-body">{{ property_type }}</p>
+      {% endif %}
+    
       <p class="govuk-body govuk-!-font-weight-bold govuk-!-margin-bottom-1">{{_("EPC rating")}}</p>
       
       {% if epc_rating %}

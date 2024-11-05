@@ -27,15 +27,11 @@ class MockEPCApi:
         return load_test_reponse("sample_epc_recommendations_response.json")
 
 
-class MockEPCApiWithEPCC:
-    def search_epc_details(self, building, postcode):
-        return load_test_reponse("sample_search_response.json")
-
+class MockEPCApiWithEPCC(MockEPCApi):
     def get_epc_details(self, rrn):
-        return load_test_reponse("sample_epc_response_with_epc_c.json")
-
-    def get_epc_recommendations(self, lmk_key):
-        return load_test_reponse("sample_epc_recommendations_response.json")
+        epc = load_test_reponse("sample_epc_response.json")
+        epc["rows"][0]["current-energy-rating"] = "C"
+        return epc
 
 
 class MockUnauthorizedEPCApi(MockEPCApi):
