@@ -146,6 +146,7 @@ from .eligibility import calculate_eligibility, eco4
 from .routing import CouldNotCalculateJourneyException, calculate_journey
 from .routing.backwards_routing import get_prev_page
 from .routing.forwards_routing import get_next_page
+from .schemas import no_back_button_on_page
 from .session_handlers.duplicate_referral_checker import (
     DuplicateReferralChecker,
 )
@@ -556,7 +557,15 @@ class PageView(utils.MethodDispatcher):
                     )
 
         if page_name in schemas.routing_overrides:
-            return page_name_to_url(session_id, schemas.routing_overrides[page_name]["prev_page"])
+            prev_page = schemas.routing_overrides[page_name]["prev_page"]
+
+            # the page is assumed to not have a back button so this should not be shown to the user
+            # in case it ever does, provide a fallback so the user does not get into an invalid state
+            # in this case, leave them on the page they are currently on
+            if prev_page == no_back_button_on_page:
+                return page_name_to_url(session_id, page_name)
+
+            return page_name_to_url(session_id, prev_page)
 
         return page_name_to_url(session_id, get_prev_page(page_name, answers))
 

@@ -105,6 +105,7 @@ from help_to_heat.frontdoor.consts import (
     schemes_page,
     shell_warning_page,
     shell_warning_page_field,
+    success_page,
     summary_page,
     supplier_field,
     supplier_field_british_gas,
@@ -201,10 +202,16 @@ page_display_questions = {
 # which pages should ignore routing checks
 # the code will not check if the user's route allows them to see these pages
 # a prev page url should be provided to allow the back link to work
+# or, if the page does not allow the user to go back, it may not be needed to calculate previous page
+# this means the page can be seen without any routing checks being run
+# if this is desired, set prev_page to the below constant
+no_back_button_on_page = "no-back-button-on-page"
+
 routing_overrides = {
     address_manual_page: {"prev_page": address_page},
     epc_select_manual_page: {"prev_page": epc_select_page},
     address_select_manual_page: {"prev_page": address_select_page},
+    success_page: {"prev_page": no_back_button_on_page},
 }
 
 # which change page to send back to
