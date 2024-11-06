@@ -622,10 +622,16 @@ class AddressView(PageView):
         building_name_or_number = data.get(address_building_name_or_number_field)
         postcode = data.get(address_postcode_field)
         try:
-            data[address_choice_field] = address_choice_field_write_address
             if country != country_field_scotland:
                 address_and_lmk_details = interface.api.epc.get_address_and_epc_lmk(building_name_or_number, postcode)
-                data[address_all_address_and_lmk_details_field] = address_and_lmk_details
+
+                if len(address_and_lmk_details) > 0:
+                    data[address_all_address_and_lmk_details_field] = address_and_lmk_details
+                    data[address_choice_field] = address_choice_field_write_address
+                else:
+                    data[address_choice_field] = address_choice_field_epc_api_fail
+            else:
+                data[address_choice_field] = address_choice_field_write_address
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
             data[address_choice_field] = address_choice_field_epc_api_fail
