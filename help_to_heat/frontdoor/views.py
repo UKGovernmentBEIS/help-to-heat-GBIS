@@ -485,6 +485,9 @@ class PageView(utils.MethodDispatcher):
         Build any additional data to be added to the context.
 
         This will be available to use in the template html file.
+
+        data will be the user submitted data for this page.
+        if you need access to other page's answers, call interface.api.session.get_session(session_id)
         """
         return {}
 
@@ -496,7 +499,8 @@ class PageView(utils.MethodDispatcher):
 
         For instance, saving tracking data when a user loads the page
 
-        data will be the user submitted data for this page
+        data will be the user submitted data for this page.
+        if you need access to other page's answers, call interface.api.session.get_session(session_id)
         """
         return data
 
@@ -506,7 +510,8 @@ class PageView(utils.MethodDispatcher):
 
         For instance, checking and storing whether the UPRN is duplicate
 
-        data will be the user submitted data for this page
+        data will be the user submitted data for this page.
+        if you need access to other page's answers, call interface.api.session.get_session(session_id)
 
         The returned data object will be used to decide which page to send to
         """
@@ -603,7 +608,8 @@ class AddressView(PageView):
 
     def save_post_data(self, data, session_id, page_name):
         reset_epc_details(session_id)
-        country = data.get(country_field)
+        session_data = interface.api.session.get_session(session_id)
+        country = session_data.get(country_field)
         building_name_or_number = data.get(address_building_name_or_number_field)
         postcode = data.get(address_postcode_field)
         try:
