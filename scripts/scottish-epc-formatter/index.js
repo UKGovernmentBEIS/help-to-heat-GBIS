@@ -1,20 +1,14 @@
 const csv = require('csv');
 const { program } = require('commander');
-const { readFileSync, writeFileSync, fstat } = require('fs');
+const { readFileSync, writeFileSync, readdirSync, appendFileSync } = require('fs');
 
-program.option('--infile <string>', 'infile', 'input.csv');
-program.option('--outfile <string>', 'outfile', undefined);
+program.option('--outfile <string>', 'outfile', "out.csv");
 
 program.parse();
 
 const options = program.opts();
 
-const inFile = options.infile;
-const outFile = options.outfile ?? options.infile;
-
-const content = readFileSync(inFile);
-
-const records = csv.parse(content, {columns: true, bom: true});
+const outFile = options.outfile;
 
 const mapping = new Map();
 mapping.set("OSG_REFERENCE_NUMBER", "uprn");
@@ -71,34 +65,53 @@ mapping.set("TENURE", "tenure");
 mapping.set("IMPROVEMENTS", "improvements");
 mapping.set("ALTERNATIVE_IMPROVEMENTS", "alternative_improvements");
 
-const outLines = [
-    [...mapping.values()].join(",")
-];
+const headers = [...mapping.values()].join(",");
+console.log(`write headers to ${outFile}`);
+writeFileSync(outFile, headers);
 
-console.log(`start ${inFile} to ${outFile}`);
+(async () => {
+    const files = readdirSync("./epc");
 
-records.toArray().then(arr => {
-    var i = 0;
-    for (const epc of arr) {
-        i++;
-        if (i === 1) continue; // first line of the file is additional headers? ignore this
+    for (const file of files) {
+        const content = readFileSync(`./epc/${file}`);
 
-        const output_fields = [...mapping.keys()]
-            .map(key => {
-                if (epc[key] === undefined) {
-                    console.log(key);
-                    console.log(epc);
-                    
-                    throw new Error("undefined in data!");
-                }
+        console.log(`begin append ${file} to ${outFile}`);
+        appendFileSync(outFile, "\n");
+        const csvData = csv.parse(content, {columns: true, bom: true});
 
-                return `"${epc[key]}"`;
-            })
-
-        outLines.push(output_fields.join(","));
+        const records = await csvData.toArray();
+    
+        const outLines = [];
+        var i = 0;
+        for (const epc of records) {
+            i++;
+            if (i === 1) continue; // first line of the file is additional headers? ignore this
+    
+            // get data from epc using unmapped key names
+            const output_fields = [...mapping.keys()]
+                .map(key => {
+                    // if data is missing, flag this & quit
+                    if (epc[key] === undefined) {
+                        console.log(key);
+                        console.log(epc);
+                        
+                        throw new Error("undefined in data!");
+                    }
+    
+                    return `"${epc[key]}"`;
+                })
+    
+            outLines.push(output_fields.join(","));
+        }
+    
+        appendFileSync(outFile, outLines.join("\n"));
+    
+        console.log(`finish append ${file} to ${outFile}`);
     }
+})();
 
-    writeFileSync(outFile, outLines.join("\n"));
+readdirSync("./epc").forEach(file => {
 
-    console.log(`finish ${inFile} to ${outFile}`);
 });
+
+
