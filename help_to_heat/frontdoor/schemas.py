@@ -44,7 +44,6 @@ from help_to_heat.frontdoor.consts import (
     epc_rating_field,
     epc_select_manual_page,
     epc_select_page,
-    field_dont_know,
     field_no,
     field_yes,
     household_income_field,
@@ -345,10 +344,6 @@ epc_display_options_map = (
     {
         "value": field_no,
         "label": _("No"),
-    },
-    {
-        "value": field_dont_know,
-        "label": _("I do not know"),
     },
 )
 epc_validation_options_map = epc_display_options_map + (
