@@ -13,7 +13,7 @@ import testino
 from django.conf import settings
 from django.utils import timezone
 
-from help_to_heat import portal, wsgi
+from help_to_heat import frontdoor, portal, wsgi
 from help_to_heat.portal import models
 
 __here__ = pathlib.Path(__file__).parent
@@ -175,3 +175,7 @@ def create_referral(session_id, data=None, supplier="British Gas", creation_time
     referral = portal.models.Referral.objects.get()
     referral.created_at = creation_timestamp
     referral.save()
+
+
+def delete_answer_in_session(session_id, page_name):
+    frontdoor.models.Answer.objects.get(session_id=session_id, page_name=page_name).delete()

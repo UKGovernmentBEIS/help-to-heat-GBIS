@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 from help_to_heat.frontdoor import interface
+from help_to_heat.frontdoor.consts import country_page
 from help_to_heat.frontdoor.mock_epc_api import (
     MockEPCApi,
     MockEPCApiWithEPCC,
@@ -2103,6 +2104,20 @@ def test_epc_page_shows_epc_info():
 
     assert page.has_one("p:contains('Date of issue')")
     assert page.has_one("p:contains('23 July 2010')")
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_success_page_still_shows_if_journey_cannot_reach_it():
+    supplier = "Utilita"
+
+    session_id, _ = _do_happy_flow(supplier=supplier)
+
+    utils.delete_answer_in_session(session_id, country_page)
+
+    client = utils.get_client()
+    page = client.get(f"/{session_id}/success").follow()
+
+    assert page.has_one(f"h1:contains('Your details have been submitted to {supplier}')")
 
 
 def _setup_client_and_page():
