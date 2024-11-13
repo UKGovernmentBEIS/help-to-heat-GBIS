@@ -260,7 +260,7 @@ loft_access_field_no_loft = "No loft"
 
 loft_insulation_field = "loft_insulation"
 loft_insulation_field_more_than_threshold = "I have more than 100mm of loft insulation"
-loft_insulation_field_less_than_threshold = "I have up to 100mm of loft insulation"
+loft_insulation_field_less_than_threshold = "I have less than or equal to 100mm of loft insulation"
 loft_insulation_field_no_insulation = "I have no loft insulation"
 loft_insulation_field_dont_know = field_dont_know
 loft_insulation_field_no_loft = "No loft"
