@@ -252,7 +252,9 @@ class Session(Entity):
             given_answers[loft_access_field] = loft_access_field_no_loft
             given_answers[loft_insulation_field] = loft_insulation_field_no_loft
 
-        # override "no insulation" to "less than threshold"
+        # Users are given the option to select "no insulation" to improve question usability
+        # This and "below threshold" are functionally identical from the supplier point of view.
+        # They will be combined before the suppliers see it to improve supplier usability
         loft_insulation = given_answers.get(loft_insulation_field)
         if loft_insulation == given_answers.get(loft_insulation_field_no_insulation):
             given_answers[loft_insulation_field] = loft_insulation_field_less_than_threshold
