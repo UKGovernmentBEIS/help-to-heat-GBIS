@@ -606,6 +606,8 @@ class EPC(Entity):
     def get_address_and_epc_lmk(self, building_name_or_number, postcode):
         epc_api = EPCApi()
         data = epc_api.search_epc_details(building_name_or_number, postcode)
+        if data is None:
+            return []
         address_and_epc_details = data["rows"]
         return address_and_epc_details
 
