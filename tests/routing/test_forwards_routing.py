@@ -57,6 +57,7 @@ from help_to_heat.frontdoor.consts import (
     loft_insulation_field_dont_know,
     loft_insulation_field_less_than_threshold,
     loft_insulation_field_more_than_threshold,
+    loft_insulation_field_no_insulation,
     loft_insulation_page,
     loft_page,
     no_epc_page,
@@ -736,6 +737,7 @@ def test_loft_access_next_page(loft_access):
     [
         loft_insulation_field_more_than_threshold,
         loft_insulation_field_less_than_threshold,
+        loft_insulation_field_no_insulation,
         loft_insulation_field_dont_know,
     ],
 )

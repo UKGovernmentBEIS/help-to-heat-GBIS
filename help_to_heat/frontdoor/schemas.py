@@ -62,6 +62,7 @@ from help_to_heat.frontdoor.consts import (
     loft_insulation_field_dont_know,
     loft_insulation_field_less_than_threshold,
     loft_insulation_field_more_than_threshold,
+    loft_insulation_field_no_insulation,
     loft_insulation_field_no_loft,
     loft_insulation_page,
     loft_page,
@@ -480,7 +481,8 @@ check_your_answers_options_map = {
     },
     loft_insulation_field: {
         loft_insulation_field_more_than_threshold: _("I have more than 100mm of loft insulation"),
-        loft_insulation_field_less_than_threshold: _("I have up to 100mm of loft insulation"),
+        loft_insulation_field_less_than_threshold: _("I have less than or equal to 100mm of loft insulation"),
+        loft_insulation_field_no_insulation: _("I have no loft insulation"),
         loft_insulation_field_dont_know: _("I do not know"),
         loft_insulation_field_no_loft: _("No loft"),
     },
@@ -699,7 +701,11 @@ loft_insulation_options_map = (
     },
     {
         "value": loft_insulation_field_less_than_threshold,
-        "label": _("I have up to 100mm of loft insulation"),
+        "label": _("I have less than or equal to 100mm of loft insulation"),
+    },
+    {
+        "value": loft_insulation_field_no_insulation,
+        "label": _("I have no loft insulation"),
     },
     {
         "value": loft_insulation_field_dont_know,

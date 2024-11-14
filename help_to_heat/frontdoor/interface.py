@@ -24,6 +24,8 @@ from .consts import (
     loft_field,
     loft_field_no,
     loft_insulation_field,
+    loft_insulation_field_less_than_threshold,
+    loft_insulation_field_no_insulation,
     loft_insulation_field_no_loft,
     park_home_main_residence_field,
     property_subtype_field,
@@ -249,6 +251,13 @@ class Session(Entity):
         if loft == loft_field_no:
             given_answers[loft_access_field] = loft_access_field_no_loft
             given_answers[loft_insulation_field] = loft_insulation_field_no_loft
+
+        # Users are given the option to select "no insulation" to improve question usability
+        # This and "below threshold" are functionally identical from the supplier point of view.
+        # They will be combined before the suppliers see it to improve supplier usability
+        loft_insulation = given_answers.get(loft_insulation_field)
+        if loft_insulation == given_answers.get(loft_insulation_field_no_insulation):
+            given_answers[loft_insulation_field] = loft_insulation_field_less_than_threshold
 
         # ensure not found EPCs are displayed as such
         # this will normally be set as an answer on pressing submit on 'address' page
