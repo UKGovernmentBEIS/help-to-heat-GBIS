@@ -240,11 +240,12 @@ def get_current_and_next_month_names(month_names):
     return current_month, next_month
 
 
-# Q1 january -> april
-# Q2 april -> july
-# Q3 july -> october
-# Q4 october -> january
+# Q1 january -> may
+# Q2 april -> august
+# Q3 july -> november
+# Q4 october -> february
 # we update the month names manually on each scottish data dump
 # this is to tell the user the month of the last dump, and expected month of next dump
+# the quarters overlap by one month, as the dump takes place roughly at the end of a month
 def get_current_and_next_quarter_month_names(month_names):
-    return month_names[6], month_names[9]
+    return month_names[9], month_names[1]
