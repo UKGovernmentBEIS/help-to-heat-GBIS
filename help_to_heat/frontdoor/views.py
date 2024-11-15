@@ -887,9 +887,10 @@ class EpcView(PageView):
             gds_epc_date = None
 
         current_month, next_month = utils.get_current_and_next_month_names(month_names)
-        current_quarter_month, next_quarter_month = utils.get_current_scottish_epc_cutoff_and_next_dump_month_names(
-            month_names
-        )
+        (
+            scottish_epc_cutoff_month,
+            next_scottish_dump_month,
+        ) = utils.get_current_scottish_epc_cutoff_and_next_dump_month_names(month_names)
 
         context = {
             "epc_rating": epc_band.upper() if epc_band else "",
@@ -897,8 +898,8 @@ class EpcView(PageView):
             "epc_date": epc_date,
             "current_month": current_month,
             "next_month": next_month,
-            "current_quarter_month": current_quarter_month,
-            "next_quarter_month": next_quarter_month,
+            "scottish_epc_cutoff_month": scottish_epc_cutoff_month,
+            "next_scottish_dump_month": next_scottish_dump_month,
             "property_type": property_type,
             "epc_display_options": schemas.epc_display_options_map,
             "address": address,
@@ -923,17 +924,18 @@ class NoEpcView(PageView):
         country = session_data.get(country_field)
 
         current_month, next_month = utils.get_current_and_next_month_names(month_names)
-        current_quarter_month, next_quarter_month = utils.get_current_scottish_epc_cutoff_and_next_dump_month_names(
-            month_names
-        )
+        (
+            scottish_epc_cutoff_month,
+            next_scottish_dump_month,
+        ) = utils.get_current_scottish_epc_cutoff_and_next_dump_month_names(month_names)
 
         show_month_wording = country in [country_field_england, country_field_wales]
 
         return {
             "current_month": current_month,
             "next_month": next_month,
-            "current_quarter_month": current_quarter_month,
-            "next_quarter_month": next_quarter_month,
+            "scottish_epc_cutoff_month": scottish_epc_cutoff_month,
+            "next_scottish_dump_month": next_scottish_dump_month,
             "show_month_wording": show_month_wording,
         }
 
