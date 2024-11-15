@@ -887,7 +887,9 @@ class EpcView(PageView):
             gds_epc_date = None
 
         current_month, next_month = utils.get_current_and_next_month_names(month_names)
-        current_quarter_month, next_quarter_month = utils.get_current_and_next_quarter_month_names(month_names)
+        current_quarter_month, next_quarter_month = utils.get_current_scottish_epc_cutoff_and_next_dump_month_names(
+            month_names
+        )
 
         context = {
             "epc_rating": epc_band.upper() if epc_band else "",
@@ -921,7 +923,9 @@ class NoEpcView(PageView):
         country = session_data.get(country_field)
 
         current_month, next_month = utils.get_current_and_next_month_names(month_names)
-        current_quarter_month, next_quarter_month = utils.get_current_and_next_quarter_month_names(month_names)
+        current_quarter_month, next_quarter_month = utils.get_current_scottish_epc_cutoff_and_next_dump_month_names(
+            month_names
+        )
 
         show_month_wording = country in [country_field_england, country_field_wales]
 
