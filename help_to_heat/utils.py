@@ -240,11 +240,12 @@ def get_current_and_next_month_names(month_names):
     return current_month, next_month
 
 
-# Q1 january -> april
-# Q2 april -> july
-# Q3 july -> october
-# Q4 october -> january
+# Latest Quarter in current dump -> epc cutoff month, next expected dump month
+# Q1 -> april, august
+# Q2 -> july, november
+# Q3 -> october, february
+# Q4 -> january, may
 # we update the month names manually on each scottish data dump
-# this is to tell the user the month of the last dump, and expected month of next dump
-def get_current_and_next_quarter_month_names(month_names):
-    return month_names[6], month_names[9]
+# this is to tell the user the first month we have no EPCs for, and the next month we expect to perform a dump
+def get_current_scottish_epc_cutoff_and_next_dump_month_names(month_names):
+    return month_names[9], month_names[1]
