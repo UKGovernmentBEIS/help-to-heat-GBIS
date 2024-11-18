@@ -146,6 +146,7 @@ from .eligibility import calculate_eligibility, eco4
 from .routing import CouldNotCalculateJourneyException, calculate_journey
 from .routing.backwards_routing import get_prev_page
 from .routing.forwards_routing import get_next_page
+from .schemas import no_back_button_on_page
 from .session_handlers.duplicate_referral_checker import (
     DuplicateReferralChecker,
 )
@@ -485,6 +486,9 @@ class PageView(utils.MethodDispatcher):
         Build any additional data to be added to the context.
 
         This will be available to use in the template html file.
+
+        data will be the user submitted data for this page.
+        if you need access to other page's answers, call interface.api.session.get_session(session_id)
         """
         return {}
 
@@ -496,7 +500,8 @@ class PageView(utils.MethodDispatcher):
 
         For instance, saving tracking data when a user loads the page
 
-        data will be the user submitted data for this page
+        data will be the user submitted data for this page.
+        if you need access to other page's answers, call interface.api.session.get_session(session_id)
         """
         return data
 
@@ -506,7 +511,8 @@ class PageView(utils.MethodDispatcher):
 
         For instance, checking and storing whether the UPRN is duplicate
 
-        data will be the user submitted data for this page
+        data will be the user submitted data for this page.
+        if you need access to other page's answers, call interface.api.session.get_session(session_id)
 
         The returned data object will be used to decide which page to send to
         """
@@ -556,7 +562,15 @@ class PageView(utils.MethodDispatcher):
                     )
 
         if page_name in schemas.routing_overrides:
-            return page_name_to_url(session_id, schemas.routing_overrides[page_name]["prev_page"])
+            prev_page = schemas.routing_overrides[page_name]["prev_page"]
+
+            # the page is assumed to not have a back button so this should not be shown to the user
+            # in case it ever does, provide a fallback so the user does not get into an invalid state
+            # in this case, leave them on the page they are currently on
+            if prev_page == no_back_button_on_page:
+                return page_name_to_url(session_id, page_name)
+
+            return page_name_to_url(session_id, prev_page)
 
         return page_name_to_url(session_id, get_prev_page(page_name, answers))
 
@@ -603,14 +617,21 @@ class AddressView(PageView):
 
     def save_post_data(self, data, session_id, page_name):
         reset_epc_details(session_id)
-        country = data.get(country_field)
+        session_data = interface.api.session.get_session(session_id)
+        country = session_data.get(country_field)
         building_name_or_number = data.get(address_building_name_or_number_field)
         postcode = data.get(address_postcode_field)
         try:
-            data[address_choice_field] = address_choice_field_write_address
             if country != country_field_scotland:
                 address_and_lmk_details = interface.api.epc.get_address_and_epc_lmk(building_name_or_number, postcode)
-                data[address_all_address_and_lmk_details_field] = address_and_lmk_details
+
+                if len(address_and_lmk_details) > 0:
+                    data[address_all_address_and_lmk_details_field] = address_and_lmk_details
+                    data[address_choice_field] = address_choice_field_write_address
+                else:
+                    data[address_choice_field] = address_choice_field_epc_api_fail
+            else:
+                data[address_choice_field] = address_choice_field_write_address
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
             data[address_choice_field] = address_choice_field_epc_api_fail
@@ -866,7 +887,10 @@ class EpcView(PageView):
             gds_epc_date = None
 
         current_month, next_month = utils.get_current_and_next_month_names(month_names)
-        current_quarter_month, next_quarter_month = utils.get_current_and_next_quarter_month_names(month_names)
+        (
+            scottish_epc_cutoff_month,
+            next_scottish_dump_month,
+        ) = utils.get_current_scottish_epc_cutoff_and_next_dump_month_names(month_names)
 
         context = {
             "epc_rating": epc_band.upper() if epc_band else "",
@@ -874,8 +898,8 @@ class EpcView(PageView):
             "epc_date": epc_date,
             "current_month": current_month,
             "next_month": next_month,
-            "current_quarter_month": current_quarter_month,
-            "next_quarter_month": next_quarter_month,
+            "scottish_epc_cutoff_month": scottish_epc_cutoff_month,
+            "next_scottish_dump_month": next_scottish_dump_month,
             "property_type": property_type,
             "epc_display_options": schemas.epc_display_options_map,
             "address": address,
@@ -900,15 +924,18 @@ class NoEpcView(PageView):
         country = session_data.get(country_field)
 
         current_month, next_month = utils.get_current_and_next_month_names(month_names)
-        current_quarter_month, next_quarter_month = utils.get_current_and_next_quarter_month_names(month_names)
+        (
+            scottish_epc_cutoff_month,
+            next_scottish_dump_month,
+        ) = utils.get_current_scottish_epc_cutoff_and_next_dump_month_names(month_names)
 
         show_month_wording = country in [country_field_england, country_field_wales]
 
         return {
             "current_month": current_month,
             "next_month": next_month,
-            "current_quarter_month": current_quarter_month,
-            "next_quarter_month": next_quarter_month,
+            "scottish_epc_cutoff_month": scottish_epc_cutoff_month,
+            "next_scottish_dump_month": next_scottish_dump_month,
             "show_month_wording": show_month_wording,
         }
 

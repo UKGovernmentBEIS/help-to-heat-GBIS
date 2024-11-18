@@ -44,7 +44,6 @@ from help_to_heat.frontdoor.consts import (
     epc_rating_field,
     epc_select_manual_page,
     epc_select_page,
-    field_dont_know,
     field_no,
     field_yes,
     household_income_field,
@@ -63,6 +62,7 @@ from help_to_heat.frontdoor.consts import (
     loft_insulation_field_dont_know,
     loft_insulation_field_less_than_threshold,
     loft_insulation_field_more_than_threshold,
+    loft_insulation_field_no_insulation,
     loft_insulation_field_no_loft,
     loft_insulation_page,
     loft_page,
@@ -105,6 +105,7 @@ from help_to_heat.frontdoor.consts import (
     schemes_page,
     shell_warning_page,
     shell_warning_page_field,
+    success_page,
     summary_page,
     supplier_field,
     supplier_field_british_gas,
@@ -201,10 +202,16 @@ page_display_questions = {
 # which pages should ignore routing checks
 # the code will not check if the user's route allows them to see these pages
 # a prev page url should be provided to allow the back link to work
+# or, if the page does not allow the user to go back, it may not be needed to calculate previous page
+# this means the page can be seen without any routing checks being run
+# if this is desired, set prev_page to the below constant
+no_back_button_on_page = "no-back-button-on-page"
+
 routing_overrides = {
     address_manual_page: {"prev_page": address_page},
     epc_select_manual_page: {"prev_page": epc_select_page},
     address_select_manual_page: {"prev_page": address_select_page},
+    success_page: {"prev_page": no_back_button_on_page},
 }
 
 # which change page to send back to
@@ -338,10 +345,6 @@ epc_display_options_map = (
     {
         "value": field_no,
         "label": _("No"),
-    },
-    {
-        "value": field_dont_know,
-        "label": _("I do not know"),
     },
 )
 epc_validation_options_map = epc_display_options_map + (
@@ -478,7 +481,8 @@ check_your_answers_options_map = {
     },
     loft_insulation_field: {
         loft_insulation_field_more_than_threshold: _("I have more than 100mm of loft insulation"),
-        loft_insulation_field_less_than_threshold: _("I have up to 100mm of loft insulation"),
+        loft_insulation_field_less_than_threshold: _("I have less than or equal to 100mm of loft insulation"),
+        loft_insulation_field_no_insulation: _("I have no loft insulation"),
         loft_insulation_field_dont_know: _("I do not know"),
         loft_insulation_field_no_loft: _("No loft"),
     },
@@ -697,7 +701,11 @@ loft_insulation_options_map = (
     },
     {
         "value": loft_insulation_field_less_than_threshold,
-        "label": _("I have up to 100mm of loft insulation"),
+        "label": _("I have less than or equal to 100mm of loft insulation"),
+    },
+    {
+        "value": loft_insulation_field_no_insulation,
+        "label": _("I have no loft insulation"),
     },
     {
         "value": loft_insulation_field_dont_know,

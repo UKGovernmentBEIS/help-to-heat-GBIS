@@ -46,6 +46,7 @@ from help_to_heat.frontdoor.consts import (
     loft_insulation_field_dont_know,
     loft_insulation_field_less_than_threshold,
     loft_insulation_field_more_than_threshold,
+    loft_insulation_field_no_insulation,
     no_epc_field,
     number_of_bedrooms_field,
     number_of_bedrooms_field_one,
@@ -521,6 +522,7 @@ def get_loft_insulation_answers():
     answers = next(get_loft_access_answers())
     yield {**answers, loft_insulation_field: loft_insulation_field_more_than_threshold}
     yield {**answers, loft_insulation_field: loft_insulation_field_less_than_threshold}
+    yield {**answers, loft_insulation_field: loft_insulation_field_no_insulation}
     yield {**answers, loft_insulation_field: loft_insulation_field_dont_know}
 
 
