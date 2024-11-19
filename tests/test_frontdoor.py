@@ -6,6 +6,7 @@ from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 from help_to_heat.frontdoor import interface
+from help_to_heat.frontdoor.consts import country_page
 from help_to_heat.frontdoor.mock_epc_api import (
     MockEPCApi,
     MockEPCApiWithEPCC,
@@ -171,7 +172,9 @@ def _answer_house_questions(
             page = _check_page(page, "loft-access", "loft_access", "Yes, there is access to my loft")
 
             assert page.has_one("h1:contains('How much loft insulation do you have?')")
-            page = _check_page(page, "loft-insulation", "loft_insulation", "I have up to 100mm of loft insulation")
+            page = _check_page(
+                page, "loft-insulation", "loft_insulation", "I have less than or equal to 100mm of loft insulation"
+            )
         else:
             page = _check_page(
                 page, "loft", "loft", "No, I do not have a loft or my loft has been converted into a room"
@@ -874,7 +877,9 @@ def test_epc_lookup_failure():
     page = _check_page(page, "loft-access", "loft_access", "Yes, there is access to my loft")
 
     assert page.has_one("h1:contains('How much loft insulation do you have?')")
-    page = _check_page(page, "loft-insulation", "loft_insulation", "I have up to 100mm of loft insulation")
+    page = _check_page(
+        page, "loft-insulation", "loft_insulation", "I have less than or equal to 100mm of loft insulation"
+    )
 
     assert page.has_one("h1:contains('Check your answers')")
     form = page.get_form()
@@ -1597,7 +1602,9 @@ def test_on_check_page_back_button_goes_to_correct_location(has_loft_insulation)
         page = _check_page(page, "loft-access", "loft_access", "Yes, there is access to my loft")
 
         assert page.has_one("h1:contains('How much loft insulation do you have?')")
-        page = _check_page(page, "loft-insulation", "loft_insulation", "I have up to 100mm of loft insulation")
+        page = _check_page(
+            page, "loft-insulation", "loft_insulation", "I have less than or equal to 100mm of loft insulation"
+        )
     else:
         page = _check_page(page, "loft", "loft", "No, I do not have a loft or my loft has been converted into a room")
 
@@ -2103,6 +2110,20 @@ def test_epc_page_shows_epc_info():
 
     assert page.has_one("p:contains('Date of issue')")
     assert page.has_one("p:contains('23 July 2010')")
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_success_page_still_shows_if_journey_cannot_reach_it():
+    supplier = "Utilita"
+
+    session_id, _ = _do_happy_flow(supplier=supplier)
+
+    utils.delete_answer_in_session(session_id, country_page)
+
+    client = utils.get_client()
+    page = client.get(f"/{session_id}/success").follow()
+
+    assert page.has_one(f"h1:contains('Your details have been submitted to {supplier}')")
 
 
 def _setup_client_and_page():

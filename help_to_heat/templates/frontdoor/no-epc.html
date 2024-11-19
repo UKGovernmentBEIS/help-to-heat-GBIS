@@ -21,7 +21,7 @@
     {% if show_month_wording %}
       <p class="govuk-body">{{_("If your property has had a new EPC issued since 1 %(current_month)s, we may not be able to find it in our database because it is only updated monthly. Please return to this service after 1 %(next_month)s when we expect the database to have been updated.") % { "current_month": current_month, "next_month": next_month }}}</p>
     {% else %}
-      <p class="govuk-body">{{_("If your property was issued an EPC since 1 %(current_quarter_month)s, we may not be able to find it in our database because it is updated quarterly. Please return to this service after 1 %(next_quarter_month)s when we expect the database to have been updated.") % { "current_quarter_month": current_quarter_month, "next_quarter_month": next_quarter_month }}}</p>
+      <p class="govuk-body">{{_("If your property was issued an EPC since 1 %(scottish_epc_cutoff_month)s, we may not be able to find it in our database because it is updated quarterly. Please return to this service after 1 %(next_scottish_dump_month)s when we expect the database to have been updated.") % { "scottish_epc_cutoff_month": scottish_epc_cutoff_month, "next_scottish_dump_month": next_scottish_dump_month }}}</p>
     {% endif %}
     <br>
     <p class="govuk-body">{{_("You may continue using this service without an EPC.")}}</p>

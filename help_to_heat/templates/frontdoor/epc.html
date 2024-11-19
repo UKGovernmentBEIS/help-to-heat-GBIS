@@ -23,7 +23,7 @@
       {% if show_monthly_epc_update_details %}
         {{_("If your property has had a new EPC issued since 1 %(current_month)s, we may not be able to find it in our database because it is only updated monthly. If you do not recognise the EPC below as your most recent one, please return to this service after 1 %(next_month)s when we expect the database to have been updated.") % { "current_month": current_month, "next_month": next_month }}}
       {% else %}
-        {{_("If your property has had a new EPC issued since 1 %(current_quarter_month)s, we may not be able to find it in our database because it is only updated quarterly. If you do not recognise the EPC below as your most recent one, please return to this service after 1 %(next_quarter_month)s when we expect the database to have been updated.") % { "current_quarter_month": current_quarter_month, "next_quarter_month": next_quarter_month }}}
+        {{_("If your property has had a new EPC issued since 1 %(scottish_epc_cutoff_month)s, we may not be able to find it in our database because it is only updated quarterly. If you do not recognise the EPC below as your most recent one, please return to this service after 1 %(next_scottish_dump_month)s when we expect the database to have been updated.") % { "scottish_epc_cutoff_month": scottish_epc_cutoff_month, "next_scottish_dump_month": next_scottish_dump_month }}}
       {% endif %}
       <br>
       {{_("You can continue with your old EPC but the energy supplier you have selected may not be able to help based on an out-of-date EPC")}}
