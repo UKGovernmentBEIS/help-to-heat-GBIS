@@ -6,6 +6,7 @@ import inspect
 import secrets
 import types
 import uuid
+import itertools
 from datetime import datetime
 
 import marshmallow
@@ -249,3 +250,19 @@ def get_current_and_next_month_names(month_names):
 # this is to tell the user the first month we have no EPCs for, and the next month we expect to perform a dump
 def get_current_scottish_epc_cutoff_and_next_dump_month_names(month_names):
     return month_names[9], month_names[1]
+
+
+def get_most_recent_epc_per_uprn(address_and_lmk_details):
+    most_recent_address_and_lmk_details = []
+    uprn_groups = []
+    address_and_lmk_details.sort(key=lambda x: x['uprn'], reverse=True)
+    for _, group in itertools.groupby(address_and_lmk_details, lambda x: x['uprn']):
+        uprn_groups.append(list(group))
+    print(str(len(uprn_groups)))
+    for group in uprn_groups:
+        print(group)
+        item = max(group, key=lambda x: datetime.strptime(x['lodgement-date'], '%Y-%m-%d'))
+        print(item['lodgement-date'])
+        most_recent_address_and_lmk_details.append(item)
+
+    return most_recent_address_and_lmk_details
