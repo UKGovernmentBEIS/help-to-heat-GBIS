@@ -6,7 +6,11 @@ from dateutil.relativedelta import relativedelta
 from django.utils import timezone
 
 from help_to_heat.frontdoor import interface
-from help_to_heat.frontdoor.consts import country_page
+from help_to_heat.frontdoor.consts import (
+    address_all_address_and_lmk_details_field,
+    address_page,
+    country_page,
+)
 from help_to_heat.frontdoor.mock_epc_api import (
     MockEPCApi,
     MockEPCApiWithEPCC,
@@ -2143,10 +2147,13 @@ def test_epc_select_only_shows_most_recent_epc_per_uprn():
     form["postcode"] = "FL23 4JA"
     page = form.submit().follow()
 
-    data = interface.api.session.get_answer(session_id, page_name="address")
-    assert len(data["address_and_lmk_details"]) == 2
-    assert data["address_and_lmk_details"][0]["lmk-key"] != "3333333333333333333333333333333333"
-    assert data["address_and_lmk_details"][1]["lmk-key"] != "3333333333333333333333333333333333"
+    data = interface.api.session.get_answer(session_id, page_name=address_page)
+
+    assert page.has_one("label:contains('22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA')")
+
+    assert len(data[address_all_address_and_lmk_details_field]) == 2
+    assert data[address_all_address_and_lmk_details_field][0]["lmk-key"] != "3333333333333333333333333333333333"
+    assert data[address_all_address_and_lmk_details_field][1]["lmk-key"] != "3333333333333333333333333333333333"
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
