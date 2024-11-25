@@ -3,10 +3,10 @@ import enum
 import functools
 import hashlib
 import inspect
+import itertools
 import secrets
 import types
 import uuid
-import itertools
 from datetime import datetime
 
 import marshmallow
@@ -254,10 +254,10 @@ def get_current_scottish_epc_cutoff_and_next_dump_month_names(month_names):
 
 def get_most_recent_epc_per_uprn(address_and_lmk_details):
     most_recent_address_and_lmk_details = []
-    address_and_lmk_details.sort(key=lambda x: x['uprn'], reverse=True)
+    address_and_lmk_details.sort(key=lambda x: x["uprn"], reverse=True)
 
-    for _, group in itertools.groupby(address_and_lmk_details, lambda x: x['uprn']):
-        item = max(list(group), key=lambda x: datetime.strptime(x['lodgement-date'], '%Y-%m-%d'))
+    for _, group in itertools.groupby(address_and_lmk_details, lambda x: x["uprn"]):
+        item = max(list(group), key=lambda x: datetime.strptime(x["lodgement-date"], "%Y-%m-%d"))
         most_recent_address_and_lmk_details.append(item)
 
     return most_recent_address_and_lmk_details
