@@ -68,7 +68,7 @@ def test_get_address():
 def test_get_epc():
     assert interface.api.epc.get_address_and_epc_lmk("22", "FL23 4JA")
     found_epc, _ = interface.api.epc.get_epc("1111111111111111111111111111111111")
-    assert found_epc["rows"][0].get("current-energy-rating").upper() == "G"
+    assert found_epc.get("current-energy-rating").upper() == "G"
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)

@@ -1,11 +1,13 @@
 import ast
 import logging
+import time
 from http import HTTPStatus
 
 import marshmallow
 import osdatahub
 import requests
 from django.conf import settings
+from requests import RequestException
 
 from help_to_heat import portal
 from help_to_heat.utils import Entity, Interface, register_event, with_schema
@@ -36,6 +38,8 @@ from .consts import (
 from .epc_api import EPCApi
 from .os_api import OSApi, ThrottledApiException
 from .routing import calculate_journey
+
+logger = logging.getLogger(__name__)
 
 
 class SaveAnswerSchema(marshmallow.Schema):
@@ -613,9 +617,45 @@ class EPC(Entity):
 
     def get_epc(self, lmk):
         epc_api = EPCApi()
-        epc_details = epc_api.get_epc_details(lmk)
-        epc_recommendations = epc_api.get_epc_recommendations(lmk)
-        return epc_details, epc_recommendations
+        epc_details_response = self._get_epc_details(epc_api, lmk)
+        epc_recommendations = self._get_epc_recommendations(epc_api, lmk)
+        return (
+            epc_details_response,
+            epc_recommendations,
+        )
+
+    def _get_epc_details(self, epc_api, lmk):
+        return epc_api.get_epc_details(lmk)["rows"][0]
+
+    RECOMMENDATION_RETRIES_COUNT = 5
+
+    def _get_epc_recommendations(self, epc_api, lmk):
+        delay = 0.5
+        for i in range(self.RECOMMENDATION_RETRIES_COUNT):
+            try:
+                return epc_api.get_epc_recommendations(lmk)["rows"]
+            except RequestException as requestException:
+                match requestException.response.status_code:
+                    case 500:
+                        # if on the last try
+                        if i == self.RECOMMENDATION_RETRIES_COUNT - 1:
+                            # raise this to logs, though let user continue with no recommendations
+                            logger.exception(requestException)
+                            return []
+                        else:
+                            # exponential backoff
+                            time.sleep(delay)
+                            delay = delay * 1.5
+
+                        # else if not on last try, try again
+                        continue
+
+                    # 404 is confirmed to mean no recommendations, so this is e.b. and so can return an empty list
+                    case 404:
+                        return []
+
+                # re-raise any other status codes
+                raise requestException
 
 
 class Feedback(Entity):
