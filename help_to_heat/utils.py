@@ -254,9 +254,9 @@ def get_current_scottish_epc_cutoff_and_next_dump_month_names(month_names):
 
 def get_most_recent_epc_per_uprn(address_and_lmk_details):
     most_recent_address_and_lmk_details = []
-    sorted_address_and_lmk_details = sorted(address_and_lmk_details, key=lambda x: x["uprn"], reverse=True)
+    sorted_address_and_lmk_details = sorted(address_and_lmk_details, key=lambda x: x.get("uprn", ""), reverse=True)
 
-    for uprn, group in itertools.groupby(sorted_address_and_lmk_details, lambda x: x["uprn"]):
+    for uprn, group in itertools.groupby(sorted_address_and_lmk_details, lambda x: x.get("uprn", "")):
         if uprn == "":
             most_recent_address_and_lmk_details.extend(group)
             continue

@@ -2150,6 +2150,7 @@ def test_epc_select_only_shows_most_recent_epc_per_uprn():
     data = interface.api.session.get_answer(session_id, page_name=address_page)
 
     assert page.has_one("label:contains('22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA')")
+    assert page.has_one("label:contains('11 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA')")
 
     assert len(data[address_all_address_and_lmk_details_field]) == 2
     assert data[address_all_address_and_lmk_details_field][0]["lmk-key"] != "3333333333333333333333333333333333"
