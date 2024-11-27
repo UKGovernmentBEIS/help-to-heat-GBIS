@@ -14,7 +14,7 @@ from help_to_heat.frontdoor.consts import (
 from help_to_heat.frontdoor.mock_epc_api import (
     MockEPCApi,
     MockEPCApiWithEPCC,
-    MockEPCApiWithOldEPC,
+    MockEPCApiWithMultipleEPC,
     MockNotFoundEPCApi,
 )
 from help_to_heat.frontdoor.mock_os_api import EmptyOSApi, MockOSApi
@@ -2117,7 +2117,7 @@ def test_epc_page_shows_epc_info():
     assert page.has_one("p:contains('23 July 2010')")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApiWithOldEPC)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApiWithMultipleEPC)
 def test_epc_select_only_shows_most_recent_epc_per_uprn():
     client = utils.get_client()
     page = client.get("/start")
