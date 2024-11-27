@@ -14,7 +14,8 @@ from help_to_heat.frontdoor.consts import (
 from help_to_heat.frontdoor.mock_epc_api import (
     MockEPCApi,
     MockEPCApiWithEPCC,
-    MockNotFoundEPCApi, MockEPCApiWithOldEPC,
+    MockEPCApiWithOldEPC,
+    MockNotFoundEPCApi,
 )
 from help_to_heat.frontdoor.mock_os_api import EmptyOSApi, MockOSApi
 from help_to_heat.portal import models
