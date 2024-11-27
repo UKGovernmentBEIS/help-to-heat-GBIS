@@ -624,9 +624,9 @@ class AddressView(PageView):
         try:
             if country != country_field_scotland:
                 address_and_lmk_details = interface.api.epc.get_address_and_epc_lmk(building_name_or_number, postcode)
-
                 if len(address_and_lmk_details) > 0:
-                    data[address_all_address_and_lmk_details_field] = address_and_lmk_details
+                    most_recent_address_and_lmk_details = utils.get_most_recent_epc_per_uprn(address_and_lmk_details)
+                    data[address_all_address_and_lmk_details_field] = most_recent_address_and_lmk_details
                     data[address_choice_field] = address_choice_field_write_address
                 else:
                     data[address_choice_field] = address_choice_field_epc_api_fail
