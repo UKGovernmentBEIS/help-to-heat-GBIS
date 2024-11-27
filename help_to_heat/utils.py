@@ -3,6 +3,7 @@ import enum
 import functools
 import hashlib
 import inspect
+import itertools
 import secrets
 import types
 import uuid
@@ -249,3 +250,19 @@ def get_current_and_next_month_names(month_names):
 # this is to tell the user the first month we have no EPCs for, and the next month we expect to perform a dump
 def get_current_scottish_epc_cutoff_and_next_dump_month_names(month_names):
     return month_names[9], month_names[1]
+
+
+def get_most_recent_epc_per_uprn(address_and_lmk_details):
+    most_recent_address_and_lmk_details = []
+    sorted_address_and_lmk_details = sorted(address_and_lmk_details, key=lambda x: x.get("uprn", ""), reverse=True)
+
+    for uprn, group in itertools.groupby(sorted_address_and_lmk_details, lambda x: x.get("uprn", "")):
+        # Some EPCs might not have UPRNs, this is currently unobserved but technically possible.
+        # This is a failsafe to include them all in the output, as we are unable to filter them by UPRN
+        if uprn == "":
+            most_recent_address_and_lmk_details.extend(group)
+            continue
+        latest_epc = max(group, key=lambda x: datetime.strptime(x["lodgement-date"], "%Y-%m-%d"))
+        most_recent_address_and_lmk_details.append(latest_epc)
+
+    return most_recent_address_and_lmk_details
