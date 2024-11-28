@@ -24,6 +24,7 @@ from help_to_heat.frontdoor.mock_epc_api import (
     MockRecommendationsInternalServerErrorEPCApi,
     MockRecommendationsNotFoundEPCApi,
     MockRecommendationsTransientInternalServerErrorEPCApi,
+    get_mock_epc_api_expecting_address_and_postcode,
 )
 from help_to_heat.frontdoor.mock_os_api import EmptyOSApi, MockOSApi
 from help_to_heat.portal import models
@@ -2269,6 +2270,43 @@ def test_success_page_still_shows_if_journey_cannot_reach_it():
     page = client.get(f"/{session_id}/success").follow()
 
     assert page.has_one(f"h1:contains('Your details have been submitted to {supplier}')")
+
+
+@unittest.mock.patch(
+    "help_to_heat.frontdoor.interface.EPCApi", get_mock_epc_api_expecting_address_and_postcode("22", "FL23 4JA")
+)
+def test_epc_api_is_called_with_trimmed_address_and_postcode():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Utilita"
+    page = form.submit().follow()
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    assert page.has_text("Do you live in a park home")
+    page = _check_page(page, "park-home", "park_home", "No")
+
+    form = page.get_form()
+    form["building_name_or_number"] = "  22  "
+    form["postcode"] = "  FL23 4JA  "
+    page = form.submit().follow()
+
+    assert page.has_one("label:contains('22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA')")
+    assert page.has_one("label:contains('11 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA')")
 
 
 def _setup_client_and_page():

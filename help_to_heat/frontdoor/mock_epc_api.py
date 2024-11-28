@@ -77,6 +77,17 @@ class MockRecommendationsTransientInternalServerErrorEPCApi(MockEPCApi):
         return super().get_epc_recommendations(lmk_key)
 
 
+def get_mock_epc_api_expecting_address_and_postcode(check_address, check_postcode):
+    class MockEpcApiExpectingAddressAndPostcode(MockEPCApi):
+        def search_epc_details(self, address, postcode):
+            if address != check_address or postcode != check_postcode:
+                raise NotFoundRequestException()
+            else:
+                return super().search_epc_details(address, postcode)
+
+    return MockEpcApiExpectingAddressAndPostcode
+
+
 class UnauthorizedRequestException(requests.exceptions.RequestException):
     def __init__(self):
         self.response = requests.Response()
