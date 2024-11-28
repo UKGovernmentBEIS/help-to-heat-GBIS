@@ -683,9 +683,7 @@ class EpcSelectView(PageView):
             return data
 
         try:
-            epc_details_response, epc_recommendations_response = interface.api.epc.get_epc(lmk)
-            epc_details = epc_details_response["rows"][0]
-            recommendations = epc_recommendations_response["rows"]
+            epc_details, recommendations = interface.api.epc.get_epc(lmk)
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
             reset_epc_details(session_id)
