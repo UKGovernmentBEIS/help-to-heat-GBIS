@@ -8,13 +8,23 @@ from django.utils import timezone
 from help_to_heat.frontdoor import interface
 from help_to_heat.frontdoor.consts import (
     address_all_address_and_lmk_details_field,
+    address_building_name_or_number_field,
     address_page,
+    address_postcode_field,
+    country_field,
     country_page,
+    lmk_field,
+    recommendations_field,
+    supplier_field,
 )
 from help_to_heat.frontdoor.mock_epc_api import (
     MockEPCApi,
     MockEPCApiWithEPCC,
     MockNotFoundEPCApi,
+    MockRecommendationsInternalServerErrorEPCApi,
+    MockRecommendationsNotFoundEPCApi,
+    MockRecommendationsTransientInternalServerErrorEPCApi,
+    get_mock_epc_api_expecting_address_and_postcode,
 )
 from help_to_heat.frontdoor.mock_os_api import EmptyOSApi, MockOSApi
 from help_to_heat.portal import models
@@ -2157,6 +2167,97 @@ def test_epc_select_only_shows_most_recent_epc_per_uprn():
     assert data[address_all_address_and_lmk_details_field][1]["lmk-key"] != "3333333333333333333333333333333333"
 
 
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockRecommendationsNotFoundEPCApi)
+def test_on_recommendations_not_found_response_recommendations_are_empty_list():
+    _get_empty_recommendations_journey()
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockRecommendationsInternalServerErrorEPCApi)
+def test_on_recommendations_internal_server_error_response_recommendations_are_empty_list():
+    _get_empty_recommendations_journey()
+
+
+def _get_empty_recommendations_journey():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form[country_field] = "England"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form[supplier_field] = "Utilita"
+    page = form.submit().follow()
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    assert page.has_text("Do you live in a park home")
+    page = _check_page(page, "park-home", "park_home", "No")
+
+    form = page.get_form()
+    form[address_building_name_or_number_field] = "22"
+    form[address_postcode_field] = "FL23 4JA"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form[lmk_field] = "222222222222222222222222222222222"
+    page = form.submit().follow()
+
+    data = interface.api.session.get_answer(session_id, page_name="epc-select")
+    assert data[recommendations_field] == []
+
+    assert page.has_one("h1:contains('What is the council tax band of your property?')")
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockRecommendationsTransientInternalServerErrorEPCApi)
+def test_on_recommendations_transient_internal_server_error_response_recommendations_are_empty_list():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form[country_field] = "England"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form[supplier_field] = "Utilita"
+    page = form.submit().follow()
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    assert page.has_text("Do you live in a park home")
+    page = _check_page(page, "park-home", "park_home", "No")
+
+    form = page.get_form()
+    form[address_building_name_or_number_field] = "22"
+    form[address_postcode_field] = "FL23 4JA"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form[lmk_field] = "222222222222222222222222222222222"
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('What is the council tax band of your property?')")
+    page = _check_page(page, "council-tax-band", "council_tax_band", "B")
+
+    assert page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
+
+
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_success_page_still_shows_if_journey_cannot_reach_it():
     supplier = "Utilita"
@@ -2169,6 +2270,43 @@ def test_success_page_still_shows_if_journey_cannot_reach_it():
     page = client.get(f"/{session_id}/success").follow()
 
     assert page.has_one(f"h1:contains('Your details have been submitted to {supplier}')")
+
+
+@unittest.mock.patch(
+    "help_to_heat.frontdoor.interface.EPCApi", get_mock_epc_api_expecting_address_and_postcode("22", "FL23 4JA")
+)
+def test_epc_api_is_called_with_trimmed_address_and_postcode():
+    client = utils.get_client()
+    page = client.get("/start")
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["supplier"] = "Utilita"
+    page = form.submit().follow()
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    assert page.has_text("Do you live in a park home")
+    page = _check_page(page, "park-home", "park_home", "No")
+
+    form = page.get_form()
+    form["building_name_or_number"] = "  22  "
+    form["postcode"] = "  FL23 4JA  "
+    page = form.submit().follow()
+
+    assert page.has_one("label:contains('22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA')")
+    assert page.has_one("label:contains('11 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA')")
 
 
 def _setup_client_and_page():

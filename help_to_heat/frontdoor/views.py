@@ -619,8 +619,13 @@ class AddressView(PageView):
         reset_epc_details(session_id)
         session_data = interface.api.session.get_session(session_id)
         country = session_data.get(country_field)
-        building_name_or_number = data.get(address_building_name_or_number_field)
-        postcode = data.get(address_postcode_field)
+        building_name_or_number = data.get(address_building_name_or_number_field).strip()
+        postcode = data.get(address_postcode_field).strip()
+
+        # overwrite the answers with stripped ones
+        data[address_building_name_or_number_field] = building_name_or_number
+        data[address_postcode_field] = postcode
+
         try:
             if country != country_field_scotland:
                 address_and_lmk_details = interface.api.epc.get_address_and_epc_lmk(building_name_or_number, postcode)
@@ -683,9 +688,7 @@ class EpcSelectView(PageView):
             return data
 
         try:
-            epc_details_response, epc_recommendations_response = interface.api.epc.get_epc(lmk)
-            epc_details = epc_details_response["rows"][0]
-            recommendations = epc_recommendations_response["rows"]
+            epc_details, recommendations = interface.api.epc.get_epc(lmk)
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
             reset_epc_details(session_id)
@@ -718,9 +721,9 @@ class EpcSelectView(PageView):
 @register_page(address_select_page)
 class AddressSelectView(PageView):
     def build_extra_context(self, request, session_id, page_name, data, is_change_page):
-        data = interface.api.session.get_answer(session_id, address_page)
-        building_name_or_number = data[address_building_name_or_number_field]
-        postcode = data[address_postcode_field]
+        address_data = interface.api.session.get_answer(session_id, address_page)
+        building_name_or_number = address_data[address_building_name_or_number_field]
+        postcode = address_data[address_postcode_field]
         addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
 
         uprn_options = tuple(

@@ -8,7 +8,7 @@ Formerly known as "Help to Heat".
 ### (Optional) Poetry Setup 
 If you want to be able to make changes to the dependency list using Poetry, or install the dependencies locally (so you can click into them in your IDE, or use autocomplete) perform these steps:
 1. [Install Poetry](https://python-poetry.org/docs/) on your machine
-2. [Install Python 3.9.13](https://www.python.org/downloads/release/python-3913/)
+2. [Install Python 3.11.9](https://www.python.org/downloads/release/python-3119/)
 3. Set up a virtual environment within the project for Poetry to manage your dependencies. A guide for Pycharm can be found [here](https://www.jetbrains.com/help/pycharm/poetry.html).
 ## Using Docker
 
