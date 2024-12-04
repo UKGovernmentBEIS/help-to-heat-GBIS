@@ -865,6 +865,7 @@ class SessionSchema(Schema):
     address_choice = fields.String()
     epc_select_choice = fields.String()
     address_select_choice = fields.String()
+    no_results = fields.String()
     uprn_is_duplicate = fields.String()
     epc_found = fields.String()
     epc_rating_is_eligible = fields.String()

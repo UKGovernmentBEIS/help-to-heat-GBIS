@@ -140,7 +140,7 @@ from .consts import (
     wall_type_field_dont_know,
     wall_type_field_mix,
     wall_type_field_solid,
-    wall_type_page,
+    wall_type_page, address_no_results_field,
 )
 from .eligibility import calculate_eligibility, eco4
 from .routing import CouldNotCalculateJourneyException, calculate_journey
@@ -626,13 +626,22 @@ class AddressView(PageView):
         data[address_building_name_or_number_field] = building_name_or_number
         data[address_postcode_field] = postcode
 
+        address_details, data = self._select_api_and_request(building_name_or_number, postcode, country, data.copy())
+
+        data[address_all_address_and_lmk_details_field] = address_details
+
+        data[address_no_results_field] = field_yes if len(address_details) == 0 else field_no
+
+        return data
+
+    def _select_api_and_request(self, building_name_or_number, postcode, country, data):
         try:
             if country != country_field_scotland:
                 address_and_lmk_details = interface.api.epc.get_address_and_epc_lmk(building_name_or_number, postcode)
                 if len(address_and_lmk_details) > 0:
                     most_recent_address_and_lmk_details = utils.get_most_recent_epc_per_uprn(address_and_lmk_details)
-                    data[address_all_address_and_lmk_details_field] = most_recent_address_and_lmk_details
                     data[address_choice_field] = address_choice_field_write_address
+                    return most_recent_address_and_lmk_details, data
                 else:
                     data[address_choice_field] = address_choice_field_epc_api_fail
             else:
@@ -641,7 +650,8 @@ class AddressView(PageView):
             logger.exception(f"An error occurred: {e}")
             data[address_choice_field] = address_choice_field_epc_api_fail
 
-        return data
+        # if didn't return epc api data, return os api data
+        return interface.api.address.find_addresses(building_name_or_number, postcode), data
 
 
 @register_page(epc_select_page)
