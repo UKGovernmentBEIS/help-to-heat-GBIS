@@ -6,6 +6,7 @@ from help_to_heat.frontdoor.consts import (
     address_choice_field_epc_api_fail,
     address_choice_field_write_address,
     address_manual_page,
+    address_no_results_field,
     address_page,
     address_select_choice_field,
     address_select_choice_field_enter_manually,
@@ -253,6 +254,10 @@ def test_address_manual_from_address_page_prev_page():
         }
 
         assert get_prev_page(address_manual_page, answers) == address_page
+
+        for address_choice in [address_choice_field_write_address, address_choice_field_epc_api_fail]:
+            answers = {**flow_answers, address_choice_field: address_choice, address_no_results_field: field_yes}
+            assert get_prev_page(address_manual_page, answers) == address_page
 
 
 def test_epc_select_manual_from_epc_select_page_prev_page():
