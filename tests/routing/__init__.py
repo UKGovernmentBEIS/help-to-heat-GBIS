@@ -3,6 +3,7 @@ from help_to_heat.frontdoor.consts import (
     address_choice_field_enter_manually,
     address_choice_field_epc_api_fail,
     address_choice_field_write_address,
+    address_no_results_field,
     address_select_choice_field,
     address_select_choice_field_enter_manually,
     address_select_choice_field_select_address,
@@ -103,6 +104,7 @@ address_flow_write_address_scotland_select_epc = "scotland select epc found"
 address_flow_write_address_scotland_select_no_epc = "scotland select epc not found"
 address_flow_write_address_scotland_manually = "scotland manually"
 address_flow_manually = "manually"
+address_flow_no_results = "no results"
 all_address_flows = [
     address_flow_write_address_epc_hit_select,
     address_flow_write_address_epc_hit_write_manually,
@@ -112,6 +114,7 @@ all_address_flows = [
     address_flow_write_address_scotland_select_no_epc,
     address_flow_write_address_scotland_manually,
     address_flow_manually,
+    address_flow_no_results,
 ]
 
 circumstances_flow_benefits_eligible = "benefits"
@@ -331,6 +334,15 @@ def _get_address_input_answers_pre_duplicate_uprn(address_flow, property_flow=No
 
         if address_flow == address_flow_manually:
             yield {**flow_answers, address_choice_field: address_choice_field_enter_manually, epc_found_field: field_no}
+
+        if address_flow == address_flow_no_results:
+            for address_choice in [address_choice_field_write_address, address_choice_field_epc_api_fail]:
+                yield {
+                    **flow_answers,
+                    address_choice_field: address_choice,
+                    address_no_results_field: field_yes,
+                    epc_found_field: field_no,
+                }
 
 
 # answers for after the user has entered an address either by select or manually

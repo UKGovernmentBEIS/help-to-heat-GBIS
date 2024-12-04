@@ -6,6 +6,7 @@ from help_to_heat.frontdoor.consts import (
     address_choice_field_epc_api_fail,
     address_choice_field_write_address,
     address_manual_page,
+    address_no_results_field,
     address_page,
     address_select_choice_field,
     address_select_choice_field_enter_manually,
@@ -237,21 +238,35 @@ def test_park_home_main_residence_next_page(park_home_main_residence, expected_n
 
 
 @pytest.mark.parametrize(
-    "country, expected_next_page",
+    "country, no_results, expected_next_page",
     [
-        (country_field_england, epc_select_page),
-        (country_field_scotland, address_select_page),
-        (country_field_wales, epc_select_page),
+        (country_field_england, field_no, epc_select_page),
+        (country_field_england, field_yes, address_manual_page),
+        (country_field_scotland, field_no, address_select_page),
+        (country_field_scotland, field_yes, address_manual_page),
+        (country_field_wales, field_no, epc_select_page),
+        (country_field_wales, field_yes, address_manual_page),
     ],
 )
-def test_address_write_address_next_page(country, expected_next_page):
-    answers = {address_choice_field: address_choice_field_write_address, country_field: country}
+def test_address_write_address_next_page(country, no_results, expected_next_page):
+    answers = {
+        address_choice_field: address_choice_field_write_address,
+        country_field: country,
+        address_no_results_field: no_results,
+    }
     assert get_next_page(address_page, answers) == expected_next_page
 
 
-def test_address_epc_api_fail_next_page():
-    answers = {address_choice_field: address_choice_field_epc_api_fail}
-    assert get_next_page(address_page, answers) == address_select_page
+@pytest.mark.parametrize(
+    "no_results, expected_next_page",
+    [
+        (field_no, address_select_page),
+        (field_yes, address_manual_page),
+    ],
+)
+def test_address_epc_api_fail_next_page(no_results, expected_next_page):
+    answers = {address_choice_field: address_choice_field_epc_api_fail, address_no_results_field: no_results}
+    assert get_next_page(address_page, answers) == expected_next_page
 
 
 def test_address_enter_manually_next_page():

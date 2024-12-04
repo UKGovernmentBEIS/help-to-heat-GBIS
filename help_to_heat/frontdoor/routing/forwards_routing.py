@@ -4,6 +4,7 @@ from help_to_heat.frontdoor.consts import (
     address_choice_field_epc_api_fail,
     address_choice_field_write_address,
     address_manual_page,
+    address_no_results_field,
     address_page,
     address_select_choice_field,
     address_select_choice_field_select_address,
@@ -322,8 +323,11 @@ def _park_home_main_residence_next_page(answers):
 @_requires_answer(address_choice_field)
 def _address_next_page(answers):
     address_choice = answers.get(address_choice_field)
+    address_no_results = answers.get(address_no_results_field)
     country = answers.get(country_field)
 
+    if address_no_results == field_yes:
+        return address_manual_page
     if address_choice == address_choice_field_write_address:
         if country in [country_field_england, country_field_wales]:
             return epc_select_page
