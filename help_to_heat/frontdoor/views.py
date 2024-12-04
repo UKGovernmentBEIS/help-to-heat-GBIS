@@ -140,7 +140,7 @@ from .consts import (
     wall_type_field_dont_know,
     wall_type_field_mix,
     wall_type_field_solid,
-    wall_type_page,
+    wall_type_page, address_no_results_field,
 )
 from .eligibility import calculate_eligibility, eco4
 from .routing import CouldNotCalculateJourneyException, calculate_journey
@@ -625,6 +625,7 @@ class AddressView(PageView):
         # overwrite the answers with stripped ones
         data[address_building_name_or_number_field] = building_name_or_number
         data[address_postcode_field] = postcode
+        data[address_no_results_field] = field_no
 
         try:
             if country != country_field_scotland:
@@ -640,6 +641,16 @@ class AddressView(PageView):
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
             data[address_choice_field] = address_choice_field_epc_api_fail
+
+        will_use_os_api = (
+            data[address_choice_field] == address_choice_field_epc_api_fail
+            or country == country_field_scotland
+            and data[address_choice_field] == address_choice_field_write_address
+        )
+
+        # on all paths that use OS API, double-check the api will give any results. if not, don't send there
+        if will_use_os_api and not interface.api.address.address_has_results(building_name_or_number, postcode):
+            data[address_no_results_field] = field_yes
 
         return data
 

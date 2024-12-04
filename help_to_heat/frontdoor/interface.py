@@ -319,6 +319,9 @@ class Address(Entity):
 
         return joined_addresses[:10]
 
+    def address_has_results(self, building_name_or_number, postcode):
+        return len(self.find_addresses(building_name_or_number, postcode)) > 0
+
     @with_schema(load=GetAddressSchema, dump=FullAddressSchema)
     def get_address(self, uprn):
         logger = logging.getLogger(__name__)
