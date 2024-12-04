@@ -13,6 +13,22 @@
       {{_("What is the property's address?")}}
     </h1>
   </legend>
+  
+  {% if show_address_manually_error %}
+    <div class="govuk-error-summary" data-module="govuk-error-summary">
+      <div role="alert">
+        <h2 class="govuk-error-summary__title">{{_("We could not find your address")}}</h2>
+        <div class="govuk-error-summary__body">
+          <ul class="govuk-list govuk-error-summary__list">
+            <li>
+              <a href="#question-address_line_1">{{_("Enter address manually")}}</a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  {% endif %} 
+  
   {% set address_line_1_label = _("Address line 1") %}
   {{macros.input('address_line_1', address_line_1_label, data, errors, 'address-line1')}}
   
