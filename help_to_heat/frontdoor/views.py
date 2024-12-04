@@ -29,6 +29,7 @@ from .consts import (
     address_manual_page,
     address_manual_postcode_field,
     address_manual_town_or_city_field,
+    address_no_results_field,
     address_page,
     address_postcode_field,
     address_select_choice_field,
@@ -140,7 +141,7 @@ from .consts import (
     wall_type_field_dont_know,
     wall_type_field_mix,
     wall_type_field_solid,
-    wall_type_page, address_no_results_field,
+    wall_type_page,
 )
 from .eligibility import calculate_eligibility, eco4
 from .routing import CouldNotCalculateJourneyException, calculate_journey
@@ -409,6 +410,7 @@ class PageView(utils.MethodDispatcher):
             page_name=page_name,
             data=data_with_get_answers,
             is_change_page=is_change_page,
+            errors=errors,
         )
 
         context = {
@@ -481,7 +483,7 @@ class PageView(utils.MethodDispatcher):
                 return redirect("/sorry")
             return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
-    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page, errors):
         """
         Build any additional data to be added to the context.
 
@@ -612,8 +614,13 @@ class ParkHomeMainResidenceView(PageView):
 
 @register_page(address_page)
 class AddressView(PageView):
-    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page, errors):
         return {"manual_url": page_name_to_url(session_id, address_manual_page, is_change_page)}
+
+    def save_get_data(self, data, session_id, page_name):
+        # this ensures that if the user presses enter manually they will not see the no results error
+        data[address_no_results_field] = field_no
+        return data
 
     def save_post_data(self, data, session_id, page_name):
         reset_epc_details(session_id)
@@ -667,7 +674,7 @@ class EpcSelectView(PageView):
         non_empty_address_parts = filter(None, address_parts)
         return ", ".join(non_empty_address_parts)
 
-    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page, errors):
         data = interface.api.session.get_answer(session_id, address_page)
         address_and_rrn_details = data.get(address_all_address_and_lmk_details_field, [])
         lmk_options = tuple(
@@ -730,7 +737,7 @@ class EpcSelectView(PageView):
 
 @register_page(address_select_page)
 class AddressSelectView(PageView):
-    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page, errors):
         address_data = interface.api.session.get_answer(session_id, address_page)
         building_name_or_number = address_data[address_building_name_or_number_field]
         postcode = address_data[address_postcode_field]
@@ -814,11 +821,19 @@ class ReferralAlreadySubmitted(PageView):
 @register_page(epc_select_manual_page)
 @register_page(address_select_manual_page)
 class AddressManualView(PageView):
-    def build_extra_context(self, request, session_id, page_name, data, *args, **kwargs):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page, errors):
         answer_data = interface.api.session.get_answer(session_id, address_page)
-        data = {**answer_data, **data}
 
-        return {"data": data}
+        session_data = interface.api.session.get_session(session_id)
+        # validation errors get priority, don't show both at once
+        show_address_manually_error = session_data[address_no_results_field] == field_yes and len(errors) == 0
+
+        context_data = {
+            **answer_data,
+            **data,
+        }
+
+        return {"data": context_data, "show_address_manually_error": show_address_manually_error}
 
     def save_post_data(self, data, session_id, page_name):
         reset_epc_details(session_id)
@@ -860,7 +875,7 @@ class CouncilTaxBandView(PageView):
 
 @register_page(epc_page)
 class EpcView(PageView):
-    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page, errors):
         session_data = interface.api.session.get_session(session_id)
 
         address = session_data.get(address_field)
@@ -931,7 +946,7 @@ class EpcView(PageView):
 
 @register_page(no_epc_page)
 class NoEpcView(PageView):
-    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page, errors):
         session_data = interface.api.session.get_session(session_id)
 
         country = session_data.get(country_field)
