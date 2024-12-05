@@ -20,6 +20,7 @@ from help_to_heat.frontdoor.consts import (
 from help_to_heat.frontdoor.mock_epc_api import (
     MockEPCApi,
     MockEPCApiWithEPCC,
+    MockEPCApiWithMultipleEPC,
     MockNotFoundEPCApi,
     MockRecommendationsInternalServerErrorEPCApi,
     MockRecommendationsNotFoundEPCApi,
@@ -2126,7 +2127,7 @@ def test_epc_page_shows_epc_info():
     assert page.has_one("p:contains('23 July 2010')")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApiWithMultipleEPC)
 def test_epc_select_only_shows_most_recent_epc_per_uprn():
     client = utils.get_client()
     page = client.get("/start")
@@ -2160,11 +2161,9 @@ def test_epc_select_only_shows_most_recent_epc_per_uprn():
     data = interface.api.session.get_answer(session_id, page_name=address_page)
 
     assert page.has_one("label:contains('22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA')")
-    assert page.has_one("label:contains('11 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA')")
 
-    assert len(data[address_all_address_and_lmk_details_field]) == 2
+    assert len(data[address_all_address_and_lmk_details_field]) == 1
     assert data[address_all_address_and_lmk_details_field][0]["lmk-key"] != "3333333333333333333333333333333333"
-    assert data[address_all_address_and_lmk_details_field][1]["lmk-key"] != "3333333333333333333333333333333333"
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockRecommendationsNotFoundEPCApi)

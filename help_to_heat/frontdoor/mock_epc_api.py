@@ -27,6 +27,11 @@ class MockEPCApi:
         return load_test_reponse("sample_epc_recommendations_response.json")
 
 
+class MockEPCApiWithMultipleEPC(MockEPCApi):
+    def search_epc_details(self, building, postcode):
+        return load_test_reponse("sample_search_response_with_multiple_epc.json")
+
+
 class MockEPCApiWithEPCC(MockEPCApi):
     def get_epc_details(self, rrn):
         epc = load_test_reponse("sample_epc_response.json")
