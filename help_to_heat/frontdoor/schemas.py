@@ -121,6 +121,7 @@ from help_to_heat.frontdoor.consts import (
     supplier_field_utilita,
     supplier_field_utility_warehouse,
     supplier_page,
+    alternative_supplier_page,
     utility_warehouse_warning_page,
     utility_warehouse_warning_page_field,
     wall_insulation_field,
@@ -141,6 +142,7 @@ from help_to_heat.frontdoor.consts import (
 summary_map = {
     country_field: _("Country of property"),
     supplier_field: _("Energy supplier"),
+    alternative_supplier_field: _("Alternative energy supplier"),
     own_property_field: pgettext_lazy("summary page", "Do you own the property?"),
     park_home_field: _("Do you live in a park home?"),
     park_home_main_residence_field: _("Is the park home your main residence?"),
@@ -161,8 +163,9 @@ summary_map = {
     loft_insulation_field: _("Is there 100mm of insulation in your loft?"),
 }
 
-confirm_sumbit_map = {
+confirm_submit_map = {
     supplier_field: _("Energy supplier"),
+    alternative_supplier_field: _("Alternative energy supplier"),
     contact_details_first_name_field: _("First name"),
     contact_details_last_name_field: _("Last name"),
     contact_details_contact_number_field: _("Contact number"),
@@ -172,6 +175,7 @@ confirm_sumbit_map = {
 page_display_questions = {
     country_page: (country_field,),
     supplier_page: (supplier_field,),
+    alternative_supplier_page: (supplier_field,),
     bulb_warning_page: (bulb_warning_page_field,),
     shell_warning_page: (shell_warning_page_field,),
     utility_warehouse_warning_page: (utility_warehouse_warning_page_field,),
@@ -218,6 +222,7 @@ routing_overrides = {
 change_page_lookup = {
     country_page: summary_page,
     supplier_page: summary_page,
+    alternative_supplier_page: summary_page,
     bulb_warning_page: summary_page,
     shell_warning_page: summary_page,
     utility_warehouse_warning_page: summary_page,

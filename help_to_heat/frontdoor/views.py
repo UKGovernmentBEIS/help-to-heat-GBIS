@@ -140,7 +140,7 @@ from .consts import (
     wall_type_field_dont_know,
     wall_type_field_mix,
     wall_type_field_solid,
-    wall_type_page,
+    wall_type_page, supplier_field_not_listed,
 )
 from .eligibility import calculate_eligibility, eco4
 from .routing import CouldNotCalculateJourneyException, calculate_journey
@@ -583,6 +583,20 @@ class CountryView(PageView):
 
 @register_page(supplier_page)
 class SupplierView(PageView):
+    def build_extra_context(self, *args, **kwargs):
+        fallback_option = (
+            {"value": supplier_field_not_listed, "label": _("My energy supplier is not listed")}
+        )
+        return {"supplier_options": schemas.supplier_options,
+                "fallback_option": fallback_option}
+
+    def save_post_data(self, data, session_id, page_name):
+        request_supplier = data.get(supplier_field)
+        data[user_selected_supplier_field] = request_supplier
+        return data
+
+@register_page(alternative_supplier_page)
+class AlternativeSupplierView(PageView):
     def build_extra_context(self, *args, **kwargs):
         return {"supplier_options": schemas.supplier_options}
 
@@ -1195,7 +1209,7 @@ class ConfirmSubmitView(PageView):
         session_data = interface.api.session.get_session(session_id)
         summary_lines = tuple(
             {
-                "question": schemas.confirm_sumbit_map[question],
+                "question": schemas.confirm_submit_map[question],
                 "answer": session_data.get(question),
                 "change_url": self.get_change_url(session_id, page_name),
             }

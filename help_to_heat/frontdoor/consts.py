@@ -4,6 +4,7 @@ govuk_start_page = "start_page"
 country_page = "country"
 northern_ireland_ineligible_page = "northern-ireland"
 supplier_page = "supplier"
+alternative_supplier_page = "alternative-supplier"
 own_property_page = "own-property"
 bulb_warning_page = "bulb-warning-page"
 shell_warning_page = "shell-warning-page"
@@ -43,6 +44,7 @@ all_pages = [
     country_page,
     northern_ireland_ineligible_page,
     supplier_page,
+    alternative_supplier_page,
     own_property_page,
     bulb_warning_page,
     shell_warning_page,
@@ -118,6 +120,11 @@ supplier_fields = [
     supplier_field_utilita,
     supplier_field_utility_warehouse,
 ]
+supplier_field_not_listed = "supplier_not_listed"
+
+alternative_supplier_field = "alternative-supplier"
+alternative_supplier_fields = supplier_fields
+
 user_selected_supplier_field = "user_selected_supplier"
 
 bulb_warning_page_field = "confirm_bulb_warning"
