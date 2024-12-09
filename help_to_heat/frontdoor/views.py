@@ -16,7 +16,7 @@ from help_to_heat import portal, utils
 from ..portal import email_handler
 from . import eligibility, interface, schemas
 from .consts import (
-    address_all_address_and_lmk_details_field,
+    address_all_address_and_details_field,
     address_building_name_or_number_field,
     address_choice_field,
     address_choice_field_enter_manually,
@@ -29,6 +29,7 @@ from .consts import (
     address_manual_page,
     address_manual_postcode_field,
     address_manual_town_or_city_field,
+    address_no_results_field,
     address_page,
     address_postcode_field,
     address_select_choice_field,
@@ -409,6 +410,7 @@ class PageView(utils.MethodDispatcher):
             page_name=page_name,
             data=data_with_get_answers,
             is_change_page=is_change_page,
+            errors=errors,
         )
 
         context = {
@@ -481,7 +483,7 @@ class PageView(utils.MethodDispatcher):
                 return redirect("/sorry")
             return redirect("frontdoor:page", session_id=session_id, page_name=next_page_name)
 
-    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page, errors):
         """
         Build any additional data to be added to the context.
 
@@ -612,8 +614,13 @@ class ParkHomeMainResidenceView(PageView):
 
 @register_page(address_page)
 class AddressView(PageView):
-    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page, errors):
         return {"manual_url": page_name_to_url(session_id, address_manual_page, is_change_page)}
+
+    def save_get_data(self, data, session_id, page_name):
+        # this ensures that if the user presses enter manually they will not see the no results error
+        data[address_no_results_field] = field_no
+        return data
 
     def save_post_data(self, data, session_id, page_name):
         reset_epc_details(session_id)
@@ -626,13 +633,22 @@ class AddressView(PageView):
         data[address_building_name_or_number_field] = building_name_or_number
         data[address_postcode_field] = postcode
 
+        address_details, data = self._select_api_and_request(building_name_or_number, postcode, country, data.copy())
+
+        data[address_all_address_and_details_field] = address_details
+
+        data[address_no_results_field] = field_yes if len(address_details) == 0 else field_no
+
+        return data
+
+    def _select_api_and_request(self, building_name_or_number, postcode, country, data):
         try:
             if country != country_field_scotland:
                 address_and_lmk_details = interface.api.epc.get_address_and_epc_lmk(building_name_or_number, postcode)
                 if len(address_and_lmk_details) > 0:
                     most_recent_address_and_lmk_details = utils.get_most_recent_epc_per_uprn(address_and_lmk_details)
-                    data[address_all_address_and_lmk_details_field] = most_recent_address_and_lmk_details
                     data[address_choice_field] = address_choice_field_write_address
+                    return most_recent_address_and_lmk_details, data
                 else:
                     data[address_choice_field] = address_choice_field_epc_api_fail
             else:
@@ -641,7 +657,8 @@ class AddressView(PageView):
             logger.exception(f"An error occurred: {e}")
             data[address_choice_field] = address_choice_field_epc_api_fail
 
-        return data
+        # if didn't return epc api data, return os api data
+        return interface.api.address.find_addresses(building_name_or_number, postcode), data
 
 
 @register_page(epc_select_page)
@@ -657,9 +674,9 @@ class EpcSelectView(PageView):
         non_empty_address_parts = filter(None, address_parts)
         return ", ".join(non_empty_address_parts)
 
-    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page, errors):
         data = interface.api.session.get_answer(session_id, address_page)
-        address_and_rrn_details = data.get(address_all_address_and_lmk_details_field, [])
+        address_and_rrn_details = data.get(address_all_address_and_details_field, [])
         lmk_options = tuple(
             {
                 "value": a["lmk-key"],
@@ -720,11 +737,9 @@ class EpcSelectView(PageView):
 
 @register_page(address_select_page)
 class AddressSelectView(PageView):
-    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
-        address_data = interface.api.session.get_answer(session_id, address_page)
-        building_name_or_number = address_data[address_building_name_or_number_field]
-        postcode = address_data[address_postcode_field]
-        addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page, errors):
+        session_data = interface.api.session.get_session(session_id)
+        addresses = self._get_addresses(session_data)
 
         uprn_options = tuple(
             {
@@ -747,6 +762,17 @@ class AddressSelectView(PageView):
             "manual_url": page_name_to_url(session_id, address_select_manual_page, is_change_page),
             "fallback_option": fallback_option,
         }
+
+    def _get_addresses(self, session_data):
+        # post PC-1463 we store this information in the session after inputting on address page
+        # though due to old sessions, we cant guarantee this field is saved
+        if address_all_address_and_details_field in session_data:
+            return session_data[address_all_address_and_details_field]
+
+        # old fallback logic
+        building_name_or_number = session_data.get(address_building_name_or_number_field)
+        postcode = session_data.get(address_postcode_field)
+        return interface.api.address.find_addresses(building_name_or_number, postcode)
 
     def save_post_data(self, data, session_id, page_name):
         uprn = data.get(uprn_field)
@@ -804,11 +830,19 @@ class ReferralAlreadySubmitted(PageView):
 @register_page(epc_select_manual_page)
 @register_page(address_select_manual_page)
 class AddressManualView(PageView):
-    def build_extra_context(self, request, session_id, page_name, data, *args, **kwargs):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page, errors):
         answer_data = interface.api.session.get_answer(session_id, address_page)
-        data = {**answer_data, **data}
 
-        return {"data": data}
+        session_data = interface.api.session.get_session(session_id)
+        # validation errors get priority, don't show both at once
+        show_address_manually_error = session_data[address_no_results_field] == field_yes and len(errors) == 0
+
+        context_data = {
+            **answer_data,
+            **data,
+        }
+
+        return {"data": context_data, "show_address_manually_error": show_address_manually_error}
 
     def save_post_data(self, data, session_id, page_name):
         reset_epc_details(session_id)
@@ -850,7 +884,7 @@ class CouncilTaxBandView(PageView):
 
 @register_page(epc_page)
 class EpcView(PageView):
-    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page, errors):
         session_data = interface.api.session.get_session(session_id)
 
         address = session_data.get(address_field)
@@ -921,7 +955,7 @@ class EpcView(PageView):
 
 @register_page(no_epc_page)
 class NoEpcView(PageView):
-    def build_extra_context(self, request, session_id, page_name, data, is_change_page):
+    def build_extra_context(self, request, session_id, page_name, data, is_change_page, errors):
         session_data = interface.api.session.get_session(session_id)
 
         country = session_data.get(country_field)
