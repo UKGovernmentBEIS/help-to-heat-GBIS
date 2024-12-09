@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from help_to_heat.frontdoor import interface
 from help_to_heat.frontdoor.consts import (
-    address_all_address_and_lmk_details_field,
+    address_all_address_and_details_field,
     address_building_name_or_number_field,
     address_page,
     address_postcode_field,
@@ -2162,8 +2162,8 @@ def test_epc_select_only_shows_most_recent_epc_per_uprn():
 
     assert page.has_one("label:contains('22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA')")
 
-    assert len(data[address_all_address_and_lmk_details_field]) == 1
-    assert data[address_all_address_and_lmk_details_field][0]["lmk-key"] != "3333333333333333333333333333333333"
+    assert len(data[address_all_address_and_details_field]) == 1
+    assert data[address_all_address_and_details_field][0]["lmk-key"] != "3333333333333333333333333333333333"
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockRecommendationsNotFoundEPCApi)
