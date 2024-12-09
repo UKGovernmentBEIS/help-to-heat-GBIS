@@ -16,7 +16,7 @@ from help_to_heat import portal, utils
 from ..portal import email_handler
 from . import eligibility, interface, schemas
 from .consts import (
-    address_all_address_and_lmk_details_field,
+    address_all_address_and_details_field,
     address_building_name_or_number_field,
     address_choice_field,
     address_choice_field_enter_manually,
@@ -635,7 +635,7 @@ class AddressView(PageView):
 
         address_details, data = self._select_api_and_request(building_name_or_number, postcode, country, data.copy())
 
-        data[address_all_address_and_lmk_details_field] = address_details
+        data[address_all_address_and_details_field] = address_details
 
         data[address_no_results_field] = field_yes if len(address_details) == 0 else field_no
 
@@ -676,7 +676,7 @@ class EpcSelectView(PageView):
 
     def build_extra_context(self, request, session_id, page_name, data, is_change_page, errors):
         data = interface.api.session.get_answer(session_id, address_page)
-        address_and_rrn_details = data.get(address_all_address_and_lmk_details_field, [])
+        address_and_rrn_details = data.get(address_all_address_and_details_field, [])
         lmk_options = tuple(
             {
                 "value": a["lmk-key"],
@@ -738,10 +738,8 @@ class EpcSelectView(PageView):
 @register_page(address_select_page)
 class AddressSelectView(PageView):
     def build_extra_context(self, request, session_id, page_name, data, is_change_page, errors):
-        address_data = interface.api.session.get_answer(session_id, address_page)
-        building_name_or_number = address_data[address_building_name_or_number_field]
-        postcode = address_data[address_postcode_field]
-        addresses = interface.api.address.find_addresses(building_name_or_number, postcode)
+        session_data = interface.api.session.get_session(session_id)
+        addresses = self._get_addresses(session_data)
 
         uprn_options = tuple(
             {
@@ -764,6 +762,17 @@ class AddressSelectView(PageView):
             "manual_url": page_name_to_url(session_id, address_select_manual_page, is_change_page),
             "fallback_option": fallback_option,
         }
+
+    def _get_addresses(self, session_data):
+        # post PC-1463 we store this information in the session after inputting on address page
+        # though due to old sessions, we cant guarantee this field is saved
+        if address_all_address_and_details_field in session_data:
+            return session_data[address_all_address_and_details_field]
+
+        # old fallback logic
+        building_name_or_number = session_data.get(address_building_name_or_number_field)
+        postcode = session_data.get(address_postcode_field)
+        return interface.api.address.find_addresses(building_name_or_number, postcode)
 
     def save_post_data(self, data, session_id, page_name):
         uprn = data.get(uprn_field)

@@ -149,7 +149,8 @@ address_choice_field_epc_api_fail = "epc api fail"
 address_choice_field_enter_manually = "enter manually"
 address_building_name_or_number_field = "building_name_or_number"
 address_postcode_field = "postcode"
-address_all_address_and_lmk_details_field = "address_and_lmk_details"
+# PC-1463: removed lmk from field name as it stores info from both flows (lmk & uprn)
+address_all_address_and_details_field = "address_and_lmk_details"
 address_no_results_field = "no_results"  # yes/no options
 
 epc_select_choice_field = "epc_select_choice"
