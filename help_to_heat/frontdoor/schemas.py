@@ -174,7 +174,6 @@ confirm_submit_map = {
 page_display_questions = {
     country_page: (country_field,),
     supplier_page: (supplier_field,),
-    alternative_supplier_page: (supplier_field,),
     bulb_warning_page: (bulb_warning_page_field,),
     shell_warning_page: (shell_warning_page_field,),
     utility_warehouse_warning_page: (utility_warehouse_warning_page_field,),
@@ -268,6 +267,7 @@ change_page_override_pages = [
     park_home_ineligible_page,
     epc_ineligible_page,
     property_ineligible_page,
+    alternative_supplier_page,
 ]
 
 # where the journey starts for questions in this change page

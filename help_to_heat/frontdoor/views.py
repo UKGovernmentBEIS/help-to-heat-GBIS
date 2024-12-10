@@ -278,8 +278,7 @@ unavailable_suppliers = []
 
 
 def unavailable_supplier_redirect(session_id):
-    session_data = interface.api.session.get_session(session_id)
-    supplier = session_data[supplier_field]
+    supplier = SupplierConverter(session_id).get_supplier()
     if supplier not in unavailable_suppliers:
         return None
 
@@ -832,7 +831,7 @@ class ReferralAlreadySubmitted(PageView):
         to_same_energy_supplier = duplicate_referral_checker.is_recent_duplicate_referral_sent_to_same_energy_supplier()
         date_created = duplicate_referral_checker.get_date_of_previous_referral().strftime("%d/%m/%Y")
         address = session_data.get(address_field)
-        supplier = session_data.get(supplier_field)
+        supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
         return {
             "to_same_energy_supplier": to_same_energy_supplier,
             "date_created": date_created,
@@ -1073,7 +1072,7 @@ class SummaryView(PageView):
         summary_lines = tuple(
             {
                 "question": schemas.summary_map[question],
-                "answer": self.get_answer(session_data, question),
+                "answer": self.get_answer(session_id, session_data, question),
                 "change_url": self.get_change_url(session_id, page_name),
             }
             for page_name, question in self.get_summary_questions(session_data)
@@ -1090,8 +1089,12 @@ class SummaryView(PageView):
     def show_question(self, session_data, question):
         return question in schemas.summary_map
 
-    def get_answer(self, session_data, question):
+    def get_answer(self, session_id, session_data, question):
         answer = session_data.get(question)
+
+        if question == supplier_field:
+            return SupplierConverter(session_id).get_supplier()
+
         answers_map = schemas.check_your_answers_options_map.get(question)
         return answers_map[answer] if answers_map else answer
 
