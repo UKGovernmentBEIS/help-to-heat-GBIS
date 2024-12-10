@@ -1,0 +1,35 @@
+{% extends "frontdoor/base.html" %}
+{% import "macros.html" as macros with context %}
+
+{% block title %}
+  <title>{{_("Select an alternative energy supplier - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
+{% endblock %}
+
+{% block content %}
+  {% call macros.form_wrapper(prev_url) -%}
+    <div class="govuk-form-group {% if errors %}govuk-form-group--error{% endif %}">
+      <fieldset class="govuk-fieldset"{% if errors %} aria-describedby="question-supplier-error" {% endif %}>
+        <legend class="govuk-fieldset__legend govuk-fieldset__legend--l">
+          <h1 class="govuk-fieldset__heading">
+            {{_("Select an alternative energy supplier")}}
+          </h1>
+        </legend>
+
+        <p class="govuk-body">{{_("If your energy supplier is not participating in the scheme, you may still be eligible to receive help from another supplier")}}</p>
+          
+        <div class="govuk-warning-text">
+          <span class="govuk-warning-text__icon" aria-hidden="true">!</span>
+          <strong class="govuk-warning-text__text">
+            <span class="govuk-visually-hidden">Warning</span>
+            {{ _("Selecting an alternative energy supplier will not impact your eligibility.") }}
+          </strong>
+        </div>
+        
+        <p class="govuk-body">{{_("Select any other energy supplier to continue")}}</p>
+
+        {{macros.radios('alternative_supplier', supplier_options, data, errors)}}
+
+      </fieldset>
+    </div>
+  {%- endcall %}
+{% endblock %}
