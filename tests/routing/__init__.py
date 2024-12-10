@@ -76,7 +76,7 @@ from help_to_heat.frontdoor.consts import (
     supplier_field_bulb,
     supplier_field_shell,
     supplier_field_utility_warehouse,
-    supplier_fields,
+    supplier_fields_real,
     utility_warehouse_warning_page_field,
     wall_insulation_field,
     wall_insulation_field_dont_know,
@@ -193,7 +193,7 @@ def get_country_answers():
 
 def get_supplier_answers():
     for country_answers in get_country_answers():
-        for supplier in supplier_fields:
+        for supplier in supplier_fields_real:
             answers = {**country_answers, supplier_field: supplier}
 
             if supplier == supplier_field_bulb:

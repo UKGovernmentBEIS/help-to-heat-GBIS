@@ -38,6 +38,8 @@ from .consts import (
     address_select_manual_page,
     address_select_page,
     all_pages,
+    alternative_supplier_field,
+    alternative_supplier_page,
     benefits_field,
     benefits_page,
     bulb_warning_page,
@@ -124,6 +126,8 @@ from .consts import (
     success_page,
     summary_page,
     supplier_field,
+    supplier_field_not_listed,
+    supplier_fields_real,
     supplier_page,
     unknown_page,
     uprn_field,
@@ -195,6 +199,7 @@ page_compulsory_field_map = {
     loft_access_page: (loft_access_field,),
     loft_insulation_page: (loft_insulation_field,),
     supplier_page: (supplier_field,),
+    alternative_supplier_page: (alternative_supplier_field,),
     contact_details_page: (contact_details_first_name_field, contact_details_last_name_field),
     confirm_and_submit_page: (confirm_and_submit_permission_field, confirm_and_submit_acknowledge_field),
 }
@@ -224,6 +229,7 @@ missing_item_errors = {
     loft_access_field: _("Select whether or not you have access to the loft"),
     loft_insulation_field: _("Select whether or not your loft is fully insulated"),
     supplier_field: _("Select your home energy supplier from the list below"),
+    alternative_supplier_field: _("Select an alternative energy supplier"),
     contact_details_first_name_field: _("Enter your first name"),
     contact_details_last_name_field: _("Enter your last name"),
     contact_details_email_field: _("Enter your email address"),
@@ -586,10 +592,23 @@ class CountryView(PageView):
 @register_page(supplier_page)
 class SupplierView(PageView):
     def build_extra_context(self, *args, **kwargs):
-        return {"supplier_options": schemas.supplier_options}
+        fallback_option = {"value": supplier_field_not_listed, "label": _("My energy supplier is not listed")}
+        return {"supplier_options": schemas.supplier_options, "fallback_option": fallback_option}
 
     def save_post_data(self, data, session_id, page_name):
         request_supplier = data.get(supplier_field)
+        if user_selected_supplier_field in supplier_fields_real:
+            data[user_selected_supplier_field] = request_supplier
+        return data
+
+
+@register_page(alternative_supplier_page)
+class AlternativeSupplierView(PageView):
+    def build_extra_context(self, *args, **kwargs):
+        return {"supplier_options": schemas.supplier_options}
+
+    def save_post_data(self, data, session_id, page_name):
+        request_supplier = data.get(alternative_supplier_field)
         data[user_selected_supplier_field] = request_supplier
         return data
 
@@ -1229,7 +1248,7 @@ class ConfirmSubmitView(PageView):
         session_data = interface.api.session.get_session(session_id)
         summary_lines = tuple(
             {
-                "question": schemas.confirm_sumbit_map[question],
+                "question": schemas.confirm_submit_map[question],
                 "answer": session_data.get(question),
                 "change_url": self.get_change_url(session_id, page_name),
             }
