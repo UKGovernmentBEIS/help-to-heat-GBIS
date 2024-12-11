@@ -143,28 +143,31 @@ park_home_field = "park_home"
 park_home_main_residence_field = "park_home_main_residence"
 # yes/no options
 
-address_choice_field = "address_choice"
-address_choice_field_write_address = "write address"
-address_choice_field_epc_api_fail = "epc api fail"
-address_choice_field_enter_manually = "enter manually"
 address_building_name_or_number_field = "building_name_or_number"
 address_postcode_field = "postcode"
 # this const was renamed to no longer include lmk.
 # this is as this field stores info from both flows (lmk & uprn)
 # the field value is left as is to preserve backwards compatibility
 address_all_address_and_details_field = "address_and_lmk_details"
-address_no_results_field = "no_results"  # yes/no options
 
-epc_select_choice_field = "epc_select_choice"
-epc_select_choice_field_select_epc = "select epc"
-epc_select_choice_field_epc_api_fail = "epc api fail"
-epc_select_choice_field_enter_manually = "enter manually"
+# journey fields are calculated based on user input & other factors, and decide where the user should go next
+# they are stored in the users' session to record the result of these checks, to make journey calculation reproducible
+address_choice_journey_field = "address_choice"
+address_choice_journey_field_write_address = "write address"
+address_choice_journey_field_epc_api_fail = "epc api fail"
+address_choice_journey_field_enter_manually = "enter manually"
+address_no_results_journey_field = "no_results"  # yes/no options
 
-address_select_choice_field = "address_select_choice"
-address_select_choice_field_select_address = "select address"
-address_select_choice_field_enter_manually = "enter manually"
+epc_select_choice_journey_field = "epc_select_choice"
+epc_select_choice_journey_field_select_epc = "select epc"
+epc_select_choice_journey_field_epc_api_fail = "epc api fail"
+epc_select_choice_journey_field_enter_manually = "enter manually"
 
-referral_already_submitted_field = "submit_another"
+address_select_choice_journey_field = "address_select_choice"
+address_select_choice_journey_field_select_address = "select address"
+address_select_choice_journey_field_enter_manually = "enter manually"
+
+referral_already_submitted_journey_field = "submit_another"
 
 address_manual_address_line_1_field = "address_line_1"
 address_manual_address_line_2_field = "address_line_2"
@@ -172,8 +175,8 @@ address_manual_town_or_city_field = "town_or_city"
 address_manual_county_field = "county"
 address_manual_postcode_field = "postcode"
 
-duplicate_uprn_field = "uprn_is_duplicate"
-epc_found_field = "epc_found"
+duplicate_uprn_journey_field = "uprn_is_duplicate"
+epc_found_journey_field = "epc_found"
 lmk_field = "lmk"
 lmk_field_enter_manually = "enter-manually"
 address_field = "address"

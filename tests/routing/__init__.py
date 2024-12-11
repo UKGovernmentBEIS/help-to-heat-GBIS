@@ -1,12 +1,12 @@
 from help_to_heat.frontdoor.consts import (
-    address_choice_field,
-    address_choice_field_enter_manually,
-    address_choice_field_epc_api_fail,
-    address_choice_field_write_address,
-    address_no_results_field,
-    address_select_choice_field,
-    address_select_choice_field_enter_manually,
-    address_select_choice_field_select_address,
+    address_choice_journey_field,
+    address_choice_journey_field_enter_manually,
+    address_choice_journey_field_epc_api_fail,
+    address_choice_journey_field_write_address,
+    address_no_results_journey_field,
+    address_select_choice_journey_field,
+    address_select_choice_journey_field_enter_manually,
+    address_select_choice_journey_field_select_address,
     benefits_field,
     bulb_warning_page_field,
     council_tax_band_field,
@@ -24,14 +24,14 @@ from help_to_heat.frontdoor.consts import (
     country_field_england,
     country_field_scotland,
     country_field_wales,
-    duplicate_uprn_field,
+    duplicate_uprn_journey_field,
     epc_accept_suggested_epc_field,
-    epc_found_field,
+    epc_found_journey_field,
     epc_rating_is_eligible_field,
-    epc_select_choice_field,
-    epc_select_choice_field_enter_manually,
-    epc_select_choice_field_epc_api_fail,
-    epc_select_choice_field_select_epc,
+    epc_select_choice_journey_field,
+    epc_select_choice_journey_field_enter_manually,
+    epc_select_choice_journey_field_epc_api_fail,
+    epc_select_choice_journey_field_select_epc,
     field_dont_know,
     field_no,
     field_yes,
@@ -265,83 +265,90 @@ def _get_address_input_answers_pre_duplicate_uprn(address_flow, property_flow=No
         if address_flow == address_flow_write_address_epc_hit_select:
             yield {
                 **flow_answers,
-                address_choice_field: address_choice_field_write_address,
-                epc_select_choice_field: epc_select_choice_field_select_epc,
-                epc_found_field: field_yes,
+                address_choice_journey_field: address_choice_journey_field_write_address,
+                epc_select_choice_journey_field: epc_select_choice_journey_field_select_epc,
+                epc_found_journey_field: field_yes,
             }
 
         if address_flow == address_flow_write_address_epc_hit_write_manually:
             yield {
                 **flow_answers,
-                address_choice_field: address_choice_field_write_address,
-                epc_select_choice_field: epc_select_choice_field_enter_manually,
-                epc_found_field: field_no,
+                address_choice_journey_field: address_choice_journey_field_write_address,
+                epc_select_choice_journey_field: epc_select_choice_journey_field_enter_manually,
+                epc_found_journey_field: field_no,
             }
 
         if address_flow == address_flow_write_address_epc_api_fail_select:
             yield {
                 **flow_answers,
-                address_choice_field: address_choice_field_epc_api_fail,
-                address_select_choice_field: address_select_choice_field_select_address,
-                epc_found_field: field_no,
+                address_choice_journey_field: address_choice_journey_field_epc_api_fail,
+                address_select_choice_journey_field: address_select_choice_journey_field_select_address,
+                epc_found_journey_field: field_no,
             }
             yield {
                 **flow_answers,
-                address_choice_field: address_choice_field_write_address,
-                epc_select_choice_field: epc_select_choice_field_epc_api_fail,
-                address_select_choice_field: address_select_choice_field_select_address,
-                epc_found_field: field_no,
+                address_choice_journey_field: address_choice_journey_field_write_address,
+                epc_select_choice_journey_field: epc_select_choice_journey_field_epc_api_fail,
+                address_select_choice_journey_field: address_select_choice_journey_field_select_address,
+                epc_found_journey_field: field_no,
             }
 
         if address_flow == address_flow_write_address_epc_api_fail_manually:
             yield {
                 **flow_answers,
-                address_choice_field: address_choice_field_epc_api_fail,
-                address_select_choice_field: address_select_choice_field_enter_manually,
-                epc_found_field: field_no,
+                address_choice_journey_field: address_choice_journey_field_epc_api_fail,
+                address_select_choice_journey_field: address_select_choice_journey_field_enter_manually,
+                epc_found_journey_field: field_no,
             }
             yield {
                 **flow_answers,
-                address_choice_field: address_choice_field_write_address,
-                epc_select_choice_field: epc_select_choice_field_epc_api_fail,
-                address_select_choice_field: address_select_choice_field_enter_manually,
-                epc_found_field: field_no,
+                address_choice_journey_field: address_choice_journey_field_write_address,
+                epc_select_choice_journey_field: epc_select_choice_journey_field_epc_api_fail,
+                address_select_choice_journey_field: address_select_choice_journey_field_enter_manually,
+                epc_found_journey_field: field_no,
             }
 
         if address_flow == address_flow_write_address_scotland_select_epc:
             yield {
                 **flow_answers,
-                address_choice_field: address_choice_field_write_address,
-                address_select_choice_field: address_select_choice_field_select_address,
-                epc_found_field: field_yes,
+                address_choice_journey_field: address_choice_journey_field_write_address,
+                address_select_choice_journey_field: address_select_choice_journey_field_select_address,
+                epc_found_journey_field: field_yes,
             }
 
         if address_flow == address_flow_write_address_scotland_select_no_epc:
             yield {
                 **flow_answers,
-                address_choice_field: address_choice_field_write_address,
-                address_select_choice_field: address_select_choice_field_select_address,
-                epc_found_field: field_no,
+                address_choice_journey_field: address_choice_journey_field_write_address,
+                address_select_choice_journey_field: address_select_choice_journey_field_select_address,
+                epc_found_journey_field: field_no,
             }
 
         if address_flow == address_flow_write_address_scotland_manually:
             yield {
                 **flow_answers,
-                address_choice_field: address_choice_field_write_address,
-                address_select_choice_field: address_select_choice_field_enter_manually,
-                epc_found_field: field_no,
+                address_choice_journey_field: address_choice_journey_field_write_address,
+                address_select_choice_journey_field: address_select_choice_journey_field_enter_manually,
+                epc_found_journey_field: field_no,
             }
 
         if address_flow == address_flow_manually:
-            yield {**flow_answers, address_choice_field: address_choice_field_enter_manually, epc_found_field: field_no}
+            yield {
+                **flow_answers,
+                address_choice_journey_field: address_choice_journey_field_enter_manually,
+                epc_found_journey_field: field_no,
+            }
 
         if address_flow == address_flow_no_results:
-            for address_choice in [address_choice_field_write_address, address_choice_field_epc_api_fail]:
+            for address_choice in [
+                address_choice_journey_field_write_address,
+                address_choice_journey_field_epc_api_fail,
+            ]:
                 yield {
                     **flow_answers,
-                    address_choice_field: address_choice,
-                    address_no_results_field: field_yes,
-                    epc_found_field: field_no,
+                    address_choice_journey_field: address_choice,
+                    address_no_results_journey_field: field_yes,
+                    epc_found_journey_field: field_no,
                 }
 
 
@@ -349,7 +356,7 @@ def _get_address_input_answers_pre_duplicate_uprn(address_flow, property_flow=No
 def get_address_answers(address_flow, duplicate_uprn=None, property_flow=None):
     for address_answers in _get_address_input_answers_pre_duplicate_uprn(address_flow, property_flow):
         if duplicate_uprn is not None:
-            yield {**address_answers, duplicate_uprn_field: duplicate_uprn}
+            yield {**address_answers, duplicate_uprn_journey_field: duplicate_uprn}
         else:
             # if flow is one where a UPRN is checked, add options for whether a UPRN hit happened
             if address_flow in [
@@ -358,8 +365,8 @@ def get_address_answers(address_flow, duplicate_uprn=None, property_flow=None):
                 address_flow_write_address_scotland_select_epc,
                 address_flow_write_address_scotland_select_no_epc,
             ]:
-                yield {**address_answers, duplicate_uprn_field: field_yes}
-                yield {**address_answers, duplicate_uprn_field: field_no}
+                yield {**address_answers, duplicate_uprn_journey_field: field_yes}
+                yield {**address_answers, duplicate_uprn_journey_field: field_no}
             else:
                 yield address_answers
 

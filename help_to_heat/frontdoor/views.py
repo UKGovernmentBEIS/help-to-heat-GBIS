@@ -18,10 +18,10 @@ from . import eligibility, interface, schemas
 from .consts import (
     address_all_address_and_details_field,
     address_building_name_or_number_field,
-    address_choice_field,
-    address_choice_field_enter_manually,
-    address_choice_field_epc_api_fail,
-    address_choice_field_write_address,
+    address_choice_journey_field,
+    address_choice_journey_field_enter_manually,
+    address_choice_journey_field_epc_api_fail,
+    address_choice_journey_field_write_address,
     address_field,
     address_manual_address_line_1_field,
     address_manual_address_line_2_field,
@@ -29,12 +29,12 @@ from .consts import (
     address_manual_page,
     address_manual_postcode_field,
     address_manual_town_or_city_field,
-    address_no_results_field,
+    address_no_results_journey_field,
     address_page,
     address_postcode_field,
-    address_select_choice_field,
-    address_select_choice_field_enter_manually,
-    address_select_choice_field_select_address,
+    address_select_choice_journey_field,
+    address_select_choice_journey_field_enter_manually,
+    address_select_choice_journey_field_select_address,
     address_select_manual_page,
     address_select_page,
     all_pages,
@@ -57,20 +57,20 @@ from .consts import (
     country_field_scotland,
     country_field_wales,
     country_page,
-    duplicate_uprn_field,
+    duplicate_uprn_journey_field,
     epc_accept_suggested_epc_field,
     epc_accept_suggested_epc_field_not_found,
     epc_details_field,
-    epc_found_field,
+    epc_found_journey_field,
     epc_ineligible_page,
     epc_page,
     epc_rating_field,
     epc_rating_field_not_found,
     epc_rating_is_eligible_field,
-    epc_select_choice_field,
-    epc_select_choice_field_enter_manually,
-    epc_select_choice_field_epc_api_fail,
-    epc_select_choice_field_select_epc,
+    epc_select_choice_journey_field,
+    epc_select_choice_journey_field_enter_manually,
+    epc_select_choice_journey_field_epc_api_fail,
+    epc_select_choice_journey_field_select_epc,
     epc_select_manual_page,
     epc_select_page,
     field_no,
@@ -113,7 +113,7 @@ from .consts import (
     property_type_field,
     property_type_page,
     recommendations_field,
-    referral_already_submitted_field,
+    referral_already_submitted_journey_field,
     referral_already_submitted_page,
     schemes_contribution_acknowledgement_field,
     schemes_field,
@@ -181,7 +181,7 @@ page_compulsory_field_map = {
         address_manual_town_or_city_field,
         address_manual_postcode_field,
     ),
-    referral_already_submitted_page: (referral_already_submitted_field,),
+    referral_already_submitted_page: (referral_already_submitted_journey_field,),
     council_tax_band_page: (council_tax_band_field,),
     epc_page: (epc_accept_suggested_epc_field,),
     benefits_page: (benefits_field,),
@@ -210,7 +210,7 @@ missing_item_errors = {
     uprn_field: _("Select your address, or I can't find my address if your address is not listed"),
     lmk_field: _("Select your address, or I can't find my address if your address is not listed"),
     address_manual_town_or_city_field: _("Enter your Town or city"),
-    referral_already_submitted_field: _("Please confirm that you want to submit another referral"),
+    referral_already_submitted_journey_field: _("Please confirm that you want to submit another referral"),
     council_tax_band_field: _("Enter the Council Tax Band of the property"),
     epc_accept_suggested_epc_field: _("Select if your EPC rating is correct or not, or that you do not know"),
     benefits_field: _("Select if anyone in your household is receiving any benefits listed below"),
@@ -619,7 +619,7 @@ class AddressView(PageView):
 
     def save_get_data(self, data, session_id, page_name):
         # this ensures that if the user presses enter manually they will not see the no results error
-        data[address_no_results_field] = field_no
+        data[address_no_results_journey_field] = field_no
         return data
 
     def save_post_data(self, data, session_id, page_name):
@@ -637,7 +637,7 @@ class AddressView(PageView):
 
         data[address_all_address_and_details_field] = address_details
 
-        data[address_no_results_field] = field_yes if len(address_details) == 0 else field_no
+        data[address_no_results_journey_field] = field_yes if len(address_details) == 0 else field_no
 
         return data
 
@@ -647,15 +647,15 @@ class AddressView(PageView):
                 address_and_lmk_details = interface.api.epc.get_address_and_epc_lmk(building_name_or_number, postcode)
                 if len(address_and_lmk_details) > 0:
                     most_recent_address_and_lmk_details = utils.get_most_recent_epc_per_uprn(address_and_lmk_details)
-                    data[address_choice_field] = address_choice_field_write_address
+                    data[address_choice_journey_field] = address_choice_journey_field_write_address
                     return most_recent_address_and_lmk_details, data
                 else:
-                    data[address_choice_field] = address_choice_field_epc_api_fail
+                    data[address_choice_journey_field] = address_choice_journey_field_epc_api_fail
             else:
-                data[address_choice_field] = address_choice_field_write_address
+                data[address_choice_journey_field] = address_choice_journey_field_write_address
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
-            data[address_choice_field] = address_choice_field_epc_api_fail
+            data[address_choice_journey_field] = address_choice_journey_field_epc_api_fail
 
         # if didn't return epc api data, return os api data
         return interface.api.address.find_addresses(building_name_or_number, postcode), data
@@ -701,7 +701,7 @@ class EpcSelectView(PageView):
         lmk = data.get(lmk_field)
 
         if lmk == lmk_field_enter_manually:
-            data[epc_select_choice_field] = epc_select_choice_field_enter_manually
+            data[epc_select_choice_journey_field] = epc_select_choice_journey_field_enter_manually
             return data
 
         try:
@@ -709,10 +709,10 @@ class EpcSelectView(PageView):
         except Exception as e:  # noqa: B902
             logger.exception(f"An error occurred: {e}")
             reset_epc_details(session_id)
-            data[epc_select_choice_field] = epc_select_choice_field_epc_api_fail
+            data[epc_select_choice_journey_field] = epc_select_choice_journey_field_epc_api_fail
             return data
 
-        data[epc_select_choice_field] = epc_select_choice_field_select_epc
+        data[epc_select_choice_journey_field] = epc_select_choice_journey_field_select_epc
 
         uprn = epc_details.get("uprn")
         address = epc_details.get("address")
@@ -728,10 +728,10 @@ class EpcSelectView(PageView):
         data = {**data, **epc_data}
 
         duplicate_referral_checker = DuplicateReferralChecker(session_id, data)
-        data[duplicate_uprn_field] = (
+        data[duplicate_uprn_journey_field] = (
             field_yes if duplicate_referral_checker.is_referral_a_recent_duplicate() else field_no
         )
-        data[epc_found_field] = field_yes
+        data[epc_found_journey_field] = field_yes
         return data
 
 
@@ -778,29 +778,29 @@ class AddressSelectView(PageView):
         uprn = data.get(uprn_field)
 
         if uprn == uprn_field_enter_manually:
-            data[address_select_choice_field] = address_select_choice_field_enter_manually
+            data[address_select_choice_journey_field] = address_select_choice_journey_field_enter_manually
             return data
 
-        data[address_select_choice_field] = address_select_choice_field_select_address
+        data[address_select_choice_journey_field] = address_select_choice_journey_field_select_address
 
         address_data = interface.api.address.get_address(uprn)
         data[address_field] = address_data["address"]
 
         duplicate_referral_checker = DuplicateReferralChecker(session_id)
-        data[duplicate_uprn_field] = (
+        data[duplicate_uprn_journey_field] = (
             field_yes if duplicate_referral_checker.is_referral_a_recent_duplicate() else field_no
         )
 
         answers = interface.api.session.get_session(session_id)
         country = answers.get(country_field)
 
-        data[epc_found_field] = field_no
+        data[epc_found_journey_field] = field_no
 
         if country == country_field_scotland and uprn is not None:
             epc = interface.api.epc.get_epc_scotland(uprn)
             if epc != {}:
                 data[epc_details_field] = epc
-                data[epc_found_field] = field_yes
+                data[epc_found_journey_field] = field_yes
 
         return data
 
@@ -835,7 +835,7 @@ class AddressManualView(PageView):
 
         session_data = interface.api.session.get_session(session_id)
         # validation errors get priority, don't show both at once
-        show_address_manually_error = session_data[address_no_results_field] == field_yes and len(errors) == 0
+        show_address_manually_error = session_data[address_no_results_journey_field] == field_yes and len(errors) == 0
 
         context_data = {
             **answer_data,
@@ -858,15 +858,15 @@ class AddressManualView(PageView):
         )
         address = ", ".join(f for f in fields if f)
         data[address_field] = address
-        data[duplicate_uprn_field] = field_no
-        data[epc_found_field] = field_no
+        data[duplicate_uprn_journey_field] = field_no
+        data[epc_found_journey_field] = field_no
 
         if page_name == address_manual_page:
-            data[address_choice_field] = address_choice_field_enter_manually
+            data[address_choice_journey_field] = address_choice_journey_field_enter_manually
         if page_name == epc_select_manual_page:
-            data[epc_select_choice_field] = epc_select_choice_field_enter_manually
+            data[epc_select_choice_journey_field] = epc_select_choice_journey_field_enter_manually
         if page_name == address_select_manual_page:
-            data[address_select_choice_field] = address_select_choice_field_enter_manually
+            data[address_select_choice_journey_field] = address_select_choice_journey_field_enter_manually
 
         return data
 
