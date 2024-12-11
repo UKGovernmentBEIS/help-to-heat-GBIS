@@ -7,6 +7,7 @@ from help_to_heat.frontdoor.consts import (
     address_select_choice_journey_field,
     address_select_choice_journey_field_enter_manually,
     address_select_choice_journey_field_select_address,
+    alternative_supplier_field,
     benefits_field,
     bulb_warning_page_field,
     council_tax_band_field,
@@ -74,6 +75,7 @@ from help_to_heat.frontdoor.consts import (
     shell_warning_page_field,
     supplier_field,
     supplier_field_bulb,
+    supplier_field_not_listed,
     supplier_field_shell,
     supplier_field_utility_warehouse,
     supplier_fields_real,
@@ -194,7 +196,7 @@ def get_country_answers():
 def get_supplier_answers():
     for country_answers in get_country_answers():
         for supplier in supplier_fields_real:
-            answers = {**country_answers, supplier_field: supplier}
+            answers = {**country_answers}
 
             if supplier == supplier_field_bulb:
                 answers[bulb_warning_page_field] = field_yes
@@ -203,7 +205,8 @@ def get_supplier_answers():
             if supplier == supplier_field_utility_warehouse:
                 answers[utility_warehouse_warning_page_field] = field_yes
 
-            yield answers
+            yield {**answers, supplier_field: supplier}
+            yield {**answers, supplier_field: supplier_field_not_listed, alternative_supplier_field: supplier}
 
 
 def _get_park_home_flow_answers():

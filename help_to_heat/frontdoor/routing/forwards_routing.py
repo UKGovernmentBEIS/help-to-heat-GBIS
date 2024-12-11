@@ -253,8 +253,7 @@ def _country_next_page(answers):
     return _unknown_response
 
 
-# where to send the user post them picking a supplier
-def _post_supplier_pick_next_page(supplier):
+def _post_select_supplier_next_page(supplier):
     if supplier in [
         supplier_field_british_gas,
         supplier_field_e,
@@ -281,16 +280,16 @@ def _supplier_next_page(answers):
     supplier = answers.get(supplier_field)
     if supplier == supplier_field_not_listed:
         return alternative_supplier_page
-    return _post_supplier_pick_next_page(supplier)
+    return _post_select_supplier_next_page(supplier)
 
 
-# the answers object is not used by the function but is used by the decorator
 @_requires_answer(alternative_supplier_field)
 def _alternative_supplier_next_page(answers):
     supplier = answers.get(alternative_supplier_field)
-    return _post_supplier_pick_next_page(supplier)
+    return _post_select_supplier_next_page(supplier)
 
 
+# the answers object is not used by the function but is used by the decorator
 @_requires_answer(bulb_warning_page_field)
 def _bulb_warning_page_next_page(_answers):
     return own_property_page

@@ -13,6 +13,8 @@ from help_to_heat.frontdoor.consts import (
     address_select_choice_journey_field_select_address,
     address_select_manual_page,
     address_select_page,
+    alternative_supplier_field,
+    alternative_supplier_page,
     benefits_field,
     benefits_page,
     bulb_warning_page,
@@ -110,6 +112,7 @@ from help_to_heat.frontdoor.consts import (
     supplier_field_edf,
     supplier_field_eon_next,
     supplier_field_foxglove,
+    supplier_field_not_listed,
     supplier_field_octopus,
     supplier_field_ovo,
     supplier_field_scottish_power,
@@ -177,11 +180,34 @@ def test_country_next_page(country, expected_next_page):
         (supplier_field_shell, shell_warning_page),
         (supplier_field_utilita, own_property_page),
         (supplier_field_utility_warehouse, utility_warehouse_warning_page),
+        (supplier_field_not_listed, alternative_supplier_page),
     ],
 )
 def test_supplier_next_page(supplier, expected_next_page):
     answers = {supplier_field: supplier}
     assert get_next_page(supplier_page, answers) == expected_next_page
+
+
+@pytest.mark.parametrize(
+    "supplier, expected_next_page",
+    [
+        (supplier_field_british_gas, own_property_page),
+        (supplier_field_bulb, bulb_warning_page),
+        (supplier_field_e, own_property_page),
+        (supplier_field_edf, own_property_page),
+        (supplier_field_eon_next, own_property_page),
+        (supplier_field_foxglove, own_property_page),
+        (supplier_field_octopus, own_property_page),
+        (supplier_field_ovo, own_property_page),
+        (supplier_field_scottish_power, own_property_page),
+        (supplier_field_shell, shell_warning_page),
+        (supplier_field_utilita, own_property_page),
+        (supplier_field_utility_warehouse, utility_warehouse_warning_page),
+    ],
+)
+def test_alternative_supplier_next_page(supplier, expected_next_page):
+    answers = {alternative_supplier_field: supplier}
+    assert get_next_page(alternative_supplier_page, answers) == expected_next_page
 
 
 def test_bulb_warning_page_next_page():
