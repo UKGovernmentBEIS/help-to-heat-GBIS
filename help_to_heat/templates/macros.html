@@ -54,7 +54,7 @@
     {% set value, label = fallback_option.value, fallback_option.label %}
     {% if options|length > 0 %}
       <br>
-      <p class="govuk-body">or</p>
+      <p class="govuk-body">{{_("or")}}</p>
     {% endif %} 
     <div class="govuk-radios__item">
       <input class="govuk-radios__input" id="{{name}}-option-{{slugify(value)}}" name="{{name}}" type="radio"
