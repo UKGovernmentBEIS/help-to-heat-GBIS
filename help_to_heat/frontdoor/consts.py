@@ -175,8 +175,8 @@ address_manual_town_or_city_field = "town_or_city"
 address_manual_county_field = "county"
 address_manual_postcode_field = "postcode"
 
-duplicate_uprn_journey_field = "uprn_is_duplicate"
-epc_found_journey_field = "epc_found"
+duplicate_uprn_journey_field = "uprn_is_duplicate"  # yes/no options
+epc_found_journey_field = "epc_found"  # yes/no options
 lmk_field = "lmk"
 lmk_field_enter_manually = "enter-manually"
 address_field = "address"
@@ -212,9 +212,9 @@ epc_accept_suggested_epc_field = "accept_suggested_epc"
 epc_accept_suggested_epc_field_not_found = "Not found"
 epc_rating_field = "epc_rating"
 epc_rating_field_not_found = "Not found"
-epc_rating_is_eligible_field = "epc_rating_is_eligible"
+epc_rating_is_eligible_field = "epc_rating_is_eligible"  # yes/no options
 
-no_epc_field = "confirm_no_epc"
+no_epc_field = "confirm_no_epc"  # yes/no options
 
 benefits_field = "benefits"
 
