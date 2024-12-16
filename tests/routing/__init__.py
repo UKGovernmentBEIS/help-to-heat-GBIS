@@ -20,7 +20,7 @@ from help_to_heat.frontdoor.consts import (
     council_tax_band_field_g,
     council_tax_band_field_h,
     council_tax_band_field_i,
-    council_tax_band_fields,
+    council_tax_band_field_values,
     country_field,
     country_field_england,
     country_field_scotland,
@@ -57,7 +57,7 @@ from help_to_heat.frontdoor.consts import (
     number_of_bedrooms_field_two,
     own_property_field,
     own_property_field_social_housing,
-    own_property_fields_non_social_housing,
+    own_property_field_values_non_social_housing,
     park_home_field,
     park_home_main_residence_field,
     property_subtype_field,
@@ -78,7 +78,7 @@ from help_to_heat.frontdoor.consts import (
     supplier_field_not_listed,
     supplier_field_shell,
     supplier_field_utility_warehouse,
-    supplier_fields_real,
+    supplier_field_values_real,
     utility_warehouse_warning_page_field,
     wall_insulation_field,
     wall_insulation_field_dont_know,
@@ -195,7 +195,7 @@ def get_country_answers():
 
 def get_supplier_answers():
     for country_answers in get_country_answers():
-        for supplier in supplier_fields_real:
+        for supplier in supplier_field_values_real:
             answers = {**country_answers}
 
             if supplier == supplier_field_bulb:
@@ -210,12 +210,12 @@ def get_supplier_answers():
 
 
 def _get_park_home_flow_answers():
-    for own_property in own_property_fields_non_social_housing:
+    for own_property in own_property_field_values_non_social_housing:
         yield {own_property_field: own_property, park_home_field: field_yes, park_home_main_residence_field: field_yes}
 
 
 def _get_main_flow_answers():
-    for own_property in own_property_fields_non_social_housing:
+    for own_property in own_property_field_values_non_social_housing:
         yield {own_property_field: own_property, park_home_field: field_no}
 
 
@@ -384,7 +384,7 @@ def get_council_tax_band_answers(address_flow, duplicate_uprn=None, property_flo
     for check_property_flow in property_flows:
         for address_answers in get_address_answers(address_flow, duplicate_uprn, check_property_flow):
             if check_property_flow == property_flow_main:
-                for council_tax_band in council_tax_band_fields:
+                for council_tax_band in council_tax_band_field_values:
                     yield {**address_answers, council_tax_band_field: council_tax_band}
             else:
                 yield address_answers

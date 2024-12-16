@@ -58,7 +58,7 @@ from help_to_heat.frontdoor.consts import (
     number_of_bedrooms_page,
     own_property_field,
     own_property_field_social_housing,
-    own_property_fields_non_social_housing,
+    own_property_field_values_non_social_housing,
     own_property_page,
     park_home_field,
     park_home_ineligible_page,
@@ -308,7 +308,7 @@ def _utility_warehouse_warning_page_next_page(_answers):
 @_requires_answer(own_property_field)
 def _own_property_next_page(answers):
     own_property = answers.get(own_property_field)
-    if own_property in own_property_fields_non_social_housing:
+    if own_property in own_property_field_values_non_social_housing:
         return park_home_page
     if own_property == own_property_field_social_housing:
         return address_page
@@ -416,7 +416,7 @@ def _referral_already_submitted_next_page(answers):
 def _post_duplicate_uprn_next_page(answers):
     own_property = answers.get(own_property_field)
     park_home = answers.get(park_home_field)
-    if own_property in own_property_fields_non_social_housing:
+    if own_property in own_property_field_values_non_social_housing:
         if park_home == field_no:
             return council_tax_band_page
         if park_home == field_yes:
@@ -472,7 +472,7 @@ def _no_epc_next_page(answers):
 # ask circumstances questions, depending on flow
 def _post_epc_next_page(answers):
     own_property = answers.get(own_property_field)
-    if own_property in own_property_fields_non_social_housing:
+    if own_property in own_property_field_values_non_social_housing:
         return benefits_page
     if own_property == own_property_field_social_housing:
         return _post_circumstances_next_page(answers)
@@ -507,7 +507,7 @@ def _household_income_next_page(answers):
 def _post_circumstances_next_page(answers):
     own_property = answers.get(own_property_field)
     park_home = answers.get(park_home_field)
-    if own_property in own_property_fields_non_social_housing:
+    if own_property in own_property_field_values_non_social_housing:
         if park_home == field_no:
             return property_type_page
         if park_home == field_yes:

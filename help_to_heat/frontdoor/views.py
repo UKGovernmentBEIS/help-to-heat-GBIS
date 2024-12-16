@@ -127,7 +127,7 @@ from .consts import (
     summary_page,
     supplier_field,
     supplier_field_not_listed,
-    supplier_fields_real,
+    supplier_field_values_real,
     supplier_page,
     unknown_page,
     uprn_field,
@@ -596,7 +596,7 @@ class SupplierView(PageView):
 
     def save_post_data(self, data, session_id, page_name):
         request_supplier = data.get(supplier_field)
-        if user_selected_supplier_field in supplier_fields_real:
+        if user_selected_supplier_field in supplier_field_values_real:
             data[user_selected_supplier_field] = request_supplier
         return data
 

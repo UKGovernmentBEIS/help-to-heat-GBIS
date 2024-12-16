@@ -108,7 +108,7 @@ supplier_field_scottish_power = "Scottish Power"
 supplier_field_shell = "Shell"
 supplier_field_utilita = "Utilita"
 supplier_field_utility_warehouse = "Utility Warehouse"
-supplier_fields_real = [
+supplier_field_values_real = [
     supplier_field_british_gas,
     supplier_field_bulb,
     supplier_field_e,
@@ -139,7 +139,7 @@ own_property_field_own_property = "Yes, I own my property and live in it"
 own_property_field_tenant = "No, I am a tenant"
 own_property_field_social_housing = "No, I am a social housing tenant"
 own_property_field_landlord = "Yes, I am the property owner but I lease the property to one or more tenants"
-own_property_fields_non_social_housing = [
+own_property_field_values_non_social_housing = [
     own_property_field_own_property,
     own_property_field_tenant,
     own_property_field_landlord,
@@ -204,7 +204,7 @@ council_tax_band_field_f = "F"
 council_tax_band_field_g = "G"
 council_tax_band_field_h = "H"
 council_tax_band_field_i = "I"
-council_tax_band_fields = [
+council_tax_band_field_values = [
     council_tax_band_field_a,
     council_tax_band_field_b,
     council_tax_band_field_c,

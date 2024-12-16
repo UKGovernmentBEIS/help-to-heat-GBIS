@@ -22,7 +22,7 @@ from help_to_heat.frontdoor.consts import (
     confirm_and_submit_page,
     contact_details_page,
     council_tax_band_field,
-    council_tax_band_fields,
+    council_tax_band_field_values,
     council_tax_band_page,
     country_field,
     country_field_england,
@@ -76,7 +76,7 @@ from help_to_heat.frontdoor.consts import (
     own_property_field_own_property,
     own_property_field_social_housing,
     own_property_field_tenant,
-    own_property_fields_non_social_housing,
+    own_property_field_values_non_social_housing,
     own_property_page,
     park_home_field,
     park_home_ineligible_page,
@@ -316,7 +316,7 @@ def test_address_enter_manually_next_page():
 )
 def test_epc_select_park_home_next_page(choice, duplicate_uprn, expected_next_page):
     epc_found = field_yes if choice == epc_select_choice_journey_field_select_epc else field_no
-    for own_property in own_property_fields_non_social_housing:
+    for own_property in own_property_field_values_non_social_housing:
         answers = {
             epc_select_choice_journey_field: choice,
             duplicate_uprn_journey_field: duplicate_uprn,
@@ -339,7 +339,7 @@ def test_epc_select_park_home_next_page(choice, duplicate_uprn, expected_next_pa
     ],
 )
 def test_epc_select_not_park_home_not_already_submitted_next_page(choice, duplicate_uprn, expected_next_page):
-    for own_property in own_property_fields_non_social_housing:
+    for own_property in own_property_field_values_non_social_housing:
         answers = {
             epc_select_choice_journey_field: choice,
             duplicate_uprn_journey_field: duplicate_uprn,
@@ -385,7 +385,7 @@ def test_epc_select_social_housing_next_page(choice, duplicate_uprn, expected_ne
     ],
 )
 def test_address_select_park_home_next_page(choice, duplicate_uprn, epc_found, expected_next_page):
-    for own_property in own_property_fields_non_social_housing:
+    for own_property in own_property_field_values_non_social_housing:
         answers = {
             address_select_choice_journey_field: choice,
             own_property_field: own_property,
@@ -410,7 +410,7 @@ def test_address_select_park_home_next_page(choice, duplicate_uprn, epc_found, e
     ],
 )
 def test_address_select_not_park_home_next_page(choice, duplicate_uprn, epc_found, expected_next_page):
-    for own_property in own_property_fields_non_social_housing:
+    for own_property in own_property_field_values_non_social_housing:
         answers = {
             address_select_choice_journey_field: choice,
             own_property_field: own_property,
@@ -528,7 +528,7 @@ def test_referral_already_submitted_next_page(flow, epc_found, expected_next_pag
 )
 def test_council_tax_band_next_page(epc_found, expected_next_page):
     for flow_answers in get_property_flow_answers(property_flow_main):
-        for council_tax_band in council_tax_band_fields:
+        for council_tax_band in council_tax_band_field_values:
             answers = {**flow_answers, council_tax_band_field: council_tax_band, epc_found_journey_field: epc_found}
             assert get_next_page(council_tax_band_page, answers) == expected_next_page
 
