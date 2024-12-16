@@ -7,7 +7,7 @@ from django.utils import timezone
 
 from help_to_heat.frontdoor import interface
 from help_to_heat.frontdoor.consts import (
-    address_all_address_and_lmk_details_field,
+    address_all_address_and_details_field,
     address_building_name_or_number_field,
     address_page,
     address_postcode_field,
@@ -20,6 +20,7 @@ from help_to_heat.frontdoor.consts import (
 from help_to_heat.frontdoor.mock_epc_api import (
     MockEPCApi,
     MockEPCApiWithEPCC,
+    MockEPCApiWithMultipleEPC,
     MockNotFoundEPCApi,
     MockRecommendationsInternalServerErrorEPCApi,
     MockRecommendationsNotFoundEPCApi,
@@ -769,11 +770,9 @@ def test_no_address():
     form["postcode"] = "FL23 4JA"
     page = form.submit().follow()
 
-    assert page.has_text("No addresses found")
-    page = page.click(contains="Enter address manually")
+    assert page.has_one("h2:contains('We could not find your address')")
     form = page.get_form()
     assert form["postcode"] == "FL23 4JA"
-
     form["address_line_1"] = "22 Acacia Avenue"
 
     page = form.submit()
@@ -789,7 +788,7 @@ def test_no_address():
     form["county"] = "Big County"
     page = form.submit().follow()
 
-    data = interface.api.session.get_answer(session_id, page_name="address-select-manual")
+    data = interface.api.session.get_answer(session_id, page_name="address-manual")
     assert data["address_line_1"] == "22 Acacia Avenue"
     assert data["town_or_city"] == "Metropolis"
     assert data["address_line_2"] == "Smalltown"
@@ -1410,6 +1409,7 @@ def test_referral_not_providing_contact_number():
         ("DN55 1PT", True),
     ],
 )
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_postcode_validation(postcode, valid):
     client = utils.get_client()
     page = client.get("/start")
@@ -2032,41 +2032,6 @@ def test_on_epc_select_page_enter_manually_can_be_selected():
     assert page.has_one('h1:contains("What is the property\'s address?")')
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockNotFoundEPCApi)
-@unittest.mock.patch("help_to_heat.frontdoor.interface.OSApi", EmptyOSApi)
-def test_on_epc_select_page_manual_link_is_shown_if_no_addresses_found():
-    client = utils.get_client()
-    page = client.get("/start")
-    page = page.follow()
-
-    session_id = page.path.split("/")[1]
-
-    _check_page = _make_check_page(session_id)
-
-    form = page.get_form()
-    form["country"] = "England"
-    page = form.submit().follow()
-
-    form = page.get_form()
-    form["supplier"] = "Octopus Energy"
-    page = form.submit().follow()
-
-    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
-
-    page = _check_page(page, "park-home", "park_home", "No")
-
-    form = page.get_form()
-    form["building_name_or_number"] = "10"
-    form["postcode"] = "SW1A 2AA"
-    page = form.submit().follow()
-
-    assert page.has_one("a:contains('Enter address manually')")
-
-    page = page.click(contains="Enter address manually")
-
-    assert page.has_one('h1:contains("What is the property\'s address?")')
-
-
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_epc_page_shows_epc_info():
     client = utils.get_client()
@@ -2126,7 +2091,7 @@ def test_epc_page_shows_epc_info():
     assert page.has_one("p:contains('23 July 2010')")
 
 
-@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApiWithMultipleEPC)
 def test_epc_select_only_shows_most_recent_epc_per_uprn():
     client = utils.get_client()
     page = client.get("/start")
@@ -2160,11 +2125,9 @@ def test_epc_select_only_shows_most_recent_epc_per_uprn():
     data = interface.api.session.get_answer(session_id, page_name=address_page)
 
     assert page.has_one("label:contains('22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA')")
-    assert page.has_one("label:contains('11 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA')")
 
-    assert len(data[address_all_address_and_lmk_details_field]) == 2
-    assert data[address_all_address_and_lmk_details_field][0]["lmk-key"] != "3333333333333333333333333333333333"
-    assert data[address_all_address_and_lmk_details_field][1]["lmk-key"] != "3333333333333333333333333333333333"
+    assert len(data[address_all_address_and_details_field]) == 1
+    assert data[address_all_address_and_details_field][0]["lmk-key"] != "3333333333333333333333333333333333"
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockRecommendationsNotFoundEPCApi)

@@ -1,12 +1,13 @@
 from help_to_heat.frontdoor.consts import (
-    address_choice_field,
-    address_choice_field_enter_manually,
-    address_choice_field_epc_api_fail,
-    address_choice_field_write_address,
+    address_choice_journey_field,
+    address_choice_journey_field_enter_manually,
+    address_choice_journey_field_epc_api_fail,
+    address_choice_journey_field_write_address,
     address_manual_page,
+    address_no_results_journey_field,
     address_page,
-    address_select_choice_field,
-    address_select_choice_field_select_address,
+    address_select_choice_journey_field,
+    address_select_choice_journey_field_select_address,
     address_select_manual_page,
     address_select_page,
     benefits_field,
@@ -23,16 +24,16 @@ from help_to_heat.frontdoor.consts import (
     country_field_scotland,
     country_field_wales,
     country_page,
-    duplicate_uprn_field,
+    duplicate_uprn_journey_field,
     epc_accept_suggested_epc_field,
-    epc_found_field,
+    epc_found_journey_field,
     epc_ineligible_page,
     epc_page,
     epc_rating_is_eligible_field,
-    epc_select_choice_field,
-    epc_select_choice_field_enter_manually,
-    epc_select_choice_field_epc_api_fail,
-    epc_select_choice_field_select_epc,
+    epc_select_choice_journey_field,
+    epc_select_choice_journey_field_enter_manually,
+    epc_select_choice_journey_field_epc_api_fail,
+    epc_select_choice_journey_field_select_epc,
     epc_select_manual_page,
     epc_select_page,
     field_no,
@@ -319,45 +320,48 @@ def _park_home_main_residence_next_page(answers):
     return _unknown_response
 
 
-@_requires_answer(address_choice_field)
+@_requires_answer(address_choice_journey_field)
 def _address_next_page(answers):
-    address_choice = answers.get(address_choice_field)
+    address_choice = answers.get(address_choice_journey_field)
+    address_no_results = answers.get(address_no_results_journey_field)
     country = answers.get(country_field)
 
-    if address_choice == address_choice_field_write_address:
+    if address_no_results == field_yes:
+        return address_manual_page
+    if address_choice == address_choice_journey_field_write_address:
         if country in [country_field_england, country_field_wales]:
             return epc_select_page
         if country == country_field_scotland:
             return address_select_page
-    if address_choice == address_choice_field_epc_api_fail:
+    if address_choice == address_choice_journey_field_epc_api_fail:
         return address_select_page
-    if address_choice == address_choice_field_enter_manually:
+    if address_choice == address_choice_journey_field_enter_manually:
         return address_manual_page
 
     return _unknown_response
 
 
-@_requires_answer(epc_select_choice_field)
+@_requires_answer(epc_select_choice_journey_field)
 def _epc_select_next_page(answers):
-    choice = answers.get(epc_select_choice_field)
+    choice = answers.get(epc_select_choice_journey_field)
 
-    if choice == epc_select_choice_field_select_epc:
+    if choice == epc_select_choice_journey_field_select_epc:
         return _post_address_input_next_page(answers)
-    if choice == epc_select_choice_field_epc_api_fail:
+    if choice == epc_select_choice_journey_field_epc_api_fail:
         return address_select_page
-    if choice == epc_select_choice_field_enter_manually:
+    if choice == epc_select_choice_journey_field_enter_manually:
         return epc_select_manual_page
 
     return _unknown_response
 
 
-@_requires_answer(address_select_choice_field)
+@_requires_answer(address_select_choice_journey_field)
 def _address_select_next_page(answers):
-    choice = answers.get(address_select_choice_field)
+    choice = answers.get(address_select_choice_journey_field)
 
-    if choice == address_select_choice_field_select_address:
+    if choice == address_select_choice_journey_field_select_address:
         return _post_address_input_next_page(answers)
-    if choice == address_choice_field_enter_manually:
+    if choice == address_choice_journey_field_enter_manually:
         return address_select_manual_page
 
     return _unknown_response
@@ -377,7 +381,7 @@ def _address_select_manual_next_page(answers):
 
 # after submitting an address, show already submitted page or continue
 def _post_address_input_next_page(answers):
-    duplicate_uprn = answers.get(duplicate_uprn_field)
+    duplicate_uprn = answers.get(duplicate_uprn_journey_field)
     if duplicate_uprn == field_yes:
         return referral_already_submitted_page
     if duplicate_uprn == field_no:
@@ -412,19 +416,19 @@ def _council_tax_band_next_page(answers):
 
 # confirms epc if it was found, or send to no epc
 def _post_council_tax_band_next_page(answers):
-    epc_found = answers.get(epc_found_field)
-    address_choice = answers.get(address_choice_field)
-    epc_select_choice = answers.get(epc_select_choice_field)
-    address_select_choice = answers.get(address_select_choice_field)
+    epc_found = answers.get(epc_found_journey_field)
+    address_choice = answers.get(address_choice_journey_field)
+    epc_select_choice = answers.get(epc_select_choice_journey_field)
+    address_select_choice = answers.get(address_select_choice_journey_field)
     if epc_found == field_yes:
         return epc_page
     if epc_found == field_no:
         # if they entered an address manually, don't show the no epc page as an epc wasn't searched for
         # note that there are 3 address select pages so 3 places where the user can opt to enter manually
         if (
-            address_choice == address_choice_field_enter_manually
-            or epc_select_choice == epc_select_choice_field_enter_manually
-            or address_select_choice == address_choice_field_enter_manually
+            address_choice == address_choice_journey_field_enter_manually
+            or epc_select_choice == epc_select_choice_journey_field_enter_manually
+            or address_select_choice == address_choice_journey_field_enter_manually
         ):
             return _post_epc_next_page(answers)
 
