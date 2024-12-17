@@ -1,16 +1,19 @@
 import pytest
 
 from help_to_heat.frontdoor.consts import (
-    address_choice_field,
-    address_choice_field_enter_manually,
-    address_choice_field_epc_api_fail,
-    address_choice_field_write_address,
+    address_choice_journey_field,
+    address_choice_journey_field_enter_manually,
+    address_choice_journey_field_epc_api_fail,
+    address_choice_journey_field_write_address,
     address_manual_page,
+    address_no_results_journey_field,
     address_page,
-    address_select_choice_field,
-    address_select_choice_field_enter_manually,
+    address_select_choice_journey_field,
+    address_select_choice_journey_field_enter_manually,
     address_select_manual_page,
     address_select_page,
+    alternative_supplier_field,
+    alternative_supplier_page,
     benefits_field,
     benefits_page,
     bulb_warning_page,
@@ -25,14 +28,14 @@ from help_to_heat.frontdoor.consts import (
     country_field_scotland,
     country_field_wales,
     country_page,
-    duplicate_uprn_field,
+    duplicate_uprn_journey_field,
     epc_accept_suggested_epc_field,
     epc_ineligible_page,
     epc_page,
     epc_rating_is_eligible_field,
-    epc_select_choice_field,
-    epc_select_choice_field_enter_manually,
-    epc_select_choice_field_epc_api_fail,
+    epc_select_choice_journey_field,
+    epc_select_choice_journey_field_enter_manually,
+    epc_select_choice_journey_field_epc_api_fail,
     epc_select_manual_page,
     epc_select_page,
     field_no,
@@ -67,6 +70,7 @@ from help_to_heat.frontdoor.consts import (
     supplier_field_edf,
     supplier_field_eon_next,
     supplier_field_foxglove,
+    supplier_field_not_listed,
     supplier_field_octopus,
     supplier_field_ovo,
     supplier_field_scottish_power,
@@ -135,16 +139,36 @@ def test_northern_ireland_ineligible_prev_page():
     assert get_prev_page(northern_ireland_ineligible_page, answers) == country_page
 
 
+def test_alternative_supplier_prev_page():
+    for flow_answers in get_country_answers():
+        answers = {**flow_answers, supplier_field: supplier_field_not_listed}
+        assert get_prev_page(alternative_supplier_page, answers) == supplier_page
+
+
 def test_bulb_warning_page_prev_page():
     for flow_answers in get_country_answers():
         answers = {**flow_answers, supplier_field: supplier_field_bulb, bulb_warning_page_field: field_yes}
         assert get_prev_page(bulb_warning_page, answers) == supplier_page
+        answers = {
+            **flow_answers,
+            supplier_field: supplier_field_not_listed,
+            alternative_supplier_field: supplier_field_bulb,
+            bulb_warning_page_field: field_yes,
+        }
+        assert get_prev_page(bulb_warning_page, answers) == alternative_supplier_page
 
 
 def test_shell_warning_page_prev_page():
     for flow_answers in get_country_answers():
         answers = {**flow_answers, supplier_field: supplier_field_shell, shell_warning_page_field: field_yes}
         assert get_prev_page(shell_warning_page, answers) == supplier_page
+        answers = {
+            **flow_answers,
+            supplier_field: supplier_field_not_listed,
+            alternative_supplier_field: supplier_field_shell,
+            bulb_warning_page_field: field_yes,
+        }
+        assert get_prev_page(shell_warning_page, answers) == alternative_supplier_page
 
 
 def test_utility_warehouse_warning_prev_page():
@@ -158,25 +182,41 @@ def test_utility_warehouse_warning_prev_page():
 
 
 @pytest.mark.parametrize(
-    "supplier, expected_prev_page",
+    "supplier, alternative, expected_prev_page",
     [
-        (supplier_field_british_gas, supplier_page),
-        (supplier_field_bulb, bulb_warning_page),
-        (supplier_field_e, supplier_page),
-        (supplier_field_edf, supplier_page),
-        (supplier_field_eon_next, supplier_page),
-        (supplier_field_foxglove, supplier_page),
-        (supplier_field_octopus, supplier_page),
-        (supplier_field_ovo, supplier_page),
-        (supplier_field_scottish_power, supplier_page),
-        (supplier_field_shell, shell_warning_page),
-        (supplier_field_utilita, supplier_page),
-        (supplier_field_utility_warehouse, utility_warehouse_warning_page),
+        (supplier_field_british_gas, field_no, supplier_page),
+        (supplier_field_bulb, field_no, bulb_warning_page),
+        (supplier_field_e, field_no, supplier_page),
+        (supplier_field_edf, field_no, supplier_page),
+        (supplier_field_eon_next, field_no, supplier_page),
+        (supplier_field_foxglove, field_no, supplier_page),
+        (supplier_field_octopus, field_no, supplier_page),
+        (supplier_field_ovo, field_no, supplier_page),
+        (supplier_field_scottish_power, field_no, supplier_page),
+        (supplier_field_shell, field_no, shell_warning_page),
+        (supplier_field_utilita, field_no, supplier_page),
+        (supplier_field_utility_warehouse, field_no, utility_warehouse_warning_page),
+        (supplier_field_british_gas, field_yes, alternative_supplier_page),
+        (supplier_field_bulb, field_yes, bulb_warning_page),
+        (supplier_field_e, field_yes, alternative_supplier_page),
+        (supplier_field_edf, field_yes, alternative_supplier_page),
+        (supplier_field_eon_next, field_yes, alternative_supplier_page),
+        (supplier_field_foxglove, field_yes, alternative_supplier_page),
+        (supplier_field_octopus, field_yes, alternative_supplier_page),
+        (supplier_field_ovo, field_yes, alternative_supplier_page),
+        (supplier_field_scottish_power, field_yes, alternative_supplier_page),
+        (supplier_field_shell, field_yes, shell_warning_page),
+        (supplier_field_utilita, field_yes, alternative_supplier_page),
+        (supplier_field_utility_warehouse, field_yes, utility_warehouse_warning_page),
     ],
 )
-def test_own_property_prev_page(supplier, expected_prev_page):
+def test_own_property_prev_page(supplier, alternative, expected_prev_page):
     for flow_answers in get_country_answers():
-        answers = {**flow_answers, supplier_field: supplier}
+        answers = (
+            {**flow_answers, supplier_field: supplier}
+            if alternative == field_no
+            else {**flow_answers, supplier_field: supplier_field_not_listed, alternative_supplier_field: supplier}
+        )
 
         if supplier == supplier_field_bulb:
             answers[bulb_warning_page_field] = field_yes
@@ -223,7 +263,7 @@ def test_epc_select_prev_page():
     for flow_answers in get_property_flow_answers():
         country = flow_answers.get(country_field)
         if country != country_field_scotland:
-            answers = {**flow_answers, address_choice_field: address_choice_field_write_address}
+            answers = {**flow_answers, address_choice_journey_field: address_choice_journey_field_write_address}
             assert get_prev_page(epc_select_page, answers) == address_page
 
 
@@ -231,17 +271,17 @@ def test_address_select_prev_page():
     for flow_answers in get_property_flow_answers():
         country = flow_answers[country_field]
         if country in [country_field_england, country_field_wales]:
-            answers = {**flow_answers, address_choice_field: address_choice_field_epc_api_fail}
+            answers = {**flow_answers, address_choice_journey_field: address_choice_journey_field_epc_api_fail}
             assert get_prev_page(address_select_page, answers) == address_page
             answers = {
                 **flow_answers,
-                address_choice_field: address_choice_field_write_address,
-                epc_select_choice_field: epc_select_choice_field_epc_api_fail,
+                address_choice_journey_field: address_choice_journey_field_write_address,
+                epc_select_choice_journey_field: epc_select_choice_journey_field_epc_api_fail,
             }
             assert get_prev_page(address_select_page, answers) == epc_select_page
 
         if country == country_field_scotland:
-            answers = {**flow_answers, address_choice_field: address_choice_field_write_address}
+            answers = {**flow_answers, address_choice_journey_field: address_choice_journey_field_write_address}
             assert get_prev_page(address_select_page, answers) == address_page
 
 
@@ -249,10 +289,18 @@ def test_address_manual_from_address_page_prev_page():
     for flow_answers in get_property_flow_answers():
         answers = {
             **flow_answers,
-            address_choice_field: address_choice_field_enter_manually,
+            address_choice_journey_field: address_choice_journey_field_enter_manually,
         }
 
         assert get_prev_page(address_manual_page, answers) == address_page
+
+        for address_choice in [address_choice_journey_field_write_address, address_choice_journey_field_epc_api_fail]:
+            answers = {
+                **flow_answers,
+                address_choice_journey_field: address_choice,
+                address_no_results_journey_field: field_yes,
+            }
+            assert get_prev_page(address_manual_page, answers) == address_page
 
 
 def test_epc_select_manual_from_epc_select_page_prev_page():
@@ -261,8 +309,8 @@ def test_epc_select_manual_from_epc_select_page_prev_page():
         if country in [country_field_england, country_field_wales]:
             answers = {
                 **flow_answers,
-                address_choice_field: address_choice_field_write_address,
-                epc_select_choice_field: epc_select_choice_field_enter_manually,
+                address_choice_journey_field: address_choice_journey_field_write_address,
+                epc_select_choice_journey_field: epc_select_choice_journey_field_enter_manually,
             }
             assert get_prev_page(epc_select_manual_page, answers) == epc_select_page
 
@@ -273,17 +321,17 @@ def test_address_select_manual_from_address_select_page_prev_page():
         if country in [country_field_england, country_field_wales]:
             answers = {
                 **flow_answers,
-                address_choice_field: address_choice_field_write_address,
-                epc_select_choice_field: epc_select_choice_field_epc_api_fail,
-                address_select_choice_field: address_select_choice_field_enter_manually,
+                address_choice_journey_field: address_choice_journey_field_write_address,
+                epc_select_choice_journey_field: epc_select_choice_journey_field_epc_api_fail,
+                address_select_choice_journey_field: address_select_choice_journey_field_enter_manually,
             }
             assert get_prev_page(address_select_manual_page, answers) == address_select_page
 
         if country == country_field_scotland:
             answers = {
                 **flow_answers,
-                address_choice_field: address_choice_field_write_address,
-                address_select_choice_field: address_select_choice_field_enter_manually,
+                address_choice_journey_field: address_choice_journey_field_write_address,
+                address_select_choice_journey_field: address_select_choice_journey_field_enter_manually,
             }
             assert get_prev_page(address_select_manual_page, answers) == address_select_page
 
@@ -299,7 +347,7 @@ def test_address_select_manual_from_address_select_page_prev_page():
 )
 def test_referral_already_submitted_page_prev_page(address_flow, expected_prev_page):
     for flow_answers in get_address_answers(address_flow):
-        answers = {**flow_answers, duplicate_uprn_field: field_yes}
+        answers = {**flow_answers, duplicate_uprn_journey_field: field_yes}
 
         assert get_prev_page(referral_already_submitted_page, answers) == expected_prev_page
 

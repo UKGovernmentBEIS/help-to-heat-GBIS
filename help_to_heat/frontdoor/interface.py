@@ -15,6 +15,8 @@ from help_to_heat.utils import Entity, Interface, register_event, with_schema
 from . import models, schemas
 from .consts import (
     all_pages,
+    alternative_supplier_field,
+    alternative_supplier_page,
     confirm_and_submit_page,
     epc_accept_suggested_epc_field,
     epc_accept_suggested_epc_field_not_found,
@@ -34,6 +36,13 @@ from .consts import (
     property_type_field,
     property_type_field_park_home,
     supplier_field,
+    supplier_field_bulb,
+    supplier_field_eon_next,
+    supplier_field_not_listed,
+    supplier_field_octopus,
+    supplier_field_shell,
+    supplier_field_utility_warehouse,
+    supplier_page,
 )
 from .epc_api import EPCApi
 from .os_api import OSApi, ThrottledApiException
@@ -161,27 +170,50 @@ def get_addresses_from_api(postcode):
 class SupplierConverter:
     def __init__(self, session_id):
         self.session_id = session_id
+        self.supplier = None
+        self.alternative_supplier = None
 
-    def _get_supplier(self):
-        return api.session.get_answer(self.session_id, "supplier")["supplier"]
+    def get_supplier(self):
+        supplier = self._get_supplier_from_session()
+        alternative_supplier = self._get_alternative_supplier_from_session()
+
+        return alternative_supplier if self._did_specify_alternative() else supplier
+
+    def _get_supplier_from_session(self):
+        if self.supplier is None:
+            self.supplier = api.session.get_answer(self.session_id, supplier_page).get(supplier_field)
+
+        return self.supplier
+
+    def _get_alternative_supplier_from_session(self):
+        if self.alternative_supplier is None:
+            self.alternative_supplier = api.session.get_answer(self.session_id, alternative_supplier_page).get(
+                alternative_supplier_field
+            )
+
+        return self.alternative_supplier
+
+    def _did_specify_alternative(self):
+        supplier = self._get_supplier_from_session()
+        return supplier == supplier_field_not_listed
 
     def _is_bulb(self):
-        return self._get_supplier() == "Bulb, now part of Octopus Energy"
+        return self.get_supplier() == supplier_field_bulb
 
     def _is_utility_warehouse(self):
-        return self._get_supplier() == "Utility Warehouse"
+        return self.get_supplier() == supplier_field_utility_warehouse
 
     def _is_shell(self):
-        return self._get_supplier() == "Shell"
+        return self.get_supplier() == supplier_field_shell
 
     def get_supplier_on_general_pages(self):
-        supplier = self._get_supplier()
+        supplier = self.get_supplier()
         if self._is_bulb():
             return supplier + ", "
         return supplier
 
     def get_supplier_on_success_page(self):
-        supplier = self._get_supplier()
+        supplier = self.get_supplier()
         if self._is_bulb() or self._is_shell():
             return "Octopus Energy"
         if self._is_utility_warehouse():
@@ -189,10 +221,14 @@ class SupplierConverter:
         return supplier
 
     def replace_in_session_data(self, session_data):
+        if self._did_specify_alternative():
+            alternative_supplier = self._get_alternative_supplier_from_session()
+            session_data[supplier_field] = alternative_supplier
+
         if self._is_bulb() or self._is_shell():
-            session_data["supplier"] = "Octopus Energy"
+            session_data[supplier_field] = supplier_field_octopus
         if self._is_utility_warehouse():
-            session_data["supplier"] = "E.ON Next"
+            session_data[supplier_field] = supplier_field_eon_next
         return session_data
 
 
