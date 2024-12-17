@@ -12,6 +12,7 @@ from help_to_heat.frontdoor.consts import (
     address_page,
     address_select_manual_page,
     address_select_page,
+    alternative_supplier_page,
     benefits_field,
     benefits_page,
     bulb_warning_page,
@@ -114,6 +115,7 @@ from help_to_heat.frontdoor.consts import (
     supplier_field_edf,
     supplier_field_eon_next,
     supplier_field_foxglove,
+    supplier_field_not_listed,
     supplier_field_octopus,
     supplier_field_ovo,
     supplier_field_scottish_power,
@@ -161,7 +163,7 @@ summary_map = {
     loft_insulation_field: _("Is there 100mm of insulation in your loft?"),
 }
 
-confirm_sumbit_map = {
+confirm_submit_map = {
     supplier_field: _("Energy supplier"),
     contact_details_first_name_field: _("First name"),
     contact_details_last_name_field: _("Last name"),
@@ -218,6 +220,7 @@ routing_overrides = {
 change_page_lookup = {
     country_page: summary_page,
     supplier_page: summary_page,
+    alternative_supplier_page: summary_page,
     bulb_warning_page: summary_page,
     shell_warning_page: summary_page,
     utility_warehouse_warning_page: summary_page,
@@ -264,6 +267,7 @@ change_page_override_pages = [
     park_home_ineligible_page,
     epc_ineligible_page,
     property_ineligible_page,
+    alternative_supplier_page,
 ]
 
 # where the journey starts for questions in this change page
@@ -853,7 +857,10 @@ class SessionSchema(Schema):
     loft_insulation = fields.String(
         validate=validate.OneOf(tuple(item["value"] for item in loft_insulation_validation_options_map))
     )
-    supplier = fields.String(validate=validate.OneOf(tuple(item["value"] for item in supplier_options)))
+    supplier = fields.String(
+        validate=validate.OneOf(tuple(item["value"] for item in supplier_options) + (supplier_field_not_listed,))
+    )
+    alternative_supplier = fields.String(validate=validate.OneOf(tuple(item["value"] for item in supplier_options)))
     user_selected_supplier = fields.String(validate=validate.OneOf(tuple(item["value"] for item in supplier_options)))
     first_name = fields.String(validate=validate.Length(max=128))
     last_name = fields.String(validate=validate.Length(max=128))

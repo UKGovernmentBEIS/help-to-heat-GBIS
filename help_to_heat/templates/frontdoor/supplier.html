@@ -21,7 +21,7 @@
         
         <p class="govuk-body">{{_("If you live in a park home and buy your energy from the site, select the energy supplier who supplies the site.")}}</p>
 
-        {{macros.radios('supplier', supplier_options, data, errors)}}
+        {{macros.radios('supplier', supplier_options, data, errors, fallback_option)}}
 
       </fieldset>
     </div>

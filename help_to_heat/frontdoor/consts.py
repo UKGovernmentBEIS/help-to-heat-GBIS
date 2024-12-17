@@ -4,6 +4,7 @@ govuk_start_page = "start_page"
 country_page = "country"
 northern_ireland_ineligible_page = "northern-ireland"
 supplier_page = "supplier"
+alternative_supplier_page = "alternative-supplier"
 own_property_page = "own-property"
 bulb_warning_page = "bulb-warning-page"
 shell_warning_page = "shell-warning-page"
@@ -43,6 +44,7 @@ all_pages = [
     country_page,
     northern_ireland_ineligible_page,
     supplier_page,
+    alternative_supplier_page,
     own_property_page,
     bulb_warning_page,
     shell_warning_page,
@@ -91,6 +93,8 @@ country_field_scotland = "Scotland"
 country_field_wales = "Wales"
 country_field_northern_ireland = "Northern Ireland"
 
+# if needing to query this, in most cases use SupplierConverter.get_supplier()
+# it handles the user selecting an alternative
 supplier_field = "supplier"
 supplier_field_british_gas = "British Gas"
 supplier_field_bulb = "Bulb, now part of Octopus Energy"
@@ -104,7 +108,7 @@ supplier_field_scottish_power = "Scottish Power"
 supplier_field_shell = "Shell"
 supplier_field_utilita = "Utilita"
 supplier_field_utility_warehouse = "Utility Warehouse"
-supplier_fields = [
+supplier_field_values_real = [
     supplier_field_british_gas,
     supplier_field_bulb,
     supplier_field_e,
@@ -118,6 +122,10 @@ supplier_fields = [
     supplier_field_utilita,
     supplier_field_utility_warehouse,
 ]
+supplier_field_not_listed = "supplier_not_listed"
+
+alternative_supplier_field = "alternative_supplier"
+
 user_selected_supplier_field = "user_selected_supplier"
 
 bulb_warning_page_field = "confirm_bulb_warning"
@@ -131,7 +139,7 @@ own_property_field_own_property = "Yes, I own my property and live in it"
 own_property_field_tenant = "No, I am a tenant"
 own_property_field_social_housing = "No, I am a social housing tenant"
 own_property_field_landlord = "Yes, I am the property owner but I lease the property to one or more tenants"
-own_property_fields_non_social_housing = [
+own_property_field_values_non_social_housing = [
     own_property_field_own_property,
     own_property_field_tenant,
     own_property_field_landlord,
@@ -196,7 +204,7 @@ council_tax_band_field_f = "F"
 council_tax_band_field_g = "G"
 council_tax_band_field_h = "H"
 council_tax_band_field_i = "I"
-council_tax_band_fields = [
+council_tax_band_field_values = [
     council_tax_band_field_a,
     council_tax_band_field_b,
     council_tax_band_field_c,

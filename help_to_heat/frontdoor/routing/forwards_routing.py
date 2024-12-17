@@ -10,6 +10,8 @@ from help_to_heat.frontdoor.consts import (
     address_select_choice_journey_field_select_address,
     address_select_manual_page,
     address_select_page,
+    alternative_supplier_field,
+    alternative_supplier_page,
     benefits_field,
     benefits_page,
     bulb_warning_page,
@@ -56,7 +58,7 @@ from help_to_heat.frontdoor.consts import (
     number_of_bedrooms_page,
     own_property_field,
     own_property_field_social_housing,
-    own_property_fields_non_social_housing,
+    own_property_field_values_non_social_housing,
     own_property_page,
     park_home_field,
     park_home_ineligible_page,
@@ -81,6 +83,7 @@ from help_to_heat.frontdoor.consts import (
     supplier_field_edf,
     supplier_field_eon_next,
     supplier_field_foxglove,
+    supplier_field_not_listed,
     supplier_field_octopus,
     supplier_field_ovo,
     supplier_field_scottish_power,
@@ -139,6 +142,9 @@ def get_next_page(current_page, answers):
 
     if current_page == supplier_page:
         return _supplier_next_page(answers)
+
+    if current_page == alternative_supplier_page:
+        return _alternative_supplier_next_page(answers)
 
     if current_page == bulb_warning_page:
         return _bulb_warning_page_next_page(answers)
@@ -247,9 +253,7 @@ def _country_next_page(answers):
     return _unknown_response
 
 
-@_requires_answer(supplier_field)
-def _supplier_next_page(answers):
-    supplier = answers.get(supplier_field)
+def _post_select_supplier_next_page(supplier):
     if supplier in [
         supplier_field_british_gas,
         supplier_field_e,
@@ -271,6 +275,20 @@ def _supplier_next_page(answers):
     return _unknown_response
 
 
+@_requires_answer(supplier_field)
+def _supplier_next_page(answers):
+    supplier = answers.get(supplier_field)
+    if supplier == supplier_field_not_listed:
+        return alternative_supplier_page
+    return _post_select_supplier_next_page(supplier)
+
+
+@_requires_answer(alternative_supplier_field)
+def _alternative_supplier_next_page(answers):
+    supplier = answers.get(alternative_supplier_field)
+    return _post_select_supplier_next_page(supplier)
+
+
 # the answers object is not used by the function but is used by the decorator
 @_requires_answer(bulb_warning_page_field)
 def _bulb_warning_page_next_page(_answers):
@@ -290,7 +308,7 @@ def _utility_warehouse_warning_page_next_page(_answers):
 @_requires_answer(own_property_field)
 def _own_property_next_page(answers):
     own_property = answers.get(own_property_field)
-    if own_property in own_property_fields_non_social_housing:
+    if own_property in own_property_field_values_non_social_housing:
         return park_home_page
     if own_property == own_property_field_social_housing:
         return address_page
@@ -398,7 +416,7 @@ def _referral_already_submitted_next_page(answers):
 def _post_duplicate_uprn_next_page(answers):
     own_property = answers.get(own_property_field)
     park_home = answers.get(park_home_field)
-    if own_property in own_property_fields_non_social_housing:
+    if own_property in own_property_field_values_non_social_housing:
         if park_home == field_no:
             return council_tax_band_page
         if park_home == field_yes:
@@ -454,7 +472,7 @@ def _no_epc_next_page(answers):
 # ask circumstances questions, depending on flow
 def _post_epc_next_page(answers):
     own_property = answers.get(own_property_field)
-    if own_property in own_property_fields_non_social_housing:
+    if own_property in own_property_field_values_non_social_housing:
         return benefits_page
     if own_property == own_property_field_social_housing:
         return _post_circumstances_next_page(answers)
@@ -489,7 +507,7 @@ def _household_income_next_page(answers):
 def _post_circumstances_next_page(answers):
     own_property = answers.get(own_property_field)
     park_home = answers.get(park_home_field)
-    if own_property in own_property_fields_non_social_housing:
+    if own_property in own_property_field_values_non_social_housing:
         if park_home == field_no:
             return property_type_page
         if park_home == field_yes:

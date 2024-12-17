@@ -38,6 +38,8 @@ from .consts import (
     address_select_manual_page,
     address_select_page,
     all_pages,
+    alternative_supplier_field,
+    alternative_supplier_page,
     benefits_field,
     benefits_page,
     bulb_warning_page,
@@ -124,6 +126,8 @@ from .consts import (
     success_page,
     summary_page,
     supplier_field,
+    supplier_field_not_listed,
+    supplier_field_values_real,
     supplier_page,
     unknown_page,
     uprn_field,
@@ -195,6 +199,7 @@ page_compulsory_field_map = {
     loft_access_page: (loft_access_field,),
     loft_insulation_page: (loft_insulation_field,),
     supplier_page: (supplier_field,),
+    alternative_supplier_page: (alternative_supplier_field,),
     contact_details_page: (contact_details_first_name_field, contact_details_last_name_field),
     confirm_and_submit_page: (confirm_and_submit_permission_field, confirm_and_submit_acknowledge_field),
 }
@@ -224,6 +229,7 @@ missing_item_errors = {
     loft_access_field: _("Select whether or not you have access to the loft"),
     loft_insulation_field: _("Select whether or not your loft is fully insulated"),
     supplier_field: _("Select your home energy supplier from the list below"),
+    alternative_supplier_field: _("Select an alternative energy supplier"),
     contact_details_first_name_field: _("Enter your first name"),
     contact_details_last_name_field: _("Enter your last name"),
     contact_details_email_field: _("Enter your email address"),
@@ -272,8 +278,7 @@ unavailable_suppliers = []
 
 
 def unavailable_supplier_redirect(session_id):
-    session_data = interface.api.session.get_session(session_id)
-    supplier = session_data[supplier_field]
+    supplier = SupplierConverter(session_id).get_supplier()
     if supplier not in unavailable_suppliers:
         return None
 
@@ -586,10 +591,23 @@ class CountryView(PageView):
 @register_page(supplier_page)
 class SupplierView(PageView):
     def build_extra_context(self, *args, **kwargs):
-        return {"supplier_options": schemas.supplier_options}
+        fallback_option = {"value": supplier_field_not_listed, "label": _("My energy supplier is not listed")}
+        return {"supplier_options": schemas.supplier_options, "fallback_option": fallback_option}
 
     def save_post_data(self, data, session_id, page_name):
         request_supplier = data.get(supplier_field)
+        if user_selected_supplier_field in supplier_field_values_real:
+            data[user_selected_supplier_field] = request_supplier
+        return data
+
+
+@register_page(alternative_supplier_page)
+class AlternativeSupplierView(PageView):
+    def build_extra_context(self, *args, **kwargs):
+        return {"supplier_options": schemas.supplier_options}
+
+    def save_post_data(self, data, session_id, page_name):
+        request_supplier = data.get(alternative_supplier_field)
         data[user_selected_supplier_field] = request_supplier
         return data
 
@@ -813,7 +831,7 @@ class ReferralAlreadySubmitted(PageView):
         to_same_energy_supplier = duplicate_referral_checker.is_recent_duplicate_referral_sent_to_same_energy_supplier()
         date_created = duplicate_referral_checker.get_date_of_previous_referral().strftime("%d/%m/%Y")
         address = session_data.get(address_field)
-        supplier = session_data.get(supplier_field)
+        supplier = SupplierConverter(session_id).get_supplier_on_general_pages()
         return {
             "to_same_energy_supplier": to_same_energy_supplier,
             "date_created": date_created,
@@ -1054,7 +1072,7 @@ class SummaryView(PageView):
         summary_lines = tuple(
             {
                 "question": schemas.summary_map[question],
-                "answer": self.get_answer(session_data, question),
+                "answer": self.get_answer(session_id, session_data, question),
                 "change_url": self.get_change_url(session_id, page_name),
             }
             for page_name, question in self.get_summary_questions(session_data)
@@ -1071,8 +1089,12 @@ class SummaryView(PageView):
     def show_question(self, session_data, question):
         return question in schemas.summary_map
 
-    def get_answer(self, session_data, question):
+    def get_answer(self, session_id, session_data, question):
         answer = session_data.get(question)
+
+        if question == supplier_field:
+            return SupplierConverter(session_id).get_supplier()
+
         answers_map = schemas.check_your_answers_options_map.get(question)
         return answers_map[answer] if answers_map else answer
 
@@ -1229,7 +1251,7 @@ class ConfirmSubmitView(PageView):
         session_data = interface.api.session.get_session(session_id)
         summary_lines = tuple(
             {
-                "question": schemas.confirm_sumbit_map[question],
+                "question": schemas.confirm_submit_map[question],
                 "answer": session_data.get(question),
                 "change_url": self.get_change_url(session_id, page_name),
             }
