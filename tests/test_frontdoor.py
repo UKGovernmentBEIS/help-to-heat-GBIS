@@ -11,11 +11,17 @@ from help_to_heat.frontdoor.consts import (
     address_building_name_or_number_field,
     address_page,
     address_postcode_field,
+    alternative_supplier_field,
     country_field,
     country_page,
     lmk_field,
     recommendations_field,
     supplier_field,
+    supplier_field_eon_next,
+    supplier_field_not_listed,
+    supplier_field_utilita,
+    supplier_field_utility_warehouse,
+    user_selected_supplier_field,
 )
 from help_to_heat.frontdoor.mock_epc_api import (
     MockEPCApi,
@@ -98,6 +104,7 @@ def _answer_house_questions(
     session_id,
     benefits_answer,
     supplier="Utilita",
+    use_alternative=False,
     park_home=False,
     has_loft=True,
     household_income="Less than £31,000 a year",
@@ -110,9 +117,19 @@ def _answer_house_questions(
     form["country"] = "England"
     page = form.submit().follow()
 
-    form = page.get_form()
-    form["supplier"] = supplier
-    page = form.submit().follow()
+    if not use_alternative:
+        form = page.get_form()
+        form["supplier"] = supplier
+        page = form.submit().follow()
+    else:
+        form = page.get_form()
+        form["supplier"] = supplier_field_not_listed
+        page = form.submit().follow()
+
+        assert page.has_text("Select an alternative energy supplier")
+        form = page.get_form()
+        form[alternative_supplier_field] = supplier
+        page = form.submit().follow()
 
     if supplier == "Bulb, now part of Octopus Energy":
         form = page.get_form()
@@ -224,7 +241,13 @@ def test_happy_flow():
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
-def _do_happy_flow(supplier="EON", benefits_answer="Yes", park_home=False, household_income="Less than £31,000 a year"):
+def _do_happy_flow(
+    supplier="EON",
+    use_alternative=False,
+    benefits_answer="Yes",
+    park_home=False,
+    household_income="Less than £31,000 a year",
+):
     client = utils.get_client()
     page = client.get("/start")
     assert page.status_code == 302
@@ -240,6 +263,7 @@ def _do_happy_flow(supplier="EON", benefits_answer="Yes", park_home=False, house
         session_id,
         benefits_answer=benefits_answer,
         supplier=supplier,
+        use_alternative=use_alternative,
         park_home=park_home,
         household_income=household_income,
     )
@@ -2270,6 +2294,29 @@ def test_epc_api_is_called_with_trimmed_address_and_postcode():
 
     assert page.has_one("label:contains('22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA')")
     assert page.has_one("label:contains('11 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA')")
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_alternative_supplier_is_shown_in_referrals():
+    supplier = supplier_field_utilita
+    session_id, _ = _do_happy_flow(supplier=supplier, use_alternative=True)
+
+    referral = models.Referral.objects.get(session_id=session_id)
+    assert referral.supplier.name == supplier
+    assert referral.data.get(supplier_field) == supplier
+    assert referral.data.get(user_selected_supplier_field) == supplier
+    referral.delete()
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_alternative_supplier_is_shown_in_referrals_when_handled_by_a_different_supplier():
+    session_id, _ = _do_happy_flow(supplier=supplier_field_utility_warehouse, use_alternative=True)
+
+    referral = models.Referral.objects.get(session_id=session_id)
+    assert referral.supplier.name == supplier_field_eon_next
+    assert referral.data.get(supplier_field) == supplier_field_eon_next
+    assert referral.data.get(user_selected_supplier_field) == supplier_field_utility_warehouse
+    referral.delete()
 
 
 def _setup_client_and_page():
