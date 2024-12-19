@@ -1,6 +1,5 @@
-from datetime import datetime
+from datetime import datetime, timezone
 
-import pytz
 from dateutil.relativedelta import relativedelta
 
 from help_to_heat import portal
@@ -27,10 +26,10 @@ class DuplicateReferralChecker:
         uprn = session_data.get(uprn_field)
         if not uprn:
             return None
-        recent_cutoff_date = datetime.utcnow() + relativedelta(months=-recent_interval_months)
+        recent_cutoff_date = datetime.now(timezone.utc) + relativedelta(months=-recent_interval_months)
         duplicate_referrals = (
             portal.models.Referral.objects.filter(data__uprn=uprn)
-            .filter(created_at__gte=recent_cutoff_date.astimezone(pytz.UTC))
+            .filter(created_at__gte=recent_cutoff_date.astimezone(timezone.utc))
             .order_by("-created_at")
         )
         if len(duplicate_referrals) == 0:
