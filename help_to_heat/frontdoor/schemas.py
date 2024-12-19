@@ -420,6 +420,9 @@ property_subtype_titles_options_map = {
     "Apartment, flat or maisonette": _("apartment, flat or maisonette"),
 }
 
+# if wording changes, old answers should be left in this map
+# otherwise, an error will be thrown on check answers page for these old users
+# see loft_insulation_field for an example
 check_your_answers_options_map = {
     country_field: {
         country_field_england: _("England"),
@@ -489,6 +492,8 @@ check_your_answers_options_map = {
         loft_insulation_field_no_insulation: _("I have no loft insulation"),
         loft_insulation_field_dont_know: _("I do not know"),
         loft_insulation_field_no_loft: _("No loft"),
+        # deprecated as part of PC-1364. see comment on this map
+        "I have up to 100mm of loft insulation": _("I have less than or equal to 100mm of loft insulation"),
     },
 }
 
