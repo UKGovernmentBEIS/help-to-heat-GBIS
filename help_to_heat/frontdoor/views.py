@@ -296,8 +296,10 @@ def register_page(name):
 
 
 def redirect_to_homepage_view(request):
-    next_url = govuk_start_page_url
-    return redirect(next_url)
+    if settings.DEBUG:
+        return start_view(request)
+    else:
+        return redirect(govuk_start_page_url)
 
 
 def start_view(request):
