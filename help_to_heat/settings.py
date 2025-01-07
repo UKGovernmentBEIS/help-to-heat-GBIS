@@ -76,6 +76,7 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
+    "allauth.account.middleware.AccountMiddleware",
     "help_to_heat.middleware.RequestLoggingMiddleware",  # at the bottom to only log requests that aren't blocked
 ]
 
@@ -185,7 +186,6 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = "en-gb"
 TIME_ZONE = "UTC"
 USE_I18N = True
-USE_L10N = True
 USE_TZ = True
 
 LOCALE_PATHS = [
@@ -257,6 +257,9 @@ OPEN_EPC_API_TOKEN = env.str("OPEN_EPC_API_TOKEN")
 OPEN_EPC_API_BASE_URL = env.str("OPEN_EPC_API_BASE_URL")
 
 TOTP_ISSUER = "Help to Heat Supplier Portal"
+
+# origins don't have a trailing slash, the BASE_URL does so must be trimmed
+CSRF_TRUSTED_ORIGINS = [BASE_URL.rstrip("/")]
 
 if not DEBUG:
     SESSION_COOKIE_SECURE = True
