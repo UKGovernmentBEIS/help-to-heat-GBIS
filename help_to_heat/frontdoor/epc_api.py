@@ -4,6 +4,8 @@ import urllib.parse
 import requests
 from django.conf import settings
 
+from help_to_heat.utils import default_api_timeout
+
 logger = logging.getLogger(__name__)
 
 
@@ -31,7 +33,7 @@ class EPCApi:
 
     def __api_call(self, url):
         headers = self._basic_auth_header()
-        response = requests.get(url, headers=headers)
+        response = requests.get(url, headers=headers, timeout=default_api_timeout)
         response.raise_for_status()
         if len(response.content) == 0:
             return None
