@@ -1,0 +1,18 @@
+# Please see the documentation for all configuration options:
+# https://docs.github.com/code-security/dependabot/dependabot-version-updates/configuration-options-for-the-dependabot.yml-file
+
+version: 2
+updates:
+  - package-ecosystem: "pip" # For Poetry, the docs indicate to use "pip"
+    directory: "/"
+    schedule:
+      interval: "daily"
+    # we may not be able to respond to pull requests immediately
+    # prioritise showing them all
+    open-pull-requests-limit: 100
+    # group together minor & patch updates. major ones get a PR per change
+    groups:
+      non-major:
+        update-types:
+          - "minor"
+          - "patch"
