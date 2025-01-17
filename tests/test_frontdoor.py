@@ -147,7 +147,7 @@ def _answer_house_questions(
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_text("Do you live in a park home")
+    assert page.has_text("Is the property a park home?")
     page = _check_page(page, "park-home", "park_home", "No" if not park_home else "Yes")
 
     if park_home:
@@ -462,7 +462,7 @@ def test_benefits_back_button_with_park_home_and_no_epc_should_return_to_address
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_text("Do you live in a park home?")
+    assert page.has_text("Is the property a park home?")
     page = _check_page(page, "park-home", "park_home", "Yes")
 
     assert page.has_text("Is the park home your main residence?")
@@ -524,7 +524,7 @@ def test_benefits_back_button_with_park_home_and_scotland_should_return_to_addre
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_text("Do you live in a park home?")
+    assert page.has_text("Is the property a park home?")
     page = _check_page(page, "park-home", "park_home", "Yes")
 
     assert page.has_text("Is the park home your main residence?")
@@ -698,7 +698,7 @@ def test_no_benefits_flow():
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_text("Do you live in a park home")
+    assert page.has_text("Is the property a park home?")
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
@@ -786,7 +786,7 @@ def test_no_address():
     form["own_property"] = "Yes, I own my property and live in it"
     page = form.submit().follow()
 
-    assert page.has_text("Do you live in a park home")
+    assert page.has_text("Is the property a park home?")
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
@@ -862,7 +862,7 @@ def test_epc_lookup_failure():
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_text("Do you live in a park home")
+    assert page.has_text("Is the property a park home?")
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
@@ -989,7 +989,7 @@ def test_eligibility():
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_text("Do you live in a park home")
+    assert page.has_text("Is the property a park home?")
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
@@ -1456,7 +1456,7 @@ def test_postcode_validation(postcode, valid):
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_text("Do you live in a park home")
+    assert page.has_text("Is the property a park home?")
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
@@ -1493,7 +1493,7 @@ def test_address_length_validation():
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_text("Do you live in a park home")
+    assert page.has_text("Is the property a park home?")
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
@@ -1593,7 +1593,7 @@ def test_on_check_page_back_button_goes_to_correct_location(has_loft_insulation)
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_text("Do you live in a park home")
+    assert page.has_text("Is the property a park home?")
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
@@ -1676,13 +1676,13 @@ def test_switching_path_to_social_housing_does_not_ask_park_home_questions_again
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_text("Do you live in a park home")
+    assert page.has_text("Is the property a park home?")
     page = _check_page(page, "park-home", "park_home", "Yes")
 
     assert page.has_text("Is the park home your main residence?")
     page = page.click(contains="Back")
 
-    assert page.has_text("Do you live in a park home")
+    assert page.has_text("Is the property a park home?")
     page = page.click(contains="Back")
 
     assert page.has_text("Do you own the property?")
@@ -2079,7 +2079,7 @@ def test_epc_page_shows_epc_info():
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_text("Do you live in a park home")
+    assert page.has_text("Is the property a park home?")
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
@@ -2138,7 +2138,7 @@ def test_epc_select_only_shows_most_recent_epc_per_uprn():
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_text("Do you live in a park home")
+    assert page.has_text("Is the property a park home?")
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
@@ -2186,7 +2186,7 @@ def _get_empty_recommendations_journey():
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_text("Do you live in a park home")
+    assert page.has_text("Is the property a park home?")
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
@@ -2227,7 +2227,7 @@ def test_on_recommendations_transient_internal_server_error_response_recommendat
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_text("Do you live in a park home")
+    assert page.has_text("Is the property a park home?")
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
@@ -2284,7 +2284,7 @@ def test_epc_api_is_called_with_trimmed_address_and_postcode():
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_text("Do you live in a park home")
+    assert page.has_text("Is the property a park home?")
     page = _check_page(page, "park-home", "park_home", "No")
 
     form = page.get_form()
