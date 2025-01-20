@@ -207,7 +207,7 @@ page_compulsory_field_map = {
 missing_item_errors = {
     country_field: _("Select where the property is located"),
     own_property_field: _("Select if you own the property"),
-    park_home_field: _("Select if you live in a park home"),
+    park_home_field: _("Select if the property is a park home"),
     park_home_main_residence_field: _("Select if the park home is your main residence"),
     address_building_name_or_number_field: _("Enter building name or number"),
     address_manual_address_line_1_field: _("Enter Address line 1"),
