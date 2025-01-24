@@ -25,7 +25,7 @@ eventlet = "0.35.2"
 Faker = "18.10.1"
 gunicorn = "21.2.0"
 psycogreen = "1.0.2"
-waitress = "2.1.2"
+waitress = "3.0.2"
 watchdog = "3.0.0"
 
 [tool.poetry.dependencies]
