@@ -266,3 +266,6 @@ def get_most_recent_epc_per_uprn(address_and_lmk_details):
         most_recent_address_and_lmk_details.append(latest_epc)
 
     return most_recent_address_and_lmk_details
+
+
+default_api_timeout = 10
