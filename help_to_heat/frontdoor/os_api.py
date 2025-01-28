@@ -4,6 +4,8 @@ from http import HTTPStatus
 
 import requests
 
+from help_to_heat.utils import default_api_timeout
+
 logger = logging.getLogger(__name__)
 
 
@@ -40,7 +42,7 @@ class OSApi:
         return []
 
     def perform_request(self, url):
-        response = requests.get(url)
+        response = requests.get(url, timeout=default_api_timeout)
         response.raise_for_status()
         json_response = response.json()
 
