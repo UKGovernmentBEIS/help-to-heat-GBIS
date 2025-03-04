@@ -249,7 +249,7 @@ def get_current_and_next_month_names(month_names):
 # we update the month names manually on each scottish data dump
 # this is to tell the user the first month we have no EPCs for, and the next month we expect to perform a dump
 def get_current_scottish_epc_cutoff_and_next_dump_month_names(month_names):
-    return month_names[9], month_names[2]
+    return month_names[9], month_names[3]
 
 
 def get_most_recent_epc_per_uprn(address_and_lmk_details):
