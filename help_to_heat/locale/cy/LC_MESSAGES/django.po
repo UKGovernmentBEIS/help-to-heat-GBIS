@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-01-20 11:05+0000\n"
+"POT-Creation-Date: 2025-03-26 09:52+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1207,30 +1207,22 @@ msgid "Pension Credit Guarantee Credit"
 msgstr "Credyd Gwarant Credyd Pensiwn"
 
 #: help_to_heat/templates/frontdoor/benefits.html:27
-msgid "Working Tax Credit"
-msgstr "Credyd Treth Gwaith"
-
-#: help_to_heat/templates/frontdoor/benefits.html:28
-msgid "Child Tax Credit"
-msgstr "Credyd Treth Plant"
-
-#: help_to_heat/templates/frontdoor/benefits.html:29
 msgid "Universal Credit"
 msgstr "Credyd Cynhwysol"
 
-#: help_to_heat/templates/frontdoor/benefits.html:30
+#: help_to_heat/templates/frontdoor/benefits.html:28
 msgid "Housing Benefit"
 msgstr "Budd-dal Tai"
 
-#: help_to_heat/templates/frontdoor/benefits.html:31
+#: help_to_heat/templates/frontdoor/benefits.html:29
 msgid "Pension Credit Savings Credit"
 msgstr "Credyd Cynilo Credyd Pensiwn"
 
-#: help_to_heat/templates/frontdoor/benefits.html:32
+#: help_to_heat/templates/frontdoor/benefits.html:30
 msgid "Child Benefit"
 msgstr "Budd-dal Plant"
 
-#: help_to_heat/templates/frontdoor/benefits.html:34
+#: help_to_heat/templates/frontdoor/benefits.html:32
 msgid "You may be asked to provide evidence of this at a later stage."
 msgstr "Efallai y gofynnir ichi ddarparu tystiolaeth o hyn yn nes ymlaen."
 
