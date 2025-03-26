@@ -242,14 +242,17 @@ def get_current_and_next_month_names(month_names):
 
 
 # Latest Quarter in current dump -> epc cutoff month, next expected dump month
-# Q1 -> april, august
-# Q2 -> july, november
-# Q3 -> october, february
-# Q4 -> january, may
+# Q1 -> april, august (usually)
+# Q2 -> july, november (usually)
+# Q3 -> october, february (usually)
+# Q4 -> january, may (usually)
 # we update the month names manually on each scottish data dump
 # this is to tell the user the first month we have no EPCs for, and the next month we expect to perform a dump
+# when changing this, pull the epc cutoff month from the above comment
+# check the scottish EPC website in the 'About' for the 'Next update due' month and add 1 month to this
+# https://statistics.gov.scot/data/domestic-energy-performance-certificates
 def get_current_scottish_epc_cutoff_and_next_dump_month_names(month_names):
-    return month_names[9], month_names[3]
+    return month_names[0], month_names[5]
 
 
 def get_most_recent_epc_per_uprn(address_and_lmk_details):
