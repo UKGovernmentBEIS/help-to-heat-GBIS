@@ -792,14 +792,14 @@ files = [
 
 [[package]]
 name = "govuk-frontend-jinja"
-version = "2.6.0"
+version = "3.5.0"
 description = "GOV.UK Frontend Jinja Macros"
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "govuk-frontend-jinja-2.6.0.tar.gz", hash = "sha256:f8a4ae52897352b12c047acccbd9d5830123175f71edb22c93b70893803243c2"},
-    {file = "govuk_frontend_jinja-2.6.0-py3-none-any.whl", hash = "sha256:68d7bc33188e7b62548feb8ff4c0def377eb2bfd698a7dfd90fcc4846e0119eb"},
+    {file = "govuk_frontend_jinja-3.5.0-py3-none-any.whl", hash = "sha256:787d3940cf40eaa78a851ff12b6470740d64bea4149b4984b1295aacd80be901"},
+    {file = "govuk_frontend_jinja-3.5.0.tar.gz", hash = "sha256:ed7577215bb288ccca0cfd8d0855bb4298d4f698f277a7ce19bd8ecbd33a53a7"},
 ]
 
 [package.dependencies]
@@ -2265,4 +2265,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "~3.11.9"
-content-hash = "f6cdbadae3338048a543202149e58faef98b695e9b1474e413612519a9b0cf07"
+content-hash = "ea808db6f48204ec626e0264fff2a593cc5ad3f5e44f413e2f5af486dd382a31"
