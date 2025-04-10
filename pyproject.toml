@@ -22,7 +22,7 @@ optional = true
 [tool.poetry.group.deployment.dependencies]
 django-gov-notify = "0.6.0"
 eventlet = "0.39.1"
-Faker = "18.10.1"
+Faker = "37.1.0"
 gunicorn = "21.2.0"
 psycogreen = "1.0.2"
 waitress = "3.0.2"
