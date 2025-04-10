@@ -57,7 +57,7 @@ six = "1.17.0"
 urllib3 = "1.26.20"
 whitenoise = "6.9.0"
 XlsxWriter = "3.2.2"
-phonenumbers = "^8.13.38"
+phonenumbers = "^9.0.2"
 
 [tool.black]
 line-length = 120
