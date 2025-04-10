@@ -668,18 +668,18 @@ dev = ["black", "build", "commitizen", "isort", "pip-tools", "pre-commit", "twin
 
 [[package]]
 name = "faker"
-version = "18.10.1"
+version = "37.1.0"
 description = "Faker is a Python package that generates fake data for you."
 optional = false
-python-versions = ">=3.7"
+python-versions = ">=3.9"
 groups = ["deployment"]
 files = [
-    {file = "Faker-18.10.1-py3-none-any.whl", hash = "sha256:633b278caa3ec239463f9139c74da2607c8da5710e56d5d7d30fc8a7440104c4"},
-    {file = "Faker-18.10.1.tar.gz", hash = "sha256:d9f363720c4a6cf9884c6c3e26e2ce26266ffe5d741a9bc7cb9256779bc62190"},
+    {file = "faker-37.1.0-py3-none-any.whl", hash = "sha256:dc2f730be71cb770e9c715b13374d80dbcee879675121ab51f9683d262ae9a1c"},
+    {file = "faker-37.1.0.tar.gz", hash = "sha256:ad9dc66a3b84888b837ca729e85299a96b58fdaef0323ed0baace93c9614af06"},
 ]
 
 [package.dependencies]
-python-dateutil = ">=2.4"
+tzdata = "*"
 
 [[package]]
 name = "flake8"
@@ -1725,7 +1725,7 @@ version = "2.9.0"
 description = "Extensions to the standard Python datetime module"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
-groups = ["main", "deployment", "dev"]
+groups = ["main", "dev"]
 files = [
     {file = "python-dateutil-2.9.0.tar.gz", hash = "sha256:78e73e19c63f5b20ffa567001531680d939dc042bf7850431877645523c66709"},
     {file = "python_dateutil-2.9.0-py2.py3-none-any.whl", hash = "sha256:cbf2f1da5e6083ac2fbfd4da39a25f34312230110440f424a14c7558bb85d82e"},
@@ -1941,7 +1941,7 @@ version = "1.17.0"
 description = "Python 2 and 3 compatibility utilities"
 optional = false
 python-versions = "!=3.0.*,!=3.1.*,!=3.2.*,>=2.7"
-groups = ["main", "deployment", "dev"]
+groups = ["main", "dev"]
 files = [
     {file = "six-1.17.0-py2.py3-none-any.whl", hash = "sha256:4721f391ed90541fddacab5acf947aa0d3dc7d27b2e1e8eda2be8970586c3274"},
     {file = "six-1.17.0.tar.gz", hash = "sha256:ff70335d468e7eb6ec65b95b99d3a2836546063f63acc5171de367e834932a81"},
@@ -2051,11 +2051,11 @@ description = "Provider of IANA time zone data"
 optional = false
 python-versions = ">=2"
 groups = ["main", "deployment"]
-markers = "sys_platform == \"win32\""
 files = [
     {file = "tzdata-2024.2-py2.py3-none-any.whl", hash = "sha256:a48093786cdcde33cad18c2555e8532f34422074448fbc874186f0abd79565cd"},
     {file = "tzdata-2024.2.tar.gz", hash = "sha256:7d85cc416e9382e69095b7bdf4afd9e3880418a2413feec7069d533d6b4e31cc"},
 ]
+markers = {main = "sys_platform == \"win32\""}
 
 [[package]]
 name = "urllib3"
@@ -2193,4 +2193,4 @@ files = [
 [metadata]
 lock-version = "2.1"
 python-versions = "~3.11.9"
-content-hash = "a76d3fee2ba869d932f65c851f065ef2196e1140d444f212017ba7d42a8bdceb"
+content-hash = "da189c5dd8f8f903d2ccdb503fd6d0ab58395f6783fb5be4668def3d49e7ca36"
