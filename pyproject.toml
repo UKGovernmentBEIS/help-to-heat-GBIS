@@ -30,7 +30,7 @@ watchdog = "6.0.0"
 
 [tool.poetry.dependencies]
 python = "~3.11.9"
-boto3 = "1.26.86"
+boto3 = "1.26.165"
 botocore = "1.29.165"
 debugpy = "1.8.13"
 Django = "5.1.8"
