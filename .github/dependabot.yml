@@ -16,3 +16,7 @@ updates:
         update-types:
           - "minor"
           - "patch"
+    ignore:
+      - dependency-name: "govuk-frontend-jinja"
+        versions:
+          - "3.*"
