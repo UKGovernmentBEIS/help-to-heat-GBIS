@@ -44,7 +44,7 @@ govuk-frontend-jinja = "2.8.0"
 httpx = "0.28.1"
 Jinja2 = "3.1.6"
 marshmallow = "3.26.1"
-osdatahub = "1.2.11"
+osdatahub = "1.3.0"
 psycopg2-binary = "2.9.10"
 pyotp = "2.9.0"
 python-dateutil = "2.9.0"
@@ -52,7 +52,7 @@ segno = "1.6.6"
 urllib3 = "2.4.0"
 whitenoise = "6.9.0"
 XlsxWriter = "3.2.2"
-phonenumbers = "^9.0.2"
+phonenumbers = "^9.0.3"
 
 [tool.black]
 line-length = 120
