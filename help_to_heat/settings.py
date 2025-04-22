@@ -49,7 +49,6 @@ INSTALLED_APPS = [
     "rest_framework",
     "allauth",
     "allauth.account",
-    "allauth.socialaccount",
     "debug_toolbar",
     "django.contrib.admin",
     "django.contrib.auth",
@@ -196,10 +195,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 AUTH_USER_MODEL = "portal.User"
 
-ACCOUNT_AUTHENTICATION_METHOD = "email"
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_LOGIN_METHODS = {"email"}
 ACCOUNT_USER_MODEL_USERNAME_FIELD = None
-ACCOUNT_USERNAME_REQUIRED = False
+ACCOUNT_SIGNUP_FIELDS = ["email*", "password1*", "password2*"]
 SITE_ID = 1
 ACCOUNT_EMAIL_VERIFICATION = "none"
 LOGIN_REDIRECT_URL = "portal:homepage"
