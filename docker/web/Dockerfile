@@ -15,7 +15,10 @@ RUN curl -o /bin/wait-for-db https://github.com/palfrey/wait-for-db/releases/dow
 RUN chmod +x /bin/wait-for-db
 
 RUN apt-get update
-RUN apt-get install -y gettext
+RUN apt-get install -y gettext \
+# this ensures psql is available on the container
+# we may use this in support when connecting to EC2 container & we need to query the database
+    postgresql-client
 
 COPY ./docker/web/start.sh /start.sh
 RUN chmod +x /start.sh
