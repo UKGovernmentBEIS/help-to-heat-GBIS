@@ -274,18 +274,18 @@ files = [
 
 [[package]]
 name = "django"
-version = "5.1.8"
+version = "5.2.1"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 optional = false
 python-versions = ">=3.10"
 groups = ["main", "deployment"]
 files = [
-    {file = "Django-5.1.8-py3-none-any.whl", hash = "sha256:11b28fa4b00e59d0def004e9ee012fefbb1065a5beb39ee838983fd24493ad4f"},
-    {file = "Django-5.1.8.tar.gz", hash = "sha256:42e92a1dd2810072bcc40a39a212b693f94406d0ba0749e68eb642f31dc770b4"},
+    {file = "django-5.2.1-py3-none-any.whl", hash = "sha256:a9b680e84f9a0e71da83e399f1e922e1ab37b2173ced046b541c72e1589a5961"},
+    {file = "django-5.2.1.tar.gz", hash = "sha256:57fe1f1b59462caed092c80b3dd324fd92161b620d59a9ba9181c34746c97284"},
 ]
 
 [package.dependencies]
-asgiref = ">=3.8.1,<4"
+asgiref = ">=3.8.1"
 sqlparse = ">=0.3.1"
 tzdata = {version = "*", markers = "sys_platform == \"win32\""}
 
@@ -295,13 +295,13 @@ bcrypt = ["bcrypt"]
 
 [[package]]
 name = "django-allauth"
-version = "65.7.0"
+version = "65.8.0"
 description = "Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication."
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "django_allauth-65.7.0.tar.gz", hash = "sha256:eb060692150f39e1529893c2de5f9b46e1dab51153ff6cca7ad72c7c125259ea"},
+    {file = "django_allauth-65.8.0.tar.gz", hash = "sha256:9da589d99d412740629333a01865a90c95c97e0fae0cde789aa45a8fda90e83b"},
 ]
 
 [package.dependencies]
@@ -352,14 +352,14 @@ tests = ["jinja2 (>=2.9.6)", "pytest", "pytest-cov", "pytest-django", "pytest-ru
 
 [[package]]
 name = "django-debug-toolbar"
-version = "5.1.0"
+version = "5.2.0"
 description = "A configurable set of panels that display various debug information about the current request/response."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "django_debug_toolbar-5.1.0-py3-none-any.whl", hash = "sha256:c0591e338ee9603bdfce5aebf8d18ca7341fdbb69595e2b0b34869be5857180e"},
-    {file = "django_debug_toolbar-5.1.0.tar.gz", hash = "sha256:8a3b9da4aeab8d384a366e20304bd939a451f0242523c5b7b402248ad474eed2"},
+    {file = "django_debug_toolbar-5.2.0-py3-none-any.whl", hash = "sha256:15627f4c2836a9099d795e271e38e8cf5204ccd79d5dbcd748f8a6c284dcd195"},
+    {file = "django_debug_toolbar-5.2.0.tar.gz", hash = "sha256:9e7f0145e1a1b7d78fcc3b53798686170a5b472d9cf085d88121ff823e900821"},
 ]
 
 [package.dependencies]
@@ -466,14 +466,14 @@ files = [
 
 [[package]]
 name = "eventlet"
-version = "0.39.1"
+version = "0.40.0"
 description = "Highly concurrent networking library"
 optional = false
-python-versions = ">=3.8"
+python-versions = ">=3.9"
 groups = ["deployment"]
 files = [
-    {file = "eventlet-0.39.1-py3-none-any.whl", hash = "sha256:2a349b6bca3471c7fc51e838beff9be94d3b9a146dc31c80890d69333ba03b80"},
-    {file = "eventlet-0.39.1.tar.gz", hash = "sha256:4a8a6475282d4021edde06ba335228c230b911b8d014577ddb33114c2b0c0510"},
+    {file = "eventlet-0.40.0-py3-none-any.whl", hash = "sha256:496915bc92d054236bad872d5143112a13b0216a7bbeeb832e1a858ae131fe8a"},
+    {file = "eventlet-0.40.0.tar.gz", hash = "sha256:f659d735e06795a26167b666008798c7a203fcd8119b08b84036e41076432ff1"},
 ]
 
 [package.dependencies]
@@ -485,14 +485,14 @@ dev = ["black", "build", "commitizen", "isort", "pip-tools", "pre-commit", "twin
 
 [[package]]
 name = "faker"
-version = "37.1.0"
+version = "37.3.0"
 description = "Faker is a Python package that generates fake data for you."
 optional = false
 python-versions = ">=3.9"
 groups = ["deployment"]
 files = [
-    {file = "faker-37.1.0-py3-none-any.whl", hash = "sha256:dc2f730be71cb770e9c715b13374d80dbcee879675121ab51f9683d262ae9a1c"},
-    {file = "faker-37.1.0.tar.gz", hash = "sha256:ad9dc66a3b84888b837ca729e85299a96b58fdaef0323ed0baace93c9614af06"},
+    {file = "faker-37.3.0-py3-none-any.whl", hash = "sha256:48c94daa16a432f2d2bc803c7ff602509699fca228d13e97e379cd860a7e216e"},
+    {file = "faker-37.3.0.tar.gz", hash = "sha256:77b79e7a2228d57175133af0bbcdd26dc623df81db390ee52f5104d46c010f2f"},
 ]
 
 [package.dependencies]
@@ -1294,14 +1294,14 @@ files = [
 
 [[package]]
 name = "phonenumbers"
-version = "9.0.3"
+version = "9.0.5"
 description = "Python version of Google's common library for parsing, formatting, storing and validating international phone numbers."
 optional = false
 python-versions = "*"
 groups = ["main"]
 files = [
-    {file = "phonenumbers-9.0.3-py2.py3-none-any.whl", hash = "sha256:0509d9b70ef66c04a1538f0b31c3e0c0b023127dad0eb1199adef0bc1841ff34"},
-    {file = "phonenumbers-9.0.3.tar.gz", hash = "sha256:c5084e6c6a77e0e8d725086c7f69002ef8e39529155b8cd31cbf8c987f344a33"},
+    {file = "phonenumbers-9.0.5-py2.py3-none-any.whl", hash = "sha256:7acef19817868a6f9cbc0d628dc5ad447b3768137e3d53c70dd6827a1ac040ba"},
+    {file = "phonenumbers-9.0.5.tar.gz", hash = "sha256:70fde168a92dd9c73f57872359515181d6cde6bb8e7ec5660e94c4ca45692c50"},
 ]
 
 [[package]]
@@ -1918,14 +1918,14 @@ brotli = ["brotli"]
 
 [[package]]
 name = "xlsxwriter"
-version = "3.2.2"
+version = "3.2.3"
 description = "A Python module for creating Excel XLSX files."
 optional = false
 python-versions = ">=3.6"
 groups = ["main"]
 files = [
-    {file = "XlsxWriter-3.2.2-py3-none-any.whl", hash = "sha256:272ce861e7fa5e82a4a6ebc24511f2cb952fde3461f6c6e1a1e81d3272db1471"},
-    {file = "xlsxwriter-3.2.2.tar.gz", hash = "sha256:befc7f92578a85fed261639fb6cde1fd51b79c5e854040847dde59d4317077dc"},
+    {file = "XlsxWriter-3.2.3-py3-none-any.whl", hash = "sha256:593f8296e8a91790c6d0378ab08b064f34a642b3feb787cf6738236bd0a4860d"},
+    {file = "xlsxwriter-3.2.3.tar.gz", hash = "sha256:ad6fd41bdcf1b885876b1f6b7087560aecc9ae5a9cc2ba97dcac7ab2e210d3d5"},
 ]
 
 [[package]]
@@ -1951,4 +1951,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = "~3.11.9"
-content-hash = "f59eecd5814df1a9f69961c9c4fd52582a5bef91e63c25e205792aae125b5ac0"
+content-hash = "daf990e5875b5f48ba1c3c8674bf19b86740c1aa8652d56861a9d331fb053f92"
