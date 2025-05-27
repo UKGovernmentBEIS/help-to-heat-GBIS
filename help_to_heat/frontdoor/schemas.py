@@ -137,7 +137,7 @@ from help_to_heat.frontdoor.consts import (
     wall_type_field_mix,
     wall_type_field_not_listed,
     wall_type_field_solid,
-    wall_type_page,
+    wall_type_page, cannot_continue_page,
 )
 
 summary_map = {
@@ -263,11 +263,13 @@ change_page_override_pages = [
     council_tax_band_page,
     epc_page,
     no_epc_page,
+    # for the ineligible pages, make sure if they give an answer that makes them ineligible this is shown rather than potentially sending to the change page
     northern_ireland_ineligible_page,
     park_home_ineligible_page,
     epc_ineligible_page,
     property_ineligible_page,
     alternative_supplier_page,
+    cannot_continue_page
 ]
 
 # where the journey starts for questions in this change page

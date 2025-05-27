@@ -9,6 +9,7 @@ own_property_page = "own-property"
 bulb_warning_page = "bulb-warning-page"
 shell_warning_page = "shell-warning-page"
 utility_warehouse_warning_page = "utility-warehouse-warning-page"
+cannot_continue_page = "cannot-continue"
 park_home_page = "park-home"
 park_home_main_residence_page = "park-home-main-residence"
 park_home_ineligible_page = "park-home-application-closed"
@@ -49,6 +50,7 @@ all_pages = [
     bulb_warning_page,
     shell_warning_page,
     utility_warehouse_warning_page,
+    cannot_continue_page,
     park_home_page,
     park_home_main_residence_page,
     park_home_ineligible_page,
