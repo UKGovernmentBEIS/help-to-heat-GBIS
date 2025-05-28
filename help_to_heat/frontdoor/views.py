@@ -106,10 +106,6 @@ from .consts import (
     own_property_page,
     page_name_field,
     park_home_field,
-    park_home_ineligible_page,
-    park_home_main_residence_field,
-    park_home_main_residence_page,
-    park_home_page,
     property_ineligible_page,
     property_subtype_field,
     property_subtype_page,
@@ -166,8 +162,6 @@ logger = logging.getLogger(__name__)
 page_compulsory_field_map = {
     country_page: (country_field,),
     own_property_page: (own_property_field,),
-    park_home_page: (park_home_field,),
-    park_home_main_residence_page: (park_home_main_residence_field,),
     address_page: (address_building_name_or_number_field, address_postcode_field),
     epc_select_page: (lmk_field,),
     address_select_page: (uprn_field,),
@@ -208,8 +202,6 @@ page_compulsory_field_map = {
 missing_item_errors = {
     country_field: _("Select where the property is located"),
     own_property_field: _("Select if you own the property"),
-    park_home_field: _("Select if the property is a park home"),
-    park_home_main_residence_field: _("Select if the park home is your main residence"),
     address_building_name_or_number_field: _("Enter building name or number"),
     address_manual_address_line_1_field: _("Enter Address line 1"),
     address_postcode_field: _("Enter a postcode"),
@@ -619,18 +611,6 @@ class AlternativeSupplierView(PageView):
 class OwnPropertyView(PageView):
     def build_extra_context(self, *args, **kwargs):
         return {"own_property_options_map": schemas.own_property_options_map}
-
-
-@register_page(park_home_page)
-class ParkHomeView(PageView):
-    def build_extra_context(self, *args, **kwargs):
-        return {"park_home_options_map": schemas.park_home_options_map}
-
-
-@register_page(park_home_main_residence_page)
-class ParkHomeMainResidenceView(PageView):
-    def build_extra_context(self, *args, **kwargs):
-        return {"park_home_main_residence_options_map": schemas.park_home_main_residence_options_map}
 
 
 @register_page(address_page)
@@ -1305,13 +1285,6 @@ class NorthernIrelandView(PageView):
     def save_get_data(self, data, session_id, page_name):
         # this is saved for analytics purposes
         # see https://github.com/UKGovernmentBEIS/help-to-heat-GBIS/commit/973f9a520c68d3b4b08ebab302614f1d030cec3e
-        data[page_name_field] = page_name
-        return data
-
-
-@register_page(park_home_ineligible_page)
-class ParkHomeIneligiblePage(PageView):
-    def save_get_data(self, data, session_id, page_name):
         data[page_name_field] = page_name
         return data
 

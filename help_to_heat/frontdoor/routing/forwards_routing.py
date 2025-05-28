@@ -62,10 +62,6 @@ from help_to_heat.frontdoor.consts import (
     own_property_field_values_non_social_housing,
     own_property_page,
     park_home_field,
-    park_home_ineligible_page,
-    park_home_main_residence_field,
-    park_home_main_residence_page,
-    park_home_page,
     property_ineligible_page,
     property_subtype_field,
     property_subtype_page,
@@ -168,12 +164,6 @@ def get_next_page(current_page, answers):
 
     if current_page == property_subtype_page:
         return _property_subtype_next_page(answers)
-
-    if current_page == park_home_page:
-        return _park_home_next_page(answers)
-
-    if current_page == park_home_main_residence_page:
-        return _park_home_main_residence_next_page(answers)
 
     if current_page == address_page:
         return _address_next_page(answers)
@@ -325,11 +315,11 @@ def _own_property_next_page(answers):
 def _property_type_next_page(answers):
     property_type = answers.get(property_type_field)
     park_home = answers.get(park_home_field)
-    if property_type in [property_type_field_house, property_type_field_bungalow]:
-        return property_subtype_page
     # for users who previously answered yes to having a park home, when this used to be a separate question
     if park_home == field_yes:
         return cannot_continue_page
+    if property_type in [property_type_field_house, property_type_field_bungalow]:
+        return property_subtype_page
     if property_type in [property_type_field_apartment, property_type_field_park_home]:
         return cannot_continue_page
 
@@ -339,28 +329,6 @@ def _property_type_next_page(answers):
 @_requires_answer(property_subtype_field)
 def _property_subtype_next_page(_answers):
     return address_page
-
-
-@_requires_answer(park_home_field)
-def _park_home_next_page(answers):
-    park_home = answers.get(park_home_field)
-    if park_home == field_yes:
-        return park_home_main_residence_page
-    if park_home == field_no:
-        return address_page
-
-    return _unknown_response
-
-
-@_requires_answer(park_home_main_residence_field)
-def _park_home_main_residence_next_page(answers):
-    park_home_main_residence = answers.get(park_home_main_residence_field)
-    if park_home_main_residence == field_no:
-        return park_home_ineligible_page
-    if park_home_main_residence == field_yes:
-        return address_page
-
-    return _unknown_response
 
 
 @_requires_answer(address_choice_journey_field)

@@ -82,11 +82,6 @@ from help_to_heat.frontdoor.consts import (
     own_property_field_social_housing,
     own_property_field_tenant,
     own_property_page,
-    park_home_field,
-    park_home_ineligible_page,
-    park_home_main_residence_field,
-    park_home_main_residence_page,
-    park_home_page,
     property_ineligible_page,
     property_subtype_field,
     property_subtype_field_detached,
@@ -145,8 +140,6 @@ summary_map = {
     country_field: _("Country of property"),
     supplier_field: _("Energy supplier"),
     own_property_field: pgettext_lazy("summary page", "Do you own the property?"),
-    park_home_field: _("Is the property a park home?"),
-    park_home_main_residence_field: _("Is the park home your main residence?"),
     address_field: _("Property address"),
     council_tax_band_field: _("Council tax band"),
     epc_rating_field: _("Energy Performance Certificate"),
@@ -179,8 +172,6 @@ page_display_questions = {
     shell_warning_page: (shell_warning_page_field,),
     utility_warehouse_warning_page: (utility_warehouse_warning_page_field,),
     own_property_page: (own_property_field,),
-    park_home_page: (park_home_field,),
-    park_home_main_residence_page: (park_home_main_residence_field,),
     address_page: (address_field,),
     council_tax_band_page: (council_tax_band_field,),
     epc_page: (epc_rating_field,),
@@ -226,8 +217,6 @@ change_page_lookup = {
     shell_warning_page: summary_page,
     utility_warehouse_warning_page: summary_page,
     own_property_page: summary_page,
-    park_home_page: summary_page,
-    park_home_main_residence_page: summary_page,
     address_page: summary_page,
     epc_select_page: summary_page,
     address_select_page: summary_page,
@@ -268,7 +257,6 @@ change_page_override_pages = [
     # do not send them to the change page upon pressing back.
     # they should instead always be shown the previous question upon pressing back to avoid confusion.
     northern_ireland_ineligible_page,
-    park_home_ineligible_page,
     epc_ineligible_page,
     property_ineligible_page,
     alternative_supplier_page,
@@ -831,7 +819,9 @@ all_property_subtypes = tuple(item["value"] for value in property_subtype_option
 class SessionSchema(Schema):
     country = fields.String(validate=validate.OneOf(tuple(item["value"] for item in country_options_map)))
     own_property = fields.String(validate=validate.OneOf(tuple(item["value"] for item in own_property_options_map)))
+    # this question is no longer asked
     park_home = fields.String(validate=validate.OneOf(tuple(item["value"] for item in park_home_options_map)))
+    # this question is no longer asked
     park_home_main_residence = fields.String(
         validate=validate.OneOf(tuple(item["value"] for item in park_home_main_residence_options_map))
     )

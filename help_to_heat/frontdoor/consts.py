@@ -12,9 +12,6 @@ utility_warehouse_warning_page = "utility-warehouse-warning-page"
 property_type_page = "property-type"
 property_subtype_page = "property-subtype"
 cannot_continue_page = "cannot-continue"
-park_home_page = "park-home"
-park_home_main_residence_page = "park-home-main-residence"
-park_home_ineligible_page = "park-home-application-closed"
 address_page = "address"
 epc_select_page = "epc-select"
 address_select_page = "address-select"
@@ -53,9 +50,6 @@ all_pages = [
     property_type_page,
     property_subtype_page,
     cannot_continue_page,
-    park_home_page,
-    park_home_main_residence_page,
-    park_home_ineligible_page,
     address_page,
     epc_select_page,
     address_select_page,
@@ -162,9 +156,11 @@ property_subtype_field_semi_detached = "Semi-detached"
 property_subtype_field_terraced = "Terraced"
 property_subtype_field_end_terrace = "End terrace"
 
+# deprecated, this question was merged into property_type_field
 park_home_field = "park_home"
 # yes/no options
 
+# deprecated, this question is no longer asked
 park_home_main_residence_field = "park_home_main_residence"
 # yes/no options
 
