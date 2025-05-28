@@ -16,6 +16,7 @@ from help_to_heat.frontdoor.consts import (
     benefits_page,
     bulb_warning_page,
     bulb_warning_page_field,
+    cannot_continue_page,
     confirm_and_submit_page,
     contact_details_page,
     council_tax_band_field,
@@ -69,6 +70,10 @@ from help_to_heat.frontdoor.consts import (
     property_subtype_field,
     property_subtype_page,
     property_type_field,
+    property_type_field_apartment,
+    property_type_field_bungalow,
+    property_type_field_house,
+    property_type_field_park_home,
     property_type_page,
     referral_already_submitted_page,
     schemes_page,
@@ -158,6 +163,12 @@ def get_next_page(current_page, answers):
     if current_page == own_property_page:
         return _own_property_next_page(answers)
 
+    if current_page == property_type_page:
+        return _property_type_next_page(answers)
+
+    if current_page == property_subtype_page:
+        return _property_subtype_next_page(answers)
+
     if current_page == park_home_page:
         return _park_home_next_page(answers)
 
@@ -199,12 +210,6 @@ def get_next_page(current_page, answers):
 
     if current_page == household_income_page:
         return _household_income_next_page(answers)
-
-    if current_page == property_type_page:
-        return _property_type_next_page(answers)
-
-    if current_page == property_subtype_page:
-        return _property_subtype_next_page(answers)
 
     if current_page == number_of_bedrooms_page:
         return _number_of_bedrooms_next_page(answers)
@@ -309,11 +314,31 @@ def _utility_warehouse_warning_page_next_page(_answers):
 def _own_property_next_page(answers):
     own_property = answers.get(own_property_field)
     if own_property in own_property_field_values_non_social_housing:
-        return park_home_page
+        return property_type_page
     if own_property == own_property_field_social_housing:
         return address_page
 
     return _unknown_response
+
+
+@_requires_answer(property_type_field)
+def _property_type_next_page(answers):
+    property_type = answers.get(property_type_field)
+    park_home = answers.get(park_home_field)
+    if property_type in [property_type_field_house, property_type_field_bungalow]:
+        return property_subtype_page
+    # for users who previously answered yes to having a park home, when this used to be a separate question
+    if park_home == field_yes:
+        return cannot_continue_page
+    if property_type in [property_type_field_apartment, property_type_field_park_home]:
+        return cannot_continue_page
+
+    return _unknown_response
+
+
+@_requires_answer(property_subtype_field)
+def _property_subtype_next_page(_answers):
+    return address_page
 
 
 @_requires_answer(park_home_field)
@@ -415,12 +440,8 @@ def _referral_already_submitted_next_page(answers):
 # show council tax band page or not, depending on flow
 def _post_duplicate_uprn_next_page(answers):
     own_property = answers.get(own_property_field)
-    park_home = answers.get(park_home_field)
     if own_property in own_property_field_values_non_social_housing:
-        if park_home == field_no:
-            return council_tax_band_page
-        if park_home == field_yes:
-            return _post_council_tax_band_next_page(answers)
+        return council_tax_band_page
     if own_property == own_property_field_social_housing:
         return _post_council_tax_band_next_page(answers)
 
@@ -475,7 +496,7 @@ def _post_epc_next_page(answers):
     if own_property in own_property_field_values_non_social_housing:
         return benefits_page
     if own_property == own_property_field_social_housing:
-        return _post_circumstances_next_page(answers)
+        return number_of_bedrooms_page
 
     return _unknown_response
 
@@ -484,7 +505,7 @@ def _post_epc_next_page(answers):
 def _benefits_next_page(answers):
     benefits = answers.get(benefits_field)
     if benefits == field_yes:
-        return _post_circumstances_next_page(answers)
+        return number_of_bedrooms_page
     if benefits == field_no:
         return household_income_page
 
@@ -500,32 +521,7 @@ def _household_income_next_page(answers):
     if len(eligible_schemes) == 0:
         return property_ineligible_page
     else:
-        return _post_circumstances_next_page(answers)
-
-
-# ask property questions, depending on flow
-def _post_circumstances_next_page(answers):
-    own_property = answers.get(own_property_field)
-    park_home = answers.get(park_home_field)
-    if own_property in own_property_field_values_non_social_housing:
-        if park_home == field_no:
-            return property_type_page
-        if park_home == field_yes:
-            return summary_page
-    if own_property == own_property_field_social_housing:
-        return property_type_page
-
-    return _unknown_response
-
-
-@_requires_answer(property_type_field)
-def _property_type_next_page(_answers):
-    return property_subtype_page
-
-
-@_requires_answer(property_subtype_field)
-def _property_subtype_next_page(_answers):
-    return number_of_bedrooms_page
+        return number_of_bedrooms_page
 
 
 @_requires_answer(number_of_bedrooms_field)

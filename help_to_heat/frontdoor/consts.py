@@ -9,6 +9,8 @@ own_property_page = "own-property"
 bulb_warning_page = "bulb-warning-page"
 shell_warning_page = "shell-warning-page"
 utility_warehouse_warning_page = "utility-warehouse-warning-page"
+property_type_page = "property-type"
+property_subtype_page = "property-subtype"
 cannot_continue_page = "cannot-continue"
 park_home_page = "park-home"
 park_home_main_residence_page = "park-home-main-residence"
@@ -27,8 +29,6 @@ epc_ineligible_page = "epc-ineligible"
 benefits_page = "benefits"
 household_income_page = "household-income"
 property_ineligible_page = "ineligible"
-property_type_page = "property-type"
-property_subtype_page = "property-subtype"
 number_of_bedrooms_page = "number-of-bedrooms"
 wall_type_page = "wall-type"
 wall_insulation_page = "wall-insulation"
@@ -50,6 +50,8 @@ all_pages = [
     bulb_warning_page,
     shell_warning_page,
     utility_warehouse_warning_page,
+    property_type_page,
+    property_subtype_page,
     cannot_continue_page,
     park_home_page,
     park_home_main_residence_page,
@@ -68,8 +70,6 @@ all_pages = [
     benefits_page,
     household_income_page,
     property_ineligible_page,
-    property_type_page,
-    property_subtype_page,
     number_of_bedrooms_page,
     wall_type_page,
     wall_insulation_page,
@@ -146,6 +146,21 @@ own_property_field_values_non_social_housing = [
     own_property_field_tenant,
     own_property_field_landlord,
 ]
+
+property_type_field = "property_type"
+property_type_field_house = "House"
+property_type_field_bungalow = "Bungalow"
+property_type_field_apartment = "Apartment, flat or maisonette"
+property_type_field_park_home = "Park home"
+
+property_subtype_field = "property_subtype"
+property_subtype_field_top_floor = "Top floor"
+property_subtype_field_middle_floor = "Middle floor"
+property_subtype_field_ground_floor = "Ground floor"
+property_subtype_field_detached = "Detached"
+property_subtype_field_semi_detached = "Semi-detached"
+property_subtype_field_terraced = "Terraced"
+property_subtype_field_end_terrace = "End terrace"
 
 park_home_field = "park_home"
 # yes/no options
@@ -231,21 +246,6 @@ benefits_field = "benefits"
 household_income_field = "household_income"
 household_income_field_less_than_threshold = "Less than £31,000 a year"
 household_income_field_more_than_threshold = "£31,000 or more a year"
-
-property_type_field = "property_type"
-property_type_field_house = "House"
-property_type_field_bungalow = "Bungalow"
-property_type_field_apartment = "Apartment, flat or maisonette"
-property_type_field_park_home = "Park home"  # set if confirms yes to park home in flow
-
-property_subtype_field = "property_subtype"
-property_subtype_field_top_floor = "Top floor"
-property_subtype_field_middle_floor = "Middle floor"
-property_subtype_field_ground_floor = "Ground floor"
-property_subtype_field_detached = "Detached"
-property_subtype_field_semi_detached = "Semi-detached"
-property_subtype_field_terraced = "Terraced"
-property_subtype_field_end_terrace = "End terrace"
 
 number_of_bedrooms_field = "number_of_bedrooms"
 number_of_bedrooms_field_studio = "Studio"

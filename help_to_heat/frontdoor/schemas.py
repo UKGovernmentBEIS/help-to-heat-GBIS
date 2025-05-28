@@ -17,6 +17,7 @@ from help_to_heat.frontdoor.consts import (
     benefits_page,
     bulb_warning_page,
     bulb_warning_page_field,
+    cannot_continue_page,
     confirm_and_submit_page,
     contact_details_contact_number_field,
     contact_details_email_field,
@@ -137,7 +138,7 @@ from help_to_heat.frontdoor.consts import (
     wall_type_field_mix,
     wall_type_field_not_listed,
     wall_type_field_solid,
-    wall_type_page, cannot_continue_page,
+    wall_type_page,
 )
 
 summary_map = {
@@ -263,13 +264,15 @@ change_page_override_pages = [
     council_tax_band_page,
     epc_page,
     no_epc_page,
-    # for the ineligible pages, make sure if they give an answer that makes them ineligible this is shown rather than potentially sending to the change page
+    # for the ineligible pages, make sure if they give an answer that makes them ineligible,
+    # do not send them to the change page upon pressing back.
+    # they should instead always be shown the previous question upon pressing back to avoid confusion.
     northern_ireland_ineligible_page,
     park_home_ineligible_page,
     epc_ineligible_page,
     property_ineligible_page,
     alternative_supplier_page,
-    cannot_continue_page
+    cannot_continue_page,
 ]
 
 # where the journey starts for questions in this change page
@@ -323,6 +326,98 @@ own_property_options_map = (
         "label": _("Yes, I am the property owner but I lease the property to one or more tenants"),
     },
 )
+
+property_type_options_map = (
+    {
+        "value": property_type_field_house,
+        "label": _("House"),
+    },
+    {
+        "value": property_type_field_bungalow,
+        "label": _("Bungalow"),
+    },
+    {
+        "value": property_type_field_apartment,
+        "label": _("Apartment, flat or maisonette"),
+    },
+    {
+        "value": property_type_field_park_home,
+        "label": _("Park home"),
+    },
+)
+
+property_subtype_titles_options_map = {
+    "House": _("house"),
+    "Bungalow": _("bungalow"),
+    "Apartment, flat or maisonette": _("apartment, flat or maisonette"),
+}
+
+property_subtype_options_map = {
+    property_type_field_apartment: (
+        {
+            "value": property_subtype_field_top_floor,
+            "label": _("Top floor"),
+            "hint": _("Sits directly below the roof with no other flat above it"),
+        },
+        {
+            "value": property_subtype_field_middle_floor,
+            "label": _("Middle floor"),
+            "hint": _("Has another flat above, and another below"),
+        },
+        {
+            "value": property_subtype_field_ground_floor,
+            "label": _("Ground floor"),
+            "hint": _(
+                "The lowest flat in the building with no flat beneath - typically at street level but may be a basement"
+            ),  # noqa E501
+        },
+    ),
+    property_type_field_bungalow: (
+        {
+            "value": property_subtype_field_detached,
+            "label": _("Detached"),
+            "hint": _("Does not share any of its walls with another house or building"),
+        },
+        {
+            "value": property_subtype_field_semi_detached,
+            "label": _("Semi-detached"),
+            "hint": _("Is attached to one other house or building"),
+        },
+        {
+            "value": property_subtype_field_terraced,
+            "label": _("Terraced"),
+            "hint": _("Sits in the middle with a house or building on each side"),
+        },
+        {
+            "value": property_subtype_field_end_terrace,
+            "label": _("End terrace"),
+            "hint": _("Sits at the end of a row of similar houses with one house attached to it"),
+        },
+    ),
+    property_type_field_house: (
+        {
+            "value": property_subtype_field_detached,
+            "label": _("Detached"),
+            "hint": _("Does not share any of its walls with another house or building"),
+        },
+        {
+            "value": property_subtype_field_semi_detached,
+            "label": _("Semi-detached"),
+            "hint": _("Is attached to one other house or building"),
+        },
+        {
+            "value": property_subtype_field_terraced,
+            "label": _("Terraced"),
+            "hint": _("Sits in the middle with a house or building on each side"),
+        },
+        {
+            "value": property_subtype_field_end_terrace,
+            "label": _("End terrace"),
+            "hint": _("Sits at the end of a row of similar houses with one house attached to it"),
+        },
+    ),
+}
+
 park_home_options_map = (
     {
         "value": field_yes,
@@ -401,26 +496,6 @@ household_income_options_map = (
         "label": _("£31,000 or more a year"),
     },
 )
-property_type_options_map = (
-    {
-        "value": property_type_field_house,
-        "label": _("House"),
-    },
-    {
-        "value": property_type_field_bungalow,
-        "label": _("Bungalow"),
-    },
-    {
-        "value": property_type_field_apartment,
-        "label": _("Apartment, flat or maisonette"),
-    },
-)
-
-property_subtype_titles_options_map = {
-    "House": _("house"),
-    "Bungalow": _("bungalow"),
-    "Apartment, flat or maisonette": _("apartment, flat or maisonette"),
-}
 
 # if wording changes, old answers should be left in this map
 # otherwise, an error will be thrown on check answers page for these old users
@@ -499,71 +574,6 @@ check_your_answers_options_map = {
     },
 }
 
-property_subtype_options_map = {
-    property_type_field_apartment: (
-        {
-            "value": property_subtype_field_top_floor,
-            "label": _("Top floor"),
-            "hint": _("Sits directly below the roof with no other flat above it"),
-        },
-        {
-            "value": property_subtype_field_middle_floor,
-            "label": _("Middle floor"),
-            "hint": _("Has another flat above, and another below"),
-        },
-        {
-            "value": property_subtype_field_ground_floor,
-            "label": _("Ground floor"),
-            "hint": _(
-                "The lowest flat in the building with no flat beneath - typically at street level but may be a basement"
-            ),  # noqa E501
-        },
-    ),
-    property_type_field_bungalow: (
-        {
-            "value": property_subtype_field_detached,
-            "label": _("Detached"),
-            "hint": _("Does not share any of its walls with another house or building"),
-        },
-        {
-            "value": property_subtype_field_semi_detached,
-            "label": _("Semi-detached"),
-            "hint": _("Is attached to one other house or building"),
-        },
-        {
-            "value": property_subtype_field_terraced,
-            "label": _("Terraced"),
-            "hint": _("Sits in the middle with a house or building on each side"),
-        },
-        {
-            "value": property_subtype_field_end_terrace,
-            "label": _("End terrace"),
-            "hint": _("Sits at the end of a row of similar houses with one house attached to it"),
-        },
-    ),
-    property_type_field_house: (
-        {
-            "value": property_subtype_field_detached,
-            "label": _("Detached"),
-            "hint": _("Does not share any of its walls with another house or building"),
-        },
-        {
-            "value": property_subtype_field_semi_detached,
-            "label": _("Semi-detached"),
-            "hint": _("Is attached to one other house or building"),
-        },
-        {
-            "value": property_subtype_field_terraced,
-            "label": _("Terraced"),
-            "hint": _("Sits in the middle with a house or building on each side"),
-        },
-        {
-            "value": property_subtype_field_end_terrace,
-            "label": _("End terrace"),
-            "hint": _("Sits at the end of a row of similar houses with one house attached to it"),
-        },
-    ),
-}
 number_of_bedrooms_options_map = (
     {
         "value": number_of_bedrooms_field_studio,

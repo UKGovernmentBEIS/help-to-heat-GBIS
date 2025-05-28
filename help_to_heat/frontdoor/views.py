@@ -44,6 +44,7 @@ from .consts import (
     benefits_page,
     bulb_warning_page,
     bulb_warning_page_field,
+    cannot_continue_page,
     confirm_and_submit_acknowledge_field,
     confirm_and_submit_page,
     confirm_and_submit_permission_field,
@@ -1324,6 +1325,13 @@ class EpcIneligiblePage(PageView):
 
 @register_page(property_ineligible_page)
 class IneligiblePage(PageView):
+    def save_get_data(self, data, session_id, page_name):
+        data[page_name_field] = page_name
+        return data
+
+
+@register_page(cannot_continue_page)
+class CannotContinuePage(PageView):
     def save_get_data(self, data, session_id, page_name):
         data[page_name_field] = page_name
         return data
