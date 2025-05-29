@@ -175,13 +175,13 @@ def get_next_page(current_page, answers):
         return _address_select_next_page(answers)
 
     if current_page == address_manual_page:
-        return _address_manual_next_page(answers)
+        return _address_manual_next_page()
 
     if current_page == epc_select_manual_page:
-        return _epc_select_manual_next_page(answers)
+        return _epc_select_manual_next_page()
 
     if current_page == address_select_manual_page:
-        return _address_select_manual_next_page(answers)
+        return _address_select_manual_next_page()
 
     if current_page == referral_already_submitted_page:
         return _referral_already_submitted_next_page(answers)
@@ -306,7 +306,7 @@ def _own_property_next_page(answers):
     if own_property in own_property_field_values_non_social_housing:
         return property_type_page
     if own_property == own_property_field_social_housing:
-        return address_page
+        return cannot_continue_page
 
     return _unknown_response
 
@@ -378,16 +378,16 @@ def _address_select_next_page(answers):
     return _unknown_response
 
 
-def _address_manual_next_page(answers):
-    return _post_duplicate_uprn_next_page(answers)
+def _address_manual_next_page():
+    return _post_duplicate_uprn_next_page()
 
 
-def _epc_select_manual_next_page(answers):
-    return _post_duplicate_uprn_next_page(answers)
+def _epc_select_manual_next_page():
+    return _post_duplicate_uprn_next_page()
 
 
-def _address_select_manual_next_page(answers):
-    return _post_duplicate_uprn_next_page(answers)
+def _address_select_manual_next_page():
+    return _post_duplicate_uprn_next_page()
 
 
 # after submitting an address, show already submitted page or continue
@@ -396,24 +396,17 @@ def _post_address_input_next_page(answers):
     if duplicate_uprn == field_yes:
         return referral_already_submitted_page
     if duplicate_uprn == field_no:
-        return _post_duplicate_uprn_next_page(answers)
+        return _post_duplicate_uprn_next_page()
 
     return _unknown_response
 
 
-def _referral_already_submitted_next_page(answers):
-    return _post_duplicate_uprn_next_page(answers)
+def _referral_already_submitted_next_page(_answers):
+    return _post_duplicate_uprn_next_page()
 
 
-# show council tax band page or not, depending on flow
-def _post_duplicate_uprn_next_page(answers):
-    own_property = answers.get(own_property_field)
-    if own_property in own_property_field_values_non_social_housing:
-        return council_tax_band_page
-    if own_property == own_property_field_social_housing:
-        return _post_council_tax_band_next_page(answers)
-
-    return _unknown_response
+def _post_duplicate_uprn_next_page():
+    return council_tax_band_page
 
 
 @_requires_answer(council_tax_band_field)
@@ -437,7 +430,7 @@ def _post_council_tax_band_next_page(answers):
             or epc_select_choice == epc_select_choice_journey_field_enter_manually
             or address_select_choice == address_choice_journey_field_enter_manually
         ):
-            return _post_epc_next_page(answers)
+            return _post_epc_next_page()
 
         return no_epc_page
 
@@ -450,23 +443,17 @@ def _epc_next_page(answers):
     if rating_is_eligible == field_no:
         return epc_ineligible_page
     else:
-        return _post_epc_next_page(answers)
+        return _post_epc_next_page()
 
 
 @_requires_answer(no_epc_field)
-def _no_epc_next_page(answers):
-    return _post_epc_next_page(answers)
+def _no_epc_next_page(_answers):
+    return _post_epc_next_page()
 
 
-# ask circumstances questions, depending on flow
-def _post_epc_next_page(answers):
-    own_property = answers.get(own_property_field)
-    if own_property in own_property_field_values_non_social_housing:
-        return benefits_page
-    if own_property == own_property_field_social_housing:
-        return number_of_bedrooms_page
-
-    return _unknown_response
+# ask circumstances questions
+def _post_epc_next_page():
+    return benefits_page
 
 
 @_requires_answer(benefits_field)
