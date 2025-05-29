@@ -139,7 +139,7 @@ own_property_field_own_property = "Yes, I own my property and live in it"
 own_property_field_tenant = "No, I am a tenant"
 own_property_field_social_housing = "No, I am a social housing tenant"
 own_property_field_landlord = "Yes, I am the property owner but I lease the property to one or more tenants"
-own_property_field_values_non_social_housing = [
+own_property_field_values_can_continue = [
     own_property_field_own_property,
     own_property_field_tenant,
     own_property_field_landlord,

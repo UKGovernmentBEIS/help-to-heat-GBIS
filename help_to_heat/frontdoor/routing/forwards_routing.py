@@ -59,7 +59,7 @@ from help_to_heat.frontdoor.consts import (
     number_of_bedrooms_page,
     own_property_field,
     own_property_field_social_housing,
-    own_property_field_values_non_social_housing,
+    own_property_field_values_can_continue,
     own_property_page,
     park_home_field,
     property_ineligible_page,
@@ -303,7 +303,7 @@ def _utility_warehouse_warning_page_next_page(_answers):
 @_requires_answer(own_property_field)
 def _own_property_next_page(answers):
     own_property = answers.get(own_property_field)
-    if own_property in own_property_field_values_non_social_housing:
+    if own_property in own_property_field_values_can_continue:
         return property_type_page
     if own_property == own_property_field_social_housing:
         return cannot_continue_page
