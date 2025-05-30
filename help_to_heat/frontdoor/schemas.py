@@ -86,11 +86,8 @@ from help_to_heat.frontdoor.consts import (
     property_subtype_field,
     property_subtype_field_detached,
     property_subtype_field_end_terrace,
-    property_subtype_field_ground_floor,
-    property_subtype_field_middle_floor,
     property_subtype_field_semi_detached,
     property_subtype_field_terraced,
-    property_subtype_field_top_floor,
     property_subtype_page,
     property_type_field,
     property_type_field_apartment,
@@ -340,71 +337,29 @@ property_subtype_titles_options_map = {
     "Apartment, flat or maisonette": _("apartment, flat or maisonette"),
 }
 
-property_subtype_options_map = {
-    property_type_field_apartment: (
-        {
-            "value": property_subtype_field_top_floor,
-            "label": _("Top floor"),
-            "hint": _("Sits directly below the roof with no other flat above it"),
-        },
-        {
-            "value": property_subtype_field_middle_floor,
-            "label": _("Middle floor"),
-            "hint": _("Has another flat above, and another below"),
-        },
-        {
-            "value": property_subtype_field_ground_floor,
-            "label": _("Ground floor"),
-            "hint": _(
-                "The lowest flat in the building with no flat beneath - typically at street level but may be a basement"
-            ),  # noqa E501
-        },
-    ),
-    property_type_field_bungalow: (
-        {
-            "value": property_subtype_field_detached,
-            "label": _("Detached"),
-            "hint": _("Does not share any of its walls with another house or building"),
-        },
-        {
-            "value": property_subtype_field_semi_detached,
-            "label": _("Semi-detached"),
-            "hint": _("Is attached to one other house or building"),
-        },
-        {
-            "value": property_subtype_field_terraced,
-            "label": _("Terraced"),
-            "hint": _("Sits in the middle with a house or building on each side"),
-        },
-        {
-            "value": property_subtype_field_end_terrace,
-            "label": _("End terrace"),
-            "hint": _("Sits at the end of a row of similar houses with one house attached to it"),
-        },
-    ),
-    property_type_field_house: (
-        {
-            "value": property_subtype_field_detached,
-            "label": _("Detached"),
-            "hint": _("Does not share any of its walls with another house or building"),
-        },
-        {
-            "value": property_subtype_field_semi_detached,
-            "label": _("Semi-detached"),
-            "hint": _("Is attached to one other house or building"),
-        },
-        {
-            "value": property_subtype_field_terraced,
-            "label": _("Terraced"),
-            "hint": _("Sits in the middle with a house or building on each side"),
-        },
-        {
-            "value": property_subtype_field_end_terrace,
-            "label": _("End terrace"),
-            "hint": _("Sits at the end of a row of similar houses with one house attached to it"),
-        },
-    ),
-}
+property_subtype_options_map = (
+    {
+        "value": property_subtype_field_detached,
+        "label": _("Detached"),
+        "hint": _("Does not share any of its walls with another house or building"),
+    },
+    {
+        "value": property_subtype_field_semi_detached,
+        "label": _("Semi-detached"),
+        "hint": _("Is attached to one other house or building"),
+    },
+    {
+        "value": property_subtype_field_terraced,
+        "label": _("Terraced"),
+        "hint": _("Sits in the middle with a house or building on each side"),
+    },
+    {
+        "value": property_subtype_field_end_terrace,
+        "label": _("End terrace"),
+        "hint": _("Sits at the end of a row of similar houses with one house attached to it"),
+    },
+)
+
 
 park_home_options_map = (
     {
@@ -519,9 +474,6 @@ check_your_answers_options_map = {
         property_subtype_field_semi_detached: _("Semi-detached"),
         property_subtype_field_terraced: _("Terraced"),
         property_subtype_field_end_terrace: _("End terrace"),
-        property_subtype_field_top_floor: _("Top floor"),
-        property_subtype_field_middle_floor: _("Middle floor"),
-        property_subtype_field_ground_floor: _("Ground floor"),
     },
     number_of_bedrooms_field: {
         number_of_bedrooms_field_studio: _("Studio"),
@@ -811,9 +763,7 @@ valid_postcode_regex_patterns = (
 
 
 all_property_types = tuple(item["value"] for item in property_type_options_map) + ("Park home",)
-all_property_subtypes = tuple(item["value"] for value in property_subtype_options_map.values() for item in value) + (
-    "Park home",
-)
+all_property_subtypes = tuple(item["value"] for item in property_subtype_options_map) + ("Park home",)
 
 
 class SessionSchema(Schema):

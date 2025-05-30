@@ -1008,7 +1008,7 @@ class PropertySubtypeView(PageView):
         property_type = data[property_type_field]
         return {
             "property_type": schemas.property_subtype_titles_options_map[property_type],
-            "property_subtype_options": schemas.property_subtype_options_map[property_type],
+            "property_subtype_options": schemas.property_subtype_options_map,
         }
 
 

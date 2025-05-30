@@ -152,9 +152,13 @@ property_type_field_apartment = "Apartment, flat or maisonette"
 property_type_field_park_home = "Park home"
 
 property_subtype_field = "property_subtype"
-property_subtype_field_top_floor = "Top floor"
-property_subtype_field_middle_floor = "Middle floor"
-property_subtype_field_ground_floor = "Ground floor"
+property_subtype_field_top_floor = "Top floor"  # deprecated, tied to apartment property type which is now ineligible
+property_subtype_field_middle_floor = (
+    "Middle floor"  # deprecated, tied to apartment property type which is now ineligible
+)
+property_subtype_field_ground_floor = (
+    "Ground floor"  # deprecated, tied to apartment property type which is now ineligible
+)
 property_subtype_field_detached = "Detached"
 property_subtype_field_semi_detached = "Semi-detached"
 property_subtype_field_terraced = "Terraced"
