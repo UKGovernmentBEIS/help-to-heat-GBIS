@@ -2091,7 +2091,7 @@ def test_cannot_continue_property_type_flow(property_type):
     assert page.has_one("h1:contains('What kind of property do you have?')")
     page = _check_page(page, "property-type", "property_type", property_type)
 
-    assert page.has_one("h1:contains('Great British Insulation Scheme for social housing tenants/park home owners')")
+    assert page.has_one("h1:contains('You cannot continue your application')")
 
 
 def _setup_client_and_page():
