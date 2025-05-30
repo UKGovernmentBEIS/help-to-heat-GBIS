@@ -1,0 +1,15 @@
+{% extends "frontdoor/base.html" %}
+{% import "macros.html" as macros with context %}
+
+{% block title %}
+  <title>{{_("You cannot continue your application - Check eligibility for Great British Insulation Scheme - GOV.UK")}}</title>
+{% endblock %}
+
+{% block content %}
+  {% call macros.further_help() -%}
+
+    <h1 class="govuk-heading-l">{{_("You cannot continue your application")}}</h1>
+
+    <p class="govuk-body">{{_("This is because of the answers you have given about your property type mean it is very unlikely to receive support by applying through this service. We understand that this may be disappointing. Contact your energy supplier directly if you think your property can be supported through the Great British Insulation Scheme.")}}</p>
+  {%- endcall %}
+{% endblock %}

@@ -74,8 +74,11 @@ def _do_test(country, council_tax_band, epc_rating):
     assert page.has_text("Do you own the property?")
     page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
 
-    assert page.has_text("Is the property a park home?")
-    page = _check_page(page, "park-home", "park_home", "No")
+    assert page.has_one("h1:contains('What kind of property do you have?')")
+    page = _check_page(page, "property-type", "property_type", "House")
+
+    assert page.has_one("h1:contains('What kind of house do you have?')")
+    page = _check_page(page, "property-subtype", "property_subtype", "Detached")
 
     form = page.get_form()
     form["building_name_or_number"] = "22"
