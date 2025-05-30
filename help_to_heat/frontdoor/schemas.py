@@ -298,14 +298,7 @@ own_property_options_map = (
             have your landlord’s permission to install any energy-saving measures to the property."
         ),
     },
-    {
-        "value": own_property_field_social_housing,
-        "label": _("No, I am a social housing tenant"),
-        "hint": _(
-            "If you are eligible for a referral through this service, your energy supplier will need to check that you \
-            have your landlord’s permission to install any energy-saving measures to the property."
-        ),
-    },
+    {"value": own_property_field_social_housing, "label": _("No, I am a social housing tenant")},
     {
         "value": own_property_field_landlord,
         "label": _("Yes, I am the property owner but I lease the property to one or more tenants"),
