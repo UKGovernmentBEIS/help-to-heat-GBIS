@@ -1,8 +1,8 @@
 # page name
-# a couple of the page strings contain a -page suffix (eg bolb_warning_page)
-# we have moved away from doing this (it's redundant), but the -page must be left there
-# this is because changing a page name is breaking, it is used for the urls
-# as well as associating questions with pages in the database
+# a couple of the page strings contain a -page suffix in the value (eg "bulb-warning-page").
+# we have moved away from doing this (it's redundant), but the -page must be left there.
+# this is because changing a page name is breaking, it is used for the urls,
+# as well as associating questions with pages in the database.
 unknown_page = "UNKNOWN-PAGE"
 govuk_start_page = "start_page"
 country_page = "country"
