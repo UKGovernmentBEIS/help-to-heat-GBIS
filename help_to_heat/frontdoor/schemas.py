@@ -766,12 +766,16 @@ all_property_types = tuple(item["value"] for item in property_type_options_map) 
 all_property_subtypes = tuple(item["value"] for item in property_subtype_options_map) + ("Park home",)
 
 
+# answers not defined in this schema will not be saved to the session, and will be removed when running validations
 class SessionSchema(Schema):
     country = fields.String(validate=validate.OneOf(tuple(item["value"] for item in country_options_map)))
     own_property = fields.String(validate=validate.OneOf(tuple(item["value"] for item in own_property_options_map)))
     # this question is no longer asked
+    # we keep it registered in case we want to refer to this answer in the future
+    # for instance, blocking park home owners from completing the flow
     park_home = fields.String(validate=validate.OneOf(tuple(item["value"] for item in park_home_options_map)))
     # this question is no longer asked
+    # we keep it registered in case we want to refer to this answer in the future
     park_home_main_residence = fields.String(
         validate=validate.OneOf(tuple(item["value"] for item in park_home_main_residence_options_map))
     )
