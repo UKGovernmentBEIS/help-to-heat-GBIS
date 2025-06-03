@@ -44,6 +44,7 @@ from .consts import (
     benefits_page,
     bulb_warning_page,
     bulb_warning_page_field,
+    cannot_continue_page,
     confirm_and_submit_acknowledge_field,
     confirm_and_submit_page,
     confirm_and_submit_permission_field,
@@ -105,10 +106,6 @@ from .consts import (
     own_property_page,
     page_name_field,
     park_home_field,
-    park_home_ineligible_page,
-    park_home_main_residence_field,
-    park_home_main_residence_page,
-    park_home_page,
     property_ineligible_page,
     property_subtype_field,
     property_subtype_page,
@@ -165,8 +162,6 @@ logger = logging.getLogger(__name__)
 page_compulsory_field_map = {
     country_page: (country_field,),
     own_property_page: (own_property_field,),
-    park_home_page: (park_home_field,),
-    park_home_main_residence_page: (park_home_main_residence_field,),
     address_page: (address_building_name_or_number_field, address_postcode_field),
     epc_select_page: (lmk_field,),
     address_select_page: (uprn_field,),
@@ -207,8 +202,6 @@ page_compulsory_field_map = {
 missing_item_errors = {
     country_field: _("Select where the property is located"),
     own_property_field: _("Select if you own the property"),
-    park_home_field: _("Select if the property is a park home"),
-    park_home_main_residence_field: _("Select if the park home is your main residence"),
     address_building_name_or_number_field: _("Enter building name or number"),
     address_manual_address_line_1_field: _("Enter Address line 1"),
     address_postcode_field: _("Enter a postcode"),
@@ -620,18 +613,6 @@ class OwnPropertyView(PageView):
         return {"own_property_options_map": schemas.own_property_options_map}
 
 
-@register_page(park_home_page)
-class ParkHomeView(PageView):
-    def build_extra_context(self, *args, **kwargs):
-        return {"park_home_options_map": schemas.park_home_options_map}
-
-
-@register_page(park_home_main_residence_page)
-class ParkHomeMainResidenceView(PageView):
-    def build_extra_context(self, *args, **kwargs):
-        return {"park_home_main_residence_options_map": schemas.park_home_main_residence_options_map}
-
-
 @register_page(address_page)
 class AddressView(PageView):
     def build_extra_context(self, request, session_id, page_name, data, is_change_page, errors):
@@ -1027,7 +1008,7 @@ class PropertySubtypeView(PageView):
         property_type = data[property_type_field]
         return {
             "property_type": schemas.property_subtype_titles_options_map[property_type],
-            "property_subtype_options": schemas.property_subtype_options_map[property_type],
+            "property_subtype_options": schemas.property_subtype_options_map,
         }
 
 
@@ -1308,13 +1289,6 @@ class NorthernIrelandView(PageView):
         return data
 
 
-@register_page(park_home_ineligible_page)
-class ParkHomeIneligiblePage(PageView):
-    def save_get_data(self, data, session_id, page_name):
-        data[page_name_field] = page_name
-        return data
-
-
 @register_page(epc_ineligible_page)
 class EpcIneligiblePage(PageView):
     def save_get_data(self, data, session_id, page_name):
@@ -1324,6 +1298,13 @@ class EpcIneligiblePage(PageView):
 
 @register_page(property_ineligible_page)
 class IneligiblePage(PageView):
+    def save_get_data(self, data, session_id, page_name):
+        data[page_name_field] = page_name
+        return data
+
+
+@register_page(cannot_continue_page)
+class CannotContinuePage(PageView):
     def save_get_data(self, data, session_id, page_name):
         data[page_name_field] = page_name
         return data
