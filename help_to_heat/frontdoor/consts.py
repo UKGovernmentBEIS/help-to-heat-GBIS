@@ -1,4 +1,8 @@
 # page name
+# a couple of the page strings contain a -page suffix in the value (eg "bulb-warning-page").
+# we have moved away from doing this (it's redundant), but the -page must be left there.
+# this is because changing a page name is breaking, it is used for the urls,
+# as well as associating questions with pages in the database.
 unknown_page = "UNKNOWN-PAGE"
 govuk_start_page = "start_page"
 country_page = "country"
@@ -9,9 +13,9 @@ own_property_page = "own-property"
 bulb_warning_page = "bulb-warning-page"
 shell_warning_page = "shell-warning-page"
 utility_warehouse_warning_page = "utility-warehouse-warning-page"
-park_home_page = "park-home"
-park_home_main_residence_page = "park-home-main-residence"
-park_home_ineligible_page = "park-home-application-closed"
+property_type_page = "property-type"
+property_subtype_page = "property-subtype"
+cannot_continue_page = "cannot-continue"
 address_page = "address"
 epc_select_page = "epc-select"
 address_select_page = "address-select"
@@ -26,8 +30,6 @@ epc_ineligible_page = "epc-ineligible"
 benefits_page = "benefits"
 household_income_page = "household-income"
 property_ineligible_page = "ineligible"
-property_type_page = "property-type"
-property_subtype_page = "property-subtype"
 number_of_bedrooms_page = "number-of-bedrooms"
 wall_type_page = "wall-type"
 wall_insulation_page = "wall-insulation"
@@ -49,9 +51,9 @@ all_pages = [
     bulb_warning_page,
     shell_warning_page,
     utility_warehouse_warning_page,
-    park_home_page,
-    park_home_main_residence_page,
-    park_home_ineligible_page,
+    property_type_page,
+    property_subtype_page,
+    cannot_continue_page,
     address_page,
     epc_select_page,
     address_select_page,
@@ -66,8 +68,6 @@ all_pages = [
     benefits_page,
     household_income_page,
     property_ineligible_page,
-    property_type_page,
-    property_subtype_page,
     number_of_bedrooms_page,
     wall_type_page,
     wall_insulation_page,
@@ -139,15 +139,36 @@ own_property_field_own_property = "Yes, I own my property and live in it"
 own_property_field_tenant = "No, I am a tenant"
 own_property_field_social_housing = "No, I am a social housing tenant"
 own_property_field_landlord = "Yes, I am the property owner but I lease the property to one or more tenants"
-own_property_field_values_non_social_housing = [
+own_property_field_values_can_continue = [
     own_property_field_own_property,
     own_property_field_tenant,
     own_property_field_landlord,
 ]
 
+property_type_field = "property_type"
+property_type_field_house = "House"
+property_type_field_bungalow = "Bungalow"
+property_type_field_apartment = "Apartment, flat or maisonette"
+property_type_field_park_home = "Park home"
+
+property_subtype_field = "property_subtype"
+property_subtype_field_top_floor = "Top floor"  # deprecated, tied to apartment property type which is now ineligible
+property_subtype_field_middle_floor = (
+    "Middle floor"  # deprecated, tied to apartment property type which is now ineligible
+)
+property_subtype_field_ground_floor = (
+    "Ground floor"  # deprecated, tied to apartment property type which is now ineligible
+)
+property_subtype_field_detached = "Detached"
+property_subtype_field_semi_detached = "Semi-detached"
+property_subtype_field_terraced = "Terraced"
+property_subtype_field_end_terrace = "End terrace"
+
+# deprecated, this question was merged into property_type_field
 park_home_field = "park_home"
 # yes/no options
 
+# deprecated, this question is no longer asked
 park_home_main_residence_field = "park_home_main_residence"
 # yes/no options
 
@@ -229,21 +250,6 @@ benefits_field = "benefits"
 household_income_field = "household_income"
 household_income_field_less_than_threshold = "Less than £31,000 a year"
 household_income_field_more_than_threshold = "£31,000 or more a year"
-
-property_type_field = "property_type"
-property_type_field_house = "House"
-property_type_field_bungalow = "Bungalow"
-property_type_field_apartment = "Apartment, flat or maisonette"
-property_type_field_park_home = "Park home"  # set if confirms yes to park home in flow
-
-property_subtype_field = "property_subtype"
-property_subtype_field_top_floor = "Top floor"
-property_subtype_field_middle_floor = "Middle floor"
-property_subtype_field_ground_floor = "Ground floor"
-property_subtype_field_detached = "Detached"
-property_subtype_field_semi_detached = "Semi-detached"
-property_subtype_field_terraced = "Terraced"
-property_subtype_field_end_terrace = "End terrace"
 
 number_of_bedrooms_field = "number_of_bedrooms"
 number_of_bedrooms_field_studio = "Studio"

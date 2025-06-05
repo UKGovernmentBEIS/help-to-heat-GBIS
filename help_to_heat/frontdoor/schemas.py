@@ -17,6 +17,7 @@ from help_to_heat.frontdoor.consts import (
     benefits_page,
     bulb_warning_page,
     bulb_warning_page_field,
+    cannot_continue_page,
     confirm_and_submit_page,
     contact_details_contact_number_field,
     contact_details_email_field,
@@ -81,20 +82,12 @@ from help_to_heat.frontdoor.consts import (
     own_property_field_social_housing,
     own_property_field_tenant,
     own_property_page,
-    park_home_field,
-    park_home_ineligible_page,
-    park_home_main_residence_field,
-    park_home_main_residence_page,
-    park_home_page,
     property_ineligible_page,
     property_subtype_field,
     property_subtype_field_detached,
     property_subtype_field_end_terrace,
-    property_subtype_field_ground_floor,
-    property_subtype_field_middle_floor,
     property_subtype_field_semi_detached,
     property_subtype_field_terraced,
-    property_subtype_field_top_floor,
     property_subtype_page,
     property_type_field,
     property_type_field_apartment,
@@ -144,8 +137,6 @@ summary_map = {
     country_field: _("Country of property"),
     supplier_field: _("Energy supplier"),
     own_property_field: pgettext_lazy("summary page", "Do you own the property?"),
-    park_home_field: _("Is the property a park home?"),
-    park_home_main_residence_field: _("Is the park home your main residence?"),
     address_field: _("Property address"),
     council_tax_band_field: _("Council tax band"),
     epc_rating_field: _("Energy Performance Certificate"),
@@ -178,8 +169,6 @@ page_display_questions = {
     shell_warning_page: (shell_warning_page_field,),
     utility_warehouse_warning_page: (utility_warehouse_warning_page_field,),
     own_property_page: (own_property_field,),
-    park_home_page: (park_home_field,),
-    park_home_main_residence_page: (park_home_main_residence_field,),
     address_page: (address_field,),
     council_tax_band_page: (council_tax_band_field,),
     epc_page: (epc_rating_field,),
@@ -225,8 +214,6 @@ change_page_lookup = {
     shell_warning_page: summary_page,
     utility_warehouse_warning_page: summary_page,
     own_property_page: summary_page,
-    park_home_page: summary_page,
-    park_home_main_residence_page: summary_page,
     address_page: summary_page,
     epc_select_page: summary_page,
     address_select_page: summary_page,
@@ -263,11 +250,14 @@ change_page_override_pages = [
     council_tax_band_page,
     epc_page,
     no_epc_page,
+    # for the ineligible pages, make sure if they give an answer that makes them ineligible,
+    # do not send them to the change page upon pressing back.
+    # they should instead always be shown the previous question upon pressing back to avoid confusion.
     northern_ireland_ineligible_page,
-    park_home_ineligible_page,
     epc_ineligible_page,
     property_ineligible_page,
     alternative_supplier_page,
+    cannot_continue_page,
 ]
 
 # where the journey starts for questions in this change page
@@ -308,19 +298,62 @@ own_property_options_map = (
             have your landlord’s permission to install any energy-saving measures to the property."
         ),
     },
-    {
-        "value": own_property_field_social_housing,
-        "label": _("No, I am a social housing tenant"),
-        "hint": _(
-            "If you are eligible for a referral through this service, your energy supplier will need to check that you \
-            have your landlord’s permission to install any energy-saving measures to the property."
-        ),
-    },
+    {"value": own_property_field_social_housing, "label": _("No, I am a social housing tenant")},
     {
         "value": own_property_field_landlord,
         "label": _("Yes, I am the property owner but I lease the property to one or more tenants"),
     },
 )
+
+property_type_options_map = (
+    {
+        "value": property_type_field_house,
+        "label": _("House"),
+    },
+    {
+        "value": property_type_field_bungalow,
+        "label": _("Bungalow"),
+    },
+    {
+        "value": property_type_field_apartment,
+        "label": _("Apartment, flat or maisonette"),
+    },
+    {
+        "value": property_type_field_park_home,
+        "label": _("Park home"),
+    },
+)
+
+property_subtype_titles_options_map = {
+    "House": _("house"),
+    "Bungalow": _("bungalow"),
+    "Apartment, flat or maisonette": _("apartment, flat or maisonette"),
+}
+
+property_subtype_options_map = (
+    {
+        "value": property_subtype_field_detached,
+        "label": _("Detached"),
+        "hint": _("Does not share any of its walls with another house or building"),
+    },
+    {
+        "value": property_subtype_field_semi_detached,
+        "label": _("Semi-detached"),
+        "hint": _("Is attached to one other house or building"),
+    },
+    {
+        "value": property_subtype_field_terraced,
+        "label": _("Terraced"),
+        "hint": _("Sits in the middle with a house or building on each side"),
+    },
+    {
+        "value": property_subtype_field_end_terrace,
+        "label": _("End terrace"),
+        "hint": _("Sits at the end of a row of similar houses with one house attached to it"),
+    },
+)
+
+
 park_home_options_map = (
     {
         "value": field_yes,
@@ -399,26 +432,6 @@ household_income_options_map = (
         "label": _("£31,000 or more a year"),
     },
 )
-property_type_options_map = (
-    {
-        "value": property_type_field_house,
-        "label": _("House"),
-    },
-    {
-        "value": property_type_field_bungalow,
-        "label": _("Bungalow"),
-    },
-    {
-        "value": property_type_field_apartment,
-        "label": _("Apartment, flat or maisonette"),
-    },
-)
-
-property_subtype_titles_options_map = {
-    "House": _("house"),
-    "Bungalow": _("bungalow"),
-    "Apartment, flat or maisonette": _("apartment, flat or maisonette"),
-}
 
 # if wording changes, old answers should be left in this map
 # otherwise, an error will be thrown on check answers page for these old users
@@ -454,9 +467,6 @@ check_your_answers_options_map = {
         property_subtype_field_semi_detached: _("Semi-detached"),
         property_subtype_field_terraced: _("Terraced"),
         property_subtype_field_end_terrace: _("End terrace"),
-        property_subtype_field_top_floor: _("Top floor"),
-        property_subtype_field_middle_floor: _("Middle floor"),
-        property_subtype_field_ground_floor: _("Ground floor"),
     },
     number_of_bedrooms_field: {
         number_of_bedrooms_field_studio: _("Studio"),
@@ -497,71 +507,6 @@ check_your_answers_options_map = {
     },
 }
 
-property_subtype_options_map = {
-    property_type_field_apartment: (
-        {
-            "value": property_subtype_field_top_floor,
-            "label": _("Top floor"),
-            "hint": _("Sits directly below the roof with no other flat above it"),
-        },
-        {
-            "value": property_subtype_field_middle_floor,
-            "label": _("Middle floor"),
-            "hint": _("Has another flat above, and another below"),
-        },
-        {
-            "value": property_subtype_field_ground_floor,
-            "label": _("Ground floor"),
-            "hint": _(
-                "The lowest flat in the building with no flat beneath - typically at street level but may be a basement"
-            ),  # noqa E501
-        },
-    ),
-    property_type_field_bungalow: (
-        {
-            "value": property_subtype_field_detached,
-            "label": _("Detached"),
-            "hint": _("Does not share any of its walls with another house or building"),
-        },
-        {
-            "value": property_subtype_field_semi_detached,
-            "label": _("Semi-detached"),
-            "hint": _("Is attached to one other house or building"),
-        },
-        {
-            "value": property_subtype_field_terraced,
-            "label": _("Terraced"),
-            "hint": _("Sits in the middle with a house or building on each side"),
-        },
-        {
-            "value": property_subtype_field_end_terrace,
-            "label": _("End terrace"),
-            "hint": _("Sits at the end of a row of similar houses with one house attached to it"),
-        },
-    ),
-    property_type_field_house: (
-        {
-            "value": property_subtype_field_detached,
-            "label": _("Detached"),
-            "hint": _("Does not share any of its walls with another house or building"),
-        },
-        {
-            "value": property_subtype_field_semi_detached,
-            "label": _("Semi-detached"),
-            "hint": _("Is attached to one other house or building"),
-        },
-        {
-            "value": property_subtype_field_terraced,
-            "label": _("Terraced"),
-            "hint": _("Sits in the middle with a house or building on each side"),
-        },
-        {
-            "value": property_subtype_field_end_terrace,
-            "label": _("End terrace"),
-            "hint": _("Sits at the end of a row of similar houses with one house attached to it"),
-        },
-    ),
-}
 number_of_bedrooms_options_map = (
     {
         "value": number_of_bedrooms_field_studio,
@@ -811,15 +756,19 @@ valid_postcode_regex_patterns = (
 
 
 all_property_types = tuple(item["value"] for item in property_type_options_map) + ("Park home",)
-all_property_subtypes = tuple(item["value"] for value in property_subtype_options_map.values() for item in value) + (
-    "Park home",
-)
+all_property_subtypes = tuple(item["value"] for item in property_subtype_options_map) + ("Park home",)
 
 
+# answers not defined in this schema will not be saved to the session, and will be removed when running validations
 class SessionSchema(Schema):
     country = fields.String(validate=validate.OneOf(tuple(item["value"] for item in country_options_map)))
     own_property = fields.String(validate=validate.OneOf(tuple(item["value"] for item in own_property_options_map)))
+    # this question is no longer asked
+    # we keep it registered in case we want to refer to this answer in the future
+    # for instance, blocking park home owners from completing the flow
     park_home = fields.String(validate=validate.OneOf(tuple(item["value"] for item in park_home_options_map)))
+    # this question is no longer asked
+    # we keep it registered in case we want to refer to this answer in the future
     park_home_main_residence = fields.String(
         validate=validate.OneOf(tuple(item["value"] for item in park_home_main_residence_options_map))
     )
