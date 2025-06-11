@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 16:15+0000\n"
+"POT-Creation-Date: 2025-06-11 11:21+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -104,15 +104,15 @@ msgstr "Rhif ffôn"
 msgid "Email"
 msgstr "Ebost"
 
-#: help_to_heat/frontdoor/schemas.py:272 help_to_heat/frontdoor/schemas.py:444
+#: help_to_heat/frontdoor/schemas.py:272 help_to_heat/frontdoor/schemas.py:441
 msgid "England"
 msgstr "Lloegr"
 
-#: help_to_heat/frontdoor/schemas.py:276 help_to_heat/frontdoor/schemas.py:445
+#: help_to_heat/frontdoor/schemas.py:276 help_to_heat/frontdoor/schemas.py:442
 msgid "Scotland"
 msgstr "Yr Alban"
 
-#: help_to_heat/frontdoor/schemas.py:280 help_to_heat/frontdoor/schemas.py:446
+#: help_to_heat/frontdoor/schemas.py:280 help_to_heat/frontdoor/schemas.py:443
 msgid "Wales"
 msgstr "Cymru"
 
@@ -120,11 +120,11 @@ msgstr "Cymru"
 msgid "Northern Ireland"
 msgstr "Gogledd Iwerddon"
 
-#: help_to_heat/frontdoor/schemas.py:291 help_to_heat/frontdoor/schemas.py:449
+#: help_to_heat/frontdoor/schemas.py:291 help_to_heat/frontdoor/schemas.py:446
 msgid "Yes, I own my property and live in it"
 msgstr "Ydy, mae'r eiddo'n perthyn i mi a dwi'n byw ynddo"
 
-#: help_to_heat/frontdoor/schemas.py:295 help_to_heat/frontdoor/schemas.py:450
+#: help_to_heat/frontdoor/schemas.py:295 help_to_heat/frontdoor/schemas.py:447
 msgid "No, I am a tenant"
 msgstr "Nac ydy. Tenant ydw i"
 
@@ -138,205 +138,205 @@ msgstr ""
 "i'ch cyflenwr ynni wirio bod gennych chi ganiatâd eich landlord i osod "
 "unrhyw fesurau arbed ynni yn yr eiddo."
 
-#: help_to_heat/frontdoor/schemas.py:303 help_to_heat/frontdoor/schemas.py:451
+#: help_to_heat/frontdoor/schemas.py:301 help_to_heat/frontdoor/schemas.py:448
 msgid "No, I am a social housing tenant"
 msgstr "Nac ydy. Dwi'n denant tai cymdeithasol"
 
-#: help_to_heat/frontdoor/schemas.py:307 help_to_heat/frontdoor/schemas.py:452
+#: help_to_heat/frontdoor/schemas.py:304 help_to_heat/frontdoor/schemas.py:449
 msgid ""
 "Yes, I am the property owner but I lease the property to one or more tenants"
 msgstr ""
 "Ydy, mae'r eiddo'n perthyn i mi ond dwi'n gosod yr eiddo i un neu ragor o "
 "denantiaid"
 
-#: help_to_heat/frontdoor/schemas.py:314 help_to_heat/frontdoor/schemas.py:463
-#: help_to_heat/frontdoor/views.py:263
+#: help_to_heat/frontdoor/schemas.py:311 help_to_heat/frontdoor/schemas.py:460
+#: help_to_heat/frontdoor/views.py:264
 msgid "House"
 msgstr "Tŷ"
 
-#: help_to_heat/frontdoor/schemas.py:318 help_to_heat/frontdoor/schemas.py:464
-#: help_to_heat/frontdoor/views.py:262
+#: help_to_heat/frontdoor/schemas.py:315 help_to_heat/frontdoor/schemas.py:461
+#: help_to_heat/frontdoor/views.py:263
 msgid "Bungalow"
 msgstr "Byngalo"
 
-#: help_to_heat/frontdoor/schemas.py:322 help_to_heat/frontdoor/schemas.py:465
+#: help_to_heat/frontdoor/schemas.py:319 help_to_heat/frontdoor/schemas.py:462
 msgid "Apartment, flat or maisonette"
 msgstr "Rhandy, fflat neu fflat ddeulawr"
 
-#: help_to_heat/frontdoor/schemas.py:326 help_to_heat/frontdoor/schemas.py:466
-#: help_to_heat/frontdoor/views.py:265
+#: help_to_heat/frontdoor/schemas.py:323 help_to_heat/frontdoor/schemas.py:463
+#: help_to_heat/frontdoor/views.py:266
 msgid "Park home"
 msgstr "Cartref mewn parc"
 
-#: help_to_heat/frontdoor/schemas.py:331
+#: help_to_heat/frontdoor/schemas.py:328
 msgid "house"
 msgstr "dŷ"
 
-#: help_to_heat/frontdoor/schemas.py:332
+#: help_to_heat/frontdoor/schemas.py:329
 msgid "bungalow"
 msgstr "fyngalo"
 
-#: help_to_heat/frontdoor/schemas.py:333
+#: help_to_heat/frontdoor/schemas.py:330
 msgid "apartment, flat or maisonette"
 msgstr "randy, fflat neu fflat ddeulawr"
 
-#: help_to_heat/frontdoor/schemas.py:339 help_to_heat/frontdoor/schemas.py:469
+#: help_to_heat/frontdoor/schemas.py:336 help_to_heat/frontdoor/schemas.py:466
 msgid "Detached"
 msgstr "Tŷ sengl"
 
-#: help_to_heat/frontdoor/schemas.py:340
+#: help_to_heat/frontdoor/schemas.py:337
 msgid "Does not share any of its walls with another house or building"
 msgstr "Nid yw'n rhannu unrhyw un o'i waliau â thŷ neu adeilad arall"
 
-#: help_to_heat/frontdoor/schemas.py:344 help_to_heat/frontdoor/schemas.py:470
+#: help_to_heat/frontdoor/schemas.py:341 help_to_heat/frontdoor/schemas.py:467
 msgid "Semi-detached"
 msgstr "Tŷ pâr"
 
-#: help_to_heat/frontdoor/schemas.py:345
+#: help_to_heat/frontdoor/schemas.py:342
 msgid "Is attached to one other house or building"
 msgstr "Mae wedi'i gysylltu ag un tŷ neu adeilad arall"
 
-#: help_to_heat/frontdoor/schemas.py:349 help_to_heat/frontdoor/schemas.py:471
+#: help_to_heat/frontdoor/schemas.py:346 help_to_heat/frontdoor/schemas.py:468
 msgid "Terraced"
 msgstr "Tŷ teras"
 
-#: help_to_heat/frontdoor/schemas.py:350
+#: help_to_heat/frontdoor/schemas.py:347
 msgid "Sits in the middle with a house or building on each side"
 msgstr "Yn sefyll yn y canol gyda thŷ neu adeilad o boptu iddo"
 
-#: help_to_heat/frontdoor/schemas.py:354 help_to_heat/frontdoor/schemas.py:472
+#: help_to_heat/frontdoor/schemas.py:351 help_to_heat/frontdoor/schemas.py:469
 msgid "End terrace"
 msgstr "Tŷ pen teras"
 
-#: help_to_heat/frontdoor/schemas.py:355
+#: help_to_heat/frontdoor/schemas.py:352
 msgid ""
 "Sits at the end of a row of similar houses with one house attached to it"
 msgstr "Yn sefyll ar ben rhes o dai tebyg gydag un tŷ ynghlwm wrtho"
 
-#: help_to_heat/frontdoor/schemas.py:363
+#: help_to_heat/frontdoor/schemas.py:360
 msgctxt "park home question option"
 msgid "Yes"
 msgstr "Ydw"
 
-#: help_to_heat/frontdoor/schemas.py:367
+#: help_to_heat/frontdoor/schemas.py:364
 msgctxt "park home question option"
 msgid "No"
 msgstr "Nad ydw"
 
-#: help_to_heat/frontdoor/schemas.py:373 help_to_heat/frontdoor/schemas.py:383
+#: help_to_heat/frontdoor/schemas.py:370 help_to_heat/frontdoor/schemas.py:380
 msgid "Yes"
 msgstr "Ie"
 
-#: help_to_heat/frontdoor/schemas.py:377 help_to_heat/frontdoor/schemas.py:387
+#: help_to_heat/frontdoor/schemas.py:374 help_to_heat/frontdoor/schemas.py:384
 msgid "No"
 msgstr "Nage"
 
-#: help_to_heat/frontdoor/schemas.py:392
+#: help_to_heat/frontdoor/schemas.py:389
 msgid "Not found"
 msgstr "Heb ei ganfod"
 
-#: help_to_heat/frontdoor/schemas.py:421 help_to_heat/frontdoor/schemas.py:455
+#: help_to_heat/frontdoor/schemas.py:418 help_to_heat/frontdoor/schemas.py:452
 msgctxt "yes no question option"
 msgid "Yes"
 msgstr "Oes"
 
-#: help_to_heat/frontdoor/schemas.py:425 help_to_heat/frontdoor/schemas.py:456
+#: help_to_heat/frontdoor/schemas.py:422 help_to_heat/frontdoor/schemas.py:453
 msgctxt "yes no question option"
 msgid "No"
 msgstr "Nac oes"
 
-#: help_to_heat/frontdoor/schemas.py:431 help_to_heat/frontdoor/schemas.py:459
+#: help_to_heat/frontdoor/schemas.py:428 help_to_heat/frontdoor/schemas.py:456
 msgid "Less than £31,000 a year"
 msgstr "Llai na £31,000 y flwyddyn"
 
-#: help_to_heat/frontdoor/schemas.py:435 help_to_heat/frontdoor/schemas.py:460
+#: help_to_heat/frontdoor/schemas.py:432 help_to_heat/frontdoor/schemas.py:457
 msgid "£31,000 or more a year"
 msgstr "£31,000 y flwyddyn neu ragor"
 
-#: help_to_heat/frontdoor/schemas.py:475 help_to_heat/frontdoor/schemas.py:516
+#: help_to_heat/frontdoor/schemas.py:472 help_to_heat/frontdoor/schemas.py:513
 msgid "Studio"
 msgstr "Stiwdio"
 
-#: help_to_heat/frontdoor/schemas.py:476 help_to_heat/frontdoor/schemas.py:520
+#: help_to_heat/frontdoor/schemas.py:473 help_to_heat/frontdoor/schemas.py:517
 msgid "One bedroom"
 msgstr "Un ystafell wely"
 
-#: help_to_heat/frontdoor/schemas.py:477 help_to_heat/frontdoor/schemas.py:524
+#: help_to_heat/frontdoor/schemas.py:474 help_to_heat/frontdoor/schemas.py:521
 msgid "Two bedrooms"
 msgstr "Dwy ystafell wely"
 
-#: help_to_heat/frontdoor/schemas.py:478 help_to_heat/frontdoor/schemas.py:528
+#: help_to_heat/frontdoor/schemas.py:475 help_to_heat/frontdoor/schemas.py:525
 msgid "Three or more bedrooms"
 msgstr "Tair neu fwy o ystafelloedd gwely"
 
-#: help_to_heat/frontdoor/schemas.py:481 help_to_heat/frontdoor/schemas.py:535
+#: help_to_heat/frontdoor/schemas.py:478 help_to_heat/frontdoor/schemas.py:532
 msgid "Solid walls"
 msgstr "Waliau solet"
 
-#: help_to_heat/frontdoor/schemas.py:482 help_to_heat/frontdoor/schemas.py:539
+#: help_to_heat/frontdoor/schemas.py:479 help_to_heat/frontdoor/schemas.py:536
 msgid "Cavity walls"
 msgstr "Waliau ceudod"
 
-#: help_to_heat/frontdoor/schemas.py:483 help_to_heat/frontdoor/schemas.py:543
+#: help_to_heat/frontdoor/schemas.py:480 help_to_heat/frontdoor/schemas.py:540
 msgid "Mix of solid and cavity walls"
 msgstr "Cymysgedd o waliau solet a waliau ceudod"
 
-#: help_to_heat/frontdoor/schemas.py:484 help_to_heat/frontdoor/schemas.py:547
+#: help_to_heat/frontdoor/schemas.py:481 help_to_heat/frontdoor/schemas.py:544
 msgid "I do not see my option listed"
 msgstr "Dwi ddim yn gweld bod fy opsiwn i wedi'i restru"
 
-#: help_to_heat/frontdoor/schemas.py:485 help_to_heat/frontdoor/schemas.py:491
-#: help_to_heat/frontdoor/schemas.py:506 help_to_heat/frontdoor/schemas.py:555
-#: help_to_heat/frontdoor/schemas.py:573 help_to_heat/frontdoor/schemas.py:669
+#: help_to_heat/frontdoor/schemas.py:482 help_to_heat/frontdoor/schemas.py:488
+#: help_to_heat/frontdoor/schemas.py:503 help_to_heat/frontdoor/schemas.py:552
+#: help_to_heat/frontdoor/schemas.py:570 help_to_heat/frontdoor/schemas.py:666
 msgid "I do not know"
 msgstr "Wn i ddim"
 
-#: help_to_heat/frontdoor/schemas.py:488 help_to_heat/frontdoor/schemas.py:561
+#: help_to_heat/frontdoor/schemas.py:485 help_to_heat/frontdoor/schemas.py:558
 msgid "Yes they are all insulated"
 msgstr "Ydyn, maen nhw i gyd wedi'u hinswleiddio"
 
-#: help_to_heat/frontdoor/schemas.py:489 help_to_heat/frontdoor/schemas.py:565
+#: help_to_heat/frontdoor/schemas.py:486 help_to_heat/frontdoor/schemas.py:562
 msgid "Some are insulated, some are not"
 msgstr "Mae rhai wedi'u eu hinswleiddio, mae rhai heb"
 
-#: help_to_heat/frontdoor/schemas.py:490 help_to_heat/frontdoor/schemas.py:569
+#: help_to_heat/frontdoor/schemas.py:487 help_to_heat/frontdoor/schemas.py:566
 msgid "No they are not insulated"
 msgstr "Na, dydyn nhw ddim wedi'u hinswleiddio"
 
-#: help_to_heat/frontdoor/schemas.py:494 help_to_heat/frontdoor/schemas.py:579
+#: help_to_heat/frontdoor/schemas.py:491 help_to_heat/frontdoor/schemas.py:576
 msgid "Yes, I have a loft that has not been converted into a room"
 msgstr "Oes, mae gen i atig sydd heb ei droi'n ystafell"
 
-#: help_to_heat/frontdoor/schemas.py:495 help_to_heat/frontdoor/schemas.py:583
+#: help_to_heat/frontdoor/schemas.py:492 help_to_heat/frontdoor/schemas.py:580
 msgid "No, I do not have a loft or my loft has been converted into a room"
 msgstr "Nac oes, does gen i ddim atig neu mae fy atig i wedi'i droi'n ystafell"
 
-#: help_to_heat/frontdoor/schemas.py:498 help_to_heat/frontdoor/schemas.py:589
+#: help_to_heat/frontdoor/schemas.py:495 help_to_heat/frontdoor/schemas.py:586
 msgid "Yes, there is access to my loft"
 msgstr "Oes, mae modd mynd i'r atig"
 
-#: help_to_heat/frontdoor/schemas.py:499 help_to_heat/frontdoor/schemas.py:593
+#: help_to_heat/frontdoor/schemas.py:496 help_to_heat/frontdoor/schemas.py:590
 msgid "No, there is no access to my loft"
 msgstr "Nac oes, does dim modd mynd i'r atig"
 
-#: help_to_heat/frontdoor/schemas.py:500 help_to_heat/frontdoor/schemas.py:507
+#: help_to_heat/frontdoor/schemas.py:497 help_to_heat/frontdoor/schemas.py:504
 msgid "No loft"
 msgstr "Dim atig"
 
-#: help_to_heat/frontdoor/schemas.py:503 help_to_heat/frontdoor/schemas.py:657
+#: help_to_heat/frontdoor/schemas.py:500 help_to_heat/frontdoor/schemas.py:654
 msgid "I have more than 100mm of loft insulation"
 msgstr "Mae gen i fwy na 100mm o inswleiddiad atig"
 
-#: help_to_heat/frontdoor/schemas.py:504 help_to_heat/frontdoor/schemas.py:509
-#: help_to_heat/frontdoor/schemas.py:661
+#: help_to_heat/frontdoor/schemas.py:501 help_to_heat/frontdoor/schemas.py:506
+#: help_to_heat/frontdoor/schemas.py:658
 msgid "I have less than or equal to 100mm of loft insulation"
 msgstr "Mae gen i lai na 100mm o inswleiddiad atig neu’r un faint â hynny"
 
-#: help_to_heat/frontdoor/schemas.py:505 help_to_heat/frontdoor/schemas.py:665
+#: help_to_heat/frontdoor/schemas.py:502 help_to_heat/frontdoor/schemas.py:662
 msgid "I have no loft insulation"
 msgstr "Does gen i ddim inswleiddiad atig"
 
-#: help_to_heat/frontdoor/schemas.py:549
+#: help_to_heat/frontdoor/schemas.py:546
 msgid ""
 "Other wall types could include cob walls, timber framed, system built, steel "
 "framed or other non-traditional build types"
@@ -344,165 +344,165 @@ msgstr ""
 "Gallai mathau eraill o waliau gynnwys waliau cob, waliau ffrâm pren, "
 "adeiladu system, fframiau dur neu fathau eraill o adeiladau anhraddodiadol"
 
-#: help_to_heat/frontdoor/schemas.py:610
+#: help_to_heat/frontdoor/schemas.py:607
 msgid "Bulb, now part of Octopus Energy"
 msgstr "Bulb, sydd bellach yn rhan o Octopus"
 
-#: help_to_heat/frontdoor/schemas.py:680
+#: help_to_heat/frontdoor/schemas.py:677
 msgid "Completely agree"
 msgstr "Cytuno'n llwyr"
 
-#: help_to_heat/frontdoor/schemas.py:684
+#: help_to_heat/frontdoor/schemas.py:681
 msgid "Agree"
 msgstr "Cytuno"
 
-#: help_to_heat/frontdoor/schemas.py:688
+#: help_to_heat/frontdoor/schemas.py:685
 msgid "Neutral"
 msgstr "Niwtral"
 
-#: help_to_heat/frontdoor/schemas.py:692
+#: help_to_heat/frontdoor/schemas.py:689
 msgid "Disagree"
 msgstr "Anghytuno"
 
-#: help_to_heat/frontdoor/schemas.py:696
+#: help_to_heat/frontdoor/schemas.py:693
 msgid "Completely disagree"
 msgstr "Anghytuno'n llwyr"
 
-#: help_to_heat/frontdoor/schemas.py:703
+#: help_to_heat/frontdoor/schemas.py:700
 msgid "Very satisfied"
 msgstr "Bodlon iawn"
 
-#: help_to_heat/frontdoor/schemas.py:707
+#: help_to_heat/frontdoor/schemas.py:704
 msgid "Somewhat satisfied"
 msgstr "Eithaf bodlon"
 
-#: help_to_heat/frontdoor/schemas.py:711
+#: help_to_heat/frontdoor/schemas.py:708
 msgid "Neither satisfied nor dissatisfied"
 msgstr "Ddim yn fodlon nac yn anfodlon"
 
-#: help_to_heat/frontdoor/schemas.py:715
+#: help_to_heat/frontdoor/schemas.py:712
 msgid "Somewhat dissatisfied"
 msgstr "Eithaf anfodlon"
 
-#: help_to_heat/frontdoor/schemas.py:719
+#: help_to_heat/frontdoor/schemas.py:716
 msgid "Very dissatisfied"
 msgstr "Anfodlon iawn"
 
-#: help_to_heat/frontdoor/schemas.py:726
+#: help_to_heat/frontdoor/schemas.py:723
 msgid "To find ways to reduce my energy bills"
 msgstr "Dod o hyd i ffyrdd i leihau fy miliau ynni"
 
-#: help_to_heat/frontdoor/schemas.py:730
+#: help_to_heat/frontdoor/schemas.py:727
 msgid "To find ways to reduce my carbon emissions"
 msgstr "Dod o hyd i ffyrdd i leihau fy allyriadau carbon"
 
-#: help_to_heat/frontdoor/schemas.py:734
+#: help_to_heat/frontdoor/schemas.py:731
 msgid "To find ways to install a specific measure in my home"
 msgstr "Dod o hyd i ffyrdd o osod mesur penodol yn fy nghartref"
 
-#: help_to_heat/frontdoor/schemas.py:738
+#: help_to_heat/frontdoor/schemas.py:735
 msgid "To find ways to improve my EPC rating"
 msgstr "Dod o hyd i ffyrdd i wella fy sgôr EPC"
 
-#: help_to_heat/frontdoor/schemas.py:742
+#: help_to_heat/frontdoor/schemas.py:739
 msgid "To find ways to make my home more comfortable"
 msgstr "Dod o hyd i ffyrdd i wneud fy nghartref yn fwy cyffyrddus"
 
-#: help_to_heat/frontdoor/schemas.py:746
+#: help_to_heat/frontdoor/schemas.py:743
 msgid "Other"
 msgstr "Arall"
 
-#: help_to_heat/frontdoor/schemas.py:838
+#: help_to_heat/frontdoor/schemas.py:841
 msgid "Enter a valid UK postcode"
 msgstr "Rhowch god post dilys yn y Deyrnas Unedig"
 
-#: help_to_heat/frontdoor/schemas.py:843
+#: help_to_heat/frontdoor/schemas.py:846
 msgid "Invalid email format"
 msgstr "Fformat ebost annilys"
 
-#: help_to_heat/frontdoor/schemas.py:853 help_to_heat/frontdoor/schemas.py:857
+#: help_to_heat/frontdoor/schemas.py:856 help_to_heat/frontdoor/schemas.py:860
 msgid ""
 "Enter a telephone number, like 01632 960 001, 07700 900 982 or +44 808 157 "
 "0192"
 msgstr "Rhowch rif ffôn, fel 01632 960 001, 07700 900 982 neu +44 808 157 0192"
 
-#: help_to_heat/frontdoor/schemas.py:869
+#: help_to_heat/frontdoor/schemas.py:872
 msgid "Energy Company Obligation 4"
 msgstr "Rhwymedigaeth Cwmni Ynni 4"
 
-#: help_to_heat/frontdoor/schemas.py:870
+#: help_to_heat/frontdoor/schemas.py:873
 msgid "Great British Insulation Scheme"
 msgstr "Cynllun Inswleiddio Mawr Prydain"
 
-#: help_to_heat/frontdoor/views.py:203
+#: help_to_heat/frontdoor/views.py:204
 msgid "Select where the property is located"
 msgstr "Dewiswch beth yw lleoliad yr eiddo"
 
-#: help_to_heat/frontdoor/views.py:204
+#: help_to_heat/frontdoor/views.py:205
 msgid "Select if you own the property"
 msgstr "Dewiswch os yw'r eiddo'n perthyn i chi"
 
-#: help_to_heat/frontdoor/views.py:205
+#: help_to_heat/frontdoor/views.py:206
 msgid "Enter building name or number"
 msgstr "Rhowch enw neu rif yr adeilad"
 
-#: help_to_heat/frontdoor/views.py:206
+#: help_to_heat/frontdoor/views.py:207
 msgid "Enter Address line 1"
 msgstr "Rhowch linell 1 y cyfeiriad"
 
-#: help_to_heat/frontdoor/views.py:207
+#: help_to_heat/frontdoor/views.py:208
 msgid "Enter a postcode"
 msgstr "Rhowch god post"
 
-#: help_to_heat/frontdoor/views.py:208 help_to_heat/frontdoor/views.py:209
+#: help_to_heat/frontdoor/views.py:209 help_to_heat/frontdoor/views.py:210
 msgid ""
 "Select your address, or I can't find my address if your address is not listed"
 msgstr ""
 "Dewiswch eich cyfeiriad, neu ‘Dwi’n methu gweld fy nghyfeiriad i’ os nad "
 "yw'ch cyfeiriad wedi'i restru"
 
-#: help_to_heat/frontdoor/views.py:210
+#: help_to_heat/frontdoor/views.py:211
 msgid "Enter your Town or city"
 msgstr "Rhowch eich tref neu'ch dinas"
 
-#: help_to_heat/frontdoor/views.py:211
+#: help_to_heat/frontdoor/views.py:212
 msgid "Please confirm that you want to submit another referral"
 msgstr "A wnewch chi gadarnhau eich bod eisiau cyflwyno atgyfeiriad arall"
 
-#: help_to_heat/frontdoor/views.py:212
+#: help_to_heat/frontdoor/views.py:213
 msgid "Enter the Council Tax Band of the property"
 msgstr "Rhowch Fand Treth Gyngor yr eiddo"
 
-#: help_to_heat/frontdoor/views.py:213
+#: help_to_heat/frontdoor/views.py:214
 msgid "Select if your EPC rating is correct or not, or that you do not know"
 msgstr ""
 "Dewiswch a yw eich cyfraddiad EPC yn gywir neu beidio, neu nad ydych chi'n "
 "gwybod"
 
-#: help_to_heat/frontdoor/views.py:214
+#: help_to_heat/frontdoor/views.py:215
 msgid ""
 "Select if anyone in your household is receiving any benefits listed below"
 msgstr ""
 "Dewiswch a oes unrhyw un yn eich aelwyd chi'n cael unrhyw un neu ragor o'r "
 "budd-daliadau isod"
 
-#: help_to_heat/frontdoor/views.py:215
+#: help_to_heat/frontdoor/views.py:216
 msgid "Select your household income"
 msgstr "Dewiswch incwm eich aelwyd"
 
-#: help_to_heat/frontdoor/views.py:216 help_to_heat/frontdoor/views.py:217
+#: help_to_heat/frontdoor/views.py:217 help_to_heat/frontdoor/views.py:218
 msgid "Select your property type"
 msgstr "Dewiswch eich math o eiddo"
 
-#: help_to_heat/frontdoor/views.py:218
+#: help_to_heat/frontdoor/views.py:219
 msgid "Select the number of bedrooms the property has"
 msgstr "Dewiswch nifer yr ystafelloedd gwely sydd gan yr eiddo"
 
-#: help_to_heat/frontdoor/views.py:219
+#: help_to_heat/frontdoor/views.py:220
 msgid "Select the type of walls the property has"
 msgstr "Dewiswch y math o waliau sydd gan yr eiddo"
 
-#: help_to_heat/frontdoor/views.py:220
+#: help_to_heat/frontdoor/views.py:221
 msgid ""
 "Select if the walls of the property are insulated or not, or if you do not "
 "know"
@@ -510,45 +510,45 @@ msgstr ""
 "Dewiswch a ydy waliau'r eiddo wedi'u hinswleiddio neu beidio, neu nad ydych "
 "chi'n gwybod"
 
-#: help_to_heat/frontdoor/views.py:221
+#: help_to_heat/frontdoor/views.py:222
 msgid "Select if you have a loft that has been converted into a room or not"
 msgstr "Dewiswch a oes gennych chi atig sydd wedi'i droi'n ystafell neu beidio"
 
-#: help_to_heat/frontdoor/views.py:222
+#: help_to_heat/frontdoor/views.py:223
 msgid "Select whether or not you have access to the loft"
 msgstr "Dewiswch a oes modd mynd i'r atig neu beidio"
 
-#: help_to_heat/frontdoor/views.py:223
+#: help_to_heat/frontdoor/views.py:224
 msgid "Select whether or not your loft is fully insulated"
 msgstr "Dewiswch a ydy'ch atig wedi'i inswleiddio'n llawn neu beidio"
 
-#: help_to_heat/frontdoor/views.py:224
+#: help_to_heat/frontdoor/views.py:225
 #: help_to_heat/templates/frontdoor/supplier.html:14
 msgid "Select your home energy supplier from the list below"
 msgstr "Dewiswch eich cyflenwr ynni cartref chi o blith y rhestr isod"
 
-#: help_to_heat/frontdoor/views.py:225
+#: help_to_heat/frontdoor/views.py:226
 #: help_to_heat/templates/frontdoor/alternative-supplier.html:14
 msgid "Select an alternative energy supplier"
 msgstr "Dewiswch gyflenwr ynni gwahanol"
 
-#: help_to_heat/frontdoor/views.py:226
+#: help_to_heat/frontdoor/views.py:227
 msgid "Enter your first name"
 msgstr "Rhowch eich enw cyntaf"
 
-#: help_to_heat/frontdoor/views.py:227
+#: help_to_heat/frontdoor/views.py:228
 msgid "Enter your last name"
 msgstr "Rhowch eich enw olaf"
 
-#: help_to_heat/frontdoor/views.py:228
+#: help_to_heat/frontdoor/views.py:229
 msgid "Enter your email address"
 msgstr "Rhowch eich cyfeiriad ebost"
 
-#: help_to_heat/frontdoor/views.py:229
+#: help_to_heat/frontdoor/views.py:230
 msgid "Enter your contact number"
 msgstr "Rhowch eich rhif ffôn"
 
-#: help_to_heat/frontdoor/views.py:231 help_to_heat/frontdoor/views.py:234
+#: help_to_heat/frontdoor/views.py:232 help_to_heat/frontdoor/views.py:235
 msgid ""
 "Please confirm that you agree to the use of your information by checking "
 "this box"
@@ -556,7 +556,7 @@ msgstr ""
 "Rhowch gadarnhad eich bod yn cytuno i'ch gwybodaeth gael ei defnyddio drwy "
 "roi tic yn y blwch hwn"
 
-#: help_to_heat/frontdoor/views.py:237
+#: help_to_heat/frontdoor/views.py:238
 msgid ""
 "Please confirm that you understand your home must be sufficiently ventilated "
 "before any insulation is installed"
@@ -564,7 +564,7 @@ msgstr ""
 "Rhowch gadarnhad eich bod yn deall bod rhaid bod i’ch cartref fod wedi’i "
 "awyru’n ddigonol cyn i unrhyw inswleiddiad gael ei osod"
 
-#: help_to_heat/frontdoor/views.py:241
+#: help_to_heat/frontdoor/views.py:242
 msgid ""
 "Please confirm that you understand you may be required to contribute towards "
 "the cost of installing insulation"
@@ -572,67 +572,67 @@ msgstr ""
 "Rhowch gadarnhad eich bod yn deall y gall fod angen ichi gyfrannu at gost "
 "gosod inswleiddiad"
 
-#: help_to_heat/frontdoor/views.py:246
+#: help_to_heat/frontdoor/views.py:247
 msgid "January"
 msgstr "Ionawr"
 
-#: help_to_heat/frontdoor/views.py:247
+#: help_to_heat/frontdoor/views.py:248
 msgid "February"
 msgstr "Chwefror"
 
-#: help_to_heat/frontdoor/views.py:248
+#: help_to_heat/frontdoor/views.py:249
 msgid "March"
 msgstr "Mawrth"
 
-#: help_to_heat/frontdoor/views.py:249
+#: help_to_heat/frontdoor/views.py:250
 msgid "April"
 msgstr "Ebrill"
 
-#: help_to_heat/frontdoor/views.py:250
+#: help_to_heat/frontdoor/views.py:251
 msgid "May"
 msgstr "Mai"
 
-#: help_to_heat/frontdoor/views.py:251
+#: help_to_heat/frontdoor/views.py:252
 msgid "June"
 msgstr "Mehefin"
 
-#: help_to_heat/frontdoor/views.py:252
+#: help_to_heat/frontdoor/views.py:253
 msgid "July"
 msgstr "Gorffennaf"
 
-#: help_to_heat/frontdoor/views.py:253
+#: help_to_heat/frontdoor/views.py:254
 msgid "August"
 msgstr "Awst"
 
-#: help_to_heat/frontdoor/views.py:254
+#: help_to_heat/frontdoor/views.py:255
 msgid "September"
 msgstr "Medi"
 
-#: help_to_heat/frontdoor/views.py:255
+#: help_to_heat/frontdoor/views.py:256
 msgid "October"
 msgstr "Hydref"
 
-#: help_to_heat/frontdoor/views.py:256
+#: help_to_heat/frontdoor/views.py:257
 msgid "November"
 msgstr "Tachwedd"
 
-#: help_to_heat/frontdoor/views.py:257
+#: help_to_heat/frontdoor/views.py:258
 msgid "December"
 msgstr "Rhagfyr"
 
-#: help_to_heat/frontdoor/views.py:261
+#: help_to_heat/frontdoor/views.py:262
 msgid "Flat"
 msgstr "Fflat"
 
-#: help_to_heat/frontdoor/views.py:264
+#: help_to_heat/frontdoor/views.py:265
 msgid "Maisonette"
 msgstr "Fflat deulawr"
 
-#: help_to_heat/frontdoor/views.py:589
+#: help_to_heat/frontdoor/views.py:590
 msgid "My energy supplier is not listed"
 msgstr "Dyw fy nghyflenwr ynni i ddim wedi'i restru"
 
-#: help_to_heat/frontdoor/views.py:690 help_to_heat/frontdoor/views.py:756
+#: help_to_heat/frontdoor/views.py:691 help_to_heat/frontdoor/views.py:757
 msgid "I cannot find my address, I want to enter it manually"
 msgstr "Dwi'n methu gweld fy nghyfeiriad i. Hoffwn ei roi fy hunan."
 
@@ -653,6 +653,7 @@ msgstr "Mae'r cyfrinair wedi'i ailosod"
 #: help_to_heat/templates/frontdoor/holding-page.html:7
 #: help_to_heat/templates/frontdoor/northern-ireland.html:8
 #: help_to_heat/templates/frontdoor/privacy-policy.html:10
+#: help_to_heat/templates/frontdoor/referral-already-submitted.html:10
 #: help_to_heat/templates/macros.html:3 help_to_heat/templates/macros.html:128
 msgid "Back"
 msgstr "Yn ôl"
@@ -2831,7 +2832,8 @@ msgstr ""
 "Mae’r atgyfeiriad wedi cael ei gyflwyno’n barod - Gwirio’ch cymhwystra ar "
 "gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
-#: help_to_heat/templates/frontdoor/referral-already-submitted.html:10
+#: help_to_heat/templates/frontdoor/referral-already-submitted.html:11
+#: help_to_heat/templates/frontdoor/referral-already-submitted.html:16
 msgid "A referral has already been submitted"
 msgstr "Mae’r atgyfeiriad wedi cael ei gyflwyno’n barod"
 
@@ -2845,17 +2847,17 @@ msgstr ""
 "gafodd ei wneud ar %(date_created)s ar gyfer %(address)s."
 
 #: help_to_heat/templates/frontdoor/referral-already-submitted.html:13
-#, python-format
+#,, python-format
 msgid ""
-"You do not need to submit another referral unless your circumstances have "
-"changed. Contact %(supplier)s if you have a query about a previously "
-"submitted referral."
+"As only one application to your energy supplier is permitted, you are not "
+"eligible to submit another at this time. Contact %(supplier)s if you have a "
+"query about a previously submitted referral"
 msgstr ""
-"Does dim angen i chi gyflwyno atgyfeiriad arall oni bai fod eich "
-"amgylchiadau wedi newid. Cysylltwch â %(supplier)s os oes gennych chi "
-"gwestiwn am atgyfeiriad sydd wedi cael ei gyflwyno’n barod."
+"Gan mai dim ond un cais i'ch cyflenwr ynni sy'n cael ei ganiatáu, dydych chi ddim yn "
+"gymwys i gyflwyno un arall ar hyn o bryd. Cysylltwch â %(supplier)s os oes "
+"gennych ymholiad am atgyfeiriad sydd wedi’i gyflwyno o’r blaen."
 
-#: help_to_heat/templates/frontdoor/referral-already-submitted.html:15
+#: help_to_heat/templates/frontdoor/referral-already-submitted.html:17
 #, python-format
 msgid ""
 "The information you have submitted matches a referral made to another energy "
@@ -2865,7 +2867,7 @@ msgstr ""
 "gafodd ei wneud i gyflenwr ynni arall ar %(date_created)s ar gyfer "
 "%(address)s."
 
-#: help_to_heat/templates/frontdoor/referral-already-submitted.html:16
+#: help_to_heat/templates/frontdoor/referral-already-submitted.html:18
 #, python-format
 msgid ""
 "You may submit a referral to %(supplier)s but you may not receive a "
@@ -2874,11 +2876,11 @@ msgstr ""
 "Cewch gyflwyno atgyfeiriad i %(supplier)s ond efallai y bydd y canlyniad yr "
 "un fath."
 
-#: help_to_heat/templates/frontdoor/referral-already-submitted.html:30
+#: help_to_heat/templates/frontdoor/referral-already-submitted.html:31
 msgid "I want to submit another referral"
 msgstr "Rydw i eisiau cyflwyno atgyfeiriad arall"
 
-#: help_to_heat/templates/frontdoor/referral-already-submitted.html:37
+#: help_to_heat/templates/frontdoor/referral-already-submitted.html:39
 msgid "Exit service"
 msgstr "Gadewch y gwasanaeth"
 
