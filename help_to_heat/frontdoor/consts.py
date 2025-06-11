@@ -196,7 +196,14 @@ address_select_choice_journey_field = "address_select_choice"
 address_select_choice_journey_field_select_address = "select address"
 address_select_choice_journey_field_enter_manually = "enter manually"
 
+# note that this field was not originally saved to the session correctly, so not all journeys have this set
+# this was since it originally was not a field used for routing.
+# because of this, we can't depend on this field for making routing decisions
 referral_already_submitted_journey_field = "submit_another"
+
+# likewise, this field was only added when it was required to block submissions to the same supplier
+# if unset, we cannot know if the user has submitted to the same supplier or not
+referral_submitted_to_same_supplier_journey_field = "submitted_to_same_supplier"  # yes/no options
 
 address_manual_address_line_1_field = "address_line_1"
 address_manual_address_line_2_field = "address_line_2"
