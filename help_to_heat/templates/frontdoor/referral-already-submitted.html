@@ -6,33 +6,35 @@
 {% endblock %}
 
 {% block content %}
-  {% call macros.form_wrapper(prev_url, button_extra_classes="govuk-button--secondary") -%}
+  {% if to_same_energy_supplier %}
+    <a href="{{prev_url}}" class="govuk-back-link">{{_("Back")}}</a>
     <h1 class="govuk-heading-l">{{_("A referral has already been submitted")}}</h1>
-    {% if to_same_energy_supplier %}
-      <p class="govuk-body">{{_("The information you have submitted matches a referral made on %(date_created)s for %(address)s.") % {"date_created": date_created, "address": address}}}</p>
-      <p class="govuk-body">{{_("You do not need to submit another referral unless your circumstances have changed. Contact %(supplier)s if you have a query about a previously submitted referral.") % {"supplier": supplier}}}</p>
-    {% else %}
+    <p class="govuk-body">{{_("The information you have submitted matches a referral made on %(date_created)s for %(address)s.") % {"date_created": date_created, "address": address}}}</p>
+    <p class="govuk-body">{{_("As only one application to your energy supplier is permitted, you are not eligible to submit another at this time. Contact %(supplier)s if you have a query about a previously submitted referral") % {"supplier": supplier}}}</p>
+  {% else %}
+    {% call macros.form_wrapper(prev_url, button_extra_classes="govuk-button--secondary") -%}
+      <h1 class="govuk-heading-l">{{_("A referral has already been submitted")}}</h1>
       <p class="govuk-body">{{_("The information you have submitted matches a referral made to another energy supplier on %(date_created)s for %(address)s.") % {"date_created": date_created, "address": address}}}</p>
       <p class="govuk-body">{{_("You may submit a referral to %(supplier)s but you may not receive a different outcome.") % {"supplier": supplier}}}</p>
-    {% endif %}
 
-    <div class="govuk-form-group {{ 'govuk-form-group--error' if errors else '' }}">
-      <fieldset class="govuk-fieldset">
-        <div class="govuk-checkboxes" data-module="govuk-checkboxes">
-          {% if errors.get('submit_another') %}
-            <p id="permission-error" class="govuk-error-message">
-              <span class="govuk-visually-hidden">Error:</span> {{errors.get('submit_another')}}
-            </p>
-          {% endif %}
-          <div class="govuk-checkboxes__item">
-            <input class="govuk-checkboxes__input" id="question-submit-another" name="submit_another" type="checkbox" {% if data.get('submit_another') == 'on' %}checked{% endif %}/>
-            <label class="govuk-label govuk-checkboxes__label" for="question-submit-another" id="question-submit-another-label">
-              {{_("I want to submit another referral")}}
-            </label>
+      <div class="govuk-form-group {{ 'govuk-form-group--error' if errors else '' }}">
+        <fieldset class="govuk-fieldset">
+          <div class="govuk-checkboxes" data-module="govuk-checkboxes">
+            {% if errors.get('submit_another') %}
+              <p id="permission-error" class="govuk-error-message">
+                <span class="govuk-visually-hidden">Error:</span> {{errors.get('submit_another')}}
+              </p>
+            {% endif %}
+            <div class="govuk-checkboxes__item">
+              <input class="govuk-checkboxes__input" id="question-submit-another" name="submit_another" type="checkbox" {% if data.get('submit_another') == 'on' %}checked{% endif %}/>
+              <label class="govuk-label govuk-checkboxes__label" for="question-submit-another" id="question-submit-another-label">
+                {{_("I want to submit another referral")}}
+              </label>
+            </div>
           </div>
-        </div>
-      </fieldset>
-    </div>
-  {%- endcall %}
+        </fieldset>
+      </div>
+    {%- endcall %}
+  {% endif %}
   <a href="https://www.gov.uk/" role="button" draggable="false" class="govuk-button" data-module="govuk-button">{{_('Exit service')}}</a>
 {% endblock %}

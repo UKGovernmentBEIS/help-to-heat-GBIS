@@ -1516,7 +1516,12 @@ def test_on_submitting_a_recent_uprn_twice_the_referral_already_submitted_page_i
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('A referral has already been submitted')")
-    assert page.has_text("The information you have submitted matches a referral made on")
+    assert page.has_text(
+        "As only one application to your energy supplier is permitted, "
+        "you are not eligible to submit another at this time."
+    )
+    assert not page.has_one("button:contains('Continue')")
+    assert page.has_one("a:contains('Exit service')")
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)

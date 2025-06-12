@@ -114,6 +114,7 @@ from .consts import (
     recommendations_field,
     referral_already_submitted_journey_field,
     referral_already_submitted_page,
+    referral_submitted_to_same_supplier_journey_field,
     schemes_contribution_acknowledgement_field,
     schemes_field,
     schemes_page,
@@ -808,6 +809,15 @@ class AddressSelectView(PageView):
 
 @register_page(referral_already_submitted_page)
 class ReferralAlreadySubmitted(PageView):
+    def save_get_data(self, data, session_id, page_name):
+        duplicate_referral_checker = DuplicateReferralChecker(session_id)
+        data[referral_submitted_to_same_supplier_journey_field] = (
+            field_yes
+            if duplicate_referral_checker.is_recent_duplicate_referral_sent_to_same_energy_supplier()
+            else field_no
+        )
+        return data
+
     def build_extra_context(self, request, session_id, *args, **kwargs):
         session_data = interface.api.session.get_session(session_id)
         duplicate_referral_checker = DuplicateReferralChecker(session_id)
