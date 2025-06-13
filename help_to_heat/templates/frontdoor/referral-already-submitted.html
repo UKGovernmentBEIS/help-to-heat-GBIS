@@ -7,10 +7,14 @@
 
 {% block content %}
   {% if to_same_energy_supplier %}
-    <a href="{{prev_url}}" class="govuk-back-link">{{_("Back")}}</a>
-    <h1 class="govuk-heading-l">{{_("A referral has already been submitted")}}</h1>
-    <p class="govuk-body">{{_("The information you have submitted matches a referral made on %(date_created)s for %(address)s.") % {"date_created": date_created, "address": address}}}</p>
-    <p class="govuk-body">{{_("As only one application to your energy supplier is permitted, you are not eligible to submit another at this time. Contact %(supplier)s if you have a query about a previously submitted referral") % {"supplier": supplier}}}</p>
+    <div class="govuk-grid-row">
+      <div class="govuk-grid-column-two-thirds">
+        <a href="{{prev_url}}" class="govuk-back-link">{{_("Back")}}</a>
+        <h1 class="govuk-heading-l">{{_("A referral has already been submitted")}}</h1>
+        <p class="govuk-body">{{_("The information you have submitted matches a referral made on %(date_created)s for %(address)s.") % {"date_created": date_created, "address": address}}}</p>
+        <p class="govuk-body">{{_("As only one application to your energy supplier is permitted, you are not eligible to submit another at this time. Contact %(supplier)s if you have a query about a previously submitted referral") % {"supplier": supplier}}}</p>
+      </div>
+    </div>
   {% else %}
     {% call macros.form_wrapper(prev_url, button_extra_classes="govuk-button--secondary") -%}
       <h1 class="govuk-heading-l">{{_("A referral has already been submitted")}}</h1>
