@@ -6,5 +6,8 @@
   "dependencies": {
     "commander": "^12.1.0",
     "csv": "^6.3.10"
+  },
+  "scripts": {
+    "start": "node index.js"
   }
 }
