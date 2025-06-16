@@ -183,6 +183,7 @@ page_compulsory_field_map = {
     ),
     referral_already_submitted_page: (referral_already_submitted_journey_field,),
     council_tax_band_page: (council_tax_band_field,),
+    epc_page: (epc_accept_suggested_epc_field,),
     benefits_page: (benefits_field,),
     household_income_page: (household_income_field,),
     property_type_page: (property_type_field,),
@@ -210,6 +211,7 @@ missing_item_errors = {
     address_manual_town_or_city_field: _("Enter your Town or city"),
     referral_already_submitted_journey_field: _("Please confirm that you want to submit another referral"),
     council_tax_band_field: _("Enter the Council Tax Band of the property"),
+    epc_accept_suggested_epc_field: _("Select if your EPC rating is correct or not, or that you do not know"),
     benefits_field: _("Select if anyone in your household is receiving any benefits listed below"),
     household_income_field: _("Select your household income"),
     property_type_field: _("Select your property type"),
@@ -954,9 +956,11 @@ class EpcView(PageView):
         return context
 
     def save_post_data(self, data, session_id, page_name):
-        data[epc_accept_suggested_epc_field] = field_yes
+        accept_suggested_epc = data.get(epc_accept_suggested_epc_field)
         epc_rating = data.get(epc_rating_field).upper()
-        data[epc_rating_is_eligible_field] = field_no if (epc_rating in ("A", "B", "C")) else field_yes
+        data[epc_rating_is_eligible_field] = (
+            field_no if (epc_rating in ("A", "B", "C")) and (accept_suggested_epc == field_yes) else field_yes
+        )
         return data
 
 
