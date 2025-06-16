@@ -830,6 +830,8 @@ class SessionSchema(Schema):
     uprn_is_duplicate = fields.String()
     epc_found = fields.String()
     epc_rating_is_eligible = fields.String()
+    submit_another = fields.String()
+    submitted_to_same_supplier = fields.String()
 
     @validates("postcode")
     def validate_postcode(self, value):
