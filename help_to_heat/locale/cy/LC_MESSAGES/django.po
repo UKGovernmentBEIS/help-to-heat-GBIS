@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-11 11:21+0000\n"
+"POT-Creation-Date: 2025-06-13 16:03+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -653,7 +653,7 @@ msgstr "Mae'r cyfrinair wedi'i ailosod"
 #: help_to_heat/templates/frontdoor/holding-page.html:7
 #: help_to_heat/templates/frontdoor/northern-ireland.html:8
 #: help_to_heat/templates/frontdoor/privacy-policy.html:10
-#: help_to_heat/templates/frontdoor/referral-already-submitted.html:10
+#: help_to_heat/templates/frontdoor/referral-already-submitted.html:12
 #: help_to_heat/templates/macros.html:3 help_to_heat/templates/macros.html:128
 msgid "Back"
 msgstr "Yn ôl"
@@ -2832,12 +2832,12 @@ msgstr ""
 "Mae’r atgyfeiriad wedi cael ei gyflwyno’n barod - Gwirio’ch cymhwystra ar "
 "gyfer Cynllun Inswleiddio Mawr Prydain - GOV.UK"
 
-#: help_to_heat/templates/frontdoor/referral-already-submitted.html:11
-#: help_to_heat/templates/frontdoor/referral-already-submitted.html:16
+#: help_to_heat/templates/frontdoor/referral-already-submitted.html:13
+#: help_to_heat/templates/frontdoor/referral-already-submitted.html:20
 msgid "A referral has already been submitted"
 msgstr "Mae’r atgyfeiriad wedi cael ei gyflwyno’n barod"
 
-#: help_to_heat/templates/frontdoor/referral-already-submitted.html:12
+#: help_to_heat/templates/frontdoor/referral-already-submitted.html:14
 #, python-format
 msgid ""
 "The information you have submitted matches a referral made on "
@@ -2846,18 +2846,18 @@ msgstr ""
 "Mae’r wybodaeth rydych chi wedi’i chyflwyno yn cyfateb i atgyfeiriad a "
 "gafodd ei wneud ar %(date_created)s ar gyfer %(address)s."
 
-#: help_to_heat/templates/frontdoor/referral-already-submitted.html:13
-#,, python-format
+#: help_to_heat/templates/frontdoor/referral-already-submitted.html:15
+#, python-format
 msgid ""
 "As only one application to your energy supplier is permitted, you are not "
 "eligible to submit another at this time. Contact %(supplier)s if you have a "
 "query about a previously submitted referral"
 msgstr ""
-"Gan mai dim ond un cais i'ch cyflenwr ynni sy'n cael ei ganiatáu, dydych chi ddim yn "
-"gymwys i gyflwyno un arall ar hyn o bryd. Cysylltwch â %(supplier)s os oes "
-"gennych ymholiad am atgyfeiriad sydd wedi’i gyflwyno o’r blaen."
+"Gan mai dim ond un cais i'ch cyflenwr ynni sy'n cael ei ganiatáu, dydych chi "
+"ddim yn gymwys i gyflwyno un arall ar hyn o bryd. Cysylltwch â %(supplier)s "
+"os oes gennych ymholiad am atgyfeiriad sydd wedi’i gyflwyno o’r blaen."
 
-#: help_to_heat/templates/frontdoor/referral-already-submitted.html:17
+#: help_to_heat/templates/frontdoor/referral-already-submitted.html:21
 #, python-format
 msgid ""
 "The information you have submitted matches a referral made to another energy "
@@ -2867,7 +2867,7 @@ msgstr ""
 "gafodd ei wneud i gyflenwr ynni arall ar %(date_created)s ar gyfer "
 "%(address)s."
 
-#: help_to_heat/templates/frontdoor/referral-already-submitted.html:18
+#: help_to_heat/templates/frontdoor/referral-already-submitted.html:22
 #, python-format
 msgid ""
 "You may submit a referral to %(supplier)s but you may not receive a "
@@ -2876,11 +2876,11 @@ msgstr ""
 "Cewch gyflwyno atgyfeiriad i %(supplier)s ond efallai y bydd y canlyniad yr "
 "un fath."
 
-#: help_to_heat/templates/frontdoor/referral-already-submitted.html:31
+#: help_to_heat/templates/frontdoor/referral-already-submitted.html:35
 msgid "I want to submit another referral"
 msgstr "Rydw i eisiau cyflwyno atgyfeiriad arall"
 
-#: help_to_heat/templates/frontdoor/referral-already-submitted.html:39
+#: help_to_heat/templates/frontdoor/referral-already-submitted.html:43
 msgid "Exit service"
 msgstr "Gadewch y gwasanaeth"
 
