@@ -98,9 +98,7 @@ def _do_test(country, council_tax_band, epc_rating):
     page = _check_page(page, "council-tax-band", "council_tax_band", council_tax_band)
     data["epc_rating"] = epc_rating
 
-    assert page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
-    form = page.get_form()
-    page = form.submit().follow()
+    page = _check_page(page, "epc", "accept_suggested_epc", "Yes")
 
     page = _check_page(page, "benefits", "benefits", "No")
 
