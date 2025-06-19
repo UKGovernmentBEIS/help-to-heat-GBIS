@@ -97,6 +97,7 @@ from help_to_heat.frontdoor.consts import (
     property_type_field_park_home,
     property_type_page,
     referral_already_submitted_page,
+    referral_submitted_to_same_supplier_journey_field,
     schemes_page,
     shell_warning_page,
     shell_warning_page_field,
@@ -133,7 +134,10 @@ from help_to_heat.frontdoor.consts import (
     wall_type_field_solid,
     wall_type_page,
 )
-from help_to_heat.frontdoor.routing.forwards_routing import get_next_page
+from help_to_heat.frontdoor.routing.forwards_routing import (
+    _unknown_response,
+    get_next_page,
+)
 from tests.routing import (
     eligible_council_tax_bands_england,
     eligible_council_tax_bands_scotland,
@@ -392,6 +396,18 @@ def test_address_select_manual_next_page():
 )
 def test_referral_already_submitted_next_page(epc_found, expected_next_page):
     answers = {own_property_field: own_property_field_own_property, epc_found_journey_field: epc_found}
+    assert get_next_page(referral_already_submitted_page, answers) == expected_next_page
+
+
+@pytest.mark.parametrize(
+    "referral_submitted_to_same_supplier, expected_next_page",
+    [
+        (field_no, council_tax_band_page),
+        (field_yes, _unknown_response),  # if submitted to same supplier, do not continue
+    ],
+)
+def test_referral_already_submitted_to_same_supplier_next_page(referral_submitted_to_same_supplier, expected_next_page):
+    answers = {referral_submitted_to_same_supplier_journey_field: referral_submitted_to_same_supplier}
     assert get_next_page(referral_already_submitted_page, answers) == expected_next_page
 
 

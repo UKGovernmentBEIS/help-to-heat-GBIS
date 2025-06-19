@@ -14,6 +14,9 @@ from help_to_heat.frontdoor.consts import (
     alternative_supplier_field,
     country_field,
     country_page,
+    epc_accept_suggested_epc_field,
+    epc_page,
+    field_yes,
     lmk_field,
     recommendations_field,
     supplier_field,
@@ -169,7 +172,8 @@ def _answer_house_questions(
     page = _check_page(page, "council-tax-band", "council_tax_band", "B")
 
     assert page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
-    page = _check_page(page, "epc", "accept_suggested_epc", "Yes")
+    form = page.get_form()
+    page = form.submit().follow()
 
     page = _check_page(page, "benefits", "benefits", benefits_answer)
 
@@ -468,7 +472,6 @@ def test_no_benefits_flow():
     assert page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
 
     form = page.get_form()
-    form["accept_suggested_epc"] = "Yes"
     page = form.submit().follow()
 
     assert page.has_one("""h1:contains("It's likely that your home already has suitable energy saving measures")""")
@@ -759,7 +762,8 @@ def test_eligibility():
     page = _check_page(page, "council-tax-band", "council_tax_band", council_tax_band)
 
     assert page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
-    page = _check_page(page, "epc", "accept_suggested_epc", "No")
+    form = page.get_form()
+    page = form.submit().follow()
 
     page = _check_page(page, "benefits", "benefits", "No")
 
@@ -1308,7 +1312,8 @@ def test_on_check_page_back_button_goes_to_correct_location(has_loft_insulation)
     page = _check_page(page, "council-tax-band", "council_tax_band", "B")
 
     assert page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
-    page = _check_page(page, "epc", "accept_suggested_epc", "Yes")
+    form = page.get_form()
+    page = form.submit().follow()
 
     page = _check_page(page, "benefits", "benefits", "Yes")
 
@@ -1516,7 +1521,12 @@ def test_on_submitting_a_recent_uprn_twice_the_referral_already_submitted_page_i
     page = form.submit().follow()
 
     assert page.has_one("h1:contains('A referral has already been submitted')")
-    assert page.has_text("The information you have submitted matches a referral made on")
+    assert page.has_text(
+        "As only one application to your energy supplier is permitted, "
+        "you are not eligible to submit another at this time."
+    )
+    assert not page.has_one("button:contains('Continue')")
+    assert page.has_one("a:contains('Exit service')")
 
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
@@ -1952,7 +1962,7 @@ def test_alternative_supplier_is_shown_in_referrals_when_handled_by_a_different_
     "property_type",
     ["Apartment, flat or maisonette", "Park home"],
 )
-@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApiWithEPCC)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_cannot_continue_property_type_flow(property_type):
     client = utils.get_client()
     page = client.get("/start")
@@ -1985,7 +1995,7 @@ def test_cannot_continue_property_type_flow(property_type):
     "property_type",
     ["Apartment, flat or maisonette", "Park home"],
 )
-@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApiWithEPCC)
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_cannot_continue_social_housing_flow(property_type):
     client = utils.get_client()
     page = client.get("/start")
@@ -2009,6 +2019,62 @@ def test_cannot_continue_social_housing_flow(property_type):
     page = _check_page(page, "own-property", "own_property", "No, I am a social housing tenant")
 
     assert page.has_one("h1:contains('You cannot continue your application')")
+
+
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_accept_epc_page_assumes_answer_is_yes():
+    client = utils.get_client()
+    page = client.get("/start")
+
+    council_tax_band = "G"
+
+    assert page.status_code == 302
+    page = page.follow()
+
+    assert page.status_code == 200
+    session_id = page.path.split("/")[1]
+    assert uuid.UUID(session_id)
+
+    _check_page = _make_check_page(session_id)
+
+    form = page.get_form()
+    form["country"] = "England"
+    page = form.submit().follow()
+
+    assert page.has_one("h1:contains('Select your home energy supplier from the list below')")
+    page = _check_page(page, "supplier", "supplier", "Utilita")
+
+    assert page.has_text("Do you own the property?")
+    page = _check_page(page, "own-property", "own_property", "Yes, I own my property and live in it")
+
+    assert page.has_one("h1:contains('What kind of property do you have?')")
+    page = _check_page(page, "property-type", "property_type", "House")
+
+    assert page.has_one("h1:contains('What kind of house do you have?')")
+    page = _check_page(page, "property-subtype", "property_subtype", "Detached")
+
+    form = page.get_form()
+    form["building_name_or_number"] = "22"
+    form["postcode"] = "FL23 4JA"
+    page = form.submit().follow()
+
+    form = page.get_form()
+    form["lmk"] = "222222222222222222222222222222222"
+    page = form.submit().follow()
+
+    data = interface.api.session.get_answer(session_id, page_name="epc-select")
+    assert data["lmk"] == "222222222222222222222222222222222"
+    assert data["address"] == "22 Acacia Avenue, Upper Wellgood, Fulchester, FL23 4JA"
+
+    assert page.has_one("h1:contains('What is the council tax band of your property?')")
+    page = _check_page(page, "council-tax-band", "council_tax_band", council_tax_band)
+
+    assert page.has_one("h1:contains('We found an Energy Performance Certificate that might be yours')")
+    form = page.get_form()
+    form.submit().follow()
+
+    data = interface.api.session.get_answer(session_id, page_name=epc_page)
+    assert data[epc_accept_suggested_epc_field] == field_yes
 
 
 def _setup_client_and_page():

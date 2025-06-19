@@ -72,6 +72,7 @@ from help_to_heat.frontdoor.consts import (
     property_type_field_park_home,
     property_type_page,
     referral_already_submitted_page,
+    referral_submitted_to_same_supplier_journey_field,
     schemes_page,
     shell_warning_page,
     shell_warning_page_field,
@@ -401,7 +402,12 @@ def _post_address_input_next_page(answers):
     return _unknown_response
 
 
-def _referral_already_submitted_next_page(_answers):
+def _referral_already_submitted_next_page(answers):
+    # ensure those who submitted a referral to the same supplier cannot continue
+    referral_submitted_to_same_supplier = answers.get(referral_submitted_to_same_supplier_journey_field)
+    if referral_submitted_to_same_supplier == field_yes:
+        return _unknown_response
+
     return _post_duplicate_uprn_next_page()
 
 
