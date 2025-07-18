@@ -30,6 +30,13 @@ Migrations are run automatically at startup, and suppliers are added automatical
 
 We have three branches linked to environments: develop, staging, and main. Committing to any of these will trigger a release to the relevant environment. To merge to main, the `production release` label must be applied to your pull request.
 
+### Trivy
+
+On each push to develop, we run a Trivy scan on the Docker image to check for vulnerabilities.
+If the scan fails, we should look into the new vulnerability and either:
+- Fix it
+- Add to .trivyignore if the issue is a false positive.
+
 ## Migration
 
 All migrations are created by Django.
