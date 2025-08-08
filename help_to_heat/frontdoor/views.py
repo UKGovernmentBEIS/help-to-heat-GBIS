@@ -590,7 +590,7 @@ class SupplierView(PageView):
 
     def save_post_data(self, data, session_id, page_name):
         request_supplier = data.get(supplier_field)
-        if user_selected_supplier_field in supplier_field_values_real:
+        if request_supplier in supplier_field_values_real:
             data[user_selected_supplier_field] = request_supplier
         return data
 
