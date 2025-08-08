@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-#
+# 
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-16 16:11+0000\n"
+"POT-Creation-Date: 2025-08-08 14:07+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -622,11 +622,11 @@ msgstr "Fflat"
 msgid "Maisonette"
 msgstr "Fflat deulawr"
 
-#: help_to_heat/frontdoor/views.py:588
+#: help_to_heat/frontdoor/views.py:599
 msgid "My energy supplier is not listed"
 msgstr "Dyw fy nghyflenwr ynni i ddim wedi'i restru"
 
-#: help_to_heat/frontdoor/views.py:689 help_to_heat/frontdoor/views.py:755
+#: help_to_heat/frontdoor/views.py:700 help_to_heat/frontdoor/views.py:766
 msgid "I cannot find my address, I want to enter it manually"
 msgstr "Dwi'n methu gweld fy nghyfeiriad i. Hoffwn ei roi fy hunan."
 
