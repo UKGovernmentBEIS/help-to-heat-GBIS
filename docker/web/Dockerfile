@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/python:3.11.9-slim-bookworm
+FROM public.ecr.aws/docker/library/python:3.11.13-slim-bookworm
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -11,16 +11,14 @@ ENV BASE_URL=${BASE_URL}
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN apt-get update
-RUN apt-get install -y gettext \
-    # needed to install wait-for-db-linux-x86 below
-    curl \
-    # this ensures psql is available on the container
-    # we may use this in support when connecting to EC2 container & we need to query the database
-    postgresql-client
-
 RUN curl -o /bin/wait-for-db https://github.com/palfrey/wait-for-db/releases/download/v1.2.0/wait-for-db-linux-x86
 RUN chmod +x /bin/wait-for-db
+
+RUN apt-get update
+RUN apt-get install -y gettext \
+# this ensures psql is available on the container
+# we may use this in support when connecting to EC2 container & we need to query the database
+    postgresql-client
 
 COPY ./docker/web/start.sh /start.sh
 RUN chmod +x /start.sh
