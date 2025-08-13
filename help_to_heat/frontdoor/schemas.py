@@ -597,6 +597,8 @@ loft_access_validation_options_map = loft_access_options_map + (
     },
 )
 
+# note that some of these are now hidden to the user
+# see hidden_suppliers in views.py
 supplier_options = (
     {
         "value": supplier_field_british_gas,
