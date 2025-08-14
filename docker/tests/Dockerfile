@@ -1,4 +1,4 @@
-FROM public.ecr.aws/docker/library/python:3.11.9-bookworm
+FROM public.ecr.aws/docker/library/python:3.11.13-slim-bookworm
 
 ENV PYTHONUNBUFFERED 1
 ENV PYTHONDONTWRITEBYTECODE 1
@@ -6,7 +6,7 @@ ENV TZ=UTC
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
-RUN apt update -y && apt install -y postgresql-client
+RUN apt update -y && apt install -y postgresql-client curl
 
 RUN curl -o /bin/wait-for-db https://github.com/palfrey/wait-for-db/releases/download/v1.2.0/wait-for-db-linux-x86
 RUN chmod +x /bin/wait-for-db

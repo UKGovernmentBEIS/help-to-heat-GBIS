@@ -6,9 +6,9 @@ Formerly known as "Help to Heat".
 2. Populate the OS API key into the OS_API_KEY variable in `envs/web`. Please only use a single value (i.e. `["my_key_here"]`), rather than all of the keys available, in order to avoid needing to rotate all of the keys if your local environment is accidentally leaked.
 3. Populate the Open EPC API token into the OPEN_EPC_API_TOKEN variable in `envs/web`.
 ### (Optional) Poetry Setup 
-If you want to be able to make changes to the dependency list using Poetry, or install the dependencies locally (so you can click into them in your IDE, or use autocomplete) perform these steps:
+If you want to be able to install the dependencies locally (so you can click into them in your IDE, or use autocomplete) perform these steps:
 1. [Install Poetry](https://python-poetry.org/docs/) on your machine
-2. [Install Python 3.11.9](https://www.python.org/downloads/release/python-3119/)
+2. [Install Python 3.11.13](https://www.python.org/downloads/release/python-31113/)
 3. Set up a virtual environment within the project for Poetry to manage your dependencies. A guide for Pycharm can be found [here](https://www.jetbrains.com/help/pycharm/poetry.html).
 ## Using Docker
 
@@ -38,6 +38,19 @@ Go inside Docker - `help-to-heat` - `web-1` and run the following command in Ter
     python manage.py makemigrations
 
 then restart the container. All required migrations will be created automatically.
+
+## Updating Python
+
+To update Python to a newer version, you will need to:
+- Update the base images in the web & test Dockerfiles.
+- If you don't have poetry installed:
+  - Start the app in docker.
+  - Open a terminal in the `app` container.
+  - This container has poetry installed and has the repository mounted, so you can make changes here and commit them.
+  - Run `export POETRY_CACHE_DIR=/app/.cache/pypoetry && export POETRY_VIRTUALENVS_CREATE=false`
+- Update the python version in pyproject.toml.
+- Run `poetry lock` to generate an updated `pyproject.toml`.
+- Rebuild the app and check it functions.
 
 ## Translations
 
