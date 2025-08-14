@@ -2077,6 +2077,31 @@ def test_accept_epc_page_assumes_answer_is_yes():
     assert data[epc_accept_suggested_epc_field] == field_yes
 
 
+@unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
+def test_on_check_answers_page_changing_to_invalid_answer_has_correct_back_behaviour():
+    _check_page, page, session_id = _setup_client_and_page()
+
+    # Answer main flow
+    page = _answer_house_questions(page, session_id, benefits_answer="Yes", has_loft=True)
+
+    # press back to get to summary page
+    page = page.click(contains="Back")
+    assert page.has_one("h1:contains('Check your answers')")
+
+    page = _click_change_button(page, "own-property")
+    assert page.has_one("h1:contains('Do you own the property?')")
+
+    # user is now ineligible
+    page = _check_page(page, "own-property", "own_property", "No, I am a social housing tenant")
+    assert page.has_one("h1:contains('You cannot continue your application')")
+
+    page = page.click(contains="Back")
+    assert page.has_one("h1:contains('Do you own the property?')")
+
+    page = page.click(contains="Back")
+    assert page.has_one("h1:contains('You cannot continue your application')")
+
+
 def _setup_client_and_page():
     client = utils.get_client()
     page = client.get("/start")
