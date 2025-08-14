@@ -124,6 +124,7 @@ from .consts import (
     success_page,
     summary_page,
     supplier_field,
+    supplier_field_e,
     supplier_field_not_listed,
     supplier_field_values_real,
     supplier_page,
@@ -267,6 +268,10 @@ property_types = {
 # to be updated when we get full list of excluded suppliers
 converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
 unavailable_suppliers = []
+hidden_suppliers = [supplier_field_e]
+visible_supplier_options = [
+    supplier_option for supplier_option in schemas.supplier_options if supplier_option["value"] not in hidden_suppliers
+]
 
 
 def unavailable_supplier_redirect(session_id):
@@ -553,11 +558,22 @@ class PageView(utils.MethodDispatcher):
                     calculate_journey(answers, from_page=start_of_journey_page, to_page=change_page_name)
                     prev_page_name = schemas.change_page_lookup[page_name]
                     return reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name=prev_page_name))
-                except CouldNotCalculateJourneyException:
-                    # if not, as a failsafe send them to the previous page in change state
-                    # this is a reasonably unsurprising action to the user, it is the previous page
-                    # TODO PC-1311: review further
-                    prev_page_name = get_prev_page(page_name, answers)
+                except CouldNotCalculateJourneyException as e:
+                    # if not, as a failsafe send them to the page at the end of their journey.
+                    # presumably, this is the one describing why they are ineligible if they cannot reach the check
+                    # answers page.
+                    ineligible_explanation_page = e.partial_journey[-1]
+                    if ineligible_explanation_page == page_name:
+                        # the user may already be on the ineligible page and so pressing back should send to a different
+                        # page.
+                        # presumably the page before the ineligible one will let them change their answer, so the user
+                        # can get unstuck
+                        prev_page_name = get_prev_page(page_name, answers)
+                    else:
+                        # otherwise send to the ineligible page
+                        # this means if the user keeps pressing back they should see
+                        # ineligible page -> page before that -> ineligible page -> page before that
+                        prev_page_name = ineligible_explanation_page
                     return reverse(
                         "frontdoor:change-page", kwargs=dict(session_id=session_id, page_name=prev_page_name)
                     )
@@ -586,7 +602,7 @@ class CountryView(PageView):
 class SupplierView(PageView):
     def build_extra_context(self, *args, **kwargs):
         fallback_option = {"value": supplier_field_not_listed, "label": _("My energy supplier is not listed")}
-        return {"supplier_options": schemas.supplier_options, "fallback_option": fallback_option}
+        return {"supplier_options": visible_supplier_options, "fallback_option": fallback_option}
 
     def save_post_data(self, data, session_id, page_name):
         request_supplier = data.get(supplier_field)
@@ -598,7 +614,7 @@ class SupplierView(PageView):
 @register_page(alternative_supplier_page)
 class AlternativeSupplierView(PageView):
     def build_extra_context(self, *args, **kwargs):
-        return {"supplier_options": schemas.supplier_options}
+        return {"supplier_options": visible_supplier_options}
 
     def save_post_data(self, data, session_id, page_name):
         request_supplier = data.get(alternative_supplier_field)
