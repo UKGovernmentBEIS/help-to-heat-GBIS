@@ -124,6 +124,7 @@ from .consts import (
     success_page,
     summary_page,
     supplier_field,
+    supplier_field_e,
     supplier_field_not_listed,
     supplier_field_values_real,
     supplier_page,
@@ -267,6 +268,10 @@ property_types = {
 # to be updated when we get full list of excluded suppliers
 converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
 unavailable_suppliers = []
+hidden_suppliers = [supplier_field_e]
+visible_supplier_options = [
+    supplier_option for supplier_option in schemas.supplier_options if supplier_option["value"] not in hidden_suppliers
+]
 
 
 def unavailable_supplier_redirect(session_id):
@@ -586,7 +591,7 @@ class CountryView(PageView):
 class SupplierView(PageView):
     def build_extra_context(self, *args, **kwargs):
         fallback_option = {"value": supplier_field_not_listed, "label": _("My energy supplier is not listed")}
-        return {"supplier_options": schemas.supplier_options, "fallback_option": fallback_option}
+        return {"supplier_options": visible_supplier_options, "fallback_option": fallback_option}
 
     def save_post_data(self, data, session_id, page_name):
         request_supplier = data.get(supplier_field)
@@ -598,7 +603,7 @@ class SupplierView(PageView):
 @register_page(alternative_supplier_page)
 class AlternativeSupplierView(PageView):
     def build_extra_context(self, *args, **kwargs):
-        return {"supplier_options": schemas.supplier_options}
+        return {"supplier_options": visible_supplier_options}
 
     def save_post_data(self, data, session_id, page_name):
         request_supplier = data.get(alternative_supplier_field)
