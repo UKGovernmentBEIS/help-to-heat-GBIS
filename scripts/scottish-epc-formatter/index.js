@@ -1,20 +1,31 @@
 const csv = require('csv');
 const { program } = require('commander');
-const { readFileSync, writeFileSync, fstat } = require('fs');
+const { readFileSync, writeFileSync, readdirSync, appendFileSync } = require('fs');
 
-program.option('--infile <string>', 'infile', 'input.csv');
+program.option('--infile <string>', 'infile', undefined);
+program.option('--infolder <string>', 'infolder', undefined);
 program.option('--outfile <string>', 'outfile', undefined);
 
 program.parse();
 
 const options = program.opts();
 
-const inFile = options.infile;
-const outFile = options.outfile ?? options.infile;
+const allFiles = [];
 
-const content = readFileSync(inFile);
+if (options.infile) {
+    allFiles.push(options.infile);
+}
 
-const records = csv.parse(content, {columns: true, bom: true});
+const infolder = options.infolder ?? "epc"
+
+for (const folderInFile of readdirSync(infolder)) {
+    allFiles.push(`${infolder}/${folderInFile}`);
+}
+
+const outFileName = options.outfile ?? "epc.csv";
+let outFile;
+let outLineCount = 0;
+let outFileIndex = 0;
 
 const mapping = new Map();
 mapping.set("OSG_REFERENCE_NUMBER", "uprn");
@@ -71,34 +82,61 @@ mapping.set("TENURE", "tenure");
 mapping.set("IMPROVEMENTS", "improvements");
 mapping.set("ALTERNATIVE_IMPROVEMENTS", "alternative_improvements");
 
-const outLines = [
-    [...mapping.values()].join(",")
-];
+function startOutputFile() {
+    outFile = `${outFileIndex}-${outFileName}`;
 
-console.log(`start ${inFile} to ${outFile}`);
+    writeFileSync(outFile, [...mapping.values()].join(","));
 
-records.toArray().then(arr => {
-    var i = 0;
-    for (const epc of arr) {
-        i++;
-        if (i === 1) continue; // first line of the file is additional headers? ignore this
+    console.log(`start write ${outFile}`);
+}
 
-        const output_fields = [...mapping.keys()]
-            .map(key => {
-                if (epc[key] === undefined) {
-                    console.log(key);
-                    console.log(epc);
-                    
-                    throw new Error("undefined in data!");
-                }
+(async () => {
+    startOutputFile();
 
-                return `"${epc[key]}"`;
-            })
+    let outLines = [];
 
-        outLines.push(output_fields.join(","));
+    for (const file of allFiles) {
+        outLines = [];
+
+        const content = readFileSync(file);
+
+        const records = csv.parse(content, {columns: true, bom: true});
+
+        console.log(`start read ${file}`);
+
+        const arr = await records.toArray();
+        let i = 0;
+        for (const epc of arr) {
+            i++;
+            if (i === 1) continue; // first line of the file is additional headers? ignore this
+
+            const output_fields = [...mapping.keys()]
+                .map(key => {
+                    if (epc[key] === undefined) {
+                        console.log(key);
+                        console.log(epc);
+                        
+                        throw new Error("undefined in data!");
+                    }
+
+                    return `"${epc[key]}"`;
+                });
+
+            outLines.push(output_fields.join(","));
+
+            outLineCount++;
+        }
+
+        appendFileSync(outFile, `${outLines.join("\n")}\n`);
+
+        if (outLineCount > 500000) {
+            outLineCount = 0;
+            outFileIndex++;
+
+            startOutputFile();
+        }
+
+        console.log(`finish read ${file}`);
     }
+})();
 
-    writeFileSync(outFile, outLines.join("\n"));
-
-    console.log(`finish ${inFile} to ${outFile}`);
-});
