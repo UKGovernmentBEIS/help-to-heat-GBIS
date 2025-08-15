@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-13 09:56+0000\n"
+"POT-Creation-Date: 2025-08-14 08:45+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -622,11 +622,11 @@ msgstr "Fflat"
 msgid "Maisonette"
 msgstr "Fflat deulawr"
 
-#: help_to_heat/frontdoor/views.py:593
+#: help_to_heat/frontdoor/views.py:604
 msgid "My energy supplier is not listed"
 msgstr "Dyw fy nghyflenwr ynni i ddim wedi'i restru"
 
-#: help_to_heat/frontdoor/views.py:694 help_to_heat/frontdoor/views.py:760
+#: help_to_heat/frontdoor/views.py:705 help_to_heat/frontdoor/views.py:771
 msgid "I cannot find my address, I want to enter it manually"
 msgstr "Dwi'n methu gweld fy nghyfeiriad i. Hoffwn ei roi fy hunan."
 
