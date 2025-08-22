@@ -52,6 +52,15 @@ To update Python to a newer version, you will need to:
 - Run `poetry lock` to generate an updated `pyproject.toml`.
 - Rebuild the app and check it functions.
 
+## Line Endings
+
+On GBIS many files use LF line endings. If your git `core.autocrlf` config setting is `true` then these files will be normalised to CRLF on commit.
+This is fine for most files, but for the `*.sh` files in the `docker` folder these files **must** be LF for local development to work.
+Otherwise, you will see a `Illegal option -o errexit` error.
+
+Double-check your `docker` folder in the repo and verify that the shell files are LF.
+If not, you will need to run `git config core.autocrlf false` and change the line endings to LF.
+
 ## Translations
 
 ### Summary
