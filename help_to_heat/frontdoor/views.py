@@ -913,7 +913,7 @@ class EpcView(PageView):
         session_data = interface.api.session.get_session(session_id)
 
         address = session_data.get(address_field)
-        show_monthly_epc_update_details = session_data.get(country_field) in [
+        england_wales_epc = session_data.get(country_field) in [
             country_field_wales,
             country_field_england,
         ]
@@ -949,10 +949,6 @@ class EpcView(PageView):
             gds_epc_date = None
 
         current_month, next_month = utils.get_current_and_next_month_names(month_names)
-        (
-            scottish_epc_cutoff_month,
-            next_scottish_dump_month,
-        ) = utils.get_current_scottish_epc_cutoff_and_next_dump_month_names(month_names)
 
         context = {
             "epc_rating": epc_band.upper() if epc_band else "",
@@ -960,12 +956,10 @@ class EpcView(PageView):
             "epc_date": epc_date,
             "current_month": current_month,
             "next_month": next_month,
-            "scottish_epc_cutoff_month": scottish_epc_cutoff_month,
-            "next_scottish_dump_month": next_scottish_dump_month,
             "property_type": property_type,
             "epc_display_options": schemas.epc_display_options_map,
             "address": address,
-            "show_monthly_epc_update_details": show_monthly_epc_update_details,
+            "england_wales_epc": england_wales_epc,
         }
         return context
 
@@ -984,19 +978,13 @@ class NoEpcView(PageView):
         country = session_data.get(country_field)
 
         current_month, next_month = utils.get_current_and_next_month_names(month_names)
-        (
-            scottish_epc_cutoff_month,
-            next_scottish_dump_month,
-        ) = utils.get_current_scottish_epc_cutoff_and_next_dump_month_names(month_names)
 
-        show_month_wording = country in [country_field_england, country_field_wales]
+        england_wales_epc = country in [country_field_england, country_field_wales]
 
         return {
             "current_month": current_month,
             "next_month": next_month,
-            "scottish_epc_cutoff_month": scottish_epc_cutoff_month,
-            "next_scottish_dump_month": next_scottish_dump_month,
-            "show_month_wording": show_month_wording,
+            "england_wales_epc": england_wales_epc,
         }
 
     def save_post_data(self, data, session_id, page_name):
