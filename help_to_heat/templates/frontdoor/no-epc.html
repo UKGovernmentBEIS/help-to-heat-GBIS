@@ -11,20 +11,17 @@
 
     <p class="govuk-body">{{_("This may be because:")}}</p>
     <ul class="govuk-list govuk-list--bullet">
-      {% if show_month_wording %}
+      {% if england_wales_epc %}
         <li>{{ _("your property was issued an EPC within the last month") }}</li>
       {% else %}
         <li>{{ _("your property was issued an EPC within the last quarter") }}</li>
       {% endif %}
       <li>{{ _("your property has not previously been issued an EPC") }}</li>
     </ul>
-    {% if show_month_wording %}
+    {% if england_wales_epc %}
       <p class="govuk-body">{{_("If your property has had a new EPC issued since 1 %(current_month)s, we may not be able to find it in our database because it is only updated monthly. Please return to this service after 1 %(next_month)s when we expect the database to have been updated.") % { "current_month": current_month, "next_month": next_month }}}</p>
-    {% else %}
-      <p class="govuk-body">{{_("If your property was issued an EPC since 1 %(scottish_epc_cutoff_month)s, we may not be able to find it in our database because it is updated quarterly. Please return to this service after 1 %(next_scottish_dump_month)s when we expect the database to have been updated.") % { "scottish_epc_cutoff_month": scottish_epc_cutoff_month, "next_scottish_dump_month": next_scottish_dump_month }}}</p>
+      <br>
     {% endif %}
-    <br>
     <p class="govuk-body">{{_("You may continue using this service without an EPC.")}}</p>
-
   {%- endcall %}
 {% endblock %}

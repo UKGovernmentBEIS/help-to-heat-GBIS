@@ -2,13 +2,13 @@
 # Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
 # FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
-# 
+#
 #, fuzzy
 msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-08-14 08:45+0000\n"
+"POT-Creation-Date: 2025-09-11 13:49+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -55,7 +55,7 @@ msgid "Annual household income"
 msgstr "Incwm blynyddol yr aelwyd"
 
 #: help_to_heat/frontdoor/schemas.py:147 help_to_heat/frontdoor/schemas.py:148
-#: help_to_heat/templates/frontdoor/epc.html:49
+#: help_to_heat/templates/frontdoor/epc.html:47
 msgid "Property type"
 msgstr "Math o eiddo"
 
@@ -1580,24 +1580,7 @@ msgstr ""
 "y gwasanaeth hwn ar ôl 1 %(next_month)s. Disgwyliwn y bydd y gronfa ddata "
 "wedi cael ei diweddaru erbyn hynny."
 
-#: help_to_heat/templates/frontdoor/epc.html:26
-#, python-format
-msgid ""
-"If your property has had a new EPC issued since 1 "
-"%(scottish_epc_cutoff_month)s, we may not be able to find it in our database "
-"because it is only updated quarterly. If you do not recognise the EPC below "
-"as your most recent one, please return to this service after 1 "
-"%(next_scottish_dump_month)s when we expect the database to have been "
-"updated."
-msgstr ""
-"Os oes EPC newydd wedi'i rhoi i’ch eiddo chi ers 1 "
-"%(scottish_epc_cutoff_month)s, efallai na fyddwn yn gallu dod o hyd iddi yn "
-"ein cronfa ddata am mai dim ond bob chwarter y bydd honno’n cael ei "
-"diweddaru. Os nad ydych chi’n adnabod yr EPC isod fel eich un ddiweddaraf "
-"chi, dewch yn ôl i'r gwasanaeth yma ar ôl 1 %(next_scottish_dump_month)s pan "
-"ydyn ni’n disgwyl y bydd y gronfa ddata wedi'i diweddaru."
-
-#: help_to_heat/templates/frontdoor/epc.html:29
+#: help_to_heat/templates/frontdoor/epc.html:27
 msgid ""
 "You can continue with your old EPC but the energy supplier you have selected "
 "may not be able to help based on an out-of-date EPC"
@@ -1605,19 +1588,19 @@ msgstr ""
 "Gallwch barhau â’ch hen Dystysgrif Perfformiad Ynni, ond efallai na fydd y "
 "cyflenwr ynni rydych chi wedi’i ddewis yn gallu helpu ar sail hen dystysgrif."
 
-#: help_to_heat/templates/frontdoor/epc.html:36
+#: help_to_heat/templates/frontdoor/epc.html:34
 msgid "Certificate"
 msgstr "Tystysgrif"
 
-#: help_to_heat/templates/frontdoor/epc.html:41
+#: help_to_heat/templates/frontdoor/epc.html:39
 msgid "Registered address"
 msgstr "Cyfeiriad cofrestredig"
 
-#: help_to_heat/templates/frontdoor/epc.html:54
+#: help_to_heat/templates/frontdoor/epc.html:52
 msgid "EPC rating"
 msgstr "Cyfraddiad EPC "
 
-#: help_to_heat/templates/frontdoor/epc.html:61
+#: help_to_heat/templates/frontdoor/epc.html:59
 msgid "Date of issue"
 msgstr "Dyddiad Rhoi"
 
@@ -2113,21 +2096,7 @@ msgstr ""
 "Dewch yn ôl at y gwasanaeth hwn ar ôl 1 %(next_month)s. Disgwyliwn y bydd y "
 "gronfa ddata wedi cael ei diweddaru erbyn hynny."
 
-#: help_to_heat/templates/frontdoor/no-epc.html:24
-#, python-format
-msgid ""
-"If your property was issued an EPC since 1 %(scottish_epc_cutoff_month)s, we "
-"may not be able to find it in our database because it is updated quarterly. "
-"Please return to this service after 1 %(next_scottish_dump_month)s when we "
-"expect the database to have been updated."
-msgstr ""
-"Os yw’ch eiddo wedi cael EPC ers 1 %(scottish_epc_cutoff_month)s, efallai na "
-"fyddwn yn gallu dod o hyd iddi yn ein cronfa ddata am mai bob chwarter y "
-"bydd honno’n cael ei diweddaru. Dewch yn ôl i’r gwasanaeth yma ar ôl 1 "
-"%(next_scottish_dump_month)s pan ydyn ni’n disgwyl y bydd y gronfa ddata "
-"wedi'i diweddaru."
-
-#: help_to_heat/templates/frontdoor/no-epc.html:27
+#: help_to_heat/templates/frontdoor/no-epc.html:25
 msgid "You may continue using this service without an EPC."
 msgstr "Cewch barhau i ddefnyddio'r gwasanaeth yma heb EPC."
 
