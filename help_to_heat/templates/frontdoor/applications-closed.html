@@ -9,15 +9,9 @@
   <div class="govuk-grid-column-two-thirds">
     <a href="{{prev_url}}" class="govuk-back-link">{{_("Back")}}</a>
 
-    {% if supplier == 'British Gas' %}
-    <h1 class="govuk-heading-l">{{_("British Gas are not taking referrals right now but they will be shortly")}}</h1>
-    <p class="govuk-body">{{_("You can check back again soon.")}}</p>
-    
-    {% else %}
     <h1 class="govuk-heading-l">{{_("%(supplier)s are not taking referrals just now")% { "supplier": supplier }}}</h1>
     <p class="govuk-body">{{_("You are not able to apply to %(supplier)s using this service just now.")% { "supplier": supplier }}}</p>
     <p class="govuk-body">{{_("You can check back again soon.")}}</p>
-    {% endif %}
     
     <p class="govuk-body">{{_("If you are a home owner in England and Wales, ")}}
       <a href="https://www.gov.uk/improve-energy-efficiency" target="_blank" rel="noopener noreferrer"  class="govuk-link">
