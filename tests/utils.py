@@ -131,7 +131,7 @@ def get_otp(secret):
     return totp.now()
 
 
-def create_referral(session_id, data=None, supplier="British Gas", creation_timestamp=timezone.now()):
+def create_referral(session_id, data=None, supplier="EDF", creation_timestamp=timezone.now()):
     if data is None:
         data = {
             "lmk": "222222222222222222222222222222222",
@@ -166,7 +166,7 @@ def create_referral(session_id, data=None, supplier="British Gas", creation_time
             "property_subtype": "Semi-detached",
             "number_of_bedrooms": "Two bedrooms",
             "accept_suggested_epc": "Not found",
-            "user_selected_supplier": "British Gas",
+            "user_selected_supplier": "EDF",
             "building_name_or_number": "10",
         }
     supplier = portal.models.Supplier.objects.get(name=data["supplier"])
