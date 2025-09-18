@@ -96,7 +96,7 @@ country_field_northern_ireland = "Northern Ireland"
 # if needing to query this, in most cases use SupplierConverter.get_supplier()
 # it handles the user selecting an alternative
 supplier_field = "supplier"
-supplier_field_british_gas = "British Gas"
+supplier_field_british_gas = "British Gas"  # offboarded
 supplier_field_bulb = "Bulb, now part of Octopus Energy"
 supplier_field_e = "E (Gas & Electricity) Ltd"  # offboarded
 supplier_field_edf = "EDF"
