@@ -112,7 +112,7 @@ CSP_CONNECT_SRC = ("'self'", "*.google-analytics.com/")
 CSP_IMG_SRC = ("'self'",)
 CSP_STYLE_SRC = ("'self'",)
 CSP_BASE_URI = ("'self'",)
-CSP_FORM_ACTION = ("'self'",)
+CSP_FORM_ACTION = ("'self'", "https://www.gov.uk/")
 
 CSRF_COOKIE_HTTPONLY = True
 
