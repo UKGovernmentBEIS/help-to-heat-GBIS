@@ -48,3 +48,7 @@ class Feedback(utils.UUIDPrimaryKeyBase, utils.TimeStampedModel):
 
     def __str__(self):
         return f"<feedback id={self.id} page_name={self.page_name}>"
+
+
+class LiveSettings(utils.TimeStampedModel):
+    public_portal_open = models.BooleanField(default=True)

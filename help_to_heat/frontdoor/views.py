@@ -148,6 +148,7 @@ from .consts import (
     wall_type_page,
 )
 from .eligibility import calculate_eligibility, eco4
+from .live_settings import public_portal_is_closed
 from .routing import CouldNotCalculateJourneyException, calculate_journey
 from .routing.backwards_routing import get_prev_page
 from .routing.forwards_routing import get_next_page
@@ -301,6 +302,9 @@ def redirect_to_homepage_view(request):
 
 
 def start_view(request):
+    if public_portal_is_closed():
+        return redirect(govuk_start_page_url)
+
     session_id = uuid.uuid4()
     next_url = reverse("frontdoor:page", kwargs=dict(session_id=session_id, page_name="country"))
     response = redirect(next_url)
@@ -327,6 +331,9 @@ def not_found_page_view(request, exception):
 
 
 def page_view(request, session_id, page_name):
+    if public_portal_is_closed():
+        return redirect(govuk_start_page_url)
+
     if page_name not in all_pages:
         raise Http404("Invalid url")
 
@@ -344,6 +351,9 @@ def page_view(request, session_id, page_name):
 
 
 def change_page_view(request, session_id, page_name):
+    if public_portal_is_closed():
+        return redirect(govuk_start_page_url)
+
     assert page_name in page_map
     return page_map[page_name](request, session_id, page_name, is_change_page=True)
 
