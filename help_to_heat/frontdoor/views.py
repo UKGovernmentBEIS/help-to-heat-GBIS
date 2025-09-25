@@ -124,6 +124,7 @@ from .consts import (
     success_page,
     summary_page,
     supplier_field,
+    supplier_field_british_gas,
     supplier_field_e,
     supplier_field_not_listed,
     supplier_field_values_real,
@@ -269,7 +270,7 @@ property_types = {
 # to be updated when we get full list of excluded suppliers
 converted_suppliers = ["Bulb, now part of Octopus Energy", "Utility Warehouse"]
 unavailable_suppliers = []
-hidden_suppliers = [supplier_field_e]
+hidden_suppliers = [supplier_field_british_gas, supplier_field_e]
 visible_supplier_options = [
     supplier_option for supplier_option in schemas.supplier_options if supplier_option["value"] not in hidden_suppliers
 ]

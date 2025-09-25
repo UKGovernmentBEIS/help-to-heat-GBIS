@@ -1454,7 +1454,7 @@ def test_on_contact_details_page_correct_phone_numbers_are_accepted(contact_numb
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_on_success_page_on_yes_to_benefits_eco4_is_shown():
-    supplier = "British Gas"
+    supplier = "EDF"
 
     _, page = _do_happy_flow(supplier=supplier, benefits_answer="Yes")
 
@@ -1466,7 +1466,7 @@ def test_on_success_page_on_yes_to_benefits_eco4_is_shown():
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_on_success_page_on_no_to_benefits_income_less_than_31k_eco4_is_shown():
-    supplier = "British Gas"
+    supplier = "EDF"
 
     _, page = _do_happy_flow(supplier=supplier, benefits_answer="No")
 
@@ -1478,7 +1478,7 @@ def test_on_success_page_on_no_to_benefits_income_less_than_31k_eco4_is_shown():
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_on_submitting_a_recent_uprn_twice_the_referral_already_submitted_page_is_shown():
-    supplier = "British Gas"
+    supplier = "EDF"
     client = utils.get_client()
     page = client.get("/start")
     page = page.follow()
@@ -1531,7 +1531,7 @@ def test_on_submitting_a_recent_uprn_twice_the_referral_already_submitted_page_i
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_on_submitting_a_uprn_which_does_not_have_recent_duplicate_already_submitted_page_is_not_shown():
-    supplier = "British Gas"
+    supplier = "EDF"
     not_recent_date = timezone.now() + relativedelta(months=-12)
 
     client = utils.get_client()
@@ -1580,7 +1580,7 @@ def test_on_submitting_a_uprn_which_does_not_have_recent_duplicate_already_submi
 
 @unittest.mock.patch("help_to_heat.frontdoor.interface.EPCApi", MockEPCApi)
 def test_on_submitting_a_recent_uprn_twice_to_different_suppliers_the_referral_already_submitted_page_is_shown():
-    supplier = "British Gas"
+    supplier = "EDF"
     client = utils.get_client()
     page = client.get("/start")
     page = page.follow()
