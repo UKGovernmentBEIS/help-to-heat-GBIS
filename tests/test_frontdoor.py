@@ -1736,7 +1736,7 @@ def test_epc_page_shows_epc_info():
     assert page.has_one("p:contains('Maisonette')")
 
     assert page.has_one("p:contains('EPC rating')")
-    assert page.has_one("p:contains('G')")
+    assert len(page.all("p:contains('G')")) == 2  # One in the service closure banner and one for the EPC details
 
     assert page.has_one("p:contains('Date of issue')")
     assert page.has_one("p:contains('23 July 2010')")
