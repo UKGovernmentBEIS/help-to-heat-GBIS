@@ -1,6 +1,11 @@
 # Check eligibility for Great British Insulation Scheme
 
 Formerly known as "Help to Heat".
+
+## GBIS Closure
+
+On 14th October 2025 GBIS was closed from public use. On 31st October 2025 the GBIS energy supplier portal was closed. This project is no longer deployed.
+
 ## Initial Setup
 1. From the project root, run `cp envs/web.template envs/web`
 2. Populate the OS API key into the OS_API_KEY variable in `envs/web`. Please only use a single value (i.e. `["my_key_here"]`), rather than all of the keys available, in order to avoid needing to rotate all of the keys if your local environment is accidentally leaked.
